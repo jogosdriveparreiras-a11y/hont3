@@ -13,9 +13,24 @@ parser.add_argument("--godot", help="Path to a compatible Godot 4.6 executable")
 args = parser.parse_args()
 
 
-def run(*command):
+def run(*command, timeout=240, capture_godot=False):
     print("+", *command, flush=True)
-    subprocess.run(command, cwd=ROOT, check=True, timeout=120)
+    if capture_godot:
+        log_path = ROOT / "tools" / "_last_godot.log"
+        with log_path.open("w", encoding="utf-8", errors="replace") as log:
+            completed = subprocess.run(
+                command, cwd=ROOT, check=False, timeout=timeout,
+                stdout=log, stderr=subprocess.STDOUT,
+            )
+        if completed.returncode != 0:
+            print(log_path.read_text(encoding="utf-8", errors="replace")[-4000:], flush=True)
+            raise subprocess.CalledProcessError(completed.returncode, command)
+        # Surface OK lines for the suite summary.
+        for line in log_path.read_text(encoding="utf-8", errors="replace").splitlines():
+            if line.startswith("OK:") or line.startswith("MERGE ") or line.startswith("PENDENTE"):
+                print(line, flush=True)
+    else:
+        subprocess.run(command, cwd=ROOT, check=True, timeout=timeout)
 
 
 run(sys.executable, "tools/lint_gd.py")
@@ -30,7 +45,7 @@ version = subprocess.run([engine, "--version"], cwd=ROOT, check=True, capture_ou
 if not re.match(r"^4\.6(?:\.|\D|$)", version):
     sys.exit(f"Godot 4.6 é necessário; executável encontrado: {version}")
 
-run(engine, "--headless", "--path", str(ROOT), "--editor", "--import", "--quit")
+run(engine, "--headless", "--path", str(ROOT), "--editor", "--import", "--quit", capture_godot=True)
 for script in ("StatusSmoke.gd", "CampaignSmoke.gd", "SceneSmoke.gd", "MergeSmoke.gd"):
-    run(engine, "--headless", "--path", str(ROOT), "-s", f"res://tools/{script}")
+    run(engine, "--headless", "--path", str(ROOT), "-s", f"res://tools/{script}", capture_godot=True)
 print("OK: verificações estáticas, importação e testes de combate/cena")
