@@ -952,15 +952,34 @@ func begin_enemy_phase() -> void:
 	_log("Vez dos adversários.")
 	changed.emit()
 
-func enemy_step() -> bool:
-	if phase != "ENEMY" or living("ALLY").is_empty() or enemy_card_plays <= 0:
-		return false
+func peek_enemy_play() -> Dictionary:
+	if phase != "ENEMY" or living("ALLY").is_empty():
+		return {}
+	if enemy_card_plays <= 0:
+		if enemy_redraws > 0 and not enemy_hand.is_empty():
+			return {"kind": "redraw", "index": 0}
+		return {}
 	var choice := _best_enemy_play()
 	if choice.is_empty():
 		if enemy_redraws > 0 and not enemy_hand.is_empty():
-			return _redraw_side("ENEMY", 0)
+			return {"kind": "redraw", "index": 0}
+		return {}
+	var card: Dictionary = enemy_hand[int(choice["index"])]
+	return {
+		"kind": "play",
+		"index": int(choice["index"]),
+		"target": int(choice["target"]),
+		"chain": choice["chain"],
+		"card": card.duplicate(true),
+	}
+
+func enemy_step() -> bool:
+	var choice := peek_enemy_play()
+	if choice.is_empty():
 		return false
-	return play(int(choice["index"]), int(choice["target"]), choice["chain"])
+	if str(choice.get("kind", "")) == "redraw":
+		return _redraw_side("ENEMY", int(choice.get("index", 0)))
+	return play(int(choice["index"]), int(choice["target"]), choice.get("chain", []))
 
 func finish_enemy_phase() -> void:
 	if phase != "ENEMY": return

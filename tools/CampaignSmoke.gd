@@ -19,10 +19,17 @@ func _run() -> void:
 		match battle.mission["objective"]:
 			"ELIMINATE":
 				for enemy in battle.living("ENEMY"): enemy["hp"] = 0
-				battle.turn = 2
-				battle._check_end()
-				assert(battle.phase != "FINISHED", "Expected reinforcements cannot be skipped")
-				battle.turn = 3
+				var rein: Dictionary = battle.mission.get("reinforcements", {})
+				var first_wave := 999
+				var last_wave := 1
+				for t in rein.keys():
+					first_wave = mini(first_wave, int(t))
+					last_wave = maxi(last_wave, int(t))
+				if first_wave < 999:
+					battle.turn = maxi(1, first_wave - 1)
+					battle._check_end()
+					assert(battle.phase != "FINISHED", "Expected reinforcements cannot be skipped: " + mission_id)
+				battle.turn = last_wave
 				battle._check_end()
 			"BOSS":
 				for enemy in battle.living("ENEMY"):
@@ -33,5 +40,5 @@ func _run() -> void:
 				battle.phase = "ENEMY"
 				battle._check_end()
 		assert(battle.phase == "FINISHED", "Mission must complete according to its objective: " + mission_id)
-	print("OK: four mission objectives, reinforcement gate and boss completion")
+	print("OK: mission objectives, reinforcement gate and boss completion (%d missions)" % Content.MISSIONS.size())
 	quit(0)

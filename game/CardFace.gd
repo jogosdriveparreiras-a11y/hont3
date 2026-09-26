@@ -3,6 +3,7 @@ extends Control
 var spec: Dictionary = {}
 var _shield_tex: Texture2D = null
 const CORNER_RADIUS := 18.0
+const BOX_ALPHA := 125.0 / 255.0
 
 func setup(data: Dictionary) -> void:
 	spec = data
@@ -16,62 +17,74 @@ func setup(data: Dictionary) -> void:
 	if _shield_tex == null and ResourceLoader.exists("res://assets/ui/impact_shield_sword.png"):
 		_shield_tex = load("res://assets/ui/impact_shield_sword.png")
 
-	# Signature group: top-LEFT — icon above name, left-aligned
+	# Signature group: top-LEFT — icon with CARD NAME beside it in leftover space
 	var icon_r := height * 0.048
 	var sig_x := width * 0.06
 	var sig_y := height * 0.045
-	var chip := Label.new()
-	chip.text = str(spec.get("chip", ""))
-	chip.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
-	chip.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	chip.position = Vector2(sig_x, sig_y + icon_r * 2.15)
-	chip.size = Vector2(width * 0.55, height * 0.038)
-	chip.add_theme_font_size_override("font_size", int(clampf(height * 0.026, 11, 20)))
-	chip.add_theme_color_override("font_color", Color("f2efe8"))
-	chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(chip)
-
-	# Card title in semi-transparent black box
-	var title_bg := ColorRect.new()
-	title_bg.color = Color(0, 0, 0, 0.62)
-	title_bg.position = Vector2(width * 0.06, height * 0.175)
-	title_bg.size = Vector2(width * 0.88, height * 0.075)
-	title_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(title_bg)
+	var icon_diameter := icon_r * 2.0
 	var title := Label.new()
 	title.text = str(spec.get("title", ""))
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	title.position = title_bg.position
-	title.size = title_bg.size
-	title.add_theme_font_size_override("font_size", int(clampf(height * 0.048, 16, 36)))
+	title.position = Vector2(sig_x + icon_diameter + width * 0.025, sig_y)
+	title.size = Vector2(width - (sig_x + icon_diameter + width * 0.06), icon_diameter)
+	title.add_theme_font_size_override("font_size", int(clampf(height * 0.042, 14, 32)))
 	title.add_theme_color_override("font_color", Color("f4f1ea"))
 	title.clip_text = true
 	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(title)
 
-	# Damage number overlay sits in shield center (drawn in _draw; label on top)
+	# Character / owner chip under the signature icon
+	var chip := Label.new()
+	chip.text = str(spec.get("chip", ""))
+	chip.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	chip.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	chip.position = Vector2(sig_x, sig_y + icon_diameter + height * 0.008)
+	chip.size = Vector2(width * 0.70, height * 0.034)
+	chip.add_theme_font_size_override("font_size", int(clampf(height * 0.024, 10, 18)))
+	chip.add_theme_color_override("font_color", Color("d9d3c6"))
+	chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(chip)
+
+	var chip_bottom := chip.position.y + chip.size.y
+	var rules_top := height * 0.60
+	var mid_gap := maxf(1.0, rules_top - chip_bottom)
+
+	# Sword + IMPACTO/PODER + number — ~90% of space between chip and effects, flush left
 	var show_damage := bool(spec.get("show_damage", false)) and not bool(spec.get("item", false))
 	if show_damage:
+		var block_h := mid_gap * 0.90
+		var block_y := chip_bottom + (mid_gap - block_h) * 0.5
+		var block_x := width * 0.05
+		var icon_side := block_h
 		var dmg := Label.new()
 		dmg.name = "DamageNumber"
 		dmg.text = str(int(spec.get("stat_value", 0)))
 		dmg.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		dmg.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		# Shield face sits near center of the impact icon rect (see _draw_impact_icon)
-		var icon_origin := Vector2(width * 0.18, height * 0.36)
-		var icon_size := Vector2(width * 0.30, height * 0.22)
-		# Shield center ≈ 50% x, ~42% y within the sword+shield graphic
-		dmg.position = Vector2(icon_origin.x - icon_size.x * 0.22, icon_origin.y - icon_size.y * 0.18)
-		dmg.size = Vector2(icon_size.x * 0.44, icon_size.y * 0.42)
-		dmg.add_theme_font_size_override("font_size", int(clampf(height * 0.055, 18, 42)))
+		# Number sits in shield face (~center-left of sword graphic)
+		dmg.position = Vector2(block_x + icon_side * 0.18, block_y + icon_side * 0.28)
+		dmg.size = Vector2(icon_side * 0.38, icon_side * 0.36)
+		dmg.add_theme_font_size_override("font_size", int(clampf(block_h * 0.28, 22, 64)))
 		dmg.add_theme_color_override("font_color", spec.get("stat_color", Color.WHITE))
 		dmg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		add_child(dmg)
+		var stat_lbl := Label.new()
+		stat_lbl.name = "StatLabel"
+		var raw_label := str(spec.get("stat_label", "ATAQUE"))
+		stat_lbl.text = "PODER" if raw_label == "PODER" else "IMPACTO"
+		stat_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+		stat_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		stat_lbl.position = Vector2(block_x + icon_side * 0.92, block_y + block_h * 0.35)
+		stat_lbl.size = Vector2(width * 0.40, block_h * 0.30)
+		stat_lbl.add_theme_font_size_override("font_size", int(clampf(block_h * 0.16, 14, 36)))
+		stat_lbl.add_theme_color_override("font_color", Color("f4f1ea"))
+		stat_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(stat_lbl)
 
-	# Effects / rules in semi-transparent black box
+	# Effects / rules in medium-opacity black box
 	var rules_bg := ColorRect.new()
-	rules_bg.color = Color(0, 0, 0, 0.68)
+	rules_bg.color = Color(0, 0, 0, BOX_ALPHA)
 	rules_bg.position = Vector2(width * 0.05, height * 0.60)
 	rules_bg.size = Vector2(width * 0.90, height * 0.26)
 	rules_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -113,10 +126,10 @@ func _draw() -> void:
 	_draw_rounded_rect(Rect2(Vector2.ZERO, size), bg, CORNER_RADIUS)
 	var art = spec.get("art", null)
 	if art is Texture2D:
-		# Full-bleed art (slight inset keeps rounded type-tint corners clean)
 		var inset := CORNER_RADIUS * 0.35
-		_draw_texture_rounded(art, Rect2(Vector2(inset, inset), size - Vector2(inset * 2, inset * 2)), CORNER_RADIUS)
-		draw_rect(Rect2(Vector2(inset, inset), size - Vector2(inset * 2, inset * 2)), Color(0, 0, 0, 0.12))
+		var art_rect := Rect2(Vector2(inset, inset), size - Vector2(inset * 2, inset * 2))
+		_draw_texture_aspect_cover(art, art_rect)
+		draw_rect(art_rect, Color(0, 0, 0, 0.12))
 	# Signature icon top-LEFT
 	var icon_center := Vector2(size.x * 0.06 + size.y * 0.048, size.y * 0.045 + size.y * 0.048)
 	var icon_radius := size.y * 0.048
@@ -144,13 +157,46 @@ func _draw() -> void:
 		x += size.x * 0.065
 
 func _draw_impact_icon(_border: Color) -> void:
-	var origin := Vector2(size.x * 0.18, size.y * 0.36)
-	var icon_size := Vector2(size.x * 0.30, size.y * 0.22)
+	# Match setup(): ~90% of gap between chip bottom and rules top, flush left, vertically centered
+	var height := size.y
+	var width := size.x
+	var icon_r := height * 0.048
+	var sig_y := height * 0.045
+	var icon_diameter := icon_r * 2.0
+	var chip_bottom := sig_y + icon_diameter + height * 0.008 + height * 0.034
+	var rules_top := height * 0.60
+	var mid_gap := maxf(1.0, rules_top - chip_bottom)
+	var block_h := mid_gap * 0.90
+	var block_y := chip_bottom + (mid_gap - block_h) * 0.5
+	var block_x := width * 0.05
+	var origin := Vector2(block_x + block_h * 0.5, block_y + block_h * 0.5)
+	var icon_size := Vector2(block_h, block_h)
 	if _shield_tex != null:
 		draw_texture_rect(_shield_tex, Rect2(origin - icon_size * 0.5, icon_size), false)
 	else:
 		draw_circle(origin, icon_size.x * 0.28, Color(0.05, 0.05, 0.07, 0.9))
 		draw_arc(origin, icon_size.x * 0.28, 0, TAU, 32, Color("ece7dc"), 2.5, true)
+
+func _draw_texture_aspect_cover(tex: Texture2D, rect: Rect2) -> void:
+	# Same height as card art rect; keep aspect (crop sides or letterbox — never squash)
+	var tex_size := tex.get_size()
+	if tex_size.x <= 0.0 or tex_size.y <= 0.0:
+		return
+	var scale := rect.size.y / tex_size.y
+	var draw_w := tex_size.x * scale
+	var draw_h := rect.size.y
+	if draw_w >= rect.size.x:
+		# Crop left/right: sample center of source
+		var src_w := tex_size.x * (rect.size.x / draw_w)
+		var src_x := (tex_size.x - src_w) * 0.5
+		draw_texture_rect_region(tex, rect, Rect2(src_x, 0.0, src_w, tex_size.y))
+	else:
+		# Letterbox sides on type-tint background
+		var dst := Rect2(
+			Vector2(rect.position.x + (rect.size.x - draw_w) * 0.5, rect.position.y),
+			Vector2(draw_w, draw_h)
+		)
+		draw_texture_rect(tex, dst, false)
 
 func _draw_pip(center: Vector2, tint: Color, glyph: String) -> void:
 	var radius := size.y * 0.022
@@ -170,6 +216,3 @@ func _draw_rounded_border(rect: Rect2, color: Color, radius: float, width: float
 	style.set_border_width_all(int(width))
 	style.set_corner_radius_all(int(radius))
 	style.draw(get_canvas_item(), rect)
-
-func _draw_texture_rounded(tex: Texture2D, rect: Rect2, _radius: float) -> void:
-	draw_texture_rect(tex, rect, false)

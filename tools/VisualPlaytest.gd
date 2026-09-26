@@ -168,7 +168,31 @@ func _run() -> void:
 			_assert(battle.hand.size() < hand_auto_before or _enemy_hp_sum(battle) < enemy_hp_sum_before or kind == "ALL_ALLIES", "%s auto-play produced no effect" % kind)
 			print("PLAYFLOW auto-%s OK hand %d→%d" % [kind, hand_auto_before, battle.hand.size()])
 
-	# Keep prior pass2 names as aliases for compatibility
+	# Pass3 polish pack captures
+	game.set("hovered_card", 0)
+	game.call("_render_battle")
+	for i in range(14):
+		await process_frame
+	_save(dirs, "playtest_hotn3_pass3_battle.png")
+	_save(dirs, "playtest_hotn3_pass3_hover.png")
+	if battle.hand.size() > 0:
+		game.set("inspected_card", 0)
+		game.set("hovered_card", 0)
+		game.set("selected_card", -1)
+		game.set("card_confirmed", false)
+		game.call("_render_battle")
+		for i in range(16):
+			await process_frame
+		_save(dirs, "playtest_hotn3_pass3_inspect.png")
+	# Street night arena capture
+	game.set("mission_id", "street")
+	game.set("best_stars", {"road": 1})
+	game.call("_start_mission")
+	for i in range(40):
+		await process_frame
+	await create_timer(0.6).timeout
+	_save(dirs, "playtest_hotn3_pass3_street.png")
+	# Compatibility aliases
 	_save(dirs, "playtest_hotn3_pass2_battle.png")
 	_save(dirs, "playtest_hotn3_pass2_after.png")
 	_finish()

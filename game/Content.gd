@@ -149,6 +149,7 @@ const MISSIONS := {
 	"ritual": {"name": "Círculo de cinzas", "objective": "SURVIVE", "turns": 5, "enemies": ["ent_techna", "ent_nero", "ent_taylor"], "reinforcements": {3: ["fera"]}, "environment": [{"name": "Runa instável", "cost": 2, "status": "vulnerable", "target": "back"}]},
 	"watch": {"name": "Defesa da sentinela", "objective": "PROTECT", "turns": 4, "protect_hp": 40, "enemies": ["ent_quasar", "ent_alistair", "ent_kabuki"], "reinforcements": {2: ["fera"]}, "environment": [{"name": "Cristal de vigília", "cost": 2, "heal": 8, "target": "ally"}]},
 	"eclipse": {"name": "Guardião do Eclipse", "objective": "BOSS", "enemies": ["guardiao", "ent_dominika_seur", "ent_leona"], "reinforcements": {3: ["fera", "fera"]}, "environment": [{"name": "Pilar selado", "cost": 3, "damage": 9, "target": "back"}]},
+	"street": {"name": "Rua noturna", "objective": "ELIMINATE", "arena": "street_night", "enemies": ["ent_daeva", "ent_alexis", "ent_alyssa_wine"], "reinforcements": {2: ["fera"], 4: ["fera"]}, "environment": [{"name": "Poste quebrado", "cost": 2, "damage": 7, "target": "front"}, {"name": "Sinal de neon", "cost": 3, "status": "blind", "target": "back"}]},
 }
 
 # Campaign order does not change the combat data: mission identifiers remain stable in saves.
@@ -157,6 +158,7 @@ const CAMPAIGN := {
 	"ritual": {"requires": ["road"], "par": 5, "brief": "O círculo permanece ativo por cinco rodadas. Techna, Nero e Taylor mantêm o selo.", "goal": "Resista por cinco rodadas."},
 	"watch": {"requires": ["road"], "par": 4, "brief": "Defenda a sentinela até a quarta rodada. Quasar, Alistair e Kabuki pressionam a vigília. Uma fera entra na segunda rodada.", "goal": "Proteja a sentinela por quatro rodadas."},
 	"eclipse": {"requires": ["ritual", "watch"], "par": 6, "brief": "O Guardião do Eclipse ocupa a retaguarda, com Dominika e Leona. Reduza sua vida à metade para expor a segunda fase.", "goal": "Derrote o Guardião do Eclipse."},
+	"street": {"requires": ["road"], "par": 4, "brief": "Daeva, Alexis e Alyssa Wine controlam a rua noturna. Elimine a gangue; feras surgem na segunda e quarta rodadas.", "goal": "Limpe a rua noturna."},
 }
 
 static var HERO_LORE := {

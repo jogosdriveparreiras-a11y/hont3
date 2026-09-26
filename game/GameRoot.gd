@@ -117,13 +117,7 @@ func _make_world() -> void:
 	environment.set("glow_levels/5", 0.25)
 	world.environment = environment
 	add_child(world)
-	_add_box(Vector3(0, -0.30, 0), Vector3(19, 0.5, 12), Color("353c47"))
-	for z in [-3.3, -1.7, 1.7, 3.3]:
-		_add_box(Vector3(0, -0.02, z), Vector3(17, 0.04, 0.035), Color("bea674"))
-	for x in [-9.1, 9.1]:
-		for z in [-5.5, 5.5]:
-			_add_box(Vector3(x, 1.75, z), Vector3(0.75, 3.5, 0.75), Color("555169"))
-			_add_box(Vector3(x, 3.5, z), Vector3(1.1, 0.3, 1.1), Color("c8ac76"))
+	_build_arena("default")
 	var layer := CanvasLayer.new()
 	layer.name = "Interface"
 	add_child(layer)
@@ -171,6 +165,70 @@ func _add_box(pos: Vector3, size: Vector3, color: Color, parent: Node3D = null) 
 	if parent == null: parent = stage
 	parent.add_child(mesh)
 	return mesh
+
+func _clear_arena() -> void:
+	if stage == null:
+		return
+	for child in stage.get_children():
+		stage.remove_child(child)
+		child.queue_free()
+
+func _build_arena(theme: String = "default") -> void:
+	_clear_arena()
+	if theme == "street_night":
+		_build_street_night_arena()
+	else:
+		_build_default_arena()
+
+func _build_default_arena() -> void:
+	_add_box(Vector3(0, -0.30, 0), Vector3(19, 0.5, 12), Color("353c47"))
+	for z in [-3.3, -1.7, 1.7, 3.3]:
+		_add_box(Vector3(0, -0.02, z), Vector3(17, 0.04, 0.035), Color("bea674"))
+	for x in [-9.1, 9.1]:
+		for z in [-5.5, 5.5]:
+			_add_box(Vector3(x, 1.75, z), Vector3(0.75, 3.5, 0.75), Color("555169"))
+			_add_box(Vector3(x, 3.5, z), Vector3(1.1, 0.3, 1.1), Color("c8ac76"))
+
+func _build_street_night_arena() -> void:
+	# Asphalt street + sidewalks matching the procedural box style of the default arena
+	_add_box(Vector3(0, -0.32, 0), Vector3(22, 0.45, 14), Color("1a1d28"))
+	_add_box(Vector3(0, -0.06, 0), Vector3(7.2, 0.08, 13.5), Color("2a2e38"))  # road
+	for z in [-5.0, -2.5, 0.0, 2.5, 5.0]:
+		_add_box(Vector3(0, -0.01, z), Vector3(0.35, 0.02, 0.9), Color("c9b56a"))  # dashed center
+	_add_box(Vector3(-5.1, -0.04, 0), Vector3(2.6, 0.08, 13.5), Color("3a3f4d"))  # sidewalk L
+	_add_box(Vector3(5.1, -0.04, 0), Vector3(2.6, 0.08, 13.5), Color("3a3f4d"))  # sidewalk R
+	# Building facades (left / right)
+	for i in range(4):
+		var z := -5.2 + i * 3.4
+		var h := 3.2 + (i % 2) * 1.4
+		_add_box(Vector3(-8.6, h * 0.5, z), Vector3(2.4, h, 3.0), Color("3d3552") if i % 2 == 0 else Color("2f3548"))
+		_add_box(Vector3(8.6, h * 0.5 + 0.2, z), Vector3(2.4, h + 0.4, 3.0), Color("45355a") if i % 2 == 0 else Color("32384a"))
+		# Lit windows
+		for wy in [0.9, 1.9, 2.9]:
+			if wy > h - 0.3:
+				continue
+			_add_box(Vector3(-7.35, wy, z - 0.7), Vector3(0.08, 0.45, 0.55), Color("ffd27a"))
+			_add_box(Vector3(-7.35, wy, z + 0.7), Vector3(0.08, 0.45, 0.55), Color("ffb86b"))
+			_add_box(Vector3(7.35, wy, z - 0.7), Vector3(0.08, 0.45, 0.55), Color("9ad7ff"))
+			_add_box(Vector3(7.35, wy, z + 0.7), Vector3(0.08, 0.45, 0.55), Color("ff9ad0"))
+	# Street lamps
+	for x in [-4.0, 4.0]:
+		for z in [-4.5, 0.0, 4.5]:
+			_add_box(Vector3(x, 1.1, z), Vector3(0.12, 2.2, 0.12), Color("4a4e5c"))
+			_add_box(Vector3(x, 2.25, z), Vector3(0.55, 0.12, 0.55), Color("c8ac76"))
+			var lamp := OmniLight3D.new()
+			lamp.position = Vector3(x, 2.15, z)
+			lamp.light_color = Color("ffd2a0")
+			lamp.light_energy = 1.6
+			lamp.omni_range = 6.5
+			stage.add_child(lamp)
+	# Neon sign block across far end
+	_add_box(Vector3(0, 3.4, -6.4), Vector3(6.5, 0.7, 0.35), Color("6b1f4a"))
+	_add_box(Vector3(0, 3.4, -6.2), Vector3(5.8, 0.45, 0.12), Color("ff4f9a"))
+
+func _arena_theme_for_mission(mid: String) -> String:
+	var mission: Dictionary = Content.MISSIONS.get(mid, {})
+	return str(mission.get("arena", "default"))
 
 func _clear_ui() -> void:
 	for child in hud.get_children():
@@ -634,6 +692,7 @@ func _start_mission() -> void:
 		return
 	pack_mode = "default"
 	_begin_battle_session()
+	_build_arena(_arena_theme_for_mission(mission_id))
 	battle.begin(mission_id, team, equipped, 0, improvements, loadout)
 	_render_battle()
 
@@ -1025,6 +1084,7 @@ func _build_economy_hud(viewport_size: Vector2) -> void:
 		economy_hud.add_child(fill)
 		y += 32.0
 	var end_btn := _button("ENCERRAR TURNO", func(): _present_enemy_turn())
+	end_btn.disabled = battle.phase != "PLAYER" or enemy_presenting
 	end_btn.position = Vector2(16, 148)
 	end_btn.custom_minimum_size = Vector2(258, 40)
 	economy_hud.add_child(end_btn)
@@ -1346,6 +1406,8 @@ func _make_3d_card(index: int, card: Dictionary, definition: Dictionary) -> void
 	var entering := not seen_hand.has(uid)
 	mesh.position = slot
 	mesh.rotation = spin
+	mesh.set_meta("base_pos", slot)
+	mesh.set_meta("base_rot", spin)
 	if entering:
 		mesh.position = slot + Vector3(2.8, 0.45, 0.0)
 		mesh.rotation = spin + Vector3(0, 0, 0.95)
@@ -1448,19 +1510,16 @@ func _set_orbit(target: float) -> void:
 	await tw.finished
 
 func _arc_pose(index: int, count: int) -> Dictionary:
-	# Cards sit between two concentric arcs: shared radius → Y follows circumference,
-	# rotation = tangent. Neighbor step ~5°; radius sized so the fan is visibly curved.
+	# Cards closer horizontally (~3.2° step) on a shared arc; hover pushes z toward camera.
 	var n := maxi(count, 1)
-	var step := deg_to_rad(5.0)
+	var step := deg_to_rad(3.2)
 	var total := step * float(maxi(n - 1, 0))
-	# Keep a minimum total span so even small hands show circumference (not a flat row)
-	total = maxf(total, deg_to_rad(18.0)) if n > 1 else 0.0
+	total = maxf(total, deg_to_rad(12.0)) if n > 1 else 0.0
 	var half := total * 0.5
 	var t := 0.5 if n <= 1 else float(index) / float(n - 1)
 	var ang := lerpf(-half, half, t)
-	var target_half_width := 0.34 + 0.17 * float(mini(n, 8))
-	# Smaller radius → larger sagitta so the circumference is obvious (not a flat tilted row)
-	var radius := 2.35
+	var target_half_width := 0.22 + 0.11 * float(mini(n, 8))
+	var radius := 2.55
 	var max_half := asin(clampf(target_half_width / radius, 0.05, 0.92))
 	if half > max_half:
 		radius = target_half_width / maxf(sin(half), 0.05)
@@ -1800,8 +1859,8 @@ func _note_card_hover(index: int, host: Control, width: float, height: float) ->
 	if changed_hover and sound != null: sound.cue("hover", "UI")
 	if inspected_card != index:
 		host.pivot_offset = Vector2(width * 0.5, height)
-		host.scale = Vector2(1.28, 1.28)
-		host.z_index = 4
+		host.scale = Vector2(1.38, 1.38)
+		host.z_index = 20
 	if index >= 0 and index < battle.hand.size():
 		_show_actor_portrait(int(battle.hand[index]["owner"]), false)
 		if is_instance_valid(hover_hint):
@@ -1883,36 +1942,25 @@ func _update_recompra_meter(progress: float, label_text: String) -> void:
 	_clear_recompra_meter()
 	var vp := get_viewport().get_visible_rect().size
 	var wrap := Control.new()
-	wrap.position = Vector2(vp.x * 0.5 - 70, vp.y * 0.55)
-	wrap.size = Vector2(140, 140)
+	wrap.position = Vector2(vp.x * 0.5 - 70, vp.y * 0.52)
+	wrap.size = Vector2(140, 160)
 	wrap.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	recompra_ring.add_child(wrap)
-	var bg := ColorRect.new()
-	bg.color = Color(0, 0, 0, 0.45)
-	bg.position = Vector2(20, 20)
-	bg.size = Vector2(100, 100)
-	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	wrap.add_child(bg)
-	var bar := ProgressBar.new()
-	bar.min_value = 0
-	bar.max_value = 1
-	bar.value = clampf(progress, 0.0, 1.0)
-	bar.show_percentage = false
-	bar.position = Vector2(30, 58)
-	bar.size = Vector2(80, 14)
-	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var fill := StyleBoxFlat.new()
-	fill.bg_color = Color("3ecf7a")
-	fill.set_corner_radius_all(8)
-	bar.add_theme_stylebox_override("fill", fill)
-	var back := StyleBoxFlat.new()
-	back.bg_color = Color(0.1, 0.14, 0.12, 0.9)
-	back.set_corner_radius_all(8)
-	bar.add_theme_stylebox_override("background", back)
-	wrap.add_child(bar)
+	var dim := ColorRect.new()
+	dim.color = Color(0, 0, 0, 0.35)
+	dim.position = Vector2(10, 10)
+	dim.size = Vector2(120, 120)
+	dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	wrap.add_child(dim)
+	var meter := HotNCircularMeter.new()
+	meter.position = Vector2(20, 20)
+	meter.size = Vector2(100, 100)
+	meter.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	meter.set_progress(progress)
+	wrap.add_child(meter)
 	var lbl := _label(label_text, 16, Color("9dffb0") if progress < 1.0 else Color("3ecf7a"))
 	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	lbl.position = Vector2(10, 78)
+	lbl.position = Vector2(10, 130)
 	lbl.size = Vector2(120, 24)
 	wrap.add_child(lbl)
 
@@ -2054,6 +2102,7 @@ func _present_enemy_turn() -> void:
 func _step_enemy() -> void:
 	if battle == null or battle.phase != "ENEMY":
 		enemy_presenting = false
+		_clear_enemy_card_overlay()
 		_set_orbit(0.0)
 		return
 	enemy_steps += 1
@@ -2061,19 +2110,81 @@ func _step_enemy() -> void:
 		battle.finish_enemy_phase()
 		packs.on_player_turn_resumed(battle, pack_mode)
 		enemy_presenting = false
+		_clear_enemy_card_overlay()
 		_set_orbit(0.0)
 		return
-	await get_tree().create_timer(0.5 / maxf(animation_speed, 0.25)).timeout
-	if battle == null or battle.phase != "ENEMY":
-		enemy_presenting = false
-		return
-	if battle.enemy_step():
-		_step_enemy()
-	else:
+	var pace := 2.0 / maxf(animation_speed, 0.25)
+	var choice: Dictionary = battle.peek_enemy_play()
+	if choice.is_empty():
 		battle.finish_enemy_phase()
 		packs.on_player_turn_resumed(battle, pack_mode)
 		enemy_presenting = false
+		_clear_enemy_card_overlay()
 		_set_orbit(0.0)
+		return
+	if str(choice.get("kind", "")) == "play":
+		var card: Dictionary = choice.get("card", {})
+		var definition: Dictionary = _card_def(str(card.get("id", "")))
+		var owner: Dictionary = battle.actor_by_id(int(card.get("owner", 0)))
+		feedback = "Adversário joga: %s" % str(definition.get("name", ""))
+		_show_actor_portrait(int(card.get("owner", 0)), true)
+		_show_enemy_card_overlay(card, definition, owner)
+		await get_tree().create_timer(pace).timeout
+		if battle == null or battle.phase != "ENEMY":
+			enemy_presenting = false
+			_clear_enemy_card_overlay()
+			return
+		var target_id := int(choice.get("target", -1))
+		if target_id >= 0:
+			_show_actor_portrait(target_id, true)
+			if actor_nodes.has(target_id):
+				var body: Node3D = actor_nodes[target_id]
+				if is_instance_valid(body):
+					body.scale = Vector3(1.18, 1.18, 1.18)
+		_clear_enemy_card_overlay()
+		battle.play(int(choice["index"]), target_id, choice.get("chain", []))
+		await get_tree().create_timer(pace).timeout
+		if actor_nodes.has(target_id):
+			var reset_body: Node3D = actor_nodes[target_id]
+			if is_instance_valid(reset_body):
+				reset_body.scale = Vector3.ONE
+	elif str(choice.get("kind", "")) == "redraw":
+		feedback = "Adversário recompra."
+		_render_battle()
+		await get_tree().create_timer(pace * 0.5).timeout
+		battle.enemy_step()
+		_render_battle()
+		await get_tree().create_timer(pace * 0.5).timeout
+	else:
+		battle.enemy_step()
+	if battle == null or battle.phase != "ENEMY":
+		enemy_presenting = false
+		_clear_enemy_card_overlay()
+		return
+	_step_enemy()
+
+func _show_enemy_card_overlay(card: Dictionary, definition: Dictionary, owner: Dictionary) -> void:
+	_clear_enemy_card_overlay()
+	if fx_overlay == null:
+		return
+	var viewport_size := get_viewport().get_visible_rect().size
+	var host = CardFace.new()
+	host.name = "EnemyCardOverlay"
+	var height := viewport_size.y * 0.6
+	var width := height * 0.66
+	host.size = Vector2(width, height)
+	host.position = Vector2((viewport_size.x - width) * 0.5, (viewport_size.y - height) * 0.5)
+	host.z_index = 12
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	host.setup(_card_spec(card, definition, owner))
+	fx_overlay.add_child(host)
+
+func _clear_enemy_card_overlay() -> void:
+	if fx_overlay == null:
+		return
+	var existing := fx_overlay.get_node_or_null("EnemyCardOverlay")
+	if existing != null:
+		existing.queue_free()
 
 func _input(event: InputEvent) -> void:
 	if battle == null or battle.phase != "PLAYER" or enemy_presenting: return
@@ -2288,8 +2399,15 @@ func _process(delta: float) -> void:
 		var card_mesh: MeshInstance3D = card_meshes[mesh_index]
 		if not is_instance_valid(card_mesh): continue
 		var raised := mesh_index == hovered_card or mesh_index == inspected_card
-		var target_scale := Vector3(1.32, 1.32, 1.32) if raised else Vector3.ONE
+		var target_scale := Vector3(1.42, 1.42, 1.42) if raised else Vector3.ONE
 		card_mesh.scale = card_mesh.scale.lerp(target_scale, 0.35)
+		var base_pos: Vector3 = card_mesh.get_meta("base_pos", card_mesh.position)
+		var lift := Vector3(0, 0.12, 0.42) if raised else Vector3.ZERO
+		var want_pos := base_pos + lift
+		# Preserve deal-in animation until near the slot
+		if card_mesh.position.distance_to(base_pos) < 1.25 or raised:
+			card_mesh.position = card_mesh.position.lerp(want_pos, 0.35)
+		card_mesh.sorting_offset = 24.0 if raised else float(mesh_index) * 0.01
 		var glow_node: MeshInstance3D = card_mesh.get_node_or_null("HoverGlow")
 		if glow_node != null and glow_node.material_override != null:
 			var gmat: StandardMaterial3D = glow_node.material_override

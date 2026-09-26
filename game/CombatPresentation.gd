@@ -63,8 +63,8 @@ func show_action(kind: String, source_id: int, target_id: int, amount: int) -> v
 		_float_text(target_id, "−%d" % amount, Color("ffd49b"))
 		_burst(target_id, Color("ec755c"))
 		if shake_enabled:
-			shake_strength = minf(0.18, 0.035 + float(amount) * 0.004) * shake_scale
-			shake_time = 0.18 / animation_speed
+			shake_strength = minf(0.55, 0.10 + float(amount) * 0.014) * shake_scale
+			shake_time = 0.36 / animation_speed
 	elif kind == "death":
 		_float_text(target_id, "CAIU", Color("cfb4ab"))
 	elif kind == "heal":

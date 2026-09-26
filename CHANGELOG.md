@@ -1,4 +1,12 @@
 ## Não publicado
+- Pacote de polimento HotN3 Godot 4.6: arte da carta sem squash (cover por altura), nome da carta ao lado do ícone de assinatura no topo, caixas pretas em opacidade média (~125/255), espada+IMPACTO/PODER+número ocupando ~90% do vão entre chip e efeitos.
+- Turno inimigo apresenta cada carta centrada (~2s) como inspeção do jogador, depois aplica no alvo e espera ~2s antes da próxima (inclui sequência de PA/Quick/Free).
+- Barra de recompra por segurar virou anel circular (`CircularMeter`).
+- Arco da mão mais fechado horizontalmente; hover traz a carta à frente (z/depth) e aumenta escala.
+- Nova missão/arena `street` — Rua noturna procedural (asfalto, calçadas, fachadas, postes, neon).
+- Tremor de tela no dano mais forte.
+- VisualPlaytest gera `playtest_hotn3_pass3_*.png`.
+
 - Corrige fluxo de cartas: hover → selecionar → confirmar → alvo. O overlay de inspeção voltava `mouse_filter` para IGNORE dentro de `CardFace.setup`, então o 2º clique cancelava em vez de confirmar; agora STOP fica depois do setup. Alvos automáticos (SELF, ALL_ALLIES/ENEMIES, RANDOM, FRONT/BACK_ROW) resolvem na confirmação sem clique extra. VisualPlaytest cobre dano com mira e auto-play.
 - Polimento battle UI pass2: arco circular da mão (~5° entre cartas), ícone escudo+espada do anexo com dano no centro do escudo, 2º clique na carta entra em mira (não desmarca), HUD esquerdo atualiza no hover, bloom/glow em barras e anéis, assinatura top-left, Iniciativa na economia à direita, arte full-bleed, cantos arredondados, idle breath nos sprites.
 - Pacote visual UI/HUD/cartas estilo Midnight Suns: fundo opaco por tipo, caixas pretas semi-transparentes, ícone escudo+espada PNG, dano só em cartas ofensivas, nome do herói centrado sob o ícone de assinatura.
