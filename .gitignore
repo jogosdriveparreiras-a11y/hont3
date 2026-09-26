@@ -1,0 +1,8 @@
+.godot/
+*.translation
+export_presets.cfg
+.import/
+*.tmp
+*.log
+.mono/
+data_*/
