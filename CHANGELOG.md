@@ -1,4 +1,6 @@
 ## Não publicado
+- `cards_3d.reparent(camera)` passa `keep_global_transform=false` para a mão 3D ficar no espaço da câmera (antes ficava sob o chão da arena).
+- Incluído `tools/VisualPlaytest.gd` para capturas de viewport sem gambiarra de Identity.
 - Smokes de Status/Campanha passam a carregar `PackBridge` antes de `begin`, pois as missões agora usam inimigos `ent_`.
 - Fallback de sprite `assets/cast` em `_sprite_region` usa o quadro inteiro; regras da carta destacam Quick/Chain/Exhaust e efeitos negativos em vermelho.
 - `run_checks` redireciona a saída do Godot para log e inclui MergeSmoke.

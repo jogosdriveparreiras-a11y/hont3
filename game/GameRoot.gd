@@ -84,7 +84,7 @@ func _make_world() -> void:
 	add_child(camera)
 	camera.look_at(Vector3(0, 0.5, 0), Vector3.UP)
 	camera.current = true
-	cards_3d.reparent(camera)
+	cards_3d.reparent(camera, false)
 	var sun := DirectionalLight3D.new()
 	sun.rotation_degrees = Vector3(-58, 25, 0)
 	sun.light_energy = 1.3
