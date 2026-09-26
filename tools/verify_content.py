@@ -68,15 +68,23 @@ for hero_id, hero in heroes.items():
     assert len(set(hero["pool"])) >= 8, hero_id
     assert hero.get("passive") in {"vanguarda", "canalizar", "oportunista", "devocao", "baluarte", "rastreador"}, hero_id
     assert (ROOT / hero["sprite"].removeprefix("res://")).is_file(), hero_id
+    assert "playable" in hero, hero_id
+    if hero.get("minion"):
+        assert hero.get("playable") is False, hero_id
     for card_id in hero["pool"]:
         assert card_id in cards, (hero_id, card_id)
     for card_id in hero["cards"]:
         assert card_id in cards, (hero_id, card_id)
         assert hero["cards"].count(card_id) <= cards[card_id].get("copy_limit", rules["copy_limit"]), (hero_id, card_id)
 
+playable = {hero_id: hero for hero_id, hero in heroes.items() if hero.get("playable", True)}
+assert len(playable) >= 6
+assert any(hero.get("boss") and not hero.get("playable", True) for hero in heroes.values())
+assert any(hero.get("minion") and not hero.get("playable", True) for hero in heroes.values())
+
 for enemy_id, enemy in enemies.items():
     assert (ROOT / enemy["sprite"].removeprefix("res://")).is_file(), enemy_id
-    for ability in enemy["skills"]:
+    for ability in enemy.get("skills", []):
         assert ability in enemy_cards, (enemy_id, ability)
 
 for name, definition in {**cards, **enemy_cards}.items():
@@ -104,11 +112,19 @@ for mission_id, mission in missions.items():
     for requirement in campaign[mission_id]["requires"]:
         assert requirement in missions and requirement != mission_id, (mission_id, requirement)
     assert mission["objective"] in {"ELIMINATE", "SURVIVE", "PROTECT", "BOSS"}, mission_id
+    seen = set()
     for enemy_id in mission["enemies"]:
-        assert enemy_id in enemies, (mission_id, enemy_id)
+        assert enemy_id in heroes, (mission_id, enemy_id)
+        if not heroes[enemy_id].get("minion"):
+            assert enemy_id not in seen, (mission_id, enemy_id)
+            seen.add(enemy_id)
     for wave in mission.get("reinforcements", {}).values():
+        wave_seen = set()
         for enemy_id in wave:
-            assert enemy_id in enemies, (mission_id, enemy_id)
+            assert enemy_id in heroes, (mission_id, enemy_id)
+            if not heroes[enemy_id].get("minion"):
+                assert enemy_id not in wave_seen, (mission_id, enemy_id)
+                wave_seen.add(enemy_id)
 
 assert set(campaign) == set(missions) and set(hero_lore) == set(heroes)
 assert campaign["road"]["requires"] == []

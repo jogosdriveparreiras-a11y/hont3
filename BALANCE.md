@@ -17,7 +17,7 @@ Estrelas: 1 pela vitória, mais 1 por ao menos dois sobreviventes; a terceira ex
 
 A sentinela agora tem 40 PV. Mesmo com quatro inimigos ativos durante todas as quatro rodadas, a pressão passiva de `2 × 4 × 4 = 32` não a elimina sozinha. As habilidades inimigas ainda podem afetar a equipe e a missão precisa ser testada em partida.
 
-Nos ataques iniciais comuns, o dano bruto por alvo antes de armadura, resistências e efeitos varia de 8 a 14; ataques em linha aplicam esse valor a cada alvo válido. Essa referência não prevê frequência de compra, gasto de Ímpeto, Quick, Marcado, inteligência dos inimigos nem eliminações por minion. Portanto não é uma estimativa de duração de partida ou taxa de vitória.
+Nos ataques iniciais comuns, o dano bruto por alvo antes de armadura, resistências e efeitos varia de 8 a 14; ataques em linha aplicam esse valor a cada alvo válido. Essa referência não prevê frequência de compra, gasto de Iniciativa, Quick, Marcado, inteligência dos inimigos nem eliminações por minion. Portanto não é uma estimativa de duração de partida ou taxa de vitória.
 
 ## Critério ainda pendente
 

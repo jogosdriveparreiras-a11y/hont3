@@ -10,7 +10,7 @@ Legenda: **C** = código ou arquivo presente e inspeção estática concluída, 
 | Menu, missão, equipe, decks, início de batalha | C | `GameRoot.gd`; `SceneSmoke.gd` preparado, não executado no motor. |
 | Arena 3D, personagens 2D, sombras, cartas 3D com fundo comum | C | Criação dinâmica em `GameRoot.gd`; aspecto visual não inspecionado em execução. |
 | Animação da mão, hover, seleção, prévia e alvo | C | `GameRoot.gd`; qualidade visual e interação ainda pendentes. |
-| Ações, recompra, deck, descarte e Ímpeto | C | `BattleState.gd`; smoke tests ainda pendentes no Godot. |
+| Ações, recompra, deck, descarte e Iniciativa | C | `BattleState.gd`; smoke tests ainda pendentes no Godot. |
 | Ataque, técnica, poder, Rápida, Marcado, Chain, área | C | Dados em `Content.gd`, resolução em `BattleState.gd`. |
 | Buff, debuff, duração, Counter, Block, Armor, Shield, cura | C | `BattleState.gd`; auditoria dos efeitos em `EFFECTS_AUDIT.md`. |
 | Tipos, vantagens na prévia, frente/retaguarda, corpo a corpo e alcance | C | `BattleState.gd`, `GameRoot.gd`; testes de cena não executados. |

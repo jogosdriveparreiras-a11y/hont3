@@ -20,7 +20,6 @@ var redraws := 0
 var moves := 0
 var item_uses := 0
 var impulse := 0
-var initiative := 5
 var turn := 0
 var phase := "PREPARING"
 var protect_hp := 0
@@ -32,7 +31,48 @@ var improvements: Dictionary = {}
 var next_actor_id := 0
 var next_card_id := 0
 var played_cards := 0
+var enemy_deck: Array[Dictionary] = []
+var enemy_hand: Array[Dictionary] = []
+var enemy_discard: Array[Dictionary] = []
+var enemy_exhausted: Array[Dictionary] = []
+var enemy_card_plays := 0
+var enemy_redraws := 0
+var enemy_moves := 0
+var enemy_impulse := 0
+var enemy_combo_used := false
 const NEGATIVE := ["weak", "vulnerable", "marked", "stun", "bind", "bound", "dazed", "poison", "bleed", "burn", "silence", "blind", "slow", "wounded", "corrupted", "confused", "banished", "webbed_up", "taunted", "berserk_enemy", "feeding_frenzy", "drop", "overload", "spike_bomb"]
+
+func _acting() -> String:
+	return "ENEMY" if phase == "ENEMY" else "ALLY"
+
+func _hand_of(side: String) -> Array[Dictionary]:
+	return enemy_hand if side == "ENEMY" else hand
+
+func _deck_of(side: String) -> Array[Dictionary]:
+	return enemy_deck if side == "ENEMY" else deck
+
+func _discard_of(side: String) -> Array[Dictionary]:
+	return enemy_discard if side == "ENEMY" else discard
+
+func _exhausted_of(side: String) -> Array[Dictionary]:
+	return enemy_exhausted if side == "ENEMY" else exhausted
+
+func _get_impulse(side: String) -> int:
+	return enemy_impulse if side == "ENEMY" else impulse
+
+func _set_impulse(side: String, value: int) -> void:
+	if side == "ENEMY": enemy_impulse = value
+	else: impulse = value
+
+func _get_plays(side: String) -> int:
+	return enemy_card_plays if side == "ENEMY" else card_plays
+
+func _set_plays(side: String, value: int) -> void:
+	if side == "ENEMY": enemy_card_plays = value
+	else: card_plays = value
+
+func _add_plays(side: String, amount: int) -> void:
+	_set_plays(side, _get_plays(side) + amount)
 
 func begin(mission_id: String, team: Array[String], equipped: Dictionary, seed_value: int = 0, card_improvements: Dictionary = {}, selected_items: Dictionary = {}) -> void:
 	rng.seed = seed_value if seed_value != 0 else randi()
@@ -42,12 +82,20 @@ func begin(mission_id: String, team: Array[String], equipped: Dictionary, seed_v
 	hand.clear()
 	discard.clear()
 	exhausted.clear()
+	enemy_deck.clear()
+	enemy_hand.clear()
+	enemy_discard.clear()
+	enemy_exhausted.clear()
 	next_actor_id = 0
 	next_card_id = 0
 	played_cards = 0
 	turn = 0
 	impulse = 0
-	initiative = 5
+	enemy_impulse = 0
+	enemy_card_plays = 0
+	enemy_redraws = 0
+	enemy_moves = 0
+	enemy_combo_used = false
 	phase = "PREPARING"
 	protect_hp = int(mission.get("protect_hp", 0))
 	environmental_used.clear()
@@ -56,16 +104,18 @@ func begin(mission_id: String, team: Array[String], equipped: Dictionary, seed_v
 	improvements = card_improvements.duplicate(true)
 	items = selected_items.duplicate(true) if not selected_items.is_empty() else {"potion": 1, "bomb": 1, "antidote": 1}
 	for id in team:
-		if Content.HEROES.has(id):
+		if Content.HEROES.has(id) and Content.HEROES[id].get("playable", true):
 			var hero := _create_actor(Content.HEROES[id], "ALLY", id)
 			var equipped_ids: Array = equipped.get(id, Content.HEROES[id]["cards"])
 			for card_id in equipped_ids:
 				if Content.CARDS.has(card_id):
 					deck.append(_create_card(card_id, hero["id"], improvements.get(id + ":" + card_id, {})))
 	for id in mission.get("enemies", []):
-		spawn_enemy(id)
+		spawn_enemy(str(id))
 	_shuffle(deck)
-	_draw(int(rules["opening_hand"]))
+	_shuffle(enemy_deck)
+	_draw_side("ALLY", int(rules["opening_hand"]))
+	_draw_side("ENEMY", int(rules["opening_hand"]))
 	_log("Missão: %s" % mission["name"])
 	start_turn()
 
@@ -89,9 +139,19 @@ func _create_card(card_id: String, owner_id: int, changes: Dictionary = {}) -> D
 	return {"uid": next_card_id, "id": card_id, "owner": owner_id, "class": Content.CARDS.get(card_id, {}).get("class", ""), "upgrade": int(changes.get("upgrade", 0)), "mod": changes.get("mod", "")}
 
 func spawn_enemy(enemy_id: String) -> void:
-	if Content.ENEMIES.has(enemy_id):
-		var enemy := _create_actor(Content.ENEMIES[enemy_id], "ENEMY", enemy_id)
-		_log("%s entrou na arena." % enemy["name"])
+	if not Content.HEROES.has(enemy_id):
+		return
+	var template: Dictionary = Content.HEROES[enemy_id]
+	# minion = true é a exceção que permite duas ou mais instâncias do mesmo personagem no mesmo lado.
+	if not template.get("minion", false):
+		for actor in actors:
+			if actor["side"] == "ENEMY" and str(actor.get("archetype", "")) == enemy_id and int(actor.get("hp", 0)) > 0:
+				return
+	var enemy := _create_actor(template, "ENEMY", enemy_id)
+	for card_id in template.get("cards", []):
+		if Content.CARDS.has(str(card_id)):
+			enemy_deck.append(_create_card(str(card_id), int(enemy["id"])))
+	_log("%s entrou na arena." % enemy["name"])
 
 func actor_by_id(id: int) -> Dictionary:
 	for actor in actors:
@@ -114,25 +174,33 @@ func _shuffle(pile: Array[Dictionary]) -> void:
 		pile[j] = temp
 
 func _draw(amount: int) -> void:
+	_draw_side(_acting(), amount)
+
+func _draw_side(side: String, amount: int) -> void:
+	var pile_hand := _hand_of(side)
+	var pile_deck := _deck_of(side)
+	var pile_discard := _discard_of(side)
 	for i in range(amount):
-		if hand.size() >= int(rules["hand_max"]):
+		if pile_hand.size() >= int(rules["hand_max"]):
 			return
-		if deck.is_empty():
-			if discard.is_empty():
+		if pile_deck.is_empty():
+			if pile_discard.is_empty():
 				return
-			for used_card in discard:
-				deck.append(used_card)
-			discard.clear()
-			_shuffle(deck)
-		var card: Dictionary = deck.pop_back()
+			for used_card in pile_discard:
+				pile_deck.append(used_card)
+			pile_discard.clear()
+			_shuffle(pile_deck)
+		var card: Dictionary = pile_deck.pop_back()
 		var owner := actor_by_id(card["owner"])
 		if owner.get("hp", 0) > 0:
 			if Content.CARDS.get(card["id"], {}).has("roulette"):
 				var choices: Array = Content.CARDS[card["id"]]["roulette"]
 				if not choices.is_empty(): card["roulette_effect"] = choices[rng.randi_range(0, choices.size() - 1)]
 			card.erase("infected")
-			hand.append(card)
+			pile_hand.append(card)
 			visual.emit("draw", int(owner["id"]), int(owner["id"]), 1)
+		else:
+			_exhausted_of(side).append(card)
 
 func start_turn() -> void:
 	if phase == "FINISHED":
@@ -292,7 +360,7 @@ func _damage_value(source: Dictionary, target: Dictionary, effect: Dictionary, c
 	if _has_status(source, "ravenous"): attack_bonus += 0.15 * int(source["statuses"]["ravenous"]["stacks"])
 	if _has_status(source, "en_fuego"): attack_bonus += 0.15 * int(source["statuses"]["en_fuego"]["stacks"])
 	if _has_status(source, "fatal_fury"): attack_bonus += 1.0
-	if (card.get("enhanced_triggered", false) or _has_status(source, "enhanced") and impulse >= 4) and card.get("class", "") == "POWER": attack_bonus += 0.25
+	if (card.get("enhanced_triggered", false) or _has_status(source, "enhanced") and _get_impulse(str(source.get("side", "ALLY"))) >= 4) and card.get("class", "") == "POWER": attack_bonus += 0.25
 	base = roundi(base * maxf(0.0, 1.0 + attack_bonus))
 	if _has_status(source, "blind"):
 		base = roundi(base * 0.75)
@@ -391,7 +459,7 @@ func _take_damage(source: Dictionary, target: Dictionary, amount: int, pierce: b
 	return died
 
 func _purge_dead_cards() -> void:
-	for pile in [deck, hand, discard]:
+	for pile in [deck, hand, discard, enemy_deck, enemy_hand, enemy_discard]:
 		for index in range(pile.size() - 1, -1, -1):
 			if actor_by_id(pile[index]["owner"]).get("hp", 0) <= 0 and not actor_by_id(pile[index]["owner"]).get("statuses", {}).has("soulbound"):
 				pile.remove_at(index)
@@ -414,12 +482,13 @@ func _resolve(source: Dictionary, targets: Array[Dictionary], card: Dictionary, 
 			_draw(int(effect.get("amount", 1)))
 		elif kind == "GENERATE":
 			var new_id: String = effect.get("id", "")
-			if Content.CARDS.has(new_id) and hand.size() < int(rules["hand_max"]):
+			var acting_hand := _hand_of(_acting())
+			if Content.CARDS.has(new_id) and acting_hand.size() < int(rules["hand_max"]):
 				var generated := _create_card(new_id, int(source["id"]))
 				generated["temporary"] = true
-				hand.append(generated)
+				acting_hand.append(generated)
 		elif kind == "CARD_PLAY":
-			card_plays += int(effect.get("amount", 1))
+			_add_plays(_acting(), int(effect.get("amount", 1)))
 		elif kind == "SUMMON":
 			if source["side"] == "ENEMY":
 				spawn_enemy(effect.get("id", "fera"))
@@ -428,7 +497,8 @@ func _resolve(source: Dictionary, targets: Array[Dictionary], card: Dictionary, 
 		elif kind == "INFECT":
 			var viable: Array[Dictionary] = []
 			var owner_id: int = int(targets[0]["id"]) if not targets.is_empty() else int(source["id"])
-			for owned_card in hand:
+			var acting_hand := _hand_of(_acting())
+			for owned_card in acting_hand:
 				if owned_card["owner"] == owner_id: viable.append(owned_card)
 			if not viable.is_empty(): viable[rng.randi_range(0, viable.size() - 1)]["infected"] = true
 		else:
@@ -501,7 +571,7 @@ func _cost(source: Dictionary, definition: Dictionary) -> int:
 	if definition.get("class", "") in ["POWER", "COMBO"]:
 		if _has_status(source, "fast"): cost -= 1
 		if _has_status(source, "slow"): cost += 1
-		if _has_status(source, "enhanced") and impulse >= 4:
+		if _has_status(source, "enhanced") and _get_impulse(str(source.get("side", "ALLY"))) >= 4:
 			cost = max(0, cost - int(source["statuses"]["enhanced"]["stacks"]))
 	return max(0, cost)
 
@@ -528,25 +598,28 @@ func _after_card_play() -> void:
 			actor["statuses"].erase(id)
 			match id:
 				"frenzy":
-					if actor["side"] == "ENEMY": _enemy_action(actor)
+					pass
 				"feeding_frenzy":
 					if mission.get("objective", "") == "PROTECT": protect_hp = max(0, protect_hp - 9)
 
 func play(hand_index: int, target_id: int, chain_ids: Array = []) -> bool:
-	if phase != "PLAYER" or hand_index < 0 or hand_index >= hand.size():
+	if phase != "PLAYER" and phase != "ENEMY":
 		return false
-	var card: Dictionary = hand[hand_index]
+	var side := _acting()
+	var acting_hand := _hand_of(side)
+	if hand_index < 0 or hand_index >= acting_hand.size():
+		return false
+	var card: Dictionary = acting_hand[hand_index]
 	var source := actor_by_id(card["owner"])
 	var target := actor_by_id(target_id)
 	var definition: Dictionary = Content.CARDS.get(card["id"], {})
-	if source.is_empty() or target.is_empty() or source["hp"] <= 0 or definition.is_empty():
+	if source.is_empty() or target.is_empty() or source["hp"] <= 0 or definition.is_empty() or source.get("side", "") != side:
 		return false
 	if card["id"] == "dueto" and actor_by_id(int(card.get("partner", -1))).get("hp", 0) <= 0:
 		return false
 	var cost := _cost(source, definition)
 	var plays: int = 0 if bool(definition.get("free", false)) else int(definition.get("plays", 1))
-	var initiative_change: int = int(definition.get("init_mod", 0))
-	if impulse < cost or card_plays < plays or initiative + initiative_change < 0 or _has_status(source, "stun") or _has_status(source, "bind") or _has_status(source, "bound") or _has_status(source, "dazed") or _has_status(source, "banished") or _has_status(source, "finalized"):
+	if _get_impulse(side) < cost or _get_plays(side) < plays or _has_status(source, "stun") or _has_status(source, "bind") or _has_status(source, "bound") or _has_status(source, "dazed") or _has_status(source, "banished") or _has_status(source, "finalized"):
 		return false
 	if _has_status(source, "silence") and definition.get("class", "") in ["SKILL", "POWER"]:
 		return false
@@ -556,13 +629,13 @@ func play(hand_index: int, target_id: int, chain_ids: Array = []) -> bool:
 	if targets.is_empty() or definition.get("target", "") == "CHAIN" and not chain_ids.is_empty() and targets.size() != chain_ids.size():
 		return false
 	var had_momentum := _has_status(source, "momentum")
-	card["enhanced_triggered"] = _has_status(source, "enhanced") and impulse >= 4
-	card_plays -= plays
-	initiative = clampi(initiative + initiative_change, 0, 10)
-	impulse = clampi(impulse - cost + int(definition.get("gain", 0)) + (1 if card.get("mod", "") == "impulse" else 0), 0, int(rules["impulse_max"]))
+	card["enhanced_triggered"] = _has_status(source, "enhanced") and _get_impulse(side) >= 4
+	_set_plays(side, _get_plays(side) - plays)
+	var gained: int = int(definition.get("gain", 0)) + (1 if card.get("mod", "") == "impulse" else 0)
+	_set_impulse(side, clampi(_get_impulse(side) - cost + gained, 0, int(rules["impulse_max"])))
 	_log("%s usou %s." % [source["name"], definition["name"]])
 	visual.emit("cast", int(source["id"]), int(target["id"]), 0)
-	hand.remove_at(hand_index)
+	acting_hand.remove_at(hand_index)
 	played_cards += 1
 	if card.get("infected", false): _add_status(source, "bleed", 1, 1, int(source["id"]))
 	if _has_status(source, "wounded"):
@@ -583,10 +656,10 @@ func play(hand_index: int, target_id: int, chain_ids: Array = []) -> bool:
 				var one: Array[Dictionary] = [combo_target]
 				_resolve(source, one, card, {"effects": definition["full_combo"]})
 	if source.get("archetype", "") == "clerigo" and definition.get("effects", []).any(func(e): return e.get("kind", "") == "HEAL"):
-		impulse = min(int(rules["impulse_max"]), impulse + 1)
-		_log("Clérigo ganhou Ímpeto ao curar.")
+		_set_impulse(side, min(int(rules["impulse_max"]), _get_impulse(side) + 1))
+		_log("Clérigo ganhou Iniciativa ao curar.")
 	if plays > 0 and (definition.get("quick", false) and fallen.has(target_id) or fallen.any(func(id): return _has_status(actor_by_id(id), "marked"))):
-		card_plays += 1
+		_add_plays(side, 1)
 		_log("Ação recuperada.")
 	if definition.get("final", false): _add_status(source, "finalized", 1, 1, int(source["id"]))
 	if _has_status(source, "conceal") and definition.get("target", "") not in ["SELF", "ALL_ALLIES"]:
@@ -596,11 +669,11 @@ func play(hand_index: int, target_id: int, chain_ids: Array = []) -> bool:
 		source["statuses"]["ravenous"]["stacks"] = max(0, int(source["statuses"]["ravenous"]["stacks"]) - 1)
 	if card.get("temporary", false) or definition.get("exhaust", false):
 		card.erase("enhanced_triggered")
-		exhausted.append(card)
+		_exhausted_of(side).append(card)
 	else:
 		card.erase("infected")
 		card.erase("enhanced_triggered")
-		discard.append(card)
+		_discard_of(side).append(card)
 	_after_card_play()
 	_check_combo()
 	_check_end()
@@ -608,31 +681,43 @@ func play(hand_index: int, target_id: int, chain_ids: Array = []) -> bool:
 	return true
 
 func _check_combo() -> void:
-	if combo_used or living("ALLY").size() < 2:
+	var side := _acting()
+	var acting_hand := _hand_of(side)
+	var used: bool = enemy_combo_used if side == "ENEMY" else combo_used
+	if used or living(side).size() < 2:
 		return
-	if impulse >= 4 and not hand.any(func(c): return c["id"] == "dueto") and hand.size() < int(rules["hand_max"]):
-		var combo := _create_card("dueto", int(living("ALLY")[0]["id"]))
-		combo["partner"] = int(living("ALLY")[1]["id"])
-		hand.append(combo)
-		combo_used = true
+	if _get_impulse(side) >= 4 and not acting_hand.any(func(c): return c["id"] == "dueto") and acting_hand.size() < int(rules["hand_max"]):
+		var combo := _create_card("dueto", int(living(side)[0]["id"]))
+		combo["partner"] = int(living(side)[1]["id"])
+		acting_hand.append(combo)
+		if side == "ENEMY": enemy_combo_used = true
+		else: combo_used = true
 		_log("Uma combinação de equipe entrou na mão.")
 
 func redraw(hand_index: int) -> bool:
-	if phase != "PLAYER" or redraws <= 0 or hand_index < 0 or hand_index >= hand.size():
+	return _redraw_side("ALLY", hand_index)
+
+func _redraw_side(side: String, hand_index: int) -> bool:
+	if side == "ENEMY" and phase != "ENEMY": return false
+	if side != "ENEMY" and phase != "PLAYER": return false
+	var acting_hand := _hand_of(side)
+	var redraw_left: int = enemy_redraws if side == "ENEMY" else redraws
+	if redraw_left <= 0 or hand_index < 0 or hand_index >= acting_hand.size():
 		return false
-	var card: Dictionary = hand.pop_at(hand_index)
-	redraws -= 1
+	var card: Dictionary = acting_hand.pop_at(hand_index)
+	if side == "ENEMY": enemy_redraws -= 1
+	else: redraws -= 1
 	var definition: Dictionary = Content.CARDS.get(card["id"], {})
 	var source := actor_by_id(card["owner"])
 	var targets: Array[Dictionary] = [source]
 	_resolve(source, targets, card, {"effects": definition.get("on_redraw", [])})
 	if card.get("mod", "") == "redraw":
-		impulse = min(int(rules["impulse_max"]), impulse + 1)
-	if card.get("temporary", false): exhausted.append(card)
+		_set_impulse(side, min(int(rules["impulse_max"]), _get_impulse(side) + 1))
+	if card.get("temporary", false): _exhausted_of(side).append(card)
 	else:
 		card.erase("infected")
-		discard.append(card)
-	_draw(1)
+		_discard_of(side).append(card)
+	_draw_side(side, 1)
 	_log("Carta redesenhada.")
 	visual.emit("redraw", int(source["id"]), int(source["id"]), 0)
 	changed.emit()
@@ -741,8 +826,9 @@ func _estimate_impact(source: Dictionary, victim: Dictionary, state: Dictionary,
 	_estimate_hit(victim, state, estimate, amount)
 
 func preview(hand_index: int, target_id: int, chain_ids: Array = []) -> Dictionary:
-	if hand_index < 0 or hand_index >= hand.size(): return {}
-	var card: Dictionary = hand[hand_index]
+	var acting_hand := _hand_of(_acting())
+	if hand_index < 0 or hand_index >= acting_hand.size(): return {}
+	var card: Dictionary = acting_hand[hand_index]
 	var source := actor_by_id(card["owner"])
 	var target := actor_by_id(target_id)
 	if source.is_empty() or target.is_empty(): return {}
@@ -808,8 +894,9 @@ func preview(hand_index: int, target_id: int, chain_ids: Array = []) -> Dictiona
 						state["row"] = "back" if state["row"] == "front" else "front"
 						estimate["row_after"] = state["row"]
 	var plays: int = 0 if bool(definition.get("free", false)) else int(definition.get("plays", 1))
-	var affordable: bool = impulse >= _cost(source, definition) and card_plays >= plays
-	var plays_after := card_plays - plays
+	var side := _acting()
+	var affordable: bool = _get_impulse(side) >= _cost(source, definition) and _get_plays(side) >= plays
+	var plays_after := _get_plays(side) - plays
 	for effect in effects:
 		if effect.get("kind", "") == "CARD_PLAY": plays_after += int(effect.get("amount", 1))
 	if plays > 0 and not random_target:
@@ -817,20 +904,50 @@ func preview(hand_index: int, target_id: int, chain_ids: Array = []) -> Dictiona
 		for victim_id in estimates:
 			if estimates[victim_id]["hp_after"] == 0 and _has_status(actor_by_id(int(victim_id)), "marked"): refund = true
 		if refund: plays_after += 1
-	return {"targets": estimates, "rows": rows, "random": random_target, "self_effects": self_effects, "other_effects": other_effects, "impulse_after": clampi(impulse - _cost(source, definition) + int(definition.get("gain", 0)), 0, int(rules["impulse_max"])), "plays_after": plays_after, "playable": affordable and (definition.get("target", "") != "CHAIN" or chain_ids.size() == int(definition.get("chain", 1))), "effects": effects}
+	return {"targets": estimates, "rows": rows, "random": random_target, "self_effects": self_effects, "other_effects": other_effects, "impulse_after": clampi(_get_impulse(side) - _cost(source, definition) + int(definition.get("gain", 0)), 0, int(rules["impulse_max"])), "plays_after": plays_after, "playable": affordable and (definition.get("target", "") != "CHAIN" or chain_ids.size() == int(definition.get("chain", 1))), "effects": effects}
 
-func end_player_turn() -> void:
+func begin_enemy_phase() -> void:
 	if phase != "PLAYER": return
 	phase = "ENEMY"
-	var enemies := living("ENEMY")
-	enemies.sort_custom(func(a, b): return a["speed"] > b["speed"])
-	for enemy in enemies:
-		if enemy["hp"] <= 0 or _has_status(enemy, "stun") or _has_status(enemy, "bind") or _has_status(enemy, "bound") or _has_status(enemy, "dazed") or _has_status(enemy, "banished"):
-			continue
-		var actions: int = 2 if bool(enemy.get("boss", false)) and int(enemy["phase"]) >= 2 else 1
-		for action in range(actions):
-			if enemy["hp"] <= 0 or living("ALLY").is_empty(): break
-			_enemy_action(enemy)
+	enemy_card_plays = int(rules["card_plays"])
+	enemy_redraws = int(rules["redraws"])
+	enemy_moves = int(rules["moves"])
+	if living("ENEMY").any(func(enemy): return bool(enemy.get("boss", false)) and int(enemy.get("phase", 1)) >= 2):
+		enemy_card_plays += 1
+	for enemy in living("ENEMY"):
+		if _has_status(enemy, "next_turn_plays") or _has_status(enemy, "neurally_enhanced"):
+			enemy_card_plays = max(enemy_card_plays, 4)
+			enemy["statuses"].erase("next_turn_plays")
+			enemy["statuses"].erase("neurally_enhanced")
+		match enemy.get("passive", ""):
+			"vanguarda":
+				if enemy["row"] == "front": enemy["block"] += 2
+			"canalizar": enemy_impulse = min(int(rules["impulse_max"]), enemy_impulse + 1)
+			"baluarte": enemy["shield"] += 2
+	if turn > 1:
+		var has_strongest: bool = living("ENEMY").any(func(actor): return _has_status(actor, "strongest_there_is"))
+		var extra: int = 1 if has_strongest else 0
+		_draw_side("ENEMY", int(rules["turn_draw"]) + extra)
+	for actor in living("ENEMY"):
+		for payload in actor["pending"]:
+			var owner_targets: Array[Dictionary] = [actor]
+			_resolve(actor, owner_targets, {}, {"effects": payload})
+		actor["pending"].clear()
+	_log("Vez dos adversários.")
+	changed.emit()
+
+func enemy_step() -> bool:
+	if phase != "ENEMY" or living("ALLY").is_empty() or enemy_card_plays <= 0:
+		return false
+	var choice := _best_enemy_play()
+	if choice.is_empty():
+		if enemy_redraws > 0 and not enemy_hand.is_empty():
+			return _redraw_side("ENEMY", 0)
+		return false
+	return play(int(choice["index"]), int(choice["target"]), choice["chain"])
+
+func finish_enemy_phase() -> void:
+	if phase != "ENEMY": return
 	_tick_statuses()
 	if mission.get("objective", "") == "PROTECT" and not living("ENEMY").is_empty():
 		protect_hp = max(0, protect_hp - max(1, living("ENEMY").size() * 2))
@@ -839,80 +956,60 @@ func end_player_turn() -> void:
 	if phase != "FINISHED": start_turn()
 	changed.emit()
 
-func _enemy_action(enemy: Dictionary) -> void:
-	if enemy["hp"] <= 0 or _has_status(enemy, "stun") or _has_status(enemy, "bind") or _has_status(enemy, "bound") or _has_status(enemy, "dazed") or _has_status(enemy, "banished"): return
-	if _has_status(enemy, "summoning"): return
-	if _has_status(enemy, "wounded"):
-		_take_damage(enemy, enemy, 3 * int(enemy["statuses"]["wounded"]["stacks"]), true, false)
-		if enemy["hp"] <= 0: return
-	if _has_status(enemy, "berserk_enemy"):
-		enemy["statuses"].erase("berserk_enemy")
-		var nearby: Array[Dictionary] = []
-		for actor in actors:
-			if actor["id"] != enemy["id"] and actor["hp"] > 0 and actor["row"] == enemy["row"]:
-				nearby.append(actor)
-		if not nearby.is_empty():
-			var victim: Dictionary = nearby[rng.randi_range(0, nearby.size() - 1)]
-			_take_damage(enemy, victim, int(enemy["attack"]) + 4, false, false)
-		return
-	var forced: Array[Dictionary] = []
-	if not _has_status(enemy, "fatal_fury") and not _has_status(enemy, "overload") and not _has_status(enemy, "summoning"):
-		for ally in living("ALLY"):
-			if _has_status(ally, "taunt"): forced.append(ally)
-		if _has_status(enemy, "taunted"):
-			var taunter := actor_by_id(int(enemy["statuses"]["taunted"]["source"]))
-			if taunter.get("hp", 0) > 0:
-				forced.clear()
-				forced.append(taunter)
-	var best_score := -100000.0
-	var best_card: Dictionary = {}
-	var best_target: Dictionary = {}
-	var disposition: String = enemy.get("ai", "AGRESSIVO")
-	for ability in enemy.get("skills", []):
-		var card: Dictionary = Content.ENEMY_CARDS.get(ability, {})
-		if card.is_empty(): continue
-		if card.has("objective") and mission.get("objective", "") != card["objective"]: continue
-		var possibilities: Array = [enemy] if str(card.get("target", "")) == "SELF" else (forced if not forced.is_empty() else living("ALLY"))
-		for target in possibilities:
-			if card.get("target", "") != "SELF" and not can_reach(enemy, target, card): continue
-			var victims := _targets(enemy, target, card, [], false)
-			if victims.is_empty(): continue
-			var score: float = float(card.get("priority", 0))
-			for victim in victims:
-				for effect in card.get("effects", []):
-					match effect.get("kind", ""):
-						"DAMAGE":
-							if _has_status(victim, "invulnerable"): continue
-							if _has_status(victim, "resist") and not effect.get("pierce", false):
-								score += 2.0
-								continue
-							var potential := _damage_value(enemy, victim, effect, {})
-							var prevented: int = 0 if bool(effect.get("pierce", false)) else int(victim["shield"]) + int(victim["block"])
-							var actual := mini(int(victim["hp"]), maxi(0, potential - prevented))
-							score += float(actual) + (16.0 if actual >= int(victim["hp"]) else 0.0)
-							if disposition == "ASSASSINO" and actual >= int(victim["hp"]): score += 8.0
-						"STATUS":
-							if not _has_status(victim, effect.get("id", "")):
-								score += 8.0 if effect.get("id", "") in ["stun", "bind", "summoning"] else 3.0
-						"BLOCK":
-							var danger := 1.0 - float(victim["hp"]) / float(victim["max_hp"])
-							score += maxf(0.0, float(effect.get("amount", 0)) * (0.35 + danger) - float(victim["block"]) * 0.6)
-							if disposition == "DEFENSIVO": score += 5.0
-						"HEAL": score += mini(int(victim["max_hp"]) - int(victim["hp"]), int(effect.get("amount", 0)))
-						"SUMMON": score += 8.0
-			if card.get("target", "") != "SELF":
-				if _has_status(target, "vulnerable"): score += 2.0
-				if target["row"] == "back" and disposition == "ASSASSINO": score += 2.0
-				if mission.get("objective", "") == "PROTECT": score += 1.0
-			if card.get("target", "") == "RANDOM": score /= float(victims.size())
+func end_player_turn() -> void:
+	begin_enemy_phase()
+	var guard := 0
+	while phase == "ENEMY" and guard < 16:
+		guard += 1
+		if not enemy_step():
+			finish_enemy_phase()
+
+func _best_enemy_play() -> Dictionary:
+	var best := {}
+	var best_score := -0.001
+	for index in range(enemy_hand.size()):
+		var card: Dictionary = enemy_hand[index]
+		var definition: Dictionary = Content.CARDS.get(card["id"], {})
+		var source := actor_by_id(int(card["owner"]))
+		if source.is_empty() or source.get("hp", 0) <= 0 or definition.is_empty(): continue
+		if _has_status(source, "stun") or _has_status(source, "bind") or _has_status(source, "bound") or _has_status(source, "dazed") or _has_status(source, "banished") or _has_status(source, "finalized"):
+			continue
+		var kind := str(definition.get("target", "ENEMY"))
+		var candidates: Array[Dictionary] = []
+		if kind == "SELF": candidates = [source]
+		elif kind in ["ALLY", "ALL_ALLIES"]: candidates = living("ENEMY")
+		elif kind == "ANY_UNIT": candidates = living("ALLY") + living("ENEMY")
+		else: candidates = living("ALLY")
+		if kind not in ["SELF", "ALLY", "ALL_ALLIES"] and definition.get("class", "") == "ATTACK":
+			var forced: Array[Dictionary] = []
+			for ally in living("ALLY"):
+				if _has_status(ally, "taunt"): forced.append(ally)
+			if not forced.is_empty(): candidates = forced
+		for target in candidates:
+			var chain: Array = []
+			if kind == "CHAIN":
+				var need := int(definition.get("chain", 1))
+				for _hit in range(need): chain.append(int(target["id"]))
+			var estimate: Dictionary = preview(index, int(target["id"]), chain)
+			if estimate.is_empty() or not estimate.get("playable", false): continue
+			var score := _score_enemy_preview(source, definition, estimate)
 			if score > best_score:
 				best_score = score
-				best_card = card
-				best_target = target
-	if not best_card.is_empty():
-		_log("%s usou %s." % [enemy["name"], best_card["name"]])
-		visual.emit("cast", int(enemy["id"]), int(best_target["id"]), 0)
-		_resolve(enemy, _targets(enemy, best_target, best_card), {}, best_card)
+				best = {"index": index, "target": int(target["id"]), "chain": chain}
+	return best
+
+func _score_enemy_preview(source: Dictionary, definition: Dictionary, estimate: Dictionary) -> float:
+	var score := 0.0
+	for id in estimate["targets"]:
+		var line: Dictionary = estimate["targets"][id]
+		score += float(line["damage"])
+		if int(line["hp_after"]) == 0: score += 18.0
+		score += float(line["statuses"].size()) * 3.0
+		if line["row_after"] != actor_by_id(int(id)).get("row", ""): score += 2.0
+	score += float(estimate["self_effects"].size()) * 2.0
+	if definition.get("class", "") == "SKILL" and str(source.get("ai", "")) == "DEFENSIVO": score += 4.0
+	if definition.get("class", "") == "ATTACK" and str(source.get("ai", "")) == "ASSASSINO": score += 3.0
+	return score
 
 func _tick_statuses() -> void:
 	var field_emitters: Array[Dictionary] = []

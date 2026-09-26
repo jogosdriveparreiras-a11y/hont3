@@ -28,7 +28,7 @@ Comparação com a lista fornecida pelo usuário e a [página de efeitos de stat
 | Dazed | Carta | Ruído mental bloqueia ação até duas cartas serem jogadas. |
 | Drop | Adaptado | Marcador no alvo, chance de KO se empurrado; não há terreno com queda. |
 | En Fuego | Carta | Fúria do totem inicia medidor que cresce por KO e amplia Ataque. |
-| Enhanced | Carta | Domínio do selo reduz custo e amplia Poderes acima do limiar de Ímpeto. |
+| Enhanced | Carta | Domínio do selo reduz custo e amplia Poderes acima do limiar de Iniciativa. |
 | Exhaust | Carta | Cartas exauridas saem da pilha durante o combate. |
 | Fast | Carta | Domínio do selo reduz custo de Poderes/Combos. |
 | Fatal Fury | Carta | Fúria do totem aumenta o próximo dano e aplica Ferido. |

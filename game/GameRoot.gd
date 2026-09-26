@@ -37,8 +37,17 @@ var presentation
 var fx_overlay: Control
 var hover_hint: Label
 var hovered_card := -1
+var inspected_card := -1
+var card_confirmed := false
+var hovered_actor := -1
 var target_cursor := 0
 var visible_uids: Dictionary = {}
+var portrait_left: TextureRect
+var portrait_right: TextureRect
+var portrait_sticky_until := 0
+var suppress_inspect_cancel := false
+var enemy_presenting := false
+var enemy_steps := 0
 var sound_levels: Dictionary = {"MASTER": 0.8, "MUSIC": 0.35, "SFX": 0.7, "UI": 0.55, "AMBIENCE": 0.18}
 var shake_level := 0.5
 var reduce_flashes := false
@@ -112,10 +121,14 @@ func _make_world() -> void:
 	presentation = Presentation.new()
 	add_child(presentation)
 	presentation.configure(camera, fx_overlay, sound)
+	portrait_left = _make_portrait(false)
+	portrait_right = _make_portrait(true)
+	fx_overlay.add_child(portrait_left)
+	fx_overlay.add_child(portrait_right)
 	_apply_accessibility()
 
 func _on_viewport_resized() -> void:
-	if battle != null and battle.phase == "PLAYER": _render_battle()
+	if battle != null and battle.phase in ["PLAYER", "ENEMY"]: _render_battle()
 
 func _material(color: Color, unshaded: bool = false) -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()
@@ -287,6 +300,7 @@ func _show_team() -> void:
 	var menu := _center_panel("EQUIPE · %d/%d" % [team.size(), Content.RULES["team_size"]])
 	for id in Content.HEROES:
 		var hero: Dictionary = Content.HEROES[id]
+		if not hero.get("playable", true): continue
 		var chosen := team.has(id)
 		var identity: Dictionary = Content.HERO_LORE[id]
 		menu.add_child(_button(("✓ " if chosen else "+ ") + "%s · %s · %d PV" % [hero["name"], identity["role"], hero["hp"]], _toggle_hero.bind(id), identity["history"] + "\n" + identity["trait"]))
@@ -349,7 +363,7 @@ func _show_decks() -> void:
 		var key: String = str(deck_hero) + ":" + str(card_id)
 		var level := int(improvements.get(key, {}).get("upgrade", 0))
 		var cost := int(definition.get("cost", 0))
-		var subtitle := "%s · %s" % [definition["class"], "%d Ímpeto" % cost if cost > 0 else "+%d Ímpeto" % int(definition.get("gain", 0))]
+		var subtitle := "%s · %s" % [definition["class"], "%d Iniciativa" % cost if cost > 0 else "+%d Iniciativa" % int(definition.get("gain", 0))]
 		var button := _button(("▶ " if deck_selected == card_id else "") + definition["name"] + " +%d\n" % level + subtitle, _choose_deck_card.bind(card_id), _card_description(definition))
 		button.custom_minimum_size = Vector2(330, 62)
 		available.add_child(button)
@@ -516,6 +530,9 @@ func _on_event(message: String) -> void:
 
 func _on_visual(kind: String, source_id: int, target_id: int, amount: int) -> void:
 	if presentation != null: presentation.show_action(kind, source_id, target_id, amount)
+	if kind in ["cast", "hit", "heal", "death", "status", "block", "guard"]:
+		_show_actor_portrait(source_id, true)
+		if target_id != source_id: _show_actor_portrait(target_id, true)
 
 func _on_finished(won: bool) -> void:
 	if won: sound.cue("victory")
@@ -560,22 +577,30 @@ func _render_battle() -> void:
 	if battle == null or battle.phase == "FINISHED": return
 	_clear_ui()
 	_clear_hand_visuals()
-	hovered_card = -1
 	var viewport_size := get_viewport().get_visible_rect().size
+	var hand_h := clampf(viewport_size.y * 0.28, 190.0, 320.0)
+	var hand_band := hand_h * 1.34
+	var hand_top := viewport_size.y - hand_band - 6.0
 	var header := VBoxContainer.new()
 	hud.add_child(header)
 	header.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
 	header.add_child(_label("%s  ·  RODADA %d" % [battle.mission["name"], battle.turn], 23, Color("e9c891")))
-	header.add_child(_label("AÇÕES %d  ·  ÍMPETO %d/%d  ·  INICIATIVA %d  ·  RECOMPRA %d  ·  MOVER %d" % [battle.card_plays, battle.impulse, battle.rules["impulse_max"], battle.initiative, battle.redraws, battle.moves], 18))
-	var deck_line := "DECK %d · DESCARTE %d" % [battle.deck.size(), battle.discard.size()]
-	if battle.mission["objective"] == "PROTECT": deck_line += "  ·  SENTINELA %d PV" % battle.protect_hp
+	var ally_line := _label("JOGADORES  " + _resource_line("ALLY"), 18)
+	ally_line.modulate = Color.WHITE if battle.phase == "PLAYER" else Color(1, 1, 1, 0.38)
+	header.add_child(ally_line)
+	var enemy_line := _label("ADVERSÁRIOS  " + _resource_line("ENEMY"), 18)
+	enemy_line.modulate = Color("ffd0c4") if battle.phase == "ENEMY" else Color(1, 0.78, 0.72, 0.38)
+	header.add_child(enemy_line)
+	var extra := ""
+	if battle.mission["objective"] == "PROTECT": extra += "SENTINELA %d PV" % battle.protect_hp
 	var next_turn: Array = battle.mission.get("reinforcements", {}).get(battle.turn + 1, [])
-	if not next_turn.is_empty(): deck_line += "  ·  REFORÇOS EM 1 TURNO"
-	header.add_child(_label(deck_line, 17, Color("e9c891") if not next_turn.is_empty() else Color.WHITE))
+	if not next_turn.is_empty(): extra += ("  ·  " if extra != "" else "") + "REFORÇOS EM 1 TURNO"
+	if extra != "":
+		header.add_child(_label(extra, 17, Color("e9c891")))
 	var left_scroll := ScrollContainer.new()
 	left_scroll.name = "LeftPanel"
-	left_scroll.position = Vector2(20, 115)
-	left_scroll.size = Vector2(290, maxf(170.0, viewport_size.y - 310.0))
+	left_scroll.position = Vector2(20, 132)
+	left_scroll.size = Vector2(290, maxf(120.0, hand_top - 144.0))
 	left_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	hud.add_child(left_scroll)
 	var left := VBoxContainer.new()
@@ -590,12 +615,12 @@ func _render_battle() -> void:
 	left.add_child(_label("INIMIGOS", 22))
 	for actor in battle.living("ENEMY"):
 		_add_actor_button(left, actor)
-	left.add_child(_button("Trocar linha (1x/turno)", func(): selected_action = "move"; _render_battle()))
-	left.add_child(_button("Encerrar turno", func(): selected_card = -1; battle.end_player_turn()))
+	left.add_child(_button("Trocar linha (1x/turno)", func(): selected_action = "move"; card_confirmed = false; inspected_card = -1; feedback = "Aponte o aliado e clique no sprite."; _render_battle()))
+	left.add_child(_button("Encerrar turno", func(): _present_enemy_turn()))
 	var right_scroll := ScrollContainer.new()
 	right_scroll.name = "RightPanel"
-	right_scroll.position = Vector2(viewport_size.x - 295, 115)
-	right_scroll.size = Vector2(275, maxf(170.0, viewport_size.y - 310.0))
+	right_scroll.position = Vector2(viewport_size.x - 295, 132)
+	right_scroll.size = Vector2(275, maxf(120.0, hand_top - 144.0))
 	right_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	hud.add_child(right_scroll)
 	var right := VBoxContainer.new()
@@ -604,7 +629,7 @@ func _render_battle() -> void:
 	right.add_child(_label("CENÁRIO", 22))
 	for index in range(battle.mission.get("environment", []).size()):
 		var object: Dictionary = battle.mission["environment"][index]
-		right.add_child(_button("%s · %d Ímpeto" % [object["name"], object["cost"]], func(): battle.use_environment(index)))
+		right.add_child(_button("%s · %d Iniciativa" % [object["name"], object["cost"]], func(): battle.use_environment(index)))
 	right.add_child(_label("ITENS", 22))
 	for id in battle.items:
 		right.add_child(_button("%s ×%d" % [id.capitalize(), battle.items[id]], func(): selected_action = "item:" + id; selected_card = -1; _render_battle()))
@@ -617,70 +642,42 @@ func _render_battle() -> void:
 	var bottom := HBoxContainer.new()
 	var hand_scroll := ScrollContainer.new()
 	hand_scroll.name = "HandScroller"
-	hand_scroll.position = Vector2(20, viewport_size.y - 95)
-	hand_scroll.size = Vector2(viewport_size.x - 40, 80)
+	hand_scroll.position = Vector2(16, hand_top)
+	hand_scroll.size = Vector2(viewport_size.x - 32, hand_band)
 	hand_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	hand_scroll.clip_contents = false
 	hud.add_child(hand_scroll)
 	bottom.add_theme_constant_override("separation", 8)
 	hand_scroll.add_child(bottom)
 	for index in range(battle.hand.size()):
 		var card: Dictionary = battle.hand[index]
 		var definition: Dictionary = Content.CARDS[card["id"]]
-		var owner: Dictionary = battle.actor_by_id(card["owner"])
-		var button := _button("%s\n%s" % [definition["name"], owner["name"]], func(): _select_card(index), _card_description(definition, card))
-		button.custom_minimum_size = Vector2(132, 68)
-		bottom.add_child(button)
-		card_hit_areas.append(button)
+		var host := _build_hand_card(index, card, definition, hand_h)
+		bottom.add_child(host)
 		_make_3d_card(index, card, definition)
-		if selected_card == index: button.modulate = Color("ffd680")
-	bottom.add_child(_button("Redesenhar carta", func(): selected_action = "redraw"; _render_battle()))
-	hover_hint = _label("Q/E ou LB/RB: cartas · ↑/↓: alvo · Enter/A: confirmar · R/X: redesenhar · T/Y: turno · M: mover · Esc/B: cancelar", 16, Color("c9d1dd"))
-	hover_hint.position = Vector2(20, viewport_size.y - 185)
+		if selected_card == index or inspected_card == index: host.modulate = Color("ffe3b0")
+	bottom.add_child(_button("Redesenhar carta", func(): selected_action = "redraw"; card_confirmed = false; inspected_card = -1; feedback = "Clique na carta para redesenhar."; _render_battle()))
+	hover_hint = _label("Passe o mouse na carta para destacá-la. Clique para ampliar, clique de novo para confirmar. O alvo é o sprite.", 16, Color("c9d1dd"))
+	hover_hint.position = Vector2(20, hand_top - 46)
 	hover_hint.custom_minimum_size.x = viewport_size.x - 40
 	hover_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	hud.add_child(hover_hint)
 	var status := _label("%s%s" % [feedback, "  ·  ALVOS %d/%d" % [chain_targets.size(), Content.CARDS[battle.hand[selected_card]["id"]].get("chain", 1)] if selected_card >= 0 and selected_card < battle.hand.size() and not chain_targets.is_empty() else ""], 19, Color("f7d499"))
-	status.position = Vector2(20, viewport_size.y - 145)
+	status.position = Vector2(20, hand_top - 24)
 	status.custom_minimum_size.x = viewport_size.x - 40
 	status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	hud.add_child(status)
 	_render_actors()
+	if inspected_card >= 0 and inspected_card < battle.hand.size() and battle.phase == "PLAYER":
+		_add_inspect_overlay(inspected_card, viewport_size)
 	visible_uids.clear()
 	for visible_card in battle.hand: visible_uids[visible_card["uid"]] = true
 
 func _add_actor_button(parent: VBoxContainer, actor: Dictionary) -> void:
-	var status_names: Array = actor["statuses"].keys()
 	var text_value := "%s [%s] %d/%d PV +%d" % [actor["name"], "F" if actor["row"] == "front" else "T", actor["hp"], actor["max_hp"], actor["block"] + actor["shield"]]
-	var hint := ", ".join(PackedStringArray(status_names)).replace("_", " ")
-	if selected_card >= 0 and selected_card < battle.hand.size():
-		var preview_chain: Array = []
-		if Content.CARDS[battle.hand[selected_card]["id"]].get("target", "") == "CHAIN":
-			preview_chain = chain_targets.duplicate()
-			preview_chain.append(actor["id"])
-		var estimate: Dictionary = battle.preview(selected_card, actor["id"], preview_chain)
-		if not estimate.is_empty():
-			var owner: Dictionary = battle.actor_by_id(battle.hand[selected_card]["owner"])
-			for id in estimate["targets"]:
-				var line: Dictionary = estimate["targets"][id]
-				var victim: Dictionary = battle.actor_by_id(id)
-				var factor: float = Content.TYPES.get(owner.get("type", ""), {}).get(victim.get("type", ""), 1.0)
-				var type_note := " · vantagem" if factor > 1.0 else " · resistência" if factor < 1.0 else ""
-				var chance_note: String = "possível alvo · " if bool(estimate.get("random", false)) else ""
-				hint += "\n%s%s: −%d PV, resta %d%s%s" % [chance_note, victim["name"], line["damage"], line["hp_after"], " · KO" if line["hp_after"] == 0 else "", type_note]
-				if line["absorbed"] > 0: hint += " · %d absorvido" % line["absorbed"]
-				if line["resist_used"] > 0: hint += " · %d Resistência consumida" % line["resist_used"]
-				if line["row_after"] != victim["row"]: hint += " · move para %s" % ("frente" if line["row_after"] == "front" else "trás")
-				if line["statuses"].size() > 0: hint += " · estados: %s" % ", ".join(PackedStringArray(line["statuses"]))
-				if line["drop_chance"] > 0.0: hint += " · queda: %d%%" % roundi(line["drop_chance"] * 100.0)
-			if estimate["self_effects"].size() > 0: hint += "\nEfeitos no usuário: %s" % ", ".join(PackedStringArray(estimate["self_effects"]))
-			if estimate["other_effects"].size() > 0: hint += "\nOutros efeitos: %s" % ", ".join(PackedStringArray(estimate["other_effects"]))
-			hint += "\nAções após jogar: %d · Ímpeto: %d" % [estimate["plays_after"], estimate["impulse_after"]]
-			if not estimate["playable"]: hint += " · faltam ações, Ímpeto ou acertos"
-	var button := _button(text_value, func(): _choose_target(actor["id"]), hint)
-	button.custom_minimum_size = Vector2(260, 42)
-	if _target_ids().size() > target_cursor and _target_ids()[target_cursor] == actor["id"]:
-		button.modulate = Color("f9d18b")
-	parent.add_child(button)
+	var line := _label(text_value, 16)
+	line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	parent.add_child(line)
 
 func _select_card(index: int) -> void:
 	if sound != null: sound.cue("select", "UI")
@@ -732,8 +729,11 @@ func _choose_target(actor_id: int) -> void:
 	chain_targets.clear()
 	if successful:
 		selected_card = -1
+		card_confirmed = false
+		inspected_card = -1
+		selected_action = ""
 	else:
-		feedback = "Sem ação, Ímpeto, alcance ou alvo válido."
+		feedback = "Sem ação, Iniciativa, alcance ou alvo válido."
 	_render_battle()
 
 func _render_actors() -> void:
@@ -824,6 +824,15 @@ func _create_actor_visual(actor: Dictionary) -> Node3D:
 	plate.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	plate.position.y = 2.55
 	body.add_child(plate)
+	var area := Area3D.new()
+	area.set_meta("actor_id", int(actor["id"]))
+	body.add_child(area)
+	var shape := CollisionShape3D.new()
+	var box := BoxShape3D.new()
+	box.size = Vector3(1.15, 2.3, 0.45)
+	shape.shape = box
+	shape.position.y = 1.15
+	area.add_child(shape)
 	return body
 
 func _make_3d_card(index: int, card: Dictionary, definition: Dictionary) -> void:
@@ -871,22 +880,11 @@ func _make_3d_card(index: int, card: Dictionary, definition: Dictionary) -> void
 	material.albedo_texture = view.get_texture()
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	face.material_override = material
-	face.position = Vector3((index - (battle.hand.size() - 1) / 2.0) * 1.1, 0.92, 6.6)
+	face.position = Vector3((index - (battle.hand.size() - 1) / 2.0) * 1.1, -40.0, 6.6)
+	face.visible = false
 	face.rotation_degrees.x = -18
 	cards_3d.add_child(face)
 	card_meshes.append(face)
-	if not visible_uids.has(card["uid"]) and not reduce_motion:
-		face.position.y = -1.4
-		create_tween().tween_property(face, "position:y", 0.92, 0.32 / animation_speed)
-	var hit_area := Area3D.new()
-	hit_area.set_meta("card_index", index)
-	face.add_child(hit_area)
-	var hit_shape := CollisionShape3D.new()
-	var solid := BoxShape3D.new()
-	solid.size = Vector3(1.14, 1.72, 0.13)
-	hit_shape.shape = solid
-	hit_area.add_child(hit_shape)
-	_add_box(Vector3(0, 0, -0.035), Vector3(1.18, 1.76, 0.055), Color("151b30"), face)
 
 func _animate_card_depart(index: int) -> void:
 	if index < 0 or index >= card_meshes.size() or reduce_motion: return
@@ -932,43 +930,325 @@ func _target_ids() -> Array[int]:
 		ids.append(actor["id"])
 	return ids
 
-func _input(event: InputEvent) -> void:
+
+func _resource_line(side: String) -> String:
+	var plays: int = battle.card_plays if side == "ALLY" else battle.enemy_card_plays
+	var initiative: int = battle.impulse if side == "ALLY" else battle.enemy_impulse
+	var redraw_left: int = battle.redraws if side == "ALLY" else battle.enemy_redraws
+	var move_left: int = battle.moves if side == "ALLY" else battle.enemy_moves
+	var deck_n: int = battle.deck.size() if side == "ALLY" else battle.enemy_deck.size()
+	var discard_n: int = battle.discard.size() if side == "ALLY" else battle.enemy_discard.size()
+	return "AÇÕES %d  ·  INICIATIVA %d/%d  ·  RECOMPRA %d  ·  MOVER %d  ·  DECK %d  ·  DESCARTE %d" % [plays, initiative, int(battle.rules["impulse_max"]), redraw_left, move_left, deck_n, discard_n]
+
+func _make_portrait(flip: bool) -> TextureRect:
+	var rect := TextureRect.new()
+	rect.name = "PortraitRight" if flip else "PortraitLeft"
+	rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	rect.flip_h = flip
+	rect.hide()
+	return rect
+
+func _layout_portraits() -> void:
+	if portrait_left == null or portrait_right == null: return
+	var vp := get_viewport().get_visible_rect().size
+	var height := vp.y * 0.62
+	var width := height * 0.56
+	portrait_left.size = Vector2(width, height)
+	portrait_left.position = Vector2(12, (vp.y - height) * 0.42)
+	portrait_right.size = Vector2(width, height)
+	portrait_right.position = Vector2(vp.x - width - 12, (vp.y - height) * 0.42)
+
+func _sprite_region(path: String, sheet: Texture2D) -> Rect2:
+	if path.ends_with("hero_rogue.png") or path.ends_with("en_dog.png"):
+		return Rect2(Vector2.ZERO, sheet.get_size())
+	if path.ends_with("hero_wizard.png"):
+		return Rect2(0, 0, minf(420.0, sheet.get_width()), minf(768.0, sheet.get_height()))
+	return Rect2(0, 0, sheet.get_width() / 9.0, sheet.get_height() / 6.0)
+
+func _unit_portrait(actor: Dictionary) -> Texture2D:
+	var portrait_path := str(actor.get("portrait", ""))
+	if portrait_path != "" and ResourceLoader.exists(portrait_path):
+		return load(portrait_path)
+	var sprite_path := str(actor.get("sprite", ""))
+	var full := sprite_path.replace(".png", "_full.png")
+	if full != sprite_path and ResourceLoader.exists(full):
+		return load(full)
+	if sprite_path == "" or not ResourceLoader.exists(sprite_path):
+		return null
+	var sheet: Texture2D = load(sprite_path)
+	var atlas := AtlasTexture.new()
+	atlas.atlas = sheet
+	atlas.region = _sprite_region(sprite_path, sheet)
+	return atlas
+
+func _card_art(actor: Dictionary, definition: Dictionary, card_id: String) -> Texture2D:
+	var configured := str(definition.get("art", ""))
+	if configured != "" and ResourceLoader.exists(configured):
+		return load(configured)
+	var by_id := "res://" + str(actor.get("archetype", "")) + "_" + card_id + ".png"
+	if ResourceLoader.exists(by_id):
+		return load(by_id)
+	var by_name := "res://" + str(actor.get("name", "")).replace(" ", "") + "_" + str(definition.get("name", "")).replace(" ", "") + ".png"
+	if ResourceLoader.exists(by_name):
+		return load(by_name)
+	return _unit_portrait(actor)
+
+func _show_actor_portrait(actor_id: int, sticky: bool) -> void:
+	if battle == null or fx_overlay == null: return
+	if not is_instance_valid(portrait_left) or not is_instance_valid(portrait_right):
+		portrait_left = _make_portrait(false)
+		portrait_right = _make_portrait(true)
+		fx_overlay.add_child(portrait_left)
+		fx_overlay.add_child(portrait_right)
+	var actor: Dictionary = battle.actor_by_id(actor_id)
+	if actor.is_empty(): return
+	_layout_portraits()
+	var widget := portrait_left if str(actor.get("side", "")) == "ALLY" else portrait_right
+	widget.texture = _unit_portrait(actor)
+	widget.show()
+	if sticky:
+		portrait_sticky_until = maxi(portrait_sticky_until, Time.get_ticks_msec() + int(1100.0 / maxf(animation_speed, 0.25)))
+
+func _hide_idle_portraits() -> void:
+	if Time.get_ticks_msec() < portrait_sticky_until: return
+	if hovered_card >= 0 or hovered_actor >= 0: return
+	if portrait_left != null: portrait_left.hide()
+	if portrait_right != null: portrait_right.hide()
+
+func _build_hand_card(index: int, card: Dictionary, definition: Dictionary, height: float) -> Panel:
+	var width := height * 0.68
+	var host := Panel.new()
+	host.custom_minimum_size = Vector2(width, height)
+	host.mouse_filter = Control.MOUSE_FILTER_STOP
+	host.clip_contents = true
+	var style := StyleBoxFlat.new()
+	var hot := hovered_card == index or inspected_card == index or selected_card == index
+	style.bg_color = Color("1b2438")
+	style.border_color = Color("f0c27a") if hot else Color("6d5838")
+	style.set_border_width_all(6 if hot else 3)
+	style.set_corner_radius_all(12)
+	host.add_theme_stylebox_override("panel", style)
+	var owner: Dictionary = battle.actor_by_id(int(card["owner"]))
+	var art := TextureRect.new()
+	art.texture = _card_art(owner, definition, str(card["id"]))
+	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	art.position = Vector2(8, 8)
+	art.size = Vector2(width - 16, height - 44)
+	host.add_child(art)
+	var who := _label(str(owner.get("name", "")), 14, Color("f6e2b8"))
+	who.position = Vector2(10, 10)
+	who.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	host.add_child(who)
+	var title := _label(definition["name"], 16 if height < 280.0 else 28, Color("f6e2b8"))
+	title.position = Vector2(10, height - 34 if height < 280.0 else height - 42)
+	title.size = Vector2(width - 20, 36)
+	title.clip_text = true
+	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	host.add_child(title)
+	if height >= 280.0:
+		art.size = Vector2(width - 16, height * 0.62)
+		var info := _label(_card_description(definition, card), 18, Color("d5deea"))
+		info.position = Vector2(14, height * 0.66)
+		info.size = Vector2(width - 28, height * 0.22)
+		info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		info.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		host.add_child(info)
+	host.mouse_entered.connect(func() -> void:
+		_note_card_hover(index, host, width, height)
+	)
+	host.mouse_exited.connect(func() -> void:
+		if hovered_card == index and inspected_card != index:
+			hovered_card = -1
+			host.scale = Vector2.ONE
+			host.z_index = 0
+			_hide_idle_portraits()
+	)
+	host.gui_input.connect(func(event: InputEvent) -> void: _on_card_gui(event, index))
+	return host
+
+func _note_card_hover(index: int, host: Control, width: float, height: float) -> void:
 	if battle == null or battle.phase != "PLAYER": return
+	var changed_hover := hovered_card != index
+	hovered_card = index
+	if changed_hover and sound != null: sound.cue("hover", "UI")
+	if inspected_card != index:
+		host.pivot_offset = Vector2(width * 0.5, height)
+		host.scale = Vector2(1.28, 1.28)
+		host.z_index = 4
+	if index >= 0 and index < battle.hand.size():
+		_show_actor_portrait(int(battle.hand[index]["owner"]), false)
+		if is_instance_valid(hover_hint):
+			hover_hint.text = _card_description(Content.CARDS[battle.hand[index]["id"]], battle.hand[index])
+
+func _on_card_gui(event: InputEvent, index: int) -> void:
+	if battle == null or battle.phase != "PLAYER" or not event is InputEventMouseButton: return
+	var click := event as InputEventMouseButton
+	if click.button_index != MOUSE_BUTTON_LEFT or not click.pressed: return
+	if selected_action == "redraw":
+		selected_action = ""
+		_animate_card_depart(index)
+		battle.redraw(index)
+		get_viewport().set_input_as_handled()
+		return
+	if inspected_card == index:
+		suppress_inspect_cancel = true
+		call_deferred("_confirm_inspected")
+	else:
+		inspected_card = index
+		selected_card = -1
+		card_confirmed = false
+		_show_actor_portrait(int(battle.hand[index]["owner"]), false)
+		call_deferred("_render_battle")
+	get_viewport().set_input_as_handled()
+
+func _confirm_inspected() -> void:
+	suppress_inspect_cancel = false
+	var index := inspected_card
+	if battle == null or index < 0 or index >= battle.hand.size(): return
+	var definition: Dictionary = Content.CARDS[battle.hand[index]["id"]]
+	var kind := str(definition.get("target", "ENEMY"))
+	inspected_card = -1
+	selected_card = index
+	card_confirmed = true
+	selected_action = ""
+	_show_actor_portrait(int(battle.hand[index]["owner"]), true)
+	if kind == "SELF":
+		_choose_target(int(battle.hand[index]["owner"]))
+		return
+	if kind == "ALL_ALLIES" or kind == "ALL_ENEMIES":
+		var pool: Array = battle.living("ALLY" if kind == "ALL_ALLIES" else "ENEMY")
+		if not pool.is_empty():
+			_choose_target(int(pool[0]["id"]))
+		return
+	feedback = "Aponte o sprite do alvo e clique para confirmar."
+	_render_battle()
+
+func _cancel_inspect() -> void:
+	if suppress_inspect_cancel:
+		return
+	inspected_card = -1
+	if not card_confirmed:
+		selected_card = -1
+	feedback = ""
+	_render_battle()
+
+func _add_inspect_overlay(index: int, viewport_size: Vector2) -> void:
+	var blocker := Button.new()
+	blocker.flat = true
+	blocker.focus_mode = Control.FOCUS_NONE
+	blocker.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	blocker.z_index = 8
+	blocker.pressed.connect(_cancel_inspect)
+	hud.add_child(blocker)
+	var height := viewport_size.y * 0.5
+	var card: Dictionary = battle.hand[index]
+	var host := _build_hand_card(index, card, Content.CARDS[card["id"]], height)
+	host.scale = Vector2.ONE
+	host.z_index = 9
+	var width := height * 0.68
+	host.size = Vector2(width, height)
+	host.position = Vector2((viewport_size.x - width) * 0.5, (viewport_size.y - height) * 0.5)
+	hud.add_child(host)
+
+func _present_enemy_turn() -> void:
+	if enemy_presenting or battle == null or battle.phase != "PLAYER": return
+	enemy_presenting = true
+	enemy_steps = 0
+	selected_card = -1
+	inspected_card = -1
+	card_confirmed = false
+	selected_action = ""
+	chain_targets.clear()
+	battle.begin_enemy_phase()
+	_step_enemy()
+
+func _step_enemy() -> void:
+	if battle == null or battle.phase != "ENEMY":
+		enemy_presenting = false
+		return
+	enemy_steps += 1
+	if enemy_steps > 16:
+		battle.finish_enemy_phase()
+		enemy_presenting = false
+		return
+	await get_tree().create_timer(0.48 / maxf(animation_speed, 0.25)).timeout
+	if battle == null or battle.phase != "ENEMY":
+		enemy_presenting = false
+		return
+	if battle.enemy_step():
+		_step_enemy()
+	else:
+		battle.finish_enemy_phase()
+		enemy_presenting = false
+
+func _input(event: InputEvent) -> void:
+	if battle == null or battle.phase != "PLAYER" or enemy_presenting: return
 	if event is InputEventKey and event.echo: return
 	if event.is_action_pressed("hotn_next") or event.is_action_pressed("hotn_previous"):
 		if battle.hand.is_empty(): return
 		var step := 1 if event.is_action_pressed("hotn_next") else -1
-		_select_card(posmod(selected_card + step, battle.hand.size()))
+		var base := inspected_card if inspected_card >= 0 else hovered_card
+		hovered_card = posmod(base + step, battle.hand.size())
+		inspected_card = hovered_card
+		card_confirmed = false
+		selected_card = -1
+		_show_actor_portrait(int(battle.hand[hovered_card]["owner"]), false)
+		_render_battle()
 	elif event.is_action_pressed("hotn_target_next") or event.is_action_pressed("hotn_target_previous"):
 		var ids := _target_ids()
 		if ids.is_empty(): return
 		target_cursor = posmod(target_cursor + (1 if event.is_action_pressed("hotn_target_next") else -1), ids.size())
+		hovered_actor = ids[target_cursor]
+		_show_actor_portrait(hovered_actor, false)
 		_render_battle()
 	elif event.is_action_pressed("hotn_confirm"):
-		var ids := _target_ids()
-		if not ids.is_empty(): _choose_target(ids[target_cursor % ids.size()])
+		if inspected_card >= 0 and not card_confirmed:
+			_confirm_inspected()
+		elif card_confirmed or selected_action != "":
+			var ids := _target_ids()
+			if not ids.is_empty(): _activate_actor(ids[target_cursor % ids.size()])
+		elif hovered_card >= 0:
+			inspected_card = hovered_card
+			_render_battle()
 	elif event.is_action_pressed("hotn_redraw"):
 		selected_action = "redraw"
-		feedback = "Selecione a carta para redesenhar."
+		card_confirmed = false
+		inspected_card = -1
+		feedback = "Clique na carta para redesenhar."
 		_render_battle()
 	elif event.is_action_pressed("hotn_move"):
 		selected_action = "move"
-		feedback = "Selecione o aliado para trocar de linha."
+		card_confirmed = false
+		inspected_card = -1
+		feedback = "Aponte o aliado e clique no sprite."
 		_render_battle()
 	elif event.is_action_pressed("hotn_end"):
-		selected_card = -1
-		battle.end_player_turn()
+		_present_enemy_turn()
 	elif event.is_action_pressed("hotn_cancel"):
 		selected_card = -1
+		inspected_card = -1
+		card_confirmed = false
 		selected_action = ""
 		chain_targets.clear()
+		feedback = ""
 		_render_battle()
 	else:
 		return
 	get_viewport().set_input_as_handled()
 
+func _activate_actor(actor_id: int) -> void:
+	if battle == null or battle.phase != "PLAYER": return
+	hovered_actor = actor_id
+	_show_actor_portrait(actor_id, true)
+	if selected_action == "move" or selected_action.begins_with("item:") or (card_confirmed and selected_card >= 0):
+		_choose_target(actor_id)
+
 func _unhandled_input(input: InputEvent) -> void:
-	if battle == null or battle.phase != "PLAYER" or not input is InputEventMouseButton:
+	if battle == null or battle.phase != "PLAYER" or enemy_presenting or not input is InputEventMouseButton:
 		return
 	var click := input as InputEventMouseButton
 	if click.button_index != MOUSE_BUTTON_LEFT or not click.pressed:
@@ -979,8 +1259,8 @@ func _unhandled_input(input: InputEvent) -> void:
 	query.collide_with_areas = true
 	query.collide_with_bodies = false
 	var hit := get_world_3d().direct_space_state.intersect_ray(query)
-	if hit.has("collider") and hit["collider"].has_meta("card_index"):
-		_select_card(int(hit["collider"].get_meta("card_index")))
+	if hit.has("collider") and hit["collider"].has_meta("actor_id"):
+		_activate_actor(int(hit["collider"].get_meta("actor_id")))
 		get_viewport().set_input_as_handled()
 
 func _card_description(definition: Dictionary, card: Dictionary = {}) -> String:
@@ -995,8 +1275,8 @@ func _card_description(definition: Dictionary, card: Dictionary = {}) -> String:
 	if definition.has("full_combo"): parts.append("COMBO COMPLETO: todos os acertos no mesmo alvo")
 	if definition.get("reach", false): parts.append("ALCANCE")
 	if definition.get("chain", 0) > 0: parts.append("CHAIN %d" % definition["chain"])
-	if definition.get("cost", 0) > 0: parts.append("−%d Ímpeto" % definition["cost"])
-	if definition.get("gain", 0) > 0: parts.append("+%d Ímpeto" % definition["gain"])
+	if definition.get("cost", 0) > 0: parts.append("−%d Iniciativa" % definition["cost"])
+	if definition.get("gain", 0) > 0: parts.append("+%d Iniciativa" % definition["gain"])
 	for effect in definition.get("effects", []):
 		match effect["kind"]:
 			"STATUS": parts.append("%s (%d turno(s), %d carga(s))" % [str(effect["id"]).replace("_", " ").capitalize(), effect.get("duration", 1), effect.get("stacks", 1)])
@@ -1022,29 +1302,32 @@ func _process(delta: float) -> void:
 	for i in range(unit_sprites.size()):
 		if is_instance_valid(unit_sprites[i]):
 			unit_sprites[i].position.y = 1.1 + (0.0 if reduce_motion else sin(Time.get_ticks_msec() * 0.002 + i) * 0.045)
-	if battle != null and battle.phase == "PLAYER":
+	if battle != null and battle.phase == "PLAYER" and camera != null:
 		var pointer := get_viewport().get_mouse_position()
 		var origin := camera.project_ray_origin(pointer)
 		var query := PhysicsRayQueryParameters3D.create(origin, origin + camera.project_ray_normal(pointer) * 80.0)
 		query.collide_with_areas = true
 		query.collide_with_bodies = false
 		var hit := get_world_3d().direct_space_state.intersect_ray(query)
-		var new_hover: int = int(hit["collider"].get_meta("card_index")) if hit.has("collider") and hit["collider"].has_meta("card_index") else -1
-		if new_hover != hovered_card:
-			hovered_card = new_hover
-			if hovered_card >= 0 and hovered_card < battle.hand.size():
-				sound.cue("hover", "UI")
-				var card: Dictionary = battle.hand[hovered_card]
-				if is_instance_valid(hover_hint): hover_hint.text = _card_description(Content.CARDS[card["id"]], card)
-			elif is_instance_valid(hover_hint): hover_hint.text = "Q/E ou LB/RB: cartas · ↑/↓: alvo · Enter/A: confirmar · R/X: redesenhar · T/Y: turno · M: mover · Esc/B: cancelar"
-	for index in range(min(card_meshes.size(), card_hit_areas.size())):
-		if not is_instance_valid(card_meshes[index]) or not is_instance_valid(card_hit_areas[index]): continue
-		var active := selected_card == index or hovered_card == index
-		var target_y := 1.18 if active else 0.92
-		var blend := minf(1.0, delta * 8.0 * animation_speed) if not reduce_motion else 1.0
-		card_meshes[index].position.y = lerpf(card_meshes[index].position.y, target_y, blend)
-		card_meshes[index].rotation_degrees.y = lerpf(card_meshes[index].rotation_degrees.y, 0.0 if active else (index - (card_meshes.size() - 1) / 2.0) * 2.0, blend)
-		card_meshes[index].scale = card_meshes[index].scale.lerp(Vector3.ONE * (1.14 if active else 1.0), blend)
+		var new_actor := int(hit["collider"].get_meta("actor_id")) if hit.has("collider") and hit["collider"].has_meta("actor_id") else -1
+		if new_actor != hovered_actor:
+			hovered_actor = new_actor
+			if hovered_actor >= 0:
+				_show_actor_portrait(hovered_actor, false)
+				if card_confirmed and selected_card >= 0 and selected_card < battle.hand.size() and is_instance_valid(hover_hint):
+					var estimate: Dictionary = battle.preview(selected_card, hovered_actor, chain_targets)
+					if not estimate.is_empty():
+						hover_hint.text = "Alvo %s · dano previsto na prévia" % battle.actor_by_id(hovered_actor).get("name", "")
+	for id in actor_nodes.keys():
+		var body: Node3D = actor_nodes[id]
+		if not is_instance_valid(body): continue
+		var avatar: Sprite3D = body.get_node_or_null("Avatar")
+		if avatar == null: continue
+		var hot := int(id) == hovered_actor
+		avatar.modulate = Color("ffe1a8") if hot else Color.WHITE
+	if portrait_sticky_until > 0 and Time.get_ticks_msec() >= portrait_sticky_until:
+		portrait_sticky_until = 0
+		_hide_idle_portraits()
 
 func _save_config() -> void:
 	var config := ConfigFile.new()
@@ -1067,7 +1350,7 @@ func _load_config() -> void:
 		var saved_team: Array = config.get_value("game", "team", team)
 		var seen_heroes := {}
 		for id in saved_team: seen_heroes[id] = true
-		if saved_team.size() == int(Content.RULES["team_size"]) and seen_heroes.size() == saved_team.size() and saved_team.all(func(id): return Content.HEROES.has(id)):
+		if saved_team.size() == int(Content.RULES["team_size"]) and seen_heroes.size() == saved_team.size() and saved_team.all(func(id): return Content.HEROES.has(id) and Content.HEROES[id].get("playable", true)):
 			team.clear()
 			for id in saved_team: team.append(id)
 		equipped = config.get_value("game", "equipped", {})

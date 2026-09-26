@@ -35,7 +35,9 @@ func clear_actors() -> void:
 	positions.clear()
 	for child in get_children(): child.queue_free()
 	if overlay != null:
-		for child in overlay.get_children(): child.queue_free()
+		for child in overlay.get_children():
+			if str(child.name) in ["PortraitLeft", "PortraitRight"]: continue
+			child.queue_free()
 	camera_position = camera_origin
 	shake_time = 0.0
 

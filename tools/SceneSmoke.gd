@@ -63,9 +63,10 @@ func _run() -> void:
 		var left_panel: ScrollContainer = hud.get_node("LeftPanel")
 		var right_panel: ScrollContainer = hud.get_node("RightPanel")
 		var hand_scroller: ScrollContainer = hud.get_node("HandScroller")
+		var space := game.get_viewport().get_visible_rect().size
 		assert(left_panel.position.x + left_panel.size.x < right_panel.position.x, "Painéis laterais não podem se sobrepor")
 		assert(left_panel.position.y + left_panel.size.y < hand_scroller.position.y, "Painéis devem terminar antes da mão")
-		assert(hand_scroller.position.x + hand_scroller.size.x <= resolution.x, "Mão precisa caber na viewport")
+		assert(hand_scroller.position.x + hand_scroller.size.x <= space.x + 1.0, "Mão precisa caber na viewport")
 	battle.end_player_turn()
 	await process_frame
 	assert(battle.phase in ["PLAYER", "FINISHED"] and battle.turn >= 2, "O turno inimigo deve terminar")
