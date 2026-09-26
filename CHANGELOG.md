@@ -1,5 +1,11 @@
 # Histórico da cópia de desenvolvimento
 
+## Pacotes opcionais de cartas e entidades
+
+- Incluídos `addons/hotn3_external_cards/` (cartas `ms_`) e `addons/hotn3_entities/` (elenco `ent_`) sem sobrescrever `Content.gd` nem `BattleState.gd`.
+- `PackBridge.gd` mescla definições para a interface e roteia jogada/redesenho. O menu oferece demos jogáveis do elenco do anexo e das cartas externas.
+- O conteúdo padrão de HotN3 continua sendo o caminho principal; os pacotes só entram pelas demos ou por IDs `ms_`/`ent_` na mão.
+
 ## Iniciativa, pool único e cartas
 
 - O recurso jogável continua sendo `impulse` (máximo 10), agora exibido como Iniciativa. O antigo modificador de iniciativa saiu das regras.

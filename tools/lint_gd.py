@@ -7,6 +7,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 FILES = [*sorted((ROOT / "game").glob("*.gd")), *sorted((ROOT / "tools").glob("*.gd"))]
+for _addon in sorted((ROOT / "addons").glob("*")):
+	if _addon.is_dir():
+		FILES.extend(sorted(_addon.glob("*.gd")))
 
 
 def check(path):

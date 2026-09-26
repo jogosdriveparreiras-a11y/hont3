@@ -1,0 +1,4435 @@
+{
+  "format": 1,
+  "cards": {
+    "ms_hunter_charge": {
+      "id": "ms_hunter_charge",
+      "owner": "hunter",
+      "source_name": "Charge",
+      "name": "Charge",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "push",
+          "2"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1
+    },
+    "ms_hunter_holy_flame": {
+      "id": "ms_hunter_holy_flame",
+      "owner": "hunter",
+      "source_name": "Holy Flame",
+      "name": "Holy Flame",
+      "class": "ATTACK",
+      "target": "ANY_UNIT",
+      "actions": [
+        [
+          "choice",
+          "hit",
+          "1",
+          "heal",
+          "2"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1
+    },
+    "ms_hunter_holy_spark": {
+      "id": "ms_hunter_holy_spark",
+      "owner": "hunter",
+      "source_name": "Holy Spark",
+      "name": "Holy Spark",
+      "class": "ATTACK",
+      "target": "ANY_UNIT",
+      "actions": [
+        [
+          "choice",
+          "hit",
+          "1",
+          "cure"
+        ],
+        [
+          "quick"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1,
+      "quick": true
+    },
+    "ms_hunter_last_sight": {
+      "id": "ms_hunter_last_sight",
+      "owner": "hunter",
+      "source_name": "Last Sight",
+      "name": "Last Sight",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "ko",
+          "conceal"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1
+    },
+    "ms_hunter_merciless": {
+      "id": "ms_hunter_merciless",
+      "owner": "hunter",
+      "source_name": "Merciless",
+      "name": "Merciless",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "bonus_status",
+          "stun",
+          "4"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1
+    },
+    "ms_hunter_morning_star": {
+      "id": "ms_hunter_morning_star",
+      "owner": "hunter",
+      "source_name": "Morning Star",
+      "name": "Morning Star",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "grow",
+          "morning_star",
+          "0.5",
+          "2"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1
+    },
+    "ms_hunter_quick_slash": {
+      "id": "ms_hunter_quick_slash",
+      "owner": "hunter",
+      "source_name": "Quick Slash",
+      "name": "Quick Slash",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "quick"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1,
+      "quick": true
+    },
+    "ms_hunter_slash": {
+      "id": "ms_hunter_slash",
+      "owner": "hunter",
+      "source_name": "Slash",
+      "name": "Slash",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "push",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1
+    },
+    "ms_hunter_wild_strike": {
+      "id": "ms_hunter_wild_strike",
+      "owner": "hunter",
+      "source_name": "Wild Strike",
+      "name": "Wild Strike",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "2"
+        ],
+        [
+          "self_status",
+          "vulnerable",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1
+    },
+    "ms_hunter_all_out": {
+      "id": "ms_hunter_all_out",
+      "owner": "hunter",
+      "source_name": "All Out",
+      "name": "All Out",
+      "class": "POWER",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "2"
+        ],
+        [
+          "discard_hand"
+        ],
+        [
+          "draw",
+          "2"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 1
+    },
+    "ms_hunter_annihilation": {
+      "id": "ms_hunter_annihilation",
+      "owner": "hunter",
+      "source_name": "Annihilation",
+      "name": "Annihilation",
+      "class": "POWER",
+      "target": "ENEMY_ROW",
+      "actions": [
+        [
+          "hit_per_impulse",
+          "0.5"
+        ],
+        [
+          "consume_all"
+        ],
+        [
+          "exhaust"
+        ]
+      ],
+      "rarity": "LEGENDARY",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 0,
+      "variable_cost": true,
+      "exhaust": true
+    },
+    "ms_hunter_bands_of_fire": {
+      "id": "ms_hunter_bands_of_fire",
+      "owner": "hunter",
+      "source_name": "Bands of Fire",
+      "name": "Bands of Fire",
+      "class": "POWER",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "push",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 1
+    },
+    "ms_hunter_bladestorm": {
+      "id": "ms_hunter_bladestorm",
+      "owner": "hunter",
+      "source_name": "Bladestorm",
+      "name": "Bladestorm",
+      "class": "POWER",
+      "target": "ENEMY_ROW",
+      "actions": [
+        [
+          "hit",
+          "2"
+        ],
+        [
+          "push",
+          "2"
+        ]
+      ],
+      "rarity": "LEGENDARY",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 4
+    },
+    "ms_hunter_fury": {
+      "id": "ms_hunter_fury",
+      "owner": "hunter",
+      "source_name": "Fury",
+      "name": "Fury",
+      "class": "POWER",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "2"
+        ],
+        [
+          "status",
+          "vulnerable",
+          "1"
+        ],
+        [
+          "final"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 2,
+      "final": true
+    },
+    "ms_hunter_guarding_strike": {
+      "id": "ms_hunter_guarding_strike",
+      "owner": "hunter",
+      "source_name": "Guarding Strike",
+      "name": "Guarding Strike",
+      "class": "POWER",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "2"
+        ],
+        [
+          "hand_block",
+          "0.1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 2
+    },
+    "ms_hunter_holy_burst": {
+      "id": "ms_hunter_holy_burst",
+      "owner": "hunter",
+      "source_name": "Holy Burst",
+      "name": "Holy Burst",
+      "class": "POWER",
+      "target": "ENEMY_ROW",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "heal_all",
+          "2"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 4
+    },
+    "ms_hunter_mindbreaker": {
+      "id": "ms_hunter_mindbreaker",
+      "owner": "hunter",
+      "source_name": "Mindbreaker",
+      "name": "Mindbreaker",
+      "class": "POWER",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "status",
+          "berserk_enemy",
+          "2"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 2
+    },
+    "ms_hunter_patience": {
+      "id": "ms_hunter_patience",
+      "owner": "hunter",
+      "source_name": "Patience",
+      "name": "Patience",
+      "class": "POWER",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "4"
+        ],
+        [
+          "hand_cost_down"
+        ],
+        [
+          "exhaust"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 6,
+      "exhaust": true
+    },
+    "ms_hunter_summon_charlie": {
+      "id": "ms_hunter_summon_charlie",
+      "owner": "hunter",
+      "source_name": "Summon Charlie",
+      "name": "Summon Charlie",
+      "class": "POWER",
+      "target": "SELF",
+      "actions": [
+        [
+          "summon",
+          "charlie",
+          "2"
+        ],
+        [
+          "draw",
+          "2"
+        ],
+        [
+          "exhaust"
+        ]
+      ],
+      "rarity": "LEGENDARY",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 4,
+      "exhaust": true
+    },
+    "ms_hunter_whip": {
+      "id": "ms_hunter_whip",
+      "owner": "hunter",
+      "source_name": "Whip",
+      "name": "Whip",
+      "class": "POWER",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "push",
+          "2"
+        ],
+        [
+          "discard_random"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 1
+    },
+    "ms_hunter_call_to_arms": {
+      "id": "ms_hunter_call_to_arms",
+      "owner": "hunter",
+      "source_name": "Call To Arms",
+      "name": "Call To Arms",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "double_gain",
+          "2"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_hunter_dark_blessing": {
+      "id": "ms_hunter_dark_blessing",
+      "owner": "hunter",
+      "source_name": "Dark Blessing",
+      "name": "Dark Blessing",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "upgrade_hand"
+        ],
+        [
+          "self_damage",
+          "1.5"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_hunter_dark_heal": {
+      "id": "ms_hunter_dark_heal",
+      "owner": "hunter",
+      "source_name": "Dark Heal",
+      "name": "Dark Heal",
+      "class": "SKILL",
+      "target": "ALLY",
+      "actions": [
+        [
+          "full_heal"
+        ],
+        [
+          "cure"
+        ],
+        [
+          "self_damage_hp",
+          "0.25"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_hunter_deadly_ground": {
+      "id": "ms_hunter_deadly_ground",
+      "owner": "hunter",
+      "source_name": "Deadly Ground",
+      "name": "Deadly Ground",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "hazard",
+          "light"
+        ],
+        [
+          "hazard",
+          "dark"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_hunter_fortify": {
+      "id": "ms_hunter_fortify",
+      "owner": "hunter",
+      "source_name": "Fortify",
+      "name": "Fortify",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "block_hp",
+          "0.3"
+        ],
+        [
+          "self_status",
+          "counter",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_hunter_heal": {
+      "id": "ms_hunter_heal",
+      "owner": "hunter",
+      "source_name": "Heal",
+      "name": "Heal",
+      "class": "SKILL",
+      "target": "ALLY",
+      "actions": [
+        [
+          "heal",
+          "3"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_hunter_holy_gift": {
+      "id": "ms_hunter_holy_gift",
+      "owner": "hunter",
+      "source_name": "Holy Gift",
+      "name": "Holy Gift",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "retain_next",
+          "1"
+        ],
+        [
+          "exhaust"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2,
+      "exhaust": true
+    },
+    "ms_hunter_inspire": {
+      "id": "ms_hunter_inspire",
+      "owner": "hunter",
+      "source_name": "Inspire",
+      "name": "Inspire",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "zero_random_heroic"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_hunter_mindbender": {
+      "id": "ms_hunter_mindbender",
+      "owner": "hunter",
+      "source_name": "Mindbender",
+      "name": "Mindbender",
+      "class": "SKILL",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "mind_attack",
+          "1"
+        ],
+        [
+          "exhaust"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2,
+      "exhaust": true
+    },
+    "ms_hunter_wrath": {
+      "id": "ms_hunter_wrath",
+      "owner": "hunter",
+      "source_name": "Wrath",
+      "name": "Wrath",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "critical_hand"
+        ],
+        [
+          "self_status",
+          "critical_draw",
+          "2"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_blade_quick_strike": {
+      "id": "ms_blade_quick_strike",
+      "owner": "blade",
+      "source_name": "Quick Strike",
+      "name": "Quick Strike",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "quick"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1,
+      "quick": true
+    },
+    "ms_blade_strike": {
+      "id": "ms_blade_strike",
+      "owner": "blade",
+      "source_name": "Strike",
+      "name": "Strike",
+      "class": "ATTACK",
+      "target": "CHAIN",
+      "actions": [
+        [
+          "hit",
+          "0.5"
+        ],
+        [
+          "chain",
+          "3"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1,
+      "chain": 3
+    },
+    "ms_blade_make_em_bleed": {
+      "id": "ms_blade_make_em_bleed",
+      "owner": "blade",
+      "source_name": "Make 'em Bleed",
+      "name": "Make 'em Bleed",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "draw_owner",
+          "1"
+        ],
+        [
+          "self_status",
+          "make_em_bleed",
+          "2"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_blade_relentless": {
+      "id": "ms_blade_relentless",
+      "owner": "blade",
+      "source_name": "Relentless",
+      "name": "Relentless",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "bonus_damaged",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1
+    },
+    "ms_blade_reaper": {
+      "id": "ms_blade_reaper",
+      "owner": "blade",
+      "source_name": "Reaper",
+      "name": "Reaper",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "consume_bleed"
+        ],
+        [
+          "ko",
+          "strengthened"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1
+    },
+    "ms_blade_the_hunger": {
+      "id": "ms_blade_the_hunger",
+      "owner": "blade",
+      "source_name": "The Hunger",
+      "name": "The Hunger",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "mark_bleeding",
+          "2"
+        ],
+        [
+          "heal_per_bleed",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_blade_savage": {
+      "id": "ms_blade_savage",
+      "owner": "blade",
+      "source_name": "Savage",
+      "name": "Savage",
+      "class": "POWER",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "2"
+        ],
+        [
+          "bonus_block",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 2
+    },
+    "ms_blade_stake": {
+      "id": "ms_blade_stake",
+      "owner": "blade",
+      "source_name": "Stake",
+      "name": "Stake",
+      "class": "POWER",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "2"
+        ],
+        [
+          "lifesteal"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 3
+    },
+    "ms_blade_daywalker": {
+      "id": "ms_blade_daywalker",
+      "owner": "blade",
+      "source_name": "Daywalker",
+      "name": "Daywalker",
+      "class": "POWER",
+      "target": "CHAIN",
+      "actions": [
+        [
+          "hit",
+          "0.8"
+        ],
+        [
+          "chain",
+          "4"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 3,
+      "chain": 4
+    },
+    "ms_blade_glaive": {
+      "id": "ms_blade_glaive",
+      "owner": "blade",
+      "source_name": "Glaive",
+      "name": "Glaive",
+      "class": "POWER",
+      "target": "ENEMY_ROW",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "status",
+          "bleed",
+          "2"
+        ],
+        [
+          "exhaust"
+        ]
+      ],
+      "rarity": "LEGENDARY",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 4,
+      "exhaust": true
+    },
+    "ms_captain_america_brooklyn_handshake": {
+      "id": "ms_captain_america_brooklyn_handshake",
+      "owner": "captain_america",
+      "source_name": "Brooklyn Handshake",
+      "name": "Brooklyn Handshake",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "push",
+          "1"
+        ],
+        [
+          "force_if_damaged"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1
+    },
+    "ms_captain_america_punch": {
+      "id": "ms_captain_america_punch",
+      "owner": "captain_america",
+      "source_name": "Punch",
+      "name": "Punch",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "push",
+          "1"
+        ],
+        [
+          "taunt"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1
+    },
+    "ms_captain_america_quick_punch": {
+      "id": "ms_captain_america_quick_punch",
+      "owner": "captain_america",
+      "source_name": "Quick Punch",
+      "name": "Quick Punch",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0.8"
+        ],
+        [
+          "taunt"
+        ],
+        [
+          "quick"
+        ],
+        [
+          "draw",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1,
+      "quick": true
+    },
+    "ms_captain_america_dig_in": {
+      "id": "ms_captain_america_dig_in",
+      "owner": "captain_america",
+      "source_name": "Dig In",
+      "name": "Dig In",
+      "class": "SKILL",
+      "target": "ALLY",
+      "actions": [
+        [
+          "taunt_attackers"
+        ],
+        [
+          "block",
+          "12"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_captain_america_tactician": {
+      "id": "ms_captain_america_tactician",
+      "owner": "captain_america",
+      "source_name": "Tactician",
+      "name": "Tactician",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "block",
+          "10"
+        ],
+        [
+          "draw",
+          "2"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_captain_america_the_best_defense": {
+      "id": "ms_captain_america_the_best_defense",
+      "owner": "captain_america",
+      "source_name": "The Best Defense",
+      "name": "The Best Defense",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "block_on_hit",
+          "2"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_captain_america_shield_bash": {
+      "id": "ms_captain_america_shield_bash",
+      "owner": "captain_america",
+      "source_name": "Shield Bash",
+      "name": "Shield Bash",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "spend_block",
+          "0.25"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1
+    },
+    "ms_captain_america_sprang": {
+      "id": "ms_captain_america_sprang",
+      "owner": "captain_america",
+      "source_name": "SPRANG!",
+      "name": "SPRANG!",
+      "class": "POWER",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "2"
+        ],
+        [
+          "bonus_targeting_self",
+          "1"
+        ],
+        [
+          "ko",
+          "draw2"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 1
+    },
+    "ms_captain_america_shield_bounce": {
+      "id": "ms_captain_america_shield_bounce",
+      "owner": "captain_america",
+      "source_name": "Shield Bounce",
+      "name": "Shield Bounce",
+      "class": "POWER",
+      "target": "ENEMY_ROW",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "taunt"
+        ],
+        [
+          "status",
+          "weak",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 2
+    },
+    "ms_captain_america_shield_charge": {
+      "id": "ms_captain_america_shield_charge",
+      "owner": "captain_america",
+      "source_name": "Shield Charge",
+      "name": "Shield Charge",
+      "class": "POWER",
+      "target": "ENEMY_ROW",
+      "actions": [
+        [
+          "hit_from_block",
+          "1"
+        ],
+        [
+          "spend_all_block"
+        ]
+      ],
+      "rarity": "LEGENDARY",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 6
+    },
+    "ms_captain_marvel_knee_strike": {
+      "id": "ms_captain_marvel_knee_strike",
+      "owner": "captain_marvel",
+      "source_name": "Knee Strike",
+      "name": "Knee Strike",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "taunt"
+        ],
+        [
+          "block_from_hit"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1
+    },
+    "ms_captain_marvel_quick_jab": {
+      "id": "ms_captain_marvel_quick_jab",
+      "owner": "captain_marvel",
+      "source_name": "Quick Jab",
+      "name": "Quick Jab",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0.8"
+        ],
+        [
+          "taunt"
+        ],
+        [
+          "quick"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1,
+      "quick": true
+    },
+    "ms_captain_marvel_one_step_ahead": {
+      "id": "ms_captain_marvel_one_step_ahead",
+      "owner": "captain_marvel",
+      "source_name": "One Step Ahead",
+      "name": "One Step Ahead",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "draw_owner_to",
+          "3"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_captain_marvel_regroup": {
+      "id": "ms_captain_marvel_regroup",
+      "owner": "captain_marvel",
+      "source_name": "Regroup",
+      "name": "Regroup",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "block",
+          "8"
+        ],
+        [
+          "heal",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_captain_marvel_bring_it_on": {
+      "id": "ms_captain_marvel_bring_it_on",
+      "owner": "captain_marvel",
+      "source_name": "Bring it On",
+      "name": "Bring it On",
+      "class": "SKILL",
+      "target": "ENEMY_ROW",
+      "actions": [
+        [
+          "taunt"
+        ],
+        [
+          "self_status",
+          "counter",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_captain_marvel_rain_of_blows": {
+      "id": "ms_captain_marvel_rain_of_blows",
+      "owner": "captain_marvel",
+      "source_name": "Rain of Blows",
+      "name": "Rain of Blows",
+      "class": "POWER",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit_per_impulse",
+          "1"
+        ],
+        [
+          "consume_all"
+        ],
+        [
+          "spend_all_block"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 0,
+      "variable_cost": true
+    },
+    "ms_captain_marvel_fists_of_radiance": {
+      "id": "ms_captain_marvel_fists_of_radiance",
+      "owner": "captain_marvel",
+      "source_name": "Fists of Radiance",
+      "name": "Fists of Radiance",
+      "class": "POWER",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "2"
+        ],
+        [
+          "push",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 2
+    },
+    "ms_captain_marvel_cosmic_ray": {
+      "id": "ms_captain_marvel_cosmic_ray",
+      "owner": "captain_marvel",
+      "source_name": "Cosmic Ray",
+      "name": "Cosmic Ray",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "bonus_targeting_self",
+          "0.75"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1
+    },
+    "ms_captain_marvel_jab": {
+      "id": "ms_captain_marvel_jab",
+      "owner": "captain_marvel",
+      "source_name": "Jab",
+      "name": "Jab",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "special_card": true,
+      "reach": false,
+      "gain": 1
+    },
+    "ms_captain_marvel_photon_beam": {
+      "id": "ms_captain_marvel_photon_beam",
+      "owner": "captain_marvel",
+      "source_name": "Photon Beam",
+      "name": "Photon Beam",
+      "class": "POWER",
+      "target": "ENEMY_ROW",
+      "actions": [
+        [
+          "hit",
+          "1.5"
+        ],
+        [
+          "taunt"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 3
+    },
+    "ms_captain_marvel_go_binary": {
+      "id": "ms_captain_marvel_go_binary",
+      "owner": "captain_marvel",
+      "source_name": "Go Binary",
+      "name": "Go Binary",
+      "class": "POWER",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "binary",
+          "1"
+        ],
+        [
+          "block_hp",
+          "0.5"
+        ],
+        [
+          "free"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "special_card": true,
+      "reach": true,
+      "cost": 0,
+      "free": true
+    },
+    "ms_captain_marvel_supernova": {
+      "id": "ms_captain_marvel_supernova",
+      "owner": "captain_marvel",
+      "source_name": "Supernova",
+      "name": "Supernova",
+      "class": "POWER",
+      "target": "ENEMY_ROW",
+      "actions": [
+        [
+          "hit",
+          "2"
+        ]
+      ],
+      "rarity": "LEGENDARY",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 2
+    },
+    "ms_doctor_strange_winds_of_watoomb": {
+      "id": "ms_doctor_strange_winds_of_watoomb",
+      "owner": "doctor_strange",
+      "source_name": "Winds of Watoomb",
+      "name": "Winds of Watoomb",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "push",
+          "1"
+        ],
+        [
+          "quick"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 1,
+      "quick": true
+    },
+    "ms_doctor_strange_bolt_of_balthakk": {
+      "id": "ms_doctor_strange_bolt_of_balthakk",
+      "owner": "doctor_strange",
+      "source_name": "Bolt of Balthakk",
+      "name": "Bolt of Balthakk",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "enhanced",
+          "4",
+          "0.75"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 1
+    },
+    "ms_doctor_strange_agamotto_s_gaze": {
+      "id": "ms_doctor_strange_agamotto_s_gaze",
+      "owner": "doctor_strange",
+      "source_name": "Agamotto's Gaze",
+      "name": "Agamotto's Gaze",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "return_attacks",
+          "2"
+        ],
+        [
+          "buff_returned",
+          "0.5"
+        ],
+        [
+          "self_status",
+          "next_turn_plays",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_doctor_strange_blessing_of_vishanti": {
+      "id": "ms_doctor_strange_blessing_of_vishanti",
+      "owner": "doctor_strange",
+      "source_name": "Blessing of Vishanti",
+      "name": "Blessing of Vishanti",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "buff_hand",
+          "0.5"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_doctor_strange_vapors_of_valtorr": {
+      "id": "ms_doctor_strange_vapors_of_valtorr",
+      "owner": "doctor_strange",
+      "source_name": "Vapors of Valtorr",
+      "name": "Vapors of Valtorr",
+      "class": "SKILL",
+      "target": "ALLY",
+      "actions": [
+        [
+          "status",
+          "conceal",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_doctor_strange_astral_meditation": {
+      "id": "ms_doctor_strange_astral_meditation",
+      "owner": "doctor_strange",
+      "source_name": "Astral Meditation",
+      "name": "Astral Meditation",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "restore_items",
+          "1"
+        ],
+        [
+          "redraws",
+          "2"
+        ],
+        [
+          "exhaust"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2,
+      "exhaust": true
+    },
+    "ms_doctor_strange_axe_of_angarruumus": {
+      "id": "ms_doctor_strange_axe_of_angarruumus",
+      "owner": "doctor_strange",
+      "source_name": "Axe of Angarruumus",
+      "name": "Axe of Angarruumus",
+      "class": "POWER",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "2"
+        ],
+        [
+          "status",
+          "weak",
+          "2"
+        ],
+        [
+          "enhanced",
+          "4",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 2
+    },
+    "ms_doctor_strange_seven_suns_of_cinnibus": {
+      "id": "ms_doctor_strange_seven_suns_of_cinnibus",
+      "owner": "doctor_strange",
+      "source_name": "Seven Suns of Cinnibus",
+      "name": "Seven Suns of Cinnibus",
+      "class": "POWER",
+      "target": "ENEMY_ROW",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "enhanced",
+          "5",
+          "0.5"
+        ],
+        [
+          "enhanced",
+          "7",
+          "0.5"
+        ],
+        [
+          "enhanced",
+          "9",
+          "0.5"
+        ]
+      ],
+      "rarity": "LEGENDARY",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 3
+    },
+    "ms_doctor_strange_shield_of_seraphim": {
+      "id": "ms_doctor_strange_shield_of_seraphim",
+      "owner": "doctor_strange",
+      "source_name": "Shield of Seraphim",
+      "name": "Shield of Seraphim",
+      "class": "POWER",
+      "target": "ALL_ALLIES",
+      "actions": [
+        [
+          "status",
+          "resist",
+          "1"
+        ],
+        [
+          "enhanced_resist",
+          "6"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 3
+    },
+    "ms_doctor_strange_crimson_bands_of_cyttorak": {
+      "id": "ms_doctor_strange_crimson_bands_of_cyttorak",
+      "owner": "doctor_strange",
+      "source_name": "Crimson Bands of Cyttorak",
+      "name": "Crimson Bands of Cyttorak",
+      "class": "POWER",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "status",
+          "bind",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 2
+    },
+    "ms_ghost_rider_lash": {
+      "id": "ms_ghost_rider_lash",
+      "owner": "ghost_rider",
+      "source_name": "Lash",
+      "name": "Lash",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0.5"
+        ],
+        [
+          "push",
+          "2"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1
+    },
+    "ms_ghost_rider_retribution": {
+      "id": "ms_ghost_rider_retribution",
+      "owner": "ghost_rider",
+      "source_name": "Retribution",
+      "name": "Retribution",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "2"
+        ],
+        [
+          "discard_random"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1
+    },
+    "ms_ghost_rider_hellmouth": {
+      "id": "ms_ghost_rider_hellmouth",
+      "owner": "ghost_rider",
+      "source_name": "Hellmouth",
+      "name": "Hellmouth",
+      "class": "SKILL",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "status",
+          "drop",
+          "2"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_ghost_rider_immolate": {
+      "id": "ms_ghost_rider_immolate",
+      "owner": "ghost_rider",
+      "source_name": "Immolate",
+      "name": "Immolate",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "ko_explosion",
+          "2"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_ghost_rider_drain_soul": {
+      "id": "ms_ghost_rider_drain_soul",
+      "owner": "ghost_rider",
+      "source_name": "Drain Soul",
+      "name": "Drain Soul",
+      "class": "POWER",
+      "target": "CHAIN",
+      "actions": [
+        [
+          "hit",
+          "0.5"
+        ],
+        [
+          "chain",
+          "2"
+        ],
+        [
+          "lifesteal"
+        ],
+        [
+          "grow_chain",
+          "drain_soul"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 1,
+      "chain": 2
+    },
+    "ms_ghost_rider_judgment": {
+      "id": "ms_ghost_rider_judgment",
+      "owner": "ghost_rider",
+      "source_name": "Judgment",
+      "name": "Judgment",
+      "class": "POWER",
+      "target": "ENEMY_ROW",
+      "actions": [
+        [
+          "self_damage_hp",
+          "0.25"
+        ],
+        [
+          "hit",
+          "2"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 1
+    },
+    "ms_ghost_rider_penance_stare": {
+      "id": "ms_ghost_rider_penance_stare",
+      "owner": "ghost_rider",
+      "source_name": "Penance Stare",
+      "name": "Penance Stare",
+      "class": "POWER",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "self_damage_hp",
+          "0.5"
+        ],
+        [
+          "hit",
+          "5"
+        ]
+      ],
+      "rarity": "LEGENDARY",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 4
+    },
+    "ms_ghost_rider_hellride": {
+      "id": "ms_ghost_rider_hellride",
+      "owner": "ghost_rider",
+      "source_name": "Hellride",
+      "name": "Hellride",
+      "class": "POWER",
+      "target": "ENEMY_ROW",
+      "actions": [
+        [
+          "hit",
+          "2"
+        ],
+        [
+          "discard_hand"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 3
+    },
+    "ms_ghost_rider_hell_s_fury": {
+      "id": "ms_ghost_rider_hell_s_fury",
+      "owner": "ghost_rider",
+      "source_name": "Hell's Fury",
+      "name": "Hell's Fury",
+      "class": "POWER",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "2"
+        ],
+        [
+          "hand_damage_growth"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 1
+    },
+    "ms_ghost_rider_straight_to_hell": {
+      "id": "ms_ghost_rider_straight_to_hell",
+      "owner": "ghost_rider",
+      "source_name": "Straight to Hell",
+      "name": "Straight to Hell",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "banished",
+          "1"
+        ],
+        [
+          "status",
+          "drop",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_iron_man_quick_blast": {
+      "id": "ms_iron_man_quick_blast",
+      "owner": "iron_man",
+      "source_name": "Quick Blast",
+      "name": "Quick Blast",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "quick"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 1,
+      "quick": true
+    },
+    "ms_iron_man_blast": {
+      "id": "ms_iron_man_blast",
+      "owner": "iron_man",
+      "source_name": "Blast",
+      "name": "Blast",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "push",
+          "1"
+        ],
+        [
+          "redraw_force"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 1
+    },
+    "ms_iron_man_leave_it_to_me": {
+      "id": "ms_iron_man_leave_it_to_me",
+      "owner": "iron_man",
+      "source_name": "Leave it To Me",
+      "name": "Leave it To Me",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "draw_owner",
+          "2"
+        ],
+        [
+          "redraws",
+          "2"
+        ],
+        [
+          "self_status",
+          "fast",
+          "2"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_iron_man_new_plan": {
+      "id": "ms_iron_man_new_plan",
+      "owner": "iron_man",
+      "source_name": "New Plan",
+      "name": "New Plan",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "double_impulse"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_iron_man_mark_target": {
+      "id": "ms_iron_man_mark_target",
+      "owner": "iron_man",
+      "source_name": "Mark Target",
+      "name": "Mark Target",
+      "class": "SKILL",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "status",
+          "marked",
+          "2"
+        ],
+        [
+          "status",
+          "vulnerable",
+          "2"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_iron_man_precision": {
+      "id": "ms_iron_man_precision",
+      "owner": "iron_man",
+      "source_name": "Precision",
+      "name": "Precision",
+      "class": "POWER",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "retain_next",
+          "1"
+        ],
+        [
+          "free"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 2,
+      "free": true
+    },
+    "ms_iron_man_surgical_strike": {
+      "id": "ms_iron_man_surgical_strike",
+      "owner": "iron_man",
+      "source_name": "Surgical Strike",
+      "name": "Surgical Strike",
+      "class": "POWER",
+      "target": "CHAIN",
+      "actions": [
+        [
+          "hit",
+          "0.75"
+        ],
+        [
+          "chain_hand_owner"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 3
+    },
+    "ms_iron_man_air_superiority": {
+      "id": "ms_iron_man_air_superiority",
+      "owner": "iron_man",
+      "source_name": "Air Superiority",
+      "name": "Air Superiority",
+      "class": "POWER",
+      "target": "ALL_ENEMIES",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "redraw_bonus",
+          "0.5"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 4
+    },
+    "ms_iron_man_hellfire_beam": {
+      "id": "ms_iron_man_hellfire_beam",
+      "owner": "iron_man",
+      "source_name": "Hellfire Beam",
+      "name": "Hellfire Beam",
+      "class": "POWER",
+      "target": "ENEMY_ROW",
+      "actions": [
+        [
+          "hit",
+          "2"
+        ],
+        [
+          "redraw_bonus",
+          "0.5"
+        ]
+      ],
+      "rarity": "LEGENDARY",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 3
+    },
+    "ms_iron_man_heads_up": {
+      "id": "ms_iron_man_heads_up",
+      "owner": "iron_man",
+      "source_name": "Heads Up",
+      "name": "Heads Up",
+      "class": "SKILL",
+      "target": "ALLY",
+      "actions": [
+        [
+          "block",
+          "9"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_magik_quick_soulslash": {
+      "id": "ms_magik_quick_soulslash",
+      "owner": "magik",
+      "source_name": "Quick Soulslash",
+      "name": "Quick Soulslash",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "push",
+          "1"
+        ],
+        [
+          "quick"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1,
+      "quick": true
+    },
+    "ms_magik_soul_blast": {
+      "id": "ms_magik_soul_blast",
+      "owner": "magik",
+      "source_name": "Soul Blast",
+      "name": "Soul Blast",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "push",
+          "2"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1
+    },
+    "ms_magik_kick": {
+      "id": "ms_magik_kick",
+      "owner": "magik",
+      "source_name": "Kick",
+      "name": "Kick",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1.5"
+        ],
+        [
+          "push",
+          "2"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1
+    },
+    "ms_magik_trap_door": {
+      "id": "ms_magik_trap_door",
+      "owner": "magik",
+      "source_name": "Trap Door",
+      "name": "Trap Door",
+      "class": "SKILL",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "move_target"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_magik_limbo_portal": {
+      "id": "ms_magik_limbo_portal",
+      "owner": "magik",
+      "source_name": "Limbo Portal",
+      "name": "Limbo Portal",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "portal",
+          "1"
+        ],
+        [
+          "free"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2,
+      "free": true
+    },
+    "ms_magik_limbo_s_grasp": {
+      "id": "ms_magik_limbo_s_grasp",
+      "owner": "magik",
+      "source_name": "Limbo's Grasp",
+      "name": "Limbo's Grasp",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "limbos_grasp",
+          "2"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_magik_gather": {
+      "id": "ms_magik_gather",
+      "owner": "magik",
+      "source_name": "Gather",
+      "name": "Gather",
+      "class": "POWER",
+      "target": "ENEMY_ROW",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "pull"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 2
+    },
+    "ms_magik_banish": {
+      "id": "ms_magik_banish",
+      "owner": "magik",
+      "source_name": "Banish",
+      "name": "Banish",
+      "class": "POWER",
+      "target": "ANY_UNIT",
+      "actions": [
+        [
+          "status",
+          "banished",
+          "1"
+        ],
+        [
+          "status",
+          "drop",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 3
+    },
+    "ms_magik_reinforcement": {
+      "id": "ms_magik_reinforcement",
+      "owner": "magik",
+      "source_name": "Reinforcement",
+      "name": "Reinforcement",
+      "class": "POWER",
+      "target": "SELF",
+      "actions": [
+        [
+          "summon",
+          "reinforcement",
+          "1"
+        ],
+        [
+          "draw",
+          "2"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 4
+    },
+    "ms_magik_darkchylde": {
+      "id": "ms_magik_darkchylde",
+      "owner": "magik",
+      "source_name": "Darkchylde",
+      "name": "Darkchylde",
+      "class": "POWER",
+      "target": "ALL_ENEMIES",
+      "actions": [
+        [
+          "taunt"
+        ],
+        [
+          "self_status",
+          "invulnerable",
+          "1"
+        ]
+      ],
+      "rarity": "LEGENDARY",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 4
+    },
+    "ms_nico_blood_for_blood": {
+      "id": "ms_nico_blood_for_blood",
+      "owner": "nico",
+      "source_name": "Blood for Blood",
+      "name": "Blood for Blood",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "ko",
+          "heal_ally"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 1
+    },
+    "ms_nico_curse": {
+      "id": "ms_nico_curse",
+      "owner": "nico",
+      "source_name": "Curse",
+      "name": "Curse",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "roulette_status",
+          "stun",
+          "marked",
+          "vulnerable",
+          "weak"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 1
+    },
+    "ms_nico_witchfire": {
+      "id": "ms_nico_witchfire",
+      "owner": "nico",
+      "source_name": "Witchfire",
+      "name": "Witchfire",
+      "class": "ATTACK",
+      "target": "RANDOM",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "ko_recast",
+          "3"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 1
+    },
+    "ms_nico_restore": {
+      "id": "ms_nico_restore",
+      "owner": "nico",
+      "source_name": "Restore",
+      "name": "Restore",
+      "class": "SKILL",
+      "target": "ALLY",
+      "actions": [
+        [
+          "full_heal"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_nico_empower": {
+      "id": "ms_nico_empower",
+      "owner": "nico",
+      "source_name": "Empower",
+      "name": "Empower",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "draw_heroic",
+          "1"
+        ],
+        [
+          "zero_heroics"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_nico_double_up": {
+      "id": "ms_nico_double_up",
+      "owner": "nico",
+      "source_name": "Double Up",
+      "name": "Double Up",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "copy_hand_type"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_nico_blood_magic": {
+      "id": "ms_nico_blood_magic",
+      "owner": "nico",
+      "source_name": "Blood Magic",
+      "name": "Blood Magic",
+      "class": "SKILL",
+      "target": "ALLY",
+      "actions": [
+        [
+          "roulette_status",
+          "blood_magic",
+          "counter",
+          "fast",
+          "strengthened"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_nico_swarm": {
+      "id": "ms_nico_swarm",
+      "owner": "nico",
+      "source_name": "Swarm",
+      "name": "Swarm",
+      "class": "POWER",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "roulette_hit",
+          "1",
+          "2",
+          "2.5",
+          "3"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 1
+    },
+    "ms_nico_witchstorm": {
+      "id": "ms_nico_witchstorm",
+      "owner": "nico",
+      "source_name": "Witchstorm",
+      "name": "Witchstorm",
+      "class": "POWER",
+      "target": "CHAIN",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "chain",
+          "4"
+        ],
+        [
+          "random_chain"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 3,
+      "chain": 4
+    },
+    "ms_nico_crack_the_sky": {
+      "id": "ms_nico_crack_the_sky",
+      "owner": "nico",
+      "source_name": "Crack the Sky",
+      "name": "Crack the Sky",
+      "class": "POWER",
+      "target": "RANDOM",
+      "actions": [
+        [
+          "hit_per_impulse",
+          "0.6"
+        ],
+        [
+          "consume_all"
+        ],
+        [
+          "ko",
+          "impulse1"
+        ]
+      ],
+      "rarity": "LEGENDARY",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 0,
+      "variable_cost": true
+    },
+    "ms_scarlet_witch_hex_bolt": {
+      "id": "ms_scarlet_witch_hex_bolt",
+      "owner": "scarlet_witch",
+      "source_name": "Hex Bolt",
+      "name": "Hex Bolt",
+      "class": "ATTACK",
+      "target": "CHAIN",
+      "actions": [
+        [
+          "hit",
+          "0.8"
+        ],
+        [
+          "chain",
+          "1"
+        ],
+        [
+          "grow_chain",
+          "hex_bolt"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 1,
+      "chain": 1
+    },
+    "ms_scarlet_witch_hex_field": {
+      "id": "ms_scarlet_witch_hex_field",
+      "owner": "scarlet_witch",
+      "source_name": "Hex Field",
+      "name": "Hex Field",
+      "class": "ATTACK",
+      "target": "ENEMY_ROW",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 1
+    },
+    "ms_scarlet_witch_quick_toss": {
+      "id": "ms_scarlet_witch_quick_toss",
+      "owner": "scarlet_witch",
+      "source_name": "Quick Toss",
+      "name": "Quick Toss",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0.5"
+        ],
+        [
+          "push",
+          "1"
+        ],
+        [
+          "quick"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 1,
+      "quick": true
+    },
+    "ms_scarlet_witch_chaos_reigns": {
+      "id": "ms_scarlet_witch_chaos_reigns",
+      "owner": "scarlet_witch",
+      "source_name": "Chaos Reigns",
+      "name": "Chaos Reigns",
+      "class": "POWER",
+      "target": "ENEMY_ROW",
+      "actions": [
+        [
+          "enemy_infighting"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 3
+    },
+    "ms_scarlet_witch_chaos_field": {
+      "id": "ms_scarlet_witch_chaos_field",
+      "owner": "scarlet_witch",
+      "source_name": "Chaos Field",
+      "name": "Chaos Field",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "chaos_field",
+          "2"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_scarlet_witch_unleashed": {
+      "id": "ms_scarlet_witch_unleashed",
+      "owner": "scarlet_witch",
+      "source_name": "Unleashed",
+      "name": "Unleashed",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "unleashed",
+          "2"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_scarlet_witch_hex_mark": {
+      "id": "ms_scarlet_witch_hex_mark",
+      "owner": "scarlet_witch",
+      "source_name": "Hex Mark",
+      "name": "Hex Mark",
+      "class": "SKILL",
+      "target": "ENEMY_ROW",
+      "actions": [
+        [
+          "status",
+          "marked",
+          "2"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_scarlet_witch_detonate": {
+      "id": "ms_scarlet_witch_detonate",
+      "owner": "scarlet_witch",
+      "source_name": "Detonate",
+      "name": "Detonate",
+      "class": "POWER",
+      "target": "ENEMY_ROW",
+      "actions": [
+        [
+          "detonate",
+          "2"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 2
+    },
+    "ms_scarlet_witch_hex_charge": {
+      "id": "ms_scarlet_witch_hex_charge",
+      "owner": "scarlet_witch",
+      "source_name": "Hex Charge",
+      "name": "Hex Charge",
+      "class": "POWER",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "status",
+          "overload",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 3
+    },
+    "ms_scarlet_witch_no_more": {
+      "id": "ms_scarlet_witch_no_more",
+      "owner": "scarlet_witch",
+      "source_name": "No More",
+      "name": "No More",
+      "class": "POWER",
+      "target": "ENEMY_ROW",
+      "actions": [
+        [
+          "self_damage_hp",
+          "1"
+        ],
+        [
+          "hit",
+          "6"
+        ]
+      ],
+      "rarity": "LEGENDARY",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 6
+    },
+    "ms_spider_man_infernal_spider": {
+      "id": "ms_spider_man_infernal_spider",
+      "owner": "spider_man",
+      "source_name": "Infernal Spider",
+      "name": "Infernal Spider",
+      "class": "POWER",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "free_owner",
+          "3"
+        ]
+      ],
+      "rarity": "LEGENDARY",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 3
+    },
+    "ms_spider_man_quick_kick": {
+      "id": "ms_spider_man_quick_kick",
+      "owner": "spider_man",
+      "source_name": "Quick Kick",
+      "name": "Quick Kick",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "push",
+          "1"
+        ],
+        [
+          "quick"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 1,
+      "quick": true
+    },
+    "ms_spider_man_chain_strike": {
+      "id": "ms_spider_man_chain_strike",
+      "owner": "spider_man",
+      "source_name": "Chain Strike",
+      "name": "Chain Strike",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "ko_chain",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 1
+    },
+    "ms_spider_man_special_delivery": {
+      "id": "ms_spider_man_special_delivery",
+      "owner": "spider_man",
+      "source_name": "Special Delivery",
+      "name": "Special Delivery",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "push",
+          "2"
+        ],
+        [
+          "pull"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 1
+    },
+    "ms_spider_man_spider_sense": {
+      "id": "ms_spider_man_spider_sense",
+      "owner": "spider_man",
+      "source_name": "Spider-Sense",
+      "name": "Spider-Sense",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "draw_owner",
+          "2"
+        ],
+        [
+          "self_status",
+          "fast",
+          "1"
+        ],
+        [
+          "self_status",
+          "resist",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_spider_man_webslinger": {
+      "id": "ms_spider_man_webslinger",
+      "owner": "spider_man",
+      "source_name": "Webslinger",
+      "name": "Webslinger",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "strengthened",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_spider_man_opportunist": {
+      "id": "ms_spider_man_opportunist",
+      "owner": "spider_man",
+      "source_name": "Opportunist",
+      "name": "Opportunist",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "opportunist",
+          "2"
+        ],
+        [
+          "moves",
+          "2"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_spider_man_web_throw": {
+      "id": "ms_spider_man_web_throw",
+      "owner": "spider_man",
+      "source_name": "Web Throw",
+      "name": "Web Throw",
+      "class": "POWER",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "push",
+          "2"
+        ],
+        [
+          "splash",
+          "0.5"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 3
+    },
+    "ms_spider_man_thwip": {
+      "id": "ms_spider_man_thwip",
+      "owner": "spider_man",
+      "source_name": "THWIP!",
+      "name": "THWIP!",
+      "class": "POWER",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "status",
+          "bind",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 2
+    },
+    "ms_spider_man_up_here": {
+      "id": "ms_spider_man_up_here",
+      "owner": "spider_man",
+      "source_name": "Up Here!",
+      "name": "Up Here!",
+      "class": "POWER",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "2"
+        ],
+        [
+          "status",
+          "weak",
+          "2"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 2
+    },
+    "ms_wolverine_chain_swipes": {
+      "id": "ms_wolverine_chain_swipes",
+      "owner": "wolverine",
+      "source_name": "Chain Swipes",
+      "name": "Chain Swipes",
+      "class": "ATTACK",
+      "target": "CHAIN",
+      "actions": [
+        [
+          "hit",
+          "0.5"
+        ],
+        [
+          "chain",
+          "3"
+        ],
+        [
+          "taunt"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1,
+      "chain": 3
+    },
+    "ms_wolverine_lethal_pounce": {
+      "id": "ms_wolverine_lethal_pounce",
+      "owner": "wolverine",
+      "source_name": "Lethal Pounce",
+      "name": "Lethal Pounce",
+      "class": "ATTACK",
+      "target": "CHAIN",
+      "actions": [
+        [
+          "hit",
+          "0.8"
+        ],
+        [
+          "chain",
+          "2"
+        ],
+        [
+          "full_combo",
+          "strengthened"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1,
+      "chain": 2
+    },
+    "ms_wolverine_power_slash": {
+      "id": "ms_wolverine_power_slash",
+      "owner": "wolverine",
+      "source_name": "Power Slash",
+      "name": "Power Slash",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "push",
+          "1"
+        ],
+        [
+          "status",
+          "vulnerable",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1
+    },
+    "ms_wolverine_quick_swipe": {
+      "id": "ms_wolverine_quick_swipe",
+      "owner": "wolverine",
+      "source_name": "Quick Swipe",
+      "name": "Quick Swipe",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "taunt"
+        ],
+        [
+          "quick"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1,
+      "quick": true
+    },
+    "ms_wolverine_berserk": {
+      "id": "ms_wolverine_berserk",
+      "owner": "wolverine",
+      "source_name": "Berserk",
+      "name": "Berserk",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "draw_owner",
+          "2"
+        ],
+        [
+          "self_status",
+          "berserk_lifesteal",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_wolverine_rapid_healing": {
+      "id": "ms_wolverine_rapid_healing",
+      "owner": "wolverine",
+      "source_name": "Rapid Healing",
+      "name": "Rapid Healing",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "heal",
+          "2"
+        ],
+        [
+          "cure"
+        ],
+        [
+          "play_while_disabled"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2,
+      "play_while_disabled": true
+    },
+    "ms_wolverine_rapid_regeneration": {
+      "id": "ms_wolverine_rapid_regeneration",
+      "owner": "wolverine",
+      "source_name": "Rapid Regeneration",
+      "name": "Rapid Regeneration",
+      "class": "POWER",
+      "target": "SELF",
+      "actions": [
+        [
+          "revive_self",
+          "0.5"
+        ],
+        [
+          "free"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "special_card": true,
+      "reach": true,
+      "cost": 2,
+      "free": true
+    },
+    "ms_wolverine_stink_of_fear": {
+      "id": "ms_wolverine_stink_of_fear",
+      "owner": "wolverine",
+      "source_name": "Stink of Fear",
+      "name": "Stink of Fear",
+      "class": "SKILL",
+      "target": "ENEMY_ROW",
+      "actions": [
+        [
+          "taunt"
+        ],
+        [
+          "self_status",
+          "counter",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_wolverine_eviscerate": {
+      "id": "ms_wolverine_eviscerate",
+      "owner": "wolverine",
+      "source_name": "Eviscerate",
+      "name": "Eviscerate",
+      "class": "POWER",
+      "target": "CHAIN",
+      "actions": [
+        [
+          "hit",
+          "0.75"
+        ],
+        [
+          "chain",
+          "4"
+        ],
+        [
+          "taunt"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 2,
+      "chain": 4
+    },
+    "ms_wolverine_piercing_slash": {
+      "id": "ms_wolverine_piercing_slash",
+      "owner": "wolverine",
+      "source_name": "Piercing Slash",
+      "name": "Piercing Slash",
+      "class": "POWER",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1.5"
+        ],
+        [
+          "bonus_block",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 1
+    },
+    "ms_wolverine_midnight_special": {
+      "id": "ms_wolverine_midnight_special",
+      "owner": "wolverine",
+      "source_name": "Midnight Special",
+      "name": "Midnight Special",
+      "class": "POWER",
+      "target": "RANDOM",
+      "actions": [
+        [
+          "hit_per_impulse",
+          "0.5"
+        ],
+        [
+          "consume_all"
+        ]
+      ],
+      "rarity": "LEGENDARY",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 0,
+      "variable_cost": true
+    },
+    "ms_hulk_smash": {
+      "id": "ms_hulk_smash",
+      "owner": "hulk",
+      "source_name": "Smash",
+      "name": "Smash",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "status",
+          "stun",
+          "1"
+        ],
+        [
+          "rage",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1
+    },
+    "ms_hulk_gamma_kick": {
+      "id": "ms_hulk_gamma_kick",
+      "owner": "hulk",
+      "source_name": "Gamma Kick",
+      "name": "Gamma Kick",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "push",
+          "2"
+        ],
+        [
+          "taunt"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1
+    },
+    "ms_hulk_challenging_roar": {
+      "id": "ms_hulk_challenging_roar",
+      "owner": "hulk",
+      "source_name": "Challenging Roar",
+      "name": "Challenging Roar",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "rage_per_targeting"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_hulk_always_angry": {
+      "id": "ms_hulk_always_angry",
+      "owner": "hulk",
+      "source_name": "Always Angry",
+      "name": "Always Angry",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "consume_rage_heal"
+        ],
+        [
+          "overheal_max"
+        ],
+        [
+          "exhaust"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2,
+      "exhaust": true
+    },
+    "ms_hulk_crush": {
+      "id": "ms_hulk_crush",
+      "owner": "hulk",
+      "source_name": "Crush",
+      "name": "Crush",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "bonus_status",
+          "stun",
+          "2"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1
+    },
+    "ms_hulk_mighty_blow": {
+      "id": "ms_hulk_mighty_blow",
+      "owner": "hulk",
+      "source_name": "Mighty Blow",
+      "name": "Mighty Blow",
+      "class": "POWER",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "3"
+        ],
+        [
+          "push",
+          "2"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 3
+    },
+    "ms_hulk_rampage": {
+      "id": "ms_hulk_rampage",
+      "owner": "hulk",
+      "source_name": "Rampage",
+      "name": "Rampage",
+      "class": "POWER",
+      "target": "CHAIN",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "chain",
+          "3"
+        ],
+        [
+          "taunt"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 3,
+      "chain": 3
+    },
+    "ms_hulk_thunderclap": {
+      "id": "ms_hulk_thunderclap",
+      "owner": "hulk",
+      "source_name": "Thunderclap",
+      "name": "Thunderclap",
+      "class": "POWER",
+      "target": "ENEMY_ROW",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "push",
+          "1"
+        ],
+        [
+          "status",
+          "stun",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 4
+    },
+    "ms_hulk_seismic_slam": {
+      "id": "ms_hulk_seismic_slam",
+      "owner": "hulk",
+      "source_name": "Seismic Slam",
+      "name": "Seismic Slam",
+      "class": "POWER",
+      "target": "ENEMY_ROW",
+      "actions": [
+        [
+          "hit",
+          "2"
+        ],
+        [
+          "taunt"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 4
+    },
+    "ms_hulk_worldbreaker": {
+      "id": "ms_hulk_worldbreaker",
+      "owner": "hulk",
+      "source_name": "Worldbreaker",
+      "name": "Worldbreaker",
+      "class": "POWER",
+      "target": "ALL_ENEMIES",
+      "actions": [
+        [
+          "hit",
+          "3"
+        ],
+        [
+          "push",
+          "2"
+        ]
+      ],
+      "rarity": "LEGENDARY",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 6
+    },
+    "ms_deadpool_all_together_now": {
+      "id": "ms_deadpool_all_together_now",
+      "owner": "deadpool",
+      "source_name": "All Together Now",
+      "name": "All Together Now",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "draw",
+          "1"
+        ],
+        [
+          "draw_en_fuego",
+          "1"
+        ],
+        [
+          "self_status",
+          "all_together_now",
+          "2"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_deadpool_boom_headshot": {
+      "id": "ms_deadpool_boom_headshot",
+      "owner": "deadpool",
+      "source_name": "Boom, Headshot",
+      "name": "Boom, Headshot",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1.5"
+        ],
+        [
+          "gain_en_fuego",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 0
+    },
+    "ms_deadpool_burning_sensation": {
+      "id": "ms_deadpool_burning_sensation",
+      "owner": "deadpool",
+      "source_name": "Burning Sensation",
+      "name": "Burning Sensation",
+      "class": "POWER",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "bonus_en_fuego",
+          "1"
+        ],
+        [
+          "exhaust"
+        ]
+      ],
+      "rarity": "LEGENDARY",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 2,
+      "exhaust": true
+    },
+    "ms_deadpool_death_from_above": {
+      "id": "ms_deadpool_death_from_above",
+      "owner": "deadpool",
+      "source_name": "Death From Above",
+      "name": "Death From Above",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "bonus_en_fuego",
+          "0.25"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 1
+    },
+    "ms_deadpool_hey_face": {
+      "id": "ms_deadpool_hey_face",
+      "owner": "deadpool",
+      "source_name": "Hey #^*face!",
+      "name": "Hey #^*face!",
+      "class": "SKILL",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "taunt"
+        ],
+        [
+          "resist_en_fuego",
+          "1"
+        ],
+        [
+          "exhaust"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2,
+      "exhaust": true
+    },
+    "ms_deadpool_mag_dump": {
+      "id": "ms_deadpool_mag_dump",
+      "owner": "deadpool",
+      "source_name": "Mag Dump",
+      "name": "Mag Dump",
+      "class": "POWER",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "2.5"
+        ],
+        [
+          "cost_down_en_fuego"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 4
+    },
+    "ms_deadpool_overpowered": {
+      "id": "ms_deadpool_overpowered",
+      "owner": "deadpool",
+      "source_name": "Overpowered",
+      "name": "Overpowered",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0.5"
+        ],
+        [
+          "push",
+          "1"
+        ],
+        [
+          "bonus_en_fuego",
+          "0.5"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 1
+    },
+    "ms_deadpool_pain_pinata": {
+      "id": "ms_deadpool_pain_pinata",
+      "owner": "deadpool",
+      "source_name": "Pain Piñata",
+      "name": "Pain Piñata",
+      "class": "POWER",
+      "target": "ENEMY_ROW",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "area_en_fuego"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 2
+    },
+    "ms_deadpool_quick_shot": {
+      "id": "ms_deadpool_quick_shot",
+      "owner": "deadpool",
+      "source_name": "Quick Shot",
+      "name": "Quick Shot",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0.75"
+        ],
+        [
+          "quick"
+        ],
+        [
+          "ko_chain",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 1,
+      "quick": true
+    },
+    "ms_deadpool_spread_the_love": {
+      "id": "ms_deadpool_spread_the_love",
+      "owner": "deadpool",
+      "source_name": "Spread the Love",
+      "name": "Spread the Love",
+      "class": "ATTACK",
+      "target": "CHAIN",
+      "actions": [
+        [
+          "hit",
+          "0.5"
+        ],
+        [
+          "chain",
+          "2"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 1,
+      "chain": 2
+    },
+    "ms_morbius_bloodlust": {
+      "id": "ms_morbius_bloodlust",
+      "owner": "morbius",
+      "source_name": "Bloodlust",
+      "name": "Bloodlust",
+      "class": "POWER",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "bloodlust",
+          "2"
+        ],
+        [
+          "block_hp",
+          "0.25"
+        ],
+        [
+          "free"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "special_card": true,
+      "reach": true,
+      "cost": 1,
+      "free": true
+    },
+    "ms_morbius_charm": {
+      "id": "ms_morbius_charm",
+      "owner": "morbius",
+      "source_name": "Charm",
+      "name": "Charm",
+      "class": "SKILL",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "mind_attack",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_morbius_claw": {
+      "id": "ms_morbius_claw",
+      "owner": "morbius",
+      "source_name": "Claw",
+      "name": "Claw",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "bonus_status",
+          "bleed",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1
+    },
+    "ms_morbius_cornered": {
+      "id": "ms_morbius_cornered",
+      "owner": "morbius",
+      "source_name": "Cornered",
+      "name": "Cornered",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "counter",
+          "1"
+        ],
+        [
+          "self_status",
+          "resist",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_morbius_echolocate": {
+      "id": "ms_morbius_echolocate",
+      "owner": "morbius",
+      "source_name": "Echolocate",
+      "name": "Echolocate",
+      "class": "POWER",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "status",
+          "weak",
+          "1"
+        ],
+        [
+          "status",
+          "marked",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 1
+    },
+    "ms_morbius_feeding_frenzy": {
+      "id": "ms_morbius_feeding_frenzy",
+      "owner": "morbius",
+      "source_name": "Feeding Frenzy",
+      "name": "Feeding Frenzy",
+      "class": "POWER",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "consume_bleed"
+        ],
+        [
+          "lifesteal"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 2
+    },
+    "ms_morbius_mist_form": {
+      "id": "ms_morbius_mist_form",
+      "owner": "morbius",
+      "source_name": "Mist Form",
+      "name": "Mist Form",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "conceal",
+          "1"
+        ],
+        [
+          "self_status",
+          "next_attack_boost",
+          "1"
+        ],
+        [
+          "exhaust"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2,
+      "exhaust": true
+    },
+    "ms_morbius_quick_claw": {
+      "id": "ms_morbius_quick_claw",
+      "owner": "morbius",
+      "source_name": "Quick Claw",
+      "name": "Quick Claw",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0.8"
+        ],
+        [
+          "quick"
+        ],
+        [
+          "lifesteal"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1,
+      "quick": true
+    },
+    "ms_morbius_savage_swipe": {
+      "id": "ms_morbius_savage_swipe",
+      "owner": "morbius",
+      "source_name": "Savage Swipe",
+      "name": "Savage Swipe",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "push",
+          "2"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1
+    },
+    "ms_morbius_shadow_strike": {
+      "id": "ms_morbius_shadow_strike",
+      "owner": "morbius",
+      "source_name": "Shadow Strike",
+      "name": "Shadow Strike",
+      "class": "POWER",
+      "target": "CHAIN",
+      "actions": [
+        [
+          "hit",
+          "0.7"
+        ],
+        [
+          "chain",
+          "3"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 2,
+      "chain": 3
+    },
+    "ms_morbius_undying_fury": {
+      "id": "ms_morbius_undying_fury",
+      "owner": "morbius",
+      "source_name": "Undying Fury",
+      "name": "Undying Fury",
+      "class": "POWER",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "3"
+        ],
+        [
+          "requires_status",
+          "bleed"
+        ],
+        [
+          "exhaust"
+        ]
+      ],
+      "rarity": "LEGENDARY",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 3,
+      "exhaust": true
+    },
+    "ms_venom_assimilation": {
+      "id": "ms_venom_assimilation",
+      "owner": "venom",
+      "source_name": "Assimilation",
+      "name": "Assimilation",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "assimilation",
+          "1"
+        ],
+        [
+          "exhaust"
+        ]
+      ],
+      "rarity": "LEGENDARY",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2,
+      "exhaust": true
+    },
+    "ms_venom_devouring_strike": {
+      "id": "ms_venom_devouring_strike",
+      "owner": "venom",
+      "source_name": "Devouring Strike",
+      "name": "Devouring Strike",
+      "class": "POWER",
+      "target": "CHAIN",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "chain",
+          "4"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 3,
+      "chain": 4
+    },
+    "ms_venom_insatiable_hunger": {
+      "id": "ms_venom_insatiable_hunger",
+      "owner": "venom",
+      "source_name": "Insatiable Hunger",
+      "name": "Insatiable Hunger",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "ravenous",
+          "1"
+        ],
+        [
+          "next_ravenous",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_venom_lethal_embrace": {
+      "id": "ms_venom_lethal_embrace",
+      "owner": "venom",
+      "source_name": "Lethal Embrace",
+      "name": "Lethal Embrace",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "bonus_full_hp",
+          "1.5"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1
+    },
+    "ms_venom_spike_burst": {
+      "id": "ms_venom_spike_burst",
+      "owner": "venom",
+      "source_name": "Spike Burst",
+      "name": "Spike Burst",
+      "class": "POWER",
+      "target": "ENEMY_ROW",
+      "actions": [
+        [
+          "hit",
+          "1.5"
+        ],
+        [
+          "chance_status",
+          "bind",
+          "0.1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 3
+    },
+    "ms_venom_symbiote_bind": {
+      "id": "ms_venom_symbiote_bind",
+      "owner": "venom",
+      "source_name": "Symbiote Bind",
+      "name": "Symbiote Bind",
+      "class": "POWER",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "status",
+          "bind",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 2
+    },
+    "ms_venom_symbiotic_senses": {
+      "id": "ms_venom_symbiotic_senses",
+      "owner": "venom",
+      "source_name": "Symbiotic Senses",
+      "name": "Symbiotic Senses",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "draw_attack_heroic",
+          "1"
+        ],
+        [
+          "self_status",
+          "preserve_ravenous",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_venom_tasty_brains": {
+      "id": "ms_venom_tasty_brains",
+      "owner": "venom",
+      "source_name": "Tasty Brains",
+      "name": "Tasty Brains",
+      "class": "POWER",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "2"
+        ],
+        [
+          "lifesteal"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 3
+    },
+    "ms_venom_tendril_strike": {
+      "id": "ms_venom_tendril_strike",
+      "owner": "venom",
+      "source_name": "Tendril Strike",
+      "name": "Tendril Strike",
+      "class": "ATTACK",
+      "target": "CHAIN",
+      "actions": [
+        [
+          "hit",
+          "0.5"
+        ],
+        [
+          "chain",
+          "2"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1,
+      "chain": 2
+    },
+    "ms_venom_web_toss": {
+      "id": "ms_venom_web_toss",
+      "owner": "venom",
+      "source_name": "Web Toss",
+      "name": "Web Toss",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "push",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": false,
+      "gain": 1
+    },
+    "ms_storm_arc": {
+      "id": "ms_storm_arc",
+      "owner": "storm",
+      "source_name": "Arc",
+      "name": "Arc",
+      "class": "ATTACK",
+      "target": "CHAIN",
+      "actions": [
+        [
+          "hit",
+          "0.75"
+        ],
+        [
+          "chain",
+          "1"
+        ],
+        [
+          "next_chain",
+          "2"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 1,
+      "chain": 1
+    },
+    "ms_storm_call_the_lightning": {
+      "id": "ms_storm_call_the_lightning",
+      "owner": "storm",
+      "source_name": "Call the Lightning",
+      "name": "Call the Lightning",
+      "class": "POWER",
+      "target": "ENEMY_ROW",
+      "actions": [
+        [
+          "hit",
+          "2"
+        ],
+        [
+          "next_area",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 3
+    },
+    "ms_storm_crushing_blow": {
+      "id": "ms_storm_crushing_blow",
+      "owner": "storm",
+      "source_name": "Crushing Blow",
+      "name": "Crushing Blow",
+      "class": "POWER",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "2"
+        ],
+        [
+          "next_damage",
+          "1"
+        ],
+        [
+          "next_cost",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 2
+    },
+    "ms_storm_gale_force": {
+      "id": "ms_storm_gale_force",
+      "owner": "storm",
+      "source_name": "Gale Force",
+      "name": "Gale Force",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "push",
+          "2"
+        ],
+        [
+          "next_quick"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 1
+    },
+    "ms_storm_hellstorm": {
+      "id": "ms_storm_hellstorm",
+      "owner": "storm",
+      "source_name": "Hellstorm",
+      "name": "Hellstorm",
+      "class": "POWER",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit_per_hand",
+          "1.5"
+        ],
+        [
+          "next_draw",
+          "2"
+        ],
+        [
+          "exhaust"
+        ]
+      ],
+      "rarity": "LEGENDARY",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 4,
+      "exhaust": true
+    },
+    "ms_storm_live_wire": {
+      "id": "ms_storm_live_wire",
+      "owner": "storm",
+      "source_name": "Live Wire",
+      "name": "Live Wire",
+      "class": "POWER",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "status",
+          "stun",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "cost": 2
+    },
+    "ms_storm_goddess_blessing": {
+      "id": "ms_storm_goddess_blessing",
+      "owner": "storm",
+      "source_name": "Goddess' Blessing",
+      "name": "Goddess' Blessing",
+      "class": "SKILL",
+      "target": "SELF",
+      "actions": [
+        [
+          "draw",
+          "1"
+        ],
+        [
+          "activate_next_turn"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_storm_overload": {
+      "id": "ms_storm_overload",
+      "owner": "storm",
+      "source_name": "Overload",
+      "name": "Overload",
+      "class": "SKILL",
+      "target": "ENEMY_ROW",
+      "actions": [
+        [
+          "status",
+          "stun",
+          "1"
+        ],
+        [
+          "redraw_strengthened"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_storm_stormshield": {
+      "id": "ms_storm_stormshield",
+      "owner": "storm",
+      "source_name": "Stormshield",
+      "name": "Stormshield",
+      "class": "SKILL",
+      "target": "ALL_ALLIES",
+      "actions": [
+        [
+          "status",
+          "resist",
+          "2"
+        ],
+        [
+          "hand_resist"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 2
+    },
+    "ms_storm_vortex": {
+      "id": "ms_storm_vortex",
+      "owner": "storm",
+      "source_name": "Vortex",
+      "name": "Vortex",
+      "class": "ATTACK",
+      "target": "ENEMY_ROW",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "push",
+          "1"
+        ]
+      ],
+      "rarity": "UNVERIFIED",
+      "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
+      "reach": true,
+      "gain": 1
+    }
+  }
+}

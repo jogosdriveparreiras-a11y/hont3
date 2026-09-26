@@ -4,8 +4,11 @@ const Content = preload("res://game/Content.gd")
 const Battle = preload("res://game/BattleState.gd")
 const SoundBus = preload("res://game/SoundBus.gd")
 const Presentation = preload("res://game/CombatPresentation.gd")
+const PackBridge = preload("res://game/PackBridge.gd")
 
 var battle
+var packs = PackBridge.new()
+var pack_mode := "default"
 var camera: Camera3D
 var stage: Node3D
 var units: Node3D
@@ -213,6 +216,8 @@ func _show_menu() -> void:
 	menu.add_child(_button("Preparar itens", _show_items))
 	menu.add_child(_button("Configurações", _show_settings))
 	menu.add_child(_button("Iniciar missão: %s" % Content.MISSIONS[mission_id]["name"], _start_mission))
+	menu.add_child(_button("Demo: elenco do anexo (ent_)", _start_entities_demo))
+	menu.add_child(_button("Demo: cartas externas (ms_)", _start_external_demo))
 
 func _show_settings() -> void:
 	var menu := _center_panel("CONFIGURAÇÕES")
@@ -423,6 +428,8 @@ func _matches_deck_filter(card_id: String, hero_id: String) -> bool:
 	return true
 
 func _card_type(definition: Dictionary) -> String:
+	for action_line in packs.describe_actions(definition):
+		parts.append(action_line)
 	for effect in definition.get("effects", []):
 		if effect.get("kind", "") == "DAMAGE":
 			return "MÁGICO" if effect.get("stat", "attack") == "power" else "FÍSICO"
@@ -511,17 +518,57 @@ func _start_mission() -> void:
 		feedback = "Escolha três heróis para entrar na missão."
 		_show_team()
 		return
+	pack_mode = "default"
+	_begin_battle_session()
+	battle.begin(mission_id, team, equipped, 0, improvements, loadout)
+	_render_battle()
+
+func _begin_battle_session() -> void:
 	selected_card = -1
 	selected_action = ""
 	chain_targets.clear()
 	event_history.clear()
+	feedback = ""
 	battle = Battle.new()
 	battle.event.connect(_on_event)
 	battle.visual.connect(_on_visual)
 	battle.changed.connect(_render_battle)
 	battle.finished.connect(_on_finished)
-	battle.begin(mission_id, team, equipped, 0, improvements, loadout)
+
+func _start_entities_demo() -> void:
+	# Missão jogável com três entidades do pacote hotn3_entities.
+	pack_mode = "entities"
+	mission_id = "road"
+	_begin_battle_session()
+	var ids: Array[String] = ["ent_akuji", "ent_adam", "ent_techna"]
+	if not packs.deploy_entities(battle, mission_id, ids):
+		feedback = "Não foi possível montar o elenco do pacote."
+		pack_mode = "default"
+		battle = null
+		_show_menu()
+		return
+	feedback = "Elenco do anexo: Akuji, Adam e Techna."
 	_render_battle()
+
+func _start_external_demo() -> void:
+	# Missão com heróis padrão e baralho ms_ via owner_mapping.
+	pack_mode = "external"
+	mission_id = "road"
+	_begin_battle_session()
+	var demo_team: Array[String] = ["guerreiro", "mago", "ladino"]
+	battle.begin(mission_id, demo_team, {}, 0, {}, loadout)
+	var installed: int = packs.install_external_demo(battle)
+	if installed <= 0:
+		feedback = "Pacote de cartas externas sem cartas instaladas."
+		pack_mode = "default"
+		battle = null
+		_show_menu()
+		return
+	feedback = "Cartas externas instaladas: %d." % installed
+	_render_battle()
+
+func _card_def(card_id: String) -> Dictionary:
+	return packs.definition(str(card_id))
 
 func _on_event(message: String) -> void:
 	event_history.append(message)
@@ -651,7 +698,7 @@ func _render_battle() -> void:
 	hand_scroll.add_child(bottom)
 	for index in range(battle.hand.size()):
 		var card: Dictionary = battle.hand[index]
-		var definition: Dictionary = Content.CARDS[card["id"]]
+		var definition: Dictionary = _card_def(str(card["id"]))
 		var host := _build_hand_card(index, card, definition, hand_h)
 		bottom.add_child(host)
 		_make_3d_card(index, card, definition)
@@ -662,7 +709,7 @@ func _render_battle() -> void:
 	hover_hint.custom_minimum_size.x = viewport_size.x - 40
 	hover_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	hud.add_child(hover_hint)
-	var status := _label("%s%s" % [feedback, "  ·  ALVOS %d/%d" % [chain_targets.size(), Content.CARDS[battle.hand[selected_card]["id"]].get("chain", 1)] if selected_card >= 0 and selected_card < battle.hand.size() and not chain_targets.is_empty() else ""], 19, Color("f7d499"))
+	var status := _label("%s%s" % [feedback, "  ·  ALVOS %d/%d" % [chain_targets.size(), _card_def(str(battle.hand[selected_card]["id"])).get("chain", 1)] if selected_card >= 0 and selected_card < battle.hand.size() and not chain_targets.is_empty() else ""], 19, Color("f7d499"))
 	status.position = Vector2(20, hand_top - 24)
 	status.custom_minimum_size.x = viewport_size.x - 40
 	status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -684,14 +731,14 @@ func _select_card(index: int) -> void:
 	if selected_action == "redraw":
 		selected_action = ""
 		_animate_card_depart(index)
-		battle.redraw(index)
+		packs.redraw_card(battle, pack_mode, index)
 		return
 	selected_action = ""
 	selected_card = index if selected_card != index else -1
 	chain_targets.clear()
 	if selected_card >= 0:
-		var definition: Dictionary = Content.CARDS[battle.hand[index]["id"]]
-		if definition["target"] == "SELF":
+		var definition: Dictionary = _card_def(str(battle.hand[index]["id"]))
+		if definition.get("target", "") == "SELF":
 			_choose_target(battle.hand[index]["owner"])
 			return
 		feedback = "Escolha o alvo para %s." % definition["name"]
@@ -711,21 +758,27 @@ func _choose_target(actor_id: int) -> void:
 		feedback = "Selecione uma carta para mostrar a prévia."
 		_render_battle()
 		return
-	var definition: Dictionary = Content.CARDS[battle.hand[selected_card]["id"]]
+	var definition: Dictionary = _card_def(str(battle.hand[selected_card]["id"]))
 	if definition.get("target", "") == "CHAIN":
 		chain_targets.append(actor_id)
 		if chain_targets.size() < int(definition.get("chain", 1)):
 			feedback = "Escolha o próximo acerto (%d/%d)." % [chain_targets.size(), definition["chain"]]
 			_render_battle()
 			return
-	var preview: Dictionary = battle.preview(selected_card, actor_id, chain_targets)
-	if preview.is_empty():
-		feedback = "Alvo indisponível para esta carta."
-		chain_targets.clear()
-		_render_battle()
-		return
-	if preview.get("playable", false): _animate_card_depart(selected_card)
-	var successful: bool = battle.play(selected_card, actor_id, chain_targets)
+	var card_id := str(battle.hand[selected_card].get("id", ""))
+	var successful: bool = false
+	if packs.is_pack_card(card_id) or pack_mode != "default":
+		_animate_card_depart(selected_card)
+		successful = packs.play_card(battle, pack_mode, selected_card, actor_id, chain_targets)
+	else:
+		var preview: Dictionary = battle.preview(selected_card, actor_id, chain_targets)
+		if preview.is_empty():
+			feedback = "Alvo indisponível para esta carta."
+			chain_targets.clear()
+			_render_battle()
+			return
+		if preview.get("playable", false): _animate_card_depart(selected_card)
+		successful = battle.play(selected_card, actor_id, chain_targets)
 	chain_targets.clear()
 	if successful:
 		selected_card = -1
@@ -1082,7 +1135,7 @@ func _note_card_hover(index: int, host: Control, width: float, height: float) ->
 	if index >= 0 and index < battle.hand.size():
 		_show_actor_portrait(int(battle.hand[index]["owner"]), false)
 		if is_instance_valid(hover_hint):
-			hover_hint.text = _card_description(Content.CARDS[battle.hand[index]["id"]], battle.hand[index])
+			hover_hint.text = _card_description(_card_def(str(battle.hand[index]["id"])), battle.hand[index])
 
 func _on_card_gui(event: InputEvent, index: int) -> void:
 	if battle == null or battle.phase != "PLAYER" or not event is InputEventMouseButton: return
@@ -1091,7 +1144,7 @@ func _on_card_gui(event: InputEvent, index: int) -> void:
 	if selected_action == "redraw":
 		selected_action = ""
 		_animate_card_depart(index)
-		battle.redraw(index)
+		packs.redraw_card(battle, pack_mode, index)
 		get_viewport().set_input_as_handled()
 		return
 	if inspected_card == index:
@@ -1109,7 +1162,7 @@ func _confirm_inspected() -> void:
 	suppress_inspect_cancel = false
 	var index := inspected_card
 	if battle == null or index < 0 or index >= battle.hand.size(): return
-	var definition: Dictionary = Content.CARDS[battle.hand[index]["id"]]
+	var definition: Dictionary = _card_def(str(battle.hand[index]["id"]))
 	var kind := str(definition.get("target", "ENEMY"))
 	inspected_card = -1
 	selected_card = index
@@ -1146,7 +1199,7 @@ func _add_inspect_overlay(index: int, viewport_size: Vector2) -> void:
 	hud.add_child(blocker)
 	var height := viewport_size.y * 0.5
 	var card: Dictionary = battle.hand[index]
-	var host := _build_hand_card(index, card, Content.CARDS[card["id"]], height)
+	var host := _build_hand_card(index, card, _card_def(str(card["id"])), height)
 	host.scale = Vector2.ONE
 	host.z_index = 9
 	var width := height * 0.68
@@ -1173,6 +1226,7 @@ func _step_enemy() -> void:
 	enemy_steps += 1
 	if enemy_steps > 16:
 		battle.finish_enemy_phase()
+		packs.on_player_turn_resumed(battle, pack_mode)
 		enemy_presenting = false
 		return
 	await get_tree().create_timer(0.48 / maxf(animation_speed, 0.25)).timeout
@@ -1183,6 +1237,7 @@ func _step_enemy() -> void:
 		_step_enemy()
 	else:
 		battle.finish_enemy_phase()
+		packs.on_player_turn_resumed(battle, pack_mode)
 		enemy_presenting = false
 
 func _input(event: InputEvent) -> void:
@@ -1285,7 +1340,7 @@ func _card_description(definition: Dictionary, card: Dictionary = {}) -> String:
 			"BLOCK": parts.append("Bloqueio %d" % int(effect.get("amount", 0)))
 			"SHIELD": parts.append("Escudo %d" % int(effect.get("amount", 0)))
 			"DRAW": parts.append("Compra %d" % int(effect.get("amount", 1)))
-			"GENERATE": parts.append("Cria %s (temporária)" % Content.CARDS.get(effect.get("id", ""), {}).get("name", "carta"))
+			"GENERATE": parts.append("Cria %s (temporária)" % _card_def(str(effect.get("id", ""))).get("name", "carta"))
 			"PUSH": parts.append("Empurra%s" % (" com força" if effect.get("forceful", false) else ""))
 			"PULL": parts.append("Puxa")
 			"CURE": parts.append("Remove estados negativos")
