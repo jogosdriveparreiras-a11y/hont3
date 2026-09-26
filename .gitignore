@@ -10,3 +10,6 @@ data_*/
 *.tmp
 *.log
 .baseline/
+
+_playtest/
+*.ctex

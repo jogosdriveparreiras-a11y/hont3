@@ -103,6 +103,18 @@ func _make_world() -> void:
 	environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	environment.ambient_light_color = Color("72769a")
 	environment.ambient_light_energy = 0.55
+	environment.tonemap_mode = Environment.TONE_MAPPER_FILMIC
+	environment.glow_enabled = true
+	environment.glow_intensity = 0.95
+	environment.glow_strength = 1.25
+	environment.glow_bloom = 0.45
+	environment.glow_hdr_threshold = 0.55
+	environment.glow_hdr_scale = 1.4
+	environment.set("glow_levels/1", 0.0)
+	environment.set("glow_levels/2", 0.9)
+	environment.set("glow_levels/3", 0.7)
+	environment.set("glow_levels/4", 0.5)
+	environment.set("glow_levels/5", 0.25)
 	world.environment = environment
 	add_child(world)
 	_add_box(Vector3(0, -0.30, 0), Vector3(19, 0.5, 12), Color("353c47"))
@@ -760,7 +772,7 @@ func _render_battle() -> void:
 	recompra_ring.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	recompra_ring.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	hud.add_child(recompra_ring)
-	hover_hint = _label("Passe o mouse na carta. Clique para inspecionar, clique de novo para confirmar. Segure ~2s para Recompra.", 15, Color("c9d1dd"))
+	hover_hint = _label("Passe o mouse na carta (HUD esquerdo atualiza). Clique para inspecionar; clique de novo para escolher alvo. Segure ~2s para Recompra.", 15, Color("c9d1dd"))
 	hover_hint.position = Vector2(20, viewport_size.y - 210)
 	hover_hint.custom_minimum_size.x = viewport_size.x * 0.42
 	hover_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -822,25 +834,144 @@ func _build_hero_hud(viewport_size: Vector2) -> void:
 	fill.position = bar_bg.position
 	fill.size = Vector2(220.0 * clampf(float(hp) / float(max_hp), 0.0, 1.0), 14)
 	hero_hud.add_child(fill)
-	# Soft glow edge
+	# Visible glow behind HP fill (additive feel via bright translucent layers)
+	var glow_outer := ColorRect.new()
+	glow_outer.color = Color(0.24, 0.95, 0.55, 0.35)
+	glow_outer.position = Vector2(118, 72)
+	glow_outer.size = Vector2(fill.size.x + 10, 26)
+	hero_hud.add_child(glow_outer)
+	hero_hud.move_child(glow_outer, fill.get_index())
 	var glow := ColorRect.new()
-	glow.color = Color(0.24, 0.9, 0.55, 0.22)
-	glow.position = Vector2(122, 76)
-	glow.size = Vector2(fill.size.x + 2, 18)
+	glow.color = Color(0.55, 1.0, 0.75, 0.55)
+	glow.position = Vector2(120, 74)
+	glow.size = Vector2(fill.size.x + 6, 22)
+	hero_hud.add_child(glow)
+	hero_hud.move_child(glow, fill.get_index())
+	fill.color = Color(0.45, 1.0, 0.7, 1.0)
+	var hp_lbl := _label("%d/%d" % [hp, max_hp], 16, Color("f4f1ea"))
+	hp_lbl.position = Vector2(350, 72)
+	hero_hud.add_child(hp_lbl)
+	var defend := int(actor.get("block", 0)) + int(actor.get("shield", 0))
+	var state_y := 100.0
+	if defend > 0:
+		var def_lbl := _label("DEF +%d" % defend, 14, Color("8fd6ff"))
+		def_lbl.position = Vector2(122, state_y)
+		hero_hud.add_child(def_lbl)
+		state_y += 18.0
+	# Active states on this hero (Iniciativa is team resource → right HUD)
+	var statuses: Dictionary = actor.get("statuses", {})
+	var state_bits: Array[String] = []
+	for sid in statuses.keys():
+		var st: Dictionary = statuses[sid]
+		if int(st.get("duration", 0)) <= 0:
+			continue
+		var stacks := int(st.get("stacks", 1))
+		var bit := _status_label(str(sid))
+		if stacks > 1:
+			bit += " x%d" % stacks
+		bit += " (%d)" % int(st.get("duration", 0))
+		state_bits.append(bit)
+		if state_bits.size() >= 4:
+			break
+	if not state_bits.is_empty():
+		var states_lbl := _label(" · ".join(PackedStringArray(state_bits)), 13, Color("d7c6ff"))
+		states_lbl.position = Vector2(122, state_y)
+		states_lbl.size = Vector2(280, 36)
+		states_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		states_lbl.clip_text = true
+		hero_hud.add_child(states_lbl)
+
+func _refresh_hero_hud() -> void:
+	if hero_hud == null or not is_instance_valid(hero_hud) or battle == null:
+		return
+	var keep_pos := hero_hud.position
+	var keep_size := hero_hud.size
+	for child in hero_hud.get_children():
+		hero_hud.remove_child(child)
+		child.queue_free()
+	# Rebuild contents in place (panel chrome lives on hud, not as child)
+	var actor_id := _focus_hero_id()
+	if actor_id < 0:
+		var empty := _label("Passe o mouse numa carta ou herói", 15, Color("aab2c0"))
+		empty.position = Vector2(16, 50)
+		hero_hud.add_child(empty)
+		return
+	var actor: Dictionary = battle.actor_by_id(actor_id)
+	if actor.is_empty():
+		return
+	var portrait := TextureRect.new()
+	portrait.texture = _unit_portrait(actor)
+	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	portrait.position = Vector2(12, 14)
+	portrait.size = Vector2(96, 112)
+	portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hero_hud.add_child(portrait)
+	var name_lbl := _label(str(actor.get("name", "")).to_upper(), 22, Color("f4f1ea"))
+	name_lbl.position = Vector2(122, 18)
+	name_lbl.size = Vector2(280, 30)
+	name_lbl.clip_text = true
+	hero_hud.add_child(name_lbl)
+	var type_lbl := _label(str(actor.get("type", "")), 14, _type_color(str(actor.get("type", ""))))
+	type_lbl.position = Vector2(122, 48)
+	hero_hud.add_child(type_lbl)
+	var hp := int(actor.get("hp", 0))
+	var max_hp := maxi(1, int(actor.get("max_hp", 1)))
+	var bar_bg := ColorRect.new()
+	bar_bg.color = Color(0.05, 0.07, 0.1, 0.85)
+	bar_bg.position = Vector2(122, 78)
+	bar_bg.size = Vector2(220, 14)
+	hero_hud.add_child(bar_bg)
+	var fill := ColorRect.new()
+	fill.color = Color(0.45, 1.0, 0.7, 1.0)
+	fill.position = bar_bg.position
+	fill.size = Vector2(220.0 * clampf(float(hp) / float(max_hp), 0.0, 1.0), 14)
+	hero_hud.add_child(fill)
+	var glow_outer := ColorRect.new()
+	glow_outer.color = Color(0.24, 0.95, 0.55, 0.35)
+	glow_outer.position = Vector2(118, 72)
+	glow_outer.size = Vector2(fill.size.x + 10, 26)
+	hero_hud.add_child(glow_outer)
+	hero_hud.move_child(glow_outer, fill.get_index())
+	var glow := ColorRect.new()
+	glow.color = Color(0.55, 1.0, 0.75, 0.55)
+	glow.position = Vector2(120, 74)
+	glow.size = Vector2(fill.size.x + 6, 22)
 	hero_hud.add_child(glow)
 	hero_hud.move_child(glow, fill.get_index())
 	var hp_lbl := _label("%d/%d" % [hp, max_hp], 16, Color("f4f1ea"))
 	hp_lbl.position = Vector2(350, 72)
 	hero_hud.add_child(hp_lbl)
 	var defend := int(actor.get("block", 0)) + int(actor.get("shield", 0))
+	var state_y := 100.0
 	if defend > 0:
 		var def_lbl := _label("DEF +%d" % defend, 14, Color("8fd6ff"))
-		def_lbl.position = Vector2(122, 100)
+		def_lbl.position = Vector2(122, state_y)
 		hero_hud.add_child(def_lbl)
-	var ini: int = battle.impulse if str(actor.get("side", "")) == "ALLY" else battle.enemy_impulse
-	var ini_lbl := _label("INICIATIVA %d/%d" % [ini, int(battle.rules["impulse_max"])], 14, Color("e9c891"))
-	ini_lbl.position = Vector2(122, 118)
-	hero_hud.add_child(ini_lbl)
+		state_y += 18.0
+	var statuses: Dictionary = actor.get("statuses", {})
+	var state_bits: Array[String] = []
+	for sid in statuses.keys():
+		var st: Dictionary = statuses[sid]
+		if int(st.get("duration", 0)) <= 0:
+			continue
+		var stacks := int(st.get("stacks", 1))
+		var bit := _status_label(str(sid))
+		if stacks > 1:
+			bit += " x%d" % stacks
+		bit += " (%d)" % int(st.get("duration", 0))
+		state_bits.append(bit)
+		if state_bits.size() >= 4:
+			break
+	if not state_bits.is_empty():
+		var states_lbl := _label(" · ".join(PackedStringArray(state_bits)), 13, Color("d7c6ff"))
+		states_lbl.position = Vector2(122, state_y)
+		states_lbl.size = Vector2(280, 36)
+		states_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		states_lbl.clip_text = true
+		hero_hud.add_child(states_lbl)
+	hero_hud.position = keep_pos
+	hero_hud.size = keep_size
 
 func _focus_hero_id() -> int:
 	if inspected_card >= 0 and inspected_card < battle.hand.size():
@@ -859,39 +990,42 @@ func _focus_hero_id() -> int:
 func _build_economy_hud(viewport_size: Vector2) -> void:
 	economy_hud = Control.new()
 	economy_hud.name = "EconomyHud"
-	economy_hud.position = Vector2(viewport_size.x - 310, viewport_size.y - 200)
-	economy_hud.size = Vector2(290, 200)
+	economy_hud.position = Vector2(viewport_size.x - 310, viewport_size.y - 220)
+	economy_hud.size = Vector2(290, 220)
 	economy_hud.mouse_filter = Control.MOUSE_FILTER_STOP
 	hud.add_child(economy_hud)
-	_chrome(economy_hud.position, Vector2(290, 200), "res://assets/ui/panel.png")
+	_chrome(economy_hud.position, Vector2(290, 220), "res://assets/ui/panel.png")
 	var plays: int = battle.card_plays
 	var redraws_left: int = battle.redraws
 	var moves_left: int = battle.moves
+	var ini_now: int = battle.impulse
+	var ini_max: int = int(battle.rules["impulse_max"])
 	var lines: Array = [
-		["%d JOGADAS DE CARTA" % plays, plays, int(battle.rules["card_plays"])],
-		["%d RECOMPRAS" % redraws_left, redraws_left, int(battle.rules["redraws"])],
-		["%d MOVIMENTOS" % moves_left, moves_left, int(battle.rules["moves"])],
+		["INICIATIVA %d/%d" % [ini_now, ini_max], ini_now, ini_max, Color("e9c891")],
+		["%d JOGADAS DE CARTA" % plays, plays, int(battle.rules["card_plays"]), Color("6eb6ff")],
+		["%d RECOMPRAS" % redraws_left, redraws_left, int(battle.rules["redraws"]), Color("6eb6ff")],
+		["%d MOVIMENTOS" % moves_left, moves_left, int(battle.rules["moves"]), Color("6eb6ff")],
 	]
-	var y := 12.0
+	var y := 8.0
 	for entry in lines:
-		var lbl := _label(str(entry[0]), 16, Color("f4f1ea"))
+		var lbl := _label(str(entry[0]), 15, Color("f4f1ea"))
 		lbl.position = Vector2(16, y)
-		lbl.size = Vector2(200, 22)
+		lbl.size = Vector2(250, 20)
 		economy_hud.add_child(lbl)
 		var track := ColorRect.new()
 		track.color = Color(0.08, 0.1, 0.14, 0.9)
-		track.position = Vector2(16, y + 22)
+		track.position = Vector2(16, y + 20)
 		track.size = Vector2(200, 6)
 		economy_hud.add_child(track)
 		var max_v := maxi(1, int(entry[2]))
 		var fill := ColorRect.new()
-		fill.color = Color("6eb6ff")
+		fill.color = entry[3]
 		fill.position = track.position
 		fill.size = Vector2(200.0 * clampf(float(entry[1]) / float(max_v), 0.0, 1.0), 6)
 		economy_hud.add_child(fill)
-		y += 38.0
+		y += 32.0
 	var end_btn := _button("ENCERRAR TURNO", func(): _present_enemy_turn())
-	end_btn.position = Vector2(16, 138)
+	end_btn.position = Vector2(16, 148)
 	end_btn.custom_minimum_size = Vector2(258, 40)
 	economy_hud.add_child(end_btn)
 	
@@ -909,14 +1043,20 @@ func _select_card(index: int) -> void:
 		packs.redraw_card(battle, pack_mode, index)
 		return
 	selected_action = ""
-	selected_card = index if selected_card != index else -1
+	# First click selects/inspects; second click on same card enters targeting (never deselects here)
+	if selected_card == index and card_confirmed:
+		feedback = "Aponte o sprite do alvo e clique para confirmar."
+		_render_battle()
+		return
+	if selected_card == index or inspected_card == index:
+		inspected_card = index
+		_confirm_inspected()
+		return
+	inspected_card = index
+	selected_card = -1
+	card_confirmed = false
 	chain_targets.clear()
-	if selected_card >= 0:
-		var definition: Dictionary = _card_def(str(battle.hand[index]["id"]))
-		if definition.get("target", "") == "SELF":
-			_choose_target(battle.hand[index]["owner"])
-			return
-		feedback = "Escolha o alvo para %s." % definition["name"]
+	feedback = "Clique de novo na carta para escolher o alvo."
 	_render_battle()
 
 func _choose_target(actor_id: int) -> void:
@@ -1014,20 +1154,22 @@ func _create_actor_visual(actor: Dictionary) -> Node3D:
 	var ring := MeshInstance3D.new()
 	ring.name = "FloorRing"
 	var torus := TorusMesh.new()
-	torus.inner_radius = 0.46
-	torus.outer_radius = 0.54
+	torus.inner_radius = 0.40
+	torus.outer_radius = 0.62
 	torus.rings = 24
 	torus.ring_segments = 48
 	ring.mesh = torus
 	var type_tint: Color = _type_color(str(actor.get("type", "")))
-	var ring_color := Color(type_tint.r, type_tint.g, type_tint.b, 0.92)
-	var mat := _material(ring_color, true)
+	var bright := type_tint.lightened(0.35)
+	var mat := _material(Color(bright.r, bright.g, bright.b, 1.0), true)
 	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	mat.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
 	mat.emission_enabled = true
-	mat.emission = type_tint
-	mat.emission_energy_multiplier = 2.4
+	mat.emission = bright
+	mat.emission_energy_multiplier = 8.0
+	mat.albedo_color = Color(bright.r, bright.g, bright.b, 1.0)
 	ring.material_override = mat
-	ring.position.y = 0.03
+	ring.position.y = 0.04
 	ring.rotation_degrees.x = 0
 	body.add_child(ring)
 	# Soft outer glow disc (hollow feel via transparent center cylinder rim)
@@ -1038,14 +1180,34 @@ func _create_actor_visual(actor: Dictionary) -> Node3D:
 	glow_disk.bottom_radius = 0.58
 	glow_disk.height = 0.01
 	glow.mesh = glow_disk
-	var glow_mat := _material(Color(type_tint.r, type_tint.g, type_tint.b, 0.18), true)
+	var glow_mat := _material(Color(type_tint.r, type_tint.g, type_tint.b, 0.35), true)
 	glow_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	glow_mat.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
 	glow_mat.emission_enabled = true
-	glow_mat.emission = type_tint
-	glow_mat.emission_energy_multiplier = 1.2
+	glow_mat.emission = type_tint.lightened(0.25)
+	glow_mat.emission_energy_multiplier = 4.5
 	glow.material_override = glow_mat
+	glow_disk.top_radius = 0.72
+	glow_disk.bottom_radius = 0.72
 	glow.position.y = 0.015
 	body.add_child(glow)
+	# Extra soft halo (Compatibility has no Environment bloom)
+	var halo := MeshInstance3D.new()
+	halo.name = "FloorHalo"
+	var halo_disk := CylinderMesh.new()
+	halo_disk.top_radius = 0.95
+	halo_disk.bottom_radius = 0.95
+	halo_disk.height = 0.008
+	halo.mesh = halo_disk
+	var halo_mat := _material(Color(type_tint.r, type_tint.g, type_tint.b, 0.22), true)
+	halo_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	halo_mat.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+	halo_mat.emission_enabled = true
+	halo_mat.emission = type_tint.lightened(0.4)
+	halo_mat.emission_energy_multiplier = 3.0
+	halo.material_override = halo_mat
+	halo.position.y = 0.01
+	body.add_child(halo)
 	if ResourceLoader.exists(actor["sprite"]):
 		var sheet: Texture2D = load(actor["sprite"])
 		var columns := 1
@@ -1091,15 +1253,28 @@ func _create_actor_visual(actor: Dictionary) -> Node3D:
 	bg_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	hp_bg.material_override = bg_mat
 	hp_root.add_child(hp_bg)
+	var hp_glow := MeshInstance3D.new()
+	hp_glow.name = "HpGlow"
+	var glow_box := BoxMesh.new()
+	glow_box.size = Vector3(0.96, 0.10, 0.04)
+	hp_glow.mesh = glow_box
+	var gmat := _material(Color(0.35, 1.0, 0.6, 0.45), true)
+	gmat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	gmat.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+	gmat.emission_enabled = true
+	gmat.emission = Color(0.45, 1.0, 0.7)
+	gmat.emission_energy_multiplier = 4.0
+	hp_glow.material_override = gmat
+	hp_root.add_child(hp_glow)
 	var hp_fill := MeshInstance3D.new()
 	hp_fill.name = "HpFill"
 	var fill_box := BoxMesh.new()
 	fill_box.size = Vector3(0.88, 0.045, 0.025)
 	hp_fill.mesh = fill_box
-	var fill_mat := _material(Color("3ecf7a"), true)
+	var fill_mat := _material(Color(0.55, 1.0, 0.75), true)
 	fill_mat.emission_enabled = true
-	fill_mat.emission = Color("3ecf7a")
-	fill_mat.emission_energy_multiplier = 2.0
+	fill_mat.emission = Color(0.55, 1.0, 0.75)
+	fill_mat.emission_energy_multiplier = 5.5
 	hp_fill.material_override = fill_mat
 	hp_root.add_child(hp_fill)
 	var area := Area3D.new()
@@ -1126,11 +1301,21 @@ func _update_world_hp_bar(body: Node3D, actor: Dictionary) -> void:
 	var box: BoxMesh = fill.mesh
 	box.size = Vector3(0.88 * ratio, 0.045, 0.025)
 	fill.position.x = -0.44 * (1.0 - ratio)
+	var tint := Color(0.55, 1.0, 0.75) if ratio > 0.45 else (Color(1.0, 0.85, 0.35) if ratio > 0.2 else Color(1.0, 0.4, 0.4))
 	var mat: StandardMaterial3D = fill.material_override
 	if mat != null:
-		var tint := Color("3ecf7a") if ratio > 0.45 else (Color("e0c35a") if ratio > 0.2 else Color("e15b5b"))
 		mat.albedo_color = tint
 		mat.emission = tint
+		mat.emission_energy_multiplier = 5.5
+	var hp_glow: MeshInstance3D = hp_root.get_node_or_null("HpGlow")
+	if hp_glow != null and hp_glow.mesh != null:
+		var gbox: BoxMesh = hp_glow.mesh
+		gbox.size = Vector3(maxf(0.08, 0.96 * ratio), 0.10, 0.04)
+		hp_glow.position.x = -0.48 * (1.0 - ratio)
+		var gmat: StandardMaterial3D = hp_glow.material_override
+		if gmat != null:
+			gmat.albedo_color = Color(tint.r, tint.g, tint.b, 0.45)
+			gmat.emission = tint
 
 func _make_3d_card(index: int, card: Dictionary, definition: Dictionary) -> void:
 	var view := SubViewport.new()
@@ -1147,10 +1332,12 @@ func _make_3d_card(index: int, card: Dictionary, definition: Dictionary) -> void
 	var plane := QuadMesh.new()
 	plane.size = Vector2(0.525, 0.81)
 	mesh.mesh = plane
-	var material := _material(Color.WHITE, true)
-	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	material.albedo_texture = view.get_texture()
-	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	var shader: Shader = load("res://game/card_round.gdshader")
+	var material := ShaderMaterial.new()
+	material.shader = shader
+	material.set_shader_parameter("albedo_tex", view.get_texture())
+	material.set_shader_parameter("corner_radius", 0.055)
+	material.set_shader_parameter("modulate_color", Color.WHITE)
 	mesh.material_override = material
 	var pose: Dictionary = _arc_pose(index, battle.hand.size())
 	var slot: Vector3 = pose["position"]
@@ -1164,10 +1351,9 @@ func _make_3d_card(index: int, card: Dictionary, definition: Dictionary) -> void
 		mesh.rotation = spin + Vector3(0, 0, 0.95)
 	cards_3d.add_child(mesh)
 	if int(owner.get("hp", 0)) <= 0:
-		mesh.transparency = 0.35
-		var dead_mat: StandardMaterial3D = mesh.material_override
+		var dead_mat: ShaderMaterial = mesh.material_override
 		if dead_mat != null:
-			dead_mat.albedo_color = Color(0.55, 0.55, 0.58, 0.75)
+			dead_mat.set_shader_parameter("modulate_color", Color(0.55, 0.55, 0.58, 0.75))
 	if entering and not reduce_motion:
 		var arrive := create_tween()
 		arrive.set_parallel(true)
@@ -1262,15 +1448,29 @@ func _set_orbit(target: float) -> void:
 	await tw.finished
 
 func _arc_pose(index: int, count: int) -> Dictionary:
-	var t := 0.5
-	if count > 1:
-		t = float(index) / float(count - 1)
-	var spread := minf(0.95, 0.12 * float(maxi(count, 1)))
-	var ang := lerpf(-spread, spread, t)
-	return {
-		"position": Vector3(sin(ang) * 1.35, -1.22 + cos(ang) * 0.18, -2.55),
-		"rotation": Vector3(-0.05, 0.0, -ang * 0.92)
-	}
+	# Cards sit between two concentric arcs: shared radius → Y follows circumference,
+	# rotation = tangent. Neighbor step ~5°; radius sized so the fan is visibly curved.
+	var n := maxi(count, 1)
+	var step := deg_to_rad(5.0)
+	var total := step * float(maxi(n - 1, 0))
+	# Keep a minimum total span so even small hands show circumference (not a flat row)
+	total = maxf(total, deg_to_rad(18.0)) if n > 1 else 0.0
+	var half := total * 0.5
+	var t := 0.5 if n <= 1 else float(index) / float(n - 1)
+	var ang := lerpf(-half, half, t)
+	var target_half_width := 0.34 + 0.17 * float(mini(n, 8))
+	# Smaller radius → larger sagitta so the circumference is obvious (not a flat tilted row)
+	var radius := 2.35
+	var max_half := asin(clampf(target_half_width / radius, 0.05, 0.92))
+	if half > max_half:
+		radius = target_half_width / maxf(sin(half), 0.05)
+	elif n > 1:
+		half = max_half
+		ang = lerpf(-half, half, t)
+	var cy := -1.05 - radius
+	var pos := Vector3(sin(ang) * radius, cy + cos(ang) * radius, -2.55)
+	var rot := Vector3(-0.05, 0.0, -ang)
+	return {"position": pos, "rotation": rot}
 
 func _type_color(kind: String) -> Color:
 	match kind:
@@ -1633,13 +1833,19 @@ func _on_card_gui(event: InputEvent, index: int) -> void:
 		_try_recompra(index)
 		get_viewport().set_input_as_handled()
 		return
-	if inspected_card == index:
+	if selected_card == index and card_confirmed:
+		# Already in targeting — keep targeting; do not deselect
+		feedback = "Aponte o sprite do alvo e clique para confirmar."
+		call_deferred("_render_battle")
+	elif inspected_card == index or (selected_card == index and not card_confirmed):
 		suppress_inspect_cancel = true
 		call_deferred("_confirm_inspected")
 	else:
+		# First click: select / inspect
 		inspected_card = index
 		selected_card = -1
 		card_confirmed = false
+		chain_targets.clear()
 		_show_actor_portrait(int(battle.hand[index]["owner"]), false)
 		call_deferred("_render_battle")
 	get_viewport().set_input_as_handled()
@@ -1968,8 +2174,17 @@ func _tick_recompra_hold(delta: float) -> void:
 
 func _process(delta: float) -> void:
 	for i in range(unit_sprites.size()):
-		if is_instance_valid(unit_sprites[i]):
-			unit_sprites[i].position.y = 1.1 + (0.0 if reduce_motion else sin(Time.get_ticks_msec() * 0.002 + i) * 0.045)
+		if not is_instance_valid(unit_sprites[i]):
+			continue
+		unit_sprites[i].position.y = 1.1
+		if reduce_motion:
+			unit_sprites[i].scale = Vector3.ONE
+		else:
+			# Classic idle breath: vertical stretch + slight horizontal squash
+			var wave := sin(Time.get_ticks_msec() * 0.0024 + float(i) * 1.7)
+			var sy := 1.0 + wave * 0.028
+			var sx := 1.0 - wave * 0.016
+			unit_sprites[i].scale = Vector3(sx, sy, 1.0)
 	if battle != null and battle.phase == "PLAYER":
 		_tick_recompra_hold(delta)
 	if battle != null and battle.phase == "PLAYER" and camera != null:
@@ -1981,20 +2196,25 @@ func _process(delta: float) -> void:
 		var hit := get_world_3d().direct_space_state.intersect_ray(query)
 		var new_card := int(hit["collider"].get_meta("card_index")) if hit.has("collider") and hit["collider"].has_meta("card_index") else -1
 		var new_actor := int(hit["collider"].get_meta("actor_id")) if new_card < 0 and hit.has("collider") and hit["collider"].has_meta("actor_id") else -1
+		var hover_dirty := false
 		if new_card != hovered_card:
 			hovered_card = new_card
+			hover_dirty = true
 			if hovered_card >= 0 and hovered_card < battle.hand.size():
 				_show_actor_portrait(int(battle.hand[hovered_card]["owner"]), false)
 				if is_instance_valid(hover_hint):
 					hover_hint.text = _card_description(_card_def(str(battle.hand[hovered_card]["id"])), battle.hand[hovered_card])
 		if new_actor != hovered_actor:
 			hovered_actor = new_actor
+			hover_dirty = true
 			if hovered_actor >= 0:
 				_show_actor_portrait(hovered_actor, false)
 				if card_confirmed and selected_card >= 0 and selected_card < battle.hand.size() and is_instance_valid(hover_hint):
 					var estimate: Dictionary = battle.preview(selected_card, hovered_actor, chain_targets)
 					if not estimate.is_empty():
 						hover_hint.text = "Alvo %s · dano previsto na prévia" % battle.actor_by_id(hovered_actor).get("name", "")
+		if hover_dirty:
+			_refresh_hero_hud()
 	for id in actor_nodes.keys():
 		var body: Node3D = actor_nodes[id]
 		if not is_instance_valid(body): continue

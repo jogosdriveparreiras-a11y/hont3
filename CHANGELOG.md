@@ -1,4 +1,5 @@
 ## Não publicado
+- Polimento battle UI pass2: arco circular da mão (~5° entre cartas), ícone escudo+espada do anexo com dano no centro do escudo, 2º clique na carta entra em mira (não desmarca), HUD esquerdo atualiza no hover, bloom/glow em barras e anéis, assinatura top-left, Iniciativa na economia à direita, arte full-bleed, cantos arredondados, idle breath nos sprites.
 - Pacote visual UI/HUD/cartas estilo Midnight Suns: fundo opaco por tipo, caixas pretas semi-transparentes, ícone escudo+espada PNG, dano só em cartas ofensivas, nome do herói centrado sob o ícone de assinatura.
 - Mão 3D em 50% do tamanho, hover com glow elétrico, inspeção +20%. HUD inferior: retrato+PV à esquerda, economia (jogadas/recompras/movimentos) + Encerrar turno à direita. Anéis de chão por tipo no lugar das sombras.
 - Recompra por segurar ~2s (sem botão "Redesenhar"). Cartas de heróis mortos ficam na mão cinzas (inspecionáveis, não jogáveis). Equipe bloqueia heróis únicos que já são inimigos da missão.
