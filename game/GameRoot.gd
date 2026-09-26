@@ -3,7 +3,7 @@ extends Node3D
 const Content = preload("res://game/Content.gd")
 const Battle = preload("res://game/BattleState.gd")
 
-var battle: HotNBattle
+var battle
 var camera: Camera3D
 var stage: Node3D
 var units: Node3D
@@ -370,7 +370,7 @@ func _add_actor_button(parent: VBoxContainer, actor: Dictionary) -> void:
 		if Content.CARDS[battle.hand[selected_card]["id"]].get("target", "") == "CHAIN":
 			preview_chain = chain_targets.duplicate()
 			preview_chain.append(actor["id"])
-		var estimate := battle.preview(selected_card, actor["id"], preview_chain)
+		var estimate: Dictionary = battle.preview(selected_card, actor["id"], preview_chain)
 		if not estimate.is_empty():
 			var owner: Dictionary = battle.actor_by_id(battle.hand[selected_card]["owner"])
 			for id in estimate["targets"]:
@@ -426,7 +426,7 @@ func _choose_target(actor_id: int) -> void:
 		chain_targets.clear()
 		_render_battle()
 		return
-	var successful := battle.play(selected_card, actor_id, chain_targets)
+	var successful: bool = battle.play(selected_card, actor_id, chain_targets)
 	chain_targets.clear()
 	if successful:
 		selected_card = -1
@@ -435,8 +435,8 @@ func _choose_target(actor_id: int) -> void:
 	_render_battle()
 
 func _render_actors() -> void:
-	var allies := battle.living("ALLY")
-	var enemies := battle.living("ENEMY")
+	var allies: Array = battle.living("ALLY")
+	var enemies: Array = battle.living("ENEMY")
 	for group in [allies, enemies]:
 		for actor in group:
 			var side: String = actor["side"]
@@ -501,7 +501,7 @@ func _make_3d_card(index: int, card: Dictionary, definition: Dictionary) -> void
 	interior.position = Vector2(18, 18)
 	interior.size = Vector2(284, 444)
 	panel.add_child(interior)
-	var owner := battle.actor_by_id(card["owner"])
+	var owner: Dictionary = battle.actor_by_id(card["owner"])
 	var title := _label(definition["name"], 26, Color("f2dcad"))
 	title.position = Vector2(35, 30)
 	title.size = Vector2(250, 75)
