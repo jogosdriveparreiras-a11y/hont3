@@ -222,7 +222,7 @@ func _show_decks() -> void:
 		catalogue.add_child(improvements_row)
 		for card_id in hero.get("pool", hero["cards"]):
 			if improvements_row.get_children().any(func(b): return b.get_meta("card_id", "") == card_id): continue
-			var key := id + ":" + card_id
+			var key: String = str(id) + ":" + str(card_id)
 			var change: Dictionary = improvements.get(key, {"upgrade": 0, "mod": ""})
 			var upgrade_button := _button("%s +%d [%s]" % [Content.CARDS[card_id]["name"], change["upgrade"], change["mod"]], func(): _improve_card(key))
 			upgrade_button.set_meta("card_id", card_id)
@@ -507,7 +507,7 @@ func _make_3d_card(index: int, card: Dictionary, definition: Dictionary) -> void
 	title.size = Vector2(250, 75)
 	title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	panel.add_child(title)
-	var owner_label := _label(owner["name"] + " · " + definition.get("class", ""), 20)
+	var owner_label := _label(str(owner.get("name", "")) + " · " + str(definition.get("class", "")), 20)
 	owner_label.position = Vector2(35, 105)
 	panel.add_child(owner_label)
 	var symbol := _label("✦", 90, Color("ad9273"))
