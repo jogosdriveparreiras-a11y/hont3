@@ -299,7 +299,7 @@ func _take_damage(source: Dictionary, target: Dictionary, amount: int, pierce: b
 		_log("%s está invulnerável." % target["name"])
 		return false
 	if not pierce and _has_status(target, "resist"):
-		var layers := target["statuses"]["resist"]
+		var layers: Dictionary = target["statuses"]["resist"]
 		layers["stacks"] -= 1
 		if layers["stacks"] <= 0: target["statuses"].erase("resist")
 		else: target["statuses"]["resist"] = layers
@@ -365,7 +365,8 @@ func _purge_dead_cards() -> void:
 func _resolve(source: Dictionary, targets: Array[Dictionary], card: Dictionary, card_data: Dictionary) -> Array[int]:
 	var fallen: Array[int] = []
 	var fatal_targets: Array[Dictionary] = []
-	var fatal_active := _has_status(source, "fatal_fury") and card_data.get("effects", []).any(func(e): return e.get("kind", "") == "DAMAGE")
+	var damage_effects: Array = card_data.get("effects", [])
+	var fatal_active: bool = _has_status(source, "fatal_fury") and damage_effects.any(func(e): return e.get("kind", "") == "DAMAGE")
 	var effects: Array = card_data.get("effects", []).duplicate(true)
 	if card_data.has("roulette") and card.has("roulette_effect"): effects.append(card["roulette_effect"])
 	for effect in effects:
@@ -402,8 +403,8 @@ func _resolve(source: Dictionary, targets: Array[Dictionary], card: Dictionary, 
 					continue
 				match kind:
 					"DAMAGE":
-						var is_area := card_data.get("target", "") in ["ENEMY_ROW", "ALL_ENEMIES"]
-						var is_melee := not card_data.get("reach", false) and source["side"] != target["side"]
+						var is_area: bool = str(card_data.get("target", "")) in ["ENEMY_ROW", "ALL_ENEMIES"]
+						var is_melee: bool = (not bool(card_data.get("reach", false))) and source["side"] != target["side"]
 						var original_hp := int(target["hp"])
 						if _take_damage(source, target, _damage_value(source, target, effect, card), effect.get("pierce", false), true, false, is_area, is_melee, card_data.get("class", "") == "ATTACK", true):
 							fallen.append(int(target["id"]))
@@ -525,7 +526,8 @@ func play(hand_index: int, target_id: int, chain_ids: Array = []) -> bool:
 		_take_damage(source, source, 3 * int(source["statuses"]["wounded"]["stacks"]), true, false)
 	var fallen: Array[int] = []
 	if source["hp"] > 0:
-		var bleed_charge := _has_status(source, "make_em_bleed") and definition.get("effects", []).any(func(e): return e.get("kind", "") == "DAMAGE")
+		var bleed_effects: Array = definition.get("effects", [])
+		var bleed_charge: bool = _has_status(source, "make_em_bleed") and bleed_effects.any(func(e): return e.get("kind", "") == "DAMAGE")
 		fallen = _resolve(source, targets, card, definition)
 		if bleed_charge and _has_status(source, "make_em_bleed"):
 			var charges: Dictionary = source["statuses"]["make_em_bleed"]
@@ -696,10 +698,10 @@ func preview(hand_index: int, target_id: int, chain_ids: Array = []) -> Dictiona
 			if victim.get("minion", false): damage = max(damage, int(state["hp"]))
 			if not effect.get("pierce", false):
 				for layer in ["shield", "block"]:
-					var blocked := min(damage, int(state[layer]))
+					var blocked: int = mini(damage, int(state[layer]))
 					state[layer] -= blocked
 					damage -= blocked
-			var lost := min(int(state["hp"]), damage)
+			var lost: int = mini(int(state["hp"]), damage)
 			state["hp"] -= lost
 			estimates[victim["id"]]["damage"] += lost
 			estimates[victim["id"]]["hp_after"] = state["hp"]
@@ -831,7 +833,7 @@ func _tick_statuses() -> void:
 		if not linked.any(func(a): return a["hp"] > 0): continue
 		var pool := 0
 		for actor in linked: pool += int(actor["hp"])
-		var shared := max(1, floori(float(pool) / float(linked.size())))
+		var shared: int = maxi(1, floori(float(pool) / float(linked.size())))
 		for actor in linked: actor["hp"] = min(int(actor["max_hp"]), shared)
 	for actor in initially_dead:
 		for id in statuses_at_start[actor["id"]]:
