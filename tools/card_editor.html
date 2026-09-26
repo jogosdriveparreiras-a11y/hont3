@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>HotN3 — Editor de Cartas</title>
+<style>
+  :root {
+    --bg: #0f1218;
+    --panel: #171b24;
+    --panel2: #1e2430;
+    --border: #2a3344;
+    --text: #e8ecf4;
+    --muted: #8b95a8;
+    --accent: #6ea8ff;
+    --attack: #e85d5d;
+    --skill: #5db8e8;
+    --power: #c77dff;
+    --ok: #4ade80;
+    --warn: #fbbf24;
+    --danger: #f87171;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: "Segoe UI", system-ui, sans-serif;
+    background: var(--bg); color: var(--text);
+    min-height: 100vh;
+  }
+  header {
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    padding: 12px 18px; border-bottom: 1px solid var(--border);
+    background: var(--panel); position: sticky; top: 0; z-index: 10;
+  }
+  header h1 { font-size: 1.05rem; margin: 0; font-weight: 650; }
+  header .hint { color: var(--muted); font-size: 0.85rem; flex: 1; }
+  .btn {
+    appearance: none; border: 1px solid var(--border); background: var(--panel2);
+    color: var(--text); padding: 7px 12px; border-radius: 8px; cursor: pointer;
+    font-size: 0.85rem; font-weight: 560;
+  }
+  .btn:hover { border-color: var(--accent); }
+  .btn.primary { background: #2a4a7a; border-color: #3d6aad; }
+  .btn.ok { background: #1a3d2a; border-color: #2d6b45; }
+  .btn.danger { background: #3d1a1a; border-color: #6b2d2d; }
+  .btn.active { outline: 2px solid var(--accent); }
+  .layout {
+    display: grid; grid-template-columns: 260px 1fr 340px;
+    gap: 0; min-height: calc(100vh - 58px);
+  }
+  @media (max-width: 1100px) {
+    .layout { grid-template-columns: 1fr; }
+  }
+  aside, main, .preview {
+    border-right: 1px solid var(--border); padding: 14px; overflow: auto;
+  }
+  .preview { border-right: none; }
+  .section-title {
+    font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--muted); margin: 14px 0 8px;
+  }
+  .section-title:first-child { margin-top: 0; }
+  input[type=text], input[type=number], select, textarea {
+    width: 100%; background: var(--panel2); border: 1px solid var(--border);
+    color: var(--text); border-radius: 8px; padding: 8px 10px; font-size: 0.9rem;
+  }
+  textarea { font-family: ui-monospace, Consolas, monospace; font-size: 0.78rem; min-height: 160px; }
+  label.field { display: block; margin-bottom: 10px; }
+  label.field > span { display: block; font-size: 0.78rem; color: var(--muted); margin-bottom: 4px; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .chip-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    border: 1px solid var(--border); background: var(--panel2); color: var(--text);
+    padding: 6px 10px; border-radius: 999px; cursor: pointer; font-size: 0.8rem;
+  }
+  .chip.on { background: #2a4a7a; border-color: var(--accent); }
+  .chip.attack.on { background: #5a2222; border-color: var(--attack); }
+  .chip.skill.on { background: #1e3f52; border-color: var(--skill); }
+  .chip.power.on { background: #3d2a55; border-color: var(--power); }
+  .toggle {
+    display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px;
+    border: 1px solid var(--border); border-radius: 8px; cursor: pointer;
+    background: var(--panel2); font-size: 0.8rem; user-select: none;
+  }
+  .toggle.on { border-color: var(--ok); background: #1a3d2a; }
+  .card-list { display: flex; flex-direction: column; gap: 4px; max-height: calc(100vh - 160px); overflow: auto; }
+  .card-item {
+    text-align: left; padding: 8px 10px; border-radius: 8px; border: 1px solid transparent;
+    background: transparent; color: var(--text); cursor: pointer; font-size: 0.82rem;
+  }
+  .card-item:hover { background: var(--panel2); }
+  .card-item.sel { border-color: var(--accent); background: #1a2740; }
+  .card-item .meta { color: var(--muted); font-size: 0.72rem; }
+  .face {
+    width: 220px; height: 340px; margin: 0 auto 14px; border-radius: 14px;
+    border: 2px solid #445; position: relative; overflow: hidden;
+    background: linear-gradient(160deg, #2a3140, #151922);
+    box-shadow: 0 12px 40px rgba(0,0,0,.45);
+  }
+  .face.ATTACK { border-color: var(--attack); }
+  .face.SKILL { border-color: var(--skill); }
+  .face.POWER { border-color: var(--power); }
+  .face .top { display: flex; justify-content: space-between; padding: 10px 12px; font-size: 0.75rem; }
+  .face .cname { padding: 0 12px; font-weight: 700; font-size: 1rem; line-height: 1.2; }
+  .face .ctarget { padding: 4px 12px; color: var(--muted); font-size: 0.75rem; }
+  .face .body { padding: 12px; font-size: 0.82rem; line-height: 1.35; min-height: 140px; }
+  .face .tags { position: absolute; bottom: 10px; left: 10px; right: 10px; display: flex; flex-wrap: wrap; gap: 4px; }
+  .face .tag { font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; background: #0008; border: 1px solid #fff2; }
+  .action-block {
+    border: 1px solid var(--border); border-radius: 10px; padding: 10px; margin-bottom: 8px;
+    background: var(--panel2);
+  }
+  .action-block header {
+    position: static; background: transparent; border: 0; padding: 0 0 8px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .action-block .args { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .muted { color: var(--muted); font-size: 0.8rem; }
+  .toast {
+    position: fixed; bottom: 18px; right: 18px; background: #1a3d2a; border: 1px solid var(--ok);
+    padding: 10px 14px; border-radius: 10px; display: none; z-index: 50;
+  }
+  .tabs { display: flex; gap: 6px; margin-bottom: 8px; }
+  .tabs .btn { flex: 1; }
+  .num-step { display: flex; gap: 4px; align-items: center; }
+  .num-step button { width: 28px; height: 28px; padding: 0; }
+  .num-step input { width: 72px; text-align: center; }
+</style>
+</head>
+<body>
+<header>
+  <h1>HotN3 · Editor de Cartas</h1>
+  <div class="hint">Digite só o nome. O resto é clique. Exporta JSON do pack <code>ent_</code> (não mexe no Content.gd).</div>
+  <button class="btn" id="btnNew">Nova carta</button>
+  <button class="btn" id="btnImport">Importar entities.json</button>
+  <button class="btn ok" id="btnExportPatch">Exportar patch JSON</button>
+  <button class="btn primary" id="btnExportFull">Exportar entities.json completo</button>
+  <input type="file" id="fileImport" accept=".json,application/json" hidden />
+</header>
+<div class="layout">
+  <aside>
+    <div class="section-title">Filtro</div>
+    <label class="field"><span>Personagem (owner)</span>
+      <select id="filterOwner"><option value="">Todos</option></select>
+    </label>
+    <input type="text" id="filterText" placeholder="Buscar nome ou id…" />
+    <div class="section-title">Cartas neste editor (<span id="count">0</span>)</div>
+    <div class="card-list" id="cardList"></div>
+  </aside>
+  <main>
+    <div class="section-title">Identidade</div>
+    <label class="field"><span>Nome da carta (única coisa que você digita de verdade)</span>
+      <input type="text" id="name" placeholder="Ex.: Golpe de titânio" />
+    </label>
+    <div class="row">
+      <label class="field" style="flex:1"><span>Id (auto, editável)</span>
+        <input type="text" id="id" />
+      </label>
+      <label class="field" style="flex:1"><span>Dono</span>
+        <select id="owner"></select>
+      </label>
+    </div>
+    <div class="section-title">Classe</div>
+    <div class="chip-row" id="classChips"></div>
+    <div class="section-title">Alvo</div>
+    <div class="chip-row" id="targetChips"></div>
+    <div class="section-title">Custo / ganho / estatística</div>
+    <div class="row">
+      <div>
+        <div class="muted">Custo (Iniciativa)</div>
+        <div class="num-step">
+          <button class="btn" data-num="cost" data-d="-1">−</button>
+          <input type="number" id="cost" min="0" max="10" value="0" />
+          <button class="btn" data-num="cost" data-d="1">+</button>
+        </div>
+      </div>
+      <div>
+        <div class="muted">Ganho</div>
+        <div class="num-step">
+          <button class="btn" data-num="gain" data-d="-1">−</button>
+          <input type="number" id="gain" min="0" max="5" value="1" />
+          <button class="btn" data-num="gain" data-d="1">+</button>
+        </div>
+      </div>
+      <div>
+        <div class="muted">Chain (se alvo CHAIN)</div>
+        <div class="num-step">
+          <button class="btn" data-num="chain" data-d="-1">−</button>
+          <input type="number" id="chain" min="1" max="6" value="2" />
+          <button class="btn" data-num="chain" data-d="1">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="section-title" style="margin-top:12px">Stat de dano</div>
+    <div class="chip-row" id="statChips"></div>
+    <div class="section-title">Flags</div>
+    <div class="row" id="flags"></div>
+    <div class="section-title">Raridade / unlock</div>
+    <div class="row">
+      <div class="chip-row" id="rarityChips"></div>
+    </div>
+    <div class="chip-row" id="unlockChips" style="margin-top:8px"></div>
+    <div class="section-title">Efeitos (ações) — clique pra adicionar</div>
+    <div class="chip-row" id="actionPalette"></div>
+    <div id="actionList" style="margin-top:10px"></div>
+    <div class="row" style="margin-top:14px">
+      <button class="btn ok" id="btnSave">Salvar nesta sessão</button>
+      <button class="btn danger" id="btnDelete">Remover</button>
+      <button class="btn" id="btnDup">Duplicar</button>
+    </div>
+  </main>
+  <div class="preview">
+    <div class="section-title">Prévia</div>
+    <div class="face" id="face">
+      <div class="top"><span id="faceClass">ATTACK</span><span id="faceCost">0</span></div>
+      <div class="cname" id="faceName">Nova carta</div>
+      <div class="ctarget" id="faceTarget">ENEMY</div>
+      <div class="body" id="faceBody"></div>
+      <div class="tags" id="faceTags"></div>
+    </div>
+    <div class="tabs">
+      <button class="btn active" data-tab="json">JSON</button>
+      <button class="btn" data-tab="gd">GDScript (opcional)</button>
+      <button class="btn" data-tab="help">Como usar</button>
+    </div>
+    <textarea id="out" readonly></textarea>
+    <div class="row" style="margin-top:8px">
+      <button class="btn primary" id="btnCopy">Copiar</button>
+      <button class="btn" id="btnDownloadOne">Baixar esta carta .json</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const HEROES = [{"id":"ent_adam","name":"Adam"},{"id":"ent_akuji","name":"Akuji"},{"id":"ent_alexis","name":"Alexis"},{"id":"ent_alistair","name":"Alistair"},{"id":"ent_alyssa_wine","name":"Alyssa Wine (Titânio)"},{"id":"ent_ashlee","name":"Ashlee"},{"id":"ent_daeva","name":"Daeva"},{"id":"ent_damian_alrosa","name":"Damian Alrosa"},{"id":"ent_dominika_seur","name":"Dominika Seur"},{"id":"ent_dylan","name":"Dylan"},{"id":"ent_evelyn_graves","name":"Evelyn Graves (Sombria)"},{"id":"ent_fate","name":"Fate"},{"id":"ent_hynda_valdtagen","name":"Hynda Valdtagen"},{"id":"ent_kabuki","name":"Kabuki"},{"id":"ent_konrad","name":"Konrad (Armagedom)"},{"id":"ent_leona","name":"Leona (Marbas)"},{"id":"ent_lust","name":"Lust"},{"id":"ent_madelyn","name":"Madelyn"},{"id":"ent_mingau_o_feiticeiro","name":"Mingau, o Feiticeiro"},{"id":"ent_mutante_generico","name":"Mutante (Genérico)"},{"id":"ent_nero","name":"Nero"},{"id":"ent_niu_valdtagen","name":"Niu Valdtagen"},{"id":"ent_pesadelo_vivo","name":"Pesadelo Vivo"},{"id":"ent_pietro_caos","name":"Pietro"},{"id":"ent_quasar","name":"Quasar"},{"id":"ent_taylor","name":"Taylor (Nave-Mãe)"},{"id":"ent_techna","name":"Techna"}];
+
+const STATUSES = ["bleed","burn","weak","vulnerable","stun","bind","marked","conceal","counter","resist","strengthened","slow","dazed","confused","banished","portal","unleashed","drop","taunted","berserk_enemy","block_on_hit","corrupted"];
+
+const CLASSES = ["ATTACK","SKILL","POWER"];
+const TARGETS = ["ENEMY","ENEMY_ROW","ALL_ENEMIES","ALLY","ALL_ALLIES","SELF","CHAIN","RANDOM","ANY_UNIT"];
+const RARITIES = ["COMMON","RARE","EPIC","LEGENDARY"];
+const UNLOCKS = ["starting","progression"];
+const STATS = ["attack","power"];
+
+const FLAGS = [
+  {key:"reach", label:"Alcance (reach)"},
+  {key:"quick", label:"Rápida (quick)"},
+  {key:"free", label:"Grátis (free)"},
+  {key:"exhaust", label:"Esgota (exhaust)"},
+  {key:"final", label:"Final"},
+];
+
+/** Catálogo de ações com UI amigável. args: campos do formulário. */
+const ACTIONS = [
+  {op:"hit", label:"Dano (×ATK/POW)", tip:"Fator multiplicador", args:[{k:"n", t:"number", label:"Fator", def:"1"}]},
+  {op:"block", label:"Bloqueio", tip:"Valor fixo", args:[{k:"n", t:"number", label:"Valor", def:"8"}]},
+  {op:"block_hp", label:"Bloqueio (% HP)", tip:"Fração do max HP", args:[{k:"n", t:"number", label:"Fração", def:"0.1"}]},
+  {op:"heal", label:"Cura (×ATK)", args:[{k:"n", t:"number", label:"Fator", def:"1"}]},
+  {op:"heal_all", label:"Cura todos aliados", args:[{k:"n", t:"number", label:"Fator", def:"1"}]},
+  {op:"full_heal", label:"Cura total", args:[]},
+  {op:"cure", label:"Limpar status", args:[]},
+  {op:"status", label:"Status no alvo", args:[
+    {k:"id", t:"status", label:"Status", def:"bleed"},
+    {k:"n", t:"number", label:"Stacks", def:"1"},
+  ]},
+  {op:"self_status", label:"Status em si", args:[
+    {k:"id", t:"status", label:"Status", def:"strengthened"},
+    {k:"n", t:"number", label:"Stacks", def:"1"},
+  ]},
+  {op:"push", label:"Empurrar", args:[{k:"n", t:"number", label:"Força", def:"2"}]},
+  {op:"pull", label:"Puxar", args:[]},
+  {op:"draw", label:"Comprar cartas", args:[{k:"n", t:"number", label:"Qtd", def:"1"}]},
+  {op:"taunt", label:"Provocar", args:[]},
+  {op:"taunt_attackers", label:"Provocar atacantes", args:[]},
+  {op:"lifesteal", label:"Roubo de vida", args:[]},
+  {op:"consume_bleed", label:"Consumir sangramento", args:[]},
+  {op:"bonus_status", label:"Bônus se status", args:[
+    {k:"id", t:"status", label:"Status", def:"bleed"},
+    {k:"n", t:"number", label:"Bônus", def:"0.5"},
+  ]},
+  {op:"bonus_damaged", label:"Bônus se ferido", args:[{k:"n", t:"number", label:"Bônus", def:"0.5"}]},
+  {op:"bonus_block", label:"Bônus se bloqueio", args:[{k:"n", t:"number", label:"Bônus", def:"0.5"}]},
+  {op:"ko", label:"Ao KO…", args:[{k:"id", t:"text", label:"Efeito", def:"draw2"}]},
+  {op:"quick", label:"Marca quick", args:[]},
+  {op:"free", label:"Marca free", args:[]},
+  {op:"exhaust", label:"Marca exhaust", args:[]},
+  {op:"final", label:"Marca final", args:[]},
+  {op:"chain", label:"Chain (ação)", args:[{k:"n", t:"number", label:"Alvos", def:"2"}]},
+  {op:"redraws", label:"+ Recompras", args:[{k:"n", t:"number", label:"Qtd", def:"1"}]},
+  {op:"summon", label:"Convocar", args:[
+    {k:"id", t:"text", label:"Tipo", def:"fera"},
+    {k:"n", t:"number", label:"Duração", def:"2"},
+  ]},
+  {op:"revive_ally", label:"Revivir aliado", args:[{k:"n", t:"number", label:"Fração HP", def:"0.5"}]},
+  {op:"choice", label:"Escolha hit/cura", args:[
+    {k:"hit", t:"number", label:"Hit fator", def:"1"},
+    {k:"heal", t:"number", label:"Heal fator", def:"2"},
+  ]},
+];
+
+const HELP = `COMO USAR (recomendado: pack acoplável)
+
+1) Importe o entities.json atual do projeto
+   (addons/hotn3_entities/entities.json)
+2) Crie/edite cartas clicando — digite só o nome.
+3) "Exportar patch JSON" gera só as cartas novas/alteradas.
+4) Ou "Exportar entities.json completo" e substitua o arquivo no addon.
+5) Abra o Godot: PackBridge já carrega o JSON. Sem editar Content.gd.
+
+Por que não editar Content.gd?
+- Content.gd é o núcleo (cartas base dos arquétipos).
+- Cartas do elenco (ent_*) já vivem em entities.json.
+- Assim o editor não quebra o script e o merge é seguro.
+
+GDScript (aba ao lado) é só se você quiser colar uma carta base
+no Content.CARDS no formato effects — raramente necessário.`;
+
+let catalog = { format: 1, heroes: {}, cards: {} };
+let draft = blankCard();
+let selectedId = null;
+let outTab = "json";
+let dirtyIds = new Set(); // cards created/edited this session
+
+function blankCard(owner) {
+  owner = owner || (HEROES[0] && HEROES[0].id) || "ent_adam";
+  return {
+    id: "",
+    name: "",
+    owner,
+    class: "ATTACK",
+    target: "ENEMY",
+    actions: [["hit","1"]],
+    reach: false,
+    stat: "attack",
+    rarity: "COMMON",
+    unlock: "starting",
+    exhaust: false,
+    gain: 1,
+  };
+}
+
+function slugify(s) {
+  return String(s || "")
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_|_$/g, "")
+    .slice(0, 48);
+}
+
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.style.display = "block";
+  setTimeout(() => t.style.display = "none", 2200);
+}
+
+function fillSelects() {
+  const fo = document.getElementById("filterOwner");
+  const ow = document.getElementById("owner");
+  fo.innerHTML = '<option value="">Todos</option>';
+  ow.innerHTML = "";
+  HEROES.forEach(h => {
+    fo.insertAdjacentHTML("beforeend", `<option value="${h.id}">${h.name}</option>`);
+    ow.insertAdjacentHTML("beforeend", `<option value="${h.id}">${h.name}</option>`);
+  });
+}
+
+function makeChips(el, items, get, set, clsMap) {
+  el.innerHTML = "";
+  items.forEach(v => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "chip" + (clsMap && clsMap[v] ? " " + clsMap[v] : "");
+    b.textContent = v;
+    b.dataset.v = v;
+    if (get() === v) b.classList.add("on");
+    b.onclick = () => { set(v); syncForm(); };
+    el.appendChild(b);
+  });
+}
+
+function syncChips() {
+  makeChips(document.getElementById("classChips"), CLASSES, () => draft.class, v => draft.class = v, {ATTACK:"attack",SKILL:"skill",POWER:"power"});
+  makeChips(document.getElementById("targetChips"), TARGETS, () => draft.target, v => draft.target = v);
+  makeChips(document.getElementById("statChips"), STATS, () => draft.stat, v => draft.stat = v);
+  makeChips(document.getElementById("rarityChips"), RARITIES, () => draft.rarity, v => draft.rarity = v);
+  makeChips(document.getElementById("unlockChips"), UNLOCKS, () => draft.unlock, v => draft.unlock = v);
+
+  const flags = document.getElementById("flags");
+  flags.innerHTML = "";
+  FLAGS.forEach(f => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "toggle" + (draft[f.key] ? " on" : "");
+    b.textContent = f.label;
+    b.onclick = () => { draft[f.key] = !draft[f.key]; syncForm(); };
+    flags.appendChild(b);
+  });
+
+  const pal = document.getElementById("actionPalette");
+  pal.innerHTML = "";
+  ACTIONS.forEach(a => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "chip";
+    b.textContent = "+ " + a.label;
+    b.title = a.tip || a.op;
+    b.onclick = () => {
+      const row = [a.op];
+      a.args.forEach(arg => row.push(String(arg.def)));
+      if (a.op === "choice") draft.actions.push(["choice","hit",String(a.args[0].def),"heal",String(a.args[1].def)]);
+      else draft.actions.push(row);
+      syncForm();
+    };
+    pal.appendChild(b);
+  });
+}
+
+function actionToArray(op, fields) {
+  if (op === "choice") return ["choice","hit",String(fields.hit||"1"),"heal",String(fields.heal||"2")];
+  const def = ACTIONS.find(a => a.op === op);
+  if (!def) return [op];
+  const row = [op];
+  def.args.forEach(arg => {
+    let v = fields[arg.k];
+    if (v === undefined || v === "") v = arg.def;
+    row.push(String(v));
+  });
+  return row;
+}
+
+function renderActions() {
+  const box = document.getElementById("actionList");
+  box.innerHTML = "";
+  draft.actions.forEach((act, idx) => {
+    const op = act[0];
+    const def = ACTIONS.find(a => a.op === op) || {op, label: op, args:[]};
+    const wrap = document.createElement("div");
+    wrap.className = "action-block";
+    const head = document.createElement("header");
+    head.innerHTML = `<strong>${def.label || op}</strong><code class="muted">${op}</code>`;
+    const del = document.createElement("button");
+    del.className = "btn danger";
+    del.textContent = "✕";
+    del.onclick = () => { draft.actions.splice(idx,1); syncForm(); };
+    head.appendChild(del);
+    wrap.appendChild(head);
+
+    if (op === "choice") {
+      const args = document.createElement("div");
+      args.className = "args";
+      args.innerHTML = `
+        <label class="field"><span>Hit fator</span><input type="number" step="0.25" value="${act[2]||1}" data-f="hit" /></label>
+        <label class="field"><span>Heal fator</span><input type="number" step="0.25" value="${act[4]||2}" data-f="heal" /></label>`;
+      args.querySelectorAll("input").forEach(inp => {
+        inp.onchange = () => {
+          const fields = {hit: args.querySelector('[data-f=hit]').value, heal: args.querySelector('[data-f=heal]').value};
+          draft.actions[idx] = actionToArray("choice", fields);
+          updatePreview();
+        };
+      });
+      wrap.appendChild(args);
+    } else if (def.args && def.args.length) {
+      const args = document.createElement("div");
+      args.className = "args";
+      def.args.forEach((arg, ai) => {
+        const cur = act[ai+1] !== undefined ? act[ai+1] : arg.def;
+        const lab = document.createElement("label");
+        lab.className = "field";
+        const span = document.createElement("span");
+        span.textContent = arg.label;
+        lab.appendChild(span);
+        let inp;
+        if (arg.t === "status") {
+          inp = document.createElement("select");
+          STATUSES.forEach(s => {
+            const o = document.createElement("option");
+            o.value = s; o.textContent = s;
+            if (s === cur) o.selected = true;
+            inp.appendChild(o);
+          });
+        } else {
+          inp = document.createElement("input");
+          inp.type = arg.t === "number" ? "number" : "text";
+          if (arg.t === "number") inp.step = "0.25";
+          inp.value = cur;
+        }
+        inp.dataset.k = arg.k;
+        inp.onchange = () => {
+          const fields = {};
+          args.querySelectorAll("[data-k]").forEach(el => fields[el.dataset.k] = el.value);
+          draft.actions[idx] = actionToArray(op, fields);
+          updatePreview();
+        };
+        lab.appendChild(inp);
+        args.appendChild(lab);
+      });
+      wrap.appendChild(args);
+    } else {
+      wrap.insertAdjacentHTML("beforeend", `<div class="muted">Sem parâmetros</div>`);
+    }
+
+    const move = document.createElement("div");
+    move.className = "row";
+    move.style.marginTop = "6px";
+    const up = document.createElement("button");
+    up.className = "btn"; up.textContent = "↑";
+    up.onclick = () => { if (idx>0) { const t=draft.actions[idx-1]; draft.actions[idx-1]=draft.actions[idx]; draft.actions[idx]=t; syncForm(); } };
+    const down = document.createElement("button");
+    down.className = "btn"; down.textContent = "↓";
+    down.onclick = () => { if (idx<draft.actions.length-1) { const t=draft.actions[idx+1]; draft.actions[idx+1]=draft.actions[idx]; draft.actions[idx]=t; syncForm(); } };
+    move.append(up, down);
+    wrap.appendChild(move);
+    box.appendChild(wrap);
+  });
+}
+
+function describeAction(a) {
+  if (!a || !a.length) return "";
+  const op = a[0];
+  const map = {
+    hit: `Causa ${a[1]}× dano`,
+    block: `+${a[1]} bloqueio`,
+    block_hp: `Bloqueio ${a[1]}× HP máx`,
+    heal: `Cura ${a[1]}×`,
+    heal_all: `Cura todos ${a[1]}×`,
+    full_heal: `Cura total`,
+    cure: `Remove status negativos`,
+    status: `Aplica ${a[1]} (${a[2]||1})`,
+    self_status: `Ganha ${a[1]} (${a[2]||1})`,
+    push: `Empurra (força ${a[1]})`,
+    pull: `Puxa`,
+    draw: `Compra ${a[1]}`,
+    taunt: `Provoca`,
+    lifesteal: `Rouba vida`,
+    choice: `Hit ${a[2]} ou cura ${a[4]}`,
+    ko: `Se KO: ${a[1]}`,
+    exhaust: `Esgota`,
+    quick: `Rápida`,
+    free: `Grátis`,
+    final: `Final`,
+  };
+  return map[op] || a.join(" ");
+}
+
+function buildCardObject() {
+  const c = {
+    id: draft.id,
+    name: draft.name,
+    owner: draft.owner,
+    class: draft.class,
+    target: draft.target,
+    actions: draft.actions.map(a => a.map(String)),
+    reach: !!draft.reach,
+    stat: draft.stat || "attack",
+    rarity: draft.rarity || "COMMON",
+    unlock: draft.unlock || "starting",
+    exhaust: !!draft.exhaust,
+  };
+  const cost = Number(document.getElementById("cost").value || 0);
+  const gain = Number(document.getElementById("gain").value || 0);
+  if (draft.class === "POWER" || cost > 0) c.cost = cost;
+  else if (gain > 0) c.gain = gain;
+  else c.gain = 0;
+  if (draft.quick) c.quick = true;
+  if (draft.free) c.free = true;
+  if (draft.final) c.final = true;
+  if (draft.target === "CHAIN") c.chain = Number(document.getElementById("chain").value || 2);
+  // mirror flags into actions if toggled but missing
+  const has = (op) => c.actions.some(a => a[0] === op);
+  if (c.quick && !has("quick")) c.actions.push(["quick"]);
+  if (c.free && !has("free")) c.actions.push(["free"]);
+  if (c.exhaust && !has("exhaust")) c.actions.push(["exhaust"]);
+  if (c.final && !has("final")) c.actions.push(["final"]);
+  return c;
+}
+
+function toGDScript(c) {
+  // Aproximação effects a partir de actions (para Content.CARDS)
+  const effects = [];
+  for (const a of c.actions) {
+    switch (a[0]) {
+      case "hit":
+        effects.push({kind:"DAMAGE", amount: Math.max(1, Math.round(5 * Number(a[1]||1))), stat: c.stat || "attack"});
+        break;
+      case "block": effects.push({kind:"BLOCK", amount: Number(a[1]||0)}); break;
+      case "heal": effects.push({kind:"HEAL", amount: Math.max(1, Math.round(8 * Number(a[1]||1)))}); break;
+      case "status": effects.push({kind:"STATUS", id:a[1], duration:2, stacks:Number(a[2]||1)}); break;
+      case "self_status": effects.push({kind:"STATUS", id:a[1], duration:2, stacks:Number(a[2]||1), self:true}); break;
+      case "push": effects.push({kind:"PUSH", force:Number(a[1]||1)}); break;
+      case "pull": effects.push({kind:"PULL"}); break;
+      case "draw": effects.push({kind:"DRAW", amount:Number(a[1]||1)}); break;
+      case "cure": effects.push({kind:"CURE"}); break;
+      case "taunt": effects.push({kind:"STATUS", id:"taunt", duration:1}); break;
+      default: break;
+    }
+  }
+  const parts = [];
+  parts.push(`"name": ${JSON.stringify(c.name)}`);
+  parts.push(`"class": "${c.class}"`);
+  parts.push(`"target": "${c.target}"`);
+  if (c.reach) parts.push(`"reach": true`);
+  if (c.cost != null) parts.push(`"cost": ${c.cost}`);
+  if (c.gain != null) parts.push(`"gain": ${c.gain}`);
+  if (c.quick) parts.push(`"quick": true`);
+  if (c.free) parts.push(`"free": true`);
+  if (c.exhaust) parts.push(`"exhaust": true`);
+  if (c.final) parts.push(`"final": true`);
+  if (c.chain) parts.push(`"chain": ${c.chain}`);
+  parts.push(`"effects": ${JSON.stringify(effects).replace(/"/g, '"')}`);
+  // GDScript uses double quotes; keep JSON-like dict
+  const body = parts.join(", ");
+  return `\t"${c.id}": {${body}},`;
+}
+
+function updatePreview() {
+  const c = buildCardObject();
+  const face = document.getElementById("face");
+  face.className = "face " + c.class;
+  document.getElementById("faceClass").textContent = c.class;
+  document.getElementById("faceCost").textContent = c.cost != null ? "Custo " + c.cost : "Ganho +" + (c.gain||0);
+  document.getElementById("faceName").textContent = c.name || "(sem nome)";
+  document.getElementById("faceTarget").textContent = "Alvo: " + c.target;
+  document.getElementById("faceBody").innerHTML = c.actions.map(describeAction).filter(Boolean).map(t => `<div>• ${t}</div>`).join("") || "<div class='muted'>Sem efeitos</div>";
+  const tags = [];
+  if (c.reach) tags.push("reach");
+  if (c.quick) tags.push("quick");
+  if (c.free) tags.push("free");
+  if (c.exhaust) tags.push("exhaust");
+  if (c.final) tags.push("final");
+  if (c.chain) tags.push("chain " + c.chain);
+  tags.push(c.rarity);
+  document.getElementById("faceTags").innerHTML = tags.map(t => `<span class="tag">${t}</span>`).join("");
+
+  const out = document.getElementById("out");
+  if (outTab === "json") out.value = JSON.stringify(c, null, 2);
+  else if (outTab === "gd") out.value = toGDScript(c);
+  else out.value = HELP;
+}
+
+function syncForm(fromDraft) {
+  if (!fromDraft) {
+    // pull numeric fields
+    draft.cost = Number(document.getElementById("cost").value || 0);
+    draft.gain = Number(document.getElementById("gain").value || 0);
+    draft.chain = Number(document.getElementById("chain").value || 2);
+  }
+  document.getElementById("name").value = draft.name || "";
+  document.getElementById("id").value = draft.id || "";
+  document.getElementById("owner").value = draft.owner || "";
+  document.getElementById("cost").value = draft.cost != null ? draft.cost : (draft.class === "POWER" ? 2 : 0);
+  document.getElementById("gain").value = draft.gain != null ? draft.gain : 1;
+  document.getElementById("chain").value = draft.chain != null ? draft.chain : 2;
+  syncChips();
+  renderActions();
+  updatePreview();
+  renderList();
+}
+
+function renderList() {
+  const fo = document.getElementById("filterOwner").value;
+  const q = document.getElementById("filterText").value.trim().toLowerCase();
+  const list = document.getElementById("cardList");
+  list.innerHTML = "";
+  const ids = Object.keys(catalog.cards).sort();
+  let n = 0;
+  ids.forEach(id => {
+    const c = catalog.cards[id];
+    if (fo && c.owner !== fo) return;
+    if (q && !(String(c.name).toLowerCase().includes(q) || id.includes(q))) return;
+    n++;
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "card-item" + (selectedId === id ? " sel" : "");
+    const dirty = dirtyIds.has(id) ? " · editada" : "";
+    b.innerHTML = `<div>${c.name || id}</div><div class="meta">${id} · ${c.class}${dirty}</div>`;
+    b.onclick = () => loadCard(id);
+    list.appendChild(b);
+  });
+  document.getElementById("count").textContent = String(n);
+}
+
+function loadCard(id) {
+  const c = catalog.cards[id];
+  if (!c) return;
+  selectedId = id;
+  draft = JSON.parse(JSON.stringify(c));
+  draft.quick = !!c.quick || (c.actions||[]).some(a => a[0]==="quick");
+  draft.free = !!c.free || (c.actions||[]).some(a => a[0]==="free");
+  draft.final = !!c.final || (c.actions||[]).some(a => a[0]==="final");
+  draft.exhaust = !!c.exhaust;
+  draft.reach = !!c.reach;
+  syncForm(true);
+}
+
+function ensureId() {
+  if (!draft.name) { toast("Digite o nome da carta"); return false; }
+  if (!draft.id) {
+    const base = slugify(draft.name);
+    draft.id = draft.owner + "_" + base;
+  }
+  if (!draft.id.startsWith("ent_")) {
+    // keep as-is but warn softly
+  }
+  return true;
+}
+
+function saveDraft() {
+  if (!ensureId()) return;
+  document.getElementById("id").value = draft.id;
+  const c = buildCardObject();
+  catalog.cards[c.id] = c;
+  dirtyIds.add(c.id);
+  selectedId = c.id;
+  // also ensure hero pool mention? leave to user / separate
+  toast("Salva na sessão: " + c.id);
+  syncForm(true);
+}
+
+function download(filename, text) {
+  const blob = new Blob([text], {type:"application/json;charset=utf-8"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function exportPatch() {
+  const cards = {};
+  dirtyIds.forEach(id => { if (catalog.cards[id]) cards[id] = catalog.cards[id]; });
+  if (!Object.keys(cards).length && selectedId && catalog.cards[selectedId]) {
+    cards[selectedId] = catalog.cards[selectedId];
+  }
+  if (!Object.keys(cards).length) { toast("Nada pra exportar — salve uma carta antes"); return; }
+  const patch = { format: 1, note: "Merge estas cartas em addons/hotn3_entities/entities.json → cards", cards };
+  download("hotn3_cards_patch.json", JSON.stringify(patch, null, 2));
+  toast("Patch baixado (" + Object.keys(cards).length + " cartas)");
+}
+
+function exportFull() {
+  if (!Object.keys(catalog.cards).length) { toast("Importe entities.json primeiro"); return; }
+  download("entities.json", JSON.stringify(catalog, null, 2));
+  toast("entities.json completo baixado");
+}
+
+function wire() {
+  fillSelects();
+  document.getElementById("name").oninput = (e) => {
+    draft.name = e.target.value;
+    if (!selectedId || !catalog.cards[selectedId]) {
+      draft.id = draft.owner + "_" + slugify(draft.name);
+      document.getElementById("id").value = draft.id;
+    }
+    updatePreview();
+  };
+  document.getElementById("id").oninput = (e) => { draft.id = e.target.value.trim(); updatePreview(); };
+  document.getElementById("owner").onchange = (e) => {
+    draft.owner = e.target.value;
+    if (draft.name && (!selectedId || !catalog.cards[selectedId])) {
+      draft.id = draft.owner + "_" + slugify(draft.name);
+      document.getElementById("id").value = draft.id;
+    }
+    updatePreview();
+  };
+  ["cost","gain","chain"].forEach(id => {
+    document.getElementById(id).oninput = () => { draft[id] = Number(document.getElementById(id).value||0); updatePreview(); };
+  });
+  document.querySelectorAll("[data-num]").forEach(btn => {
+    btn.onclick = () => {
+      const id = btn.dataset.num;
+      const el = document.getElementById(id);
+      el.value = String(Math.max(0, Number(el.value||0) + Number(btn.dataset.d)));
+      draft[id] = Number(el.value);
+      updatePreview();
+    };
+  });
+  document.getElementById("filterOwner").onchange = renderList;
+  document.getElementById("filterText").oninput = renderList;
+  document.getElementById("btnNew").onclick = () => {
+    selectedId = null;
+    draft = blankCard(document.getElementById("filterOwner").value || undefined);
+    syncForm(true);
+  };
+  document.getElementById("btnSave").onclick = saveDraft;
+  document.getElementById("btnDelete").onclick = () => {
+    if (!selectedId) return;
+    delete catalog.cards[selectedId];
+    dirtyIds.delete(selectedId);
+    selectedId = null;
+    draft = blankCard();
+    syncForm(true);
+    toast("Removida da sessão");
+  };
+  document.getElementById("btnDup").onclick = () => {
+    if (!ensureId()) return;
+    const c = buildCardObject();
+    c.id = c.id + "_copy";
+    c.name = c.name + " (cópia)";
+    catalog.cards[c.id] = c;
+    dirtyIds.add(c.id);
+    loadCard(c.id);
+    toast("Duplicada");
+  };
+  document.getElementById("btnImport").onclick = () => document.getElementById("fileImport").click();
+  document.getElementById("fileImport").onchange = async (e) => {
+    const f = e.target.files[0];
+    if (!f) return;
+    try {
+      const data = JSON.parse(await f.text());
+      if (!data.cards) throw new Error("JSON sem 'cards'");
+      catalog = { format: data.format || 1, heroes: data.heroes || {}, cards: data.cards };
+      dirtyIds.clear();
+      toast("Importado: " + Object.keys(catalog.cards).length + " cartas");
+      renderList();
+    } catch (err) {
+      toast("Falha ao importar: " + err.message);
+    }
+    e.target.value = "";
+  };
+  document.getElementById("btnExportPatch").onclick = exportPatch;
+  document.getElementById("btnExportFull").onclick = exportFull;
+  document.getElementById("btnCopy").onclick = async () => {
+    await navigator.clipboard.writeText(document.getElementById("out").value);
+    toast("Copiado");
+  };
+  document.getElementById("btnDownloadOne").onclick = () => {
+    if (!ensureId()) return;
+    const c = buildCardObject();
+    download(c.id + ".json", JSON.stringify(c, null, 2));
+  };
+  document.querySelectorAll(".tabs .btn").forEach(b => {
+    b.onclick = () => {
+      document.querySelectorAll(".tabs .btn").forEach(x => x.classList.remove("active"));
+      b.classList.add("active");
+      outTab = b.dataset.tab;
+      updatePreview();
+    };
+  });
+  syncForm(true);
+}
+
+wire();
+</script>
+</body>
+</html>
