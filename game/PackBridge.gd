@@ -46,7 +46,7 @@ func play_card(battle: Variant, mode: String, hand_index: int, target_id: int, c
 		return false
 	if hand_index < 0 or hand_index >= battle.hand.size():
 		return false
-	var card_id := str(battle.hand[hand_index].get("id", ""))
+	var card_id: String = str(battle.hand[hand_index].get("id", ""))
 	if mode == "entities" or card_id.begins_with("ent_"):
 		return entities.play(battle, hand_index, target_id, chain_ids)
 	if mode == "external" or card_id.begins_with("ms_"):
@@ -88,9 +88,9 @@ func install_external_demo(battle: Variant) -> int:
 	var selected: Dictionary = {}
 	var used_owners: Dictionary = {}
 	for ally in battle.living("ALLY"):
-		var archetype := str(ally.get("archetype", ""))
+		var archetype: String = str(ally.get("archetype", ""))
 		var candidates: Array = archetype_owners.get(archetype, [])
-		var chosen := ""
+		var chosen: String = ""
 		for candidate in candidates:
 			if not used_owners.has(candidate):
 				chosen = str(candidate)

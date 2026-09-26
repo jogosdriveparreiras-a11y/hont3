@@ -91,7 +91,7 @@ func install(battle: Variant, owner_map: Dictionary, selected: Dictionary = {}) 
 	memory.clear()
 	var installed := 0
 	for owner in (selected.keys() if not selected.is_empty() else owner_map.keys()):
-		var actor_id := int(owner_map.get(owner, -1))
+		var actor_id: int = int(owner_map.get(owner, -1))
 		var actor: Dictionary = battle.actor_by_id(actor_id)
 		if actor.is_empty() or actor.get("side") != "ALLY": continue
 		if owner == "deadpool": _stack(actor, "en_fuego", 0)
@@ -121,14 +121,14 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 	if not bool(def.get("play_while_disabled", false)):
 		for locked in ["stun", "bind", "bound", "dazed", "banished", "finalized"]:
 			if battle._has_status(source, locked): return false
-	var cost := int(card.get("cost_override", def.get("cost", 0)))
+	var cost: int = int(card.get("cost_override", def.get("cost", 0)))
 	if def.get("class") == "POWER":
 		if battle._has_status(source, "fast"): cost -= 1
 		if battle._has_status(source, "slow"): cost += 1
 		if _has_action(def, "cost_down_en_fuego"): cost -= int(_counter(source, "en_fuego"))
 	cost = maxi(0, cost)
-	var owner_free := def.get("owner") == "spider_man" and _counter(source, "free_owner") > 0
-	var plays := 0 if def.get("free", false) or owner_free else 1
+	var owner_free: bool = def.get("owner") == "spider_man" and _counter(source, "free_owner") > 0
+	var plays: int = 0 if bool(def.get("free", false)) or owner_free else 1
 	if battle.impulse < cost or battle.card_plays < plays: return false
 	var resolved_def: Dictionary = def.duplicate(true)
 	if def.get("target") == "CHAIN":
@@ -151,7 +151,7 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 			chain_count = maxi(1, battle.hand.filter(func(c): return c.get("owner") == source["id"]).size())
 		if chain_ids.size() != chain_count or targets.size() != chain_count: return false
 	if targets.is_empty(): return false
-	var spent_impulse := battle.impulse
+	var spent_impulse: int = int(battle.impulse)
 	battle.hand.remove_at(hand_index)
 	battle.card_plays -= plays
 	if owner_free: _consume(source, "free_owner")
@@ -173,7 +173,7 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 				for victim in targets:
 					var before_hp := int(victim["hp"])
 					var bonus := _bonus(battle, source, victim, def, card)
-					var multiplier := 0.5 if battle._has_status(source, "weak") else 1.0
+					var multiplier: float = 0.5 if battle._has_status(source, "weak") else 1.0
 					if battle._has_status(source, "strengthened"): multiplier *= 1.5
 					if battle._has_status(source, "binary") or battle._has_status(source, "overpowered"): multiplier *= 2.0
 					if battle._has_status(victim, "vulnerable"): multiplier *= 1.5
@@ -213,7 +213,7 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 						var force := int(a[1])
 						if _has_action(def, "force_if_damaged") and int(victim["hp"]) < int(victim["max_hp"]): force *= 2
 						if battle._has_status(source, "portal"):
-							var portal_damage := roundi(float(source["attack"]) * (1.5 if battle._has_status(source, "limbos_grasp") else 0.5))
+							var portal_damage: int = roundi(float(source["attack"]) * (1.5 if battle._has_status(source, "limbos_grasp") else 0.5))
 							battle._take_damage(source, victim, portal_damage, false, false, true)
 							source["statuses"].erase("portal")
 						if force > 1:
@@ -232,7 +232,7 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 				for victim in targets:
 					if not battle._has_status(victim, "bleed"): continue
 					var s: Dictionary = victim["statuses"]["bleed"]
-					var amount := 3 * int(s.get("stacks", 1)) * int(s.get("duration", 1))
+					var amount: int = 3 * int(s.get("stacks", 1)) * int(s.get("duration", 1))
 					victim["statuses"].erase("bleed")
 					if battle._take_damage(source, victim, amount, true, false, false, false, false, false, true): kos.append(int(victim["id"]))
 			"taunt":
@@ -258,7 +258,7 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 			"redraws": battle.redraws += int(a[1])
 			"moves": battle.moves += int(a[1])
 			"zero_random_heroic", "zero_heroics":
-				var candidates := battle.hand.filter(func(c): return c.get("class") == "POWER")
+				var candidates: Array = battle.hand.filter(func(c): return c.get("class") == "POWER")
 				if op == "zero_random_heroic" and not candidates.is_empty(): candidates = [candidates[battle.rng.randi_range(0, candidates.size() - 1)]]
 				for held in candidates:
 					held["cost_override"] = 0
@@ -266,7 +266,7 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 			"copy_hand_type":
 				if battle.hand.is_empty(): continue
 				var chosen: Dictionary = battle.hand[battle.rng.randi_range(0, battle.hand.size() - 1)]
-				var originals := battle.hand.duplicate(true)
+				var originals: Array = battle.hand.duplicate(true)
 				for held in originals:
 					if held.get("class") == chosen.get("class") and battle.hand.size() < battle.rules["hand_max"]:
 						var copy: Dictionary = held.duplicate(true)
@@ -283,12 +283,12 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 				for foe in battle.living("ENEMY"):
 					if battle._has_status(foe, "bleed"): battle._add_status(foe, "marked", 2, int(a[1]), int(source["id"]))
 			"heal_per_bleed":
-				var count := battle.living("ENEMY").filter(func(foe): return battle._has_status(foe, "bleed")).size()
+				var count: int = battle.living("ENEMY").filter(func(foe): return battle._has_status(foe, "bleed")).size()
 				source["hp"] = mini(int(source["max_hp"]), int(source["hp"]) + count * int(source["attack"]) * int(a[1]))
 			"chance_status", "roulette_status":
 				for victim in targets:
 					if op == "chance_status" and battle.rng.randf() > float(a[2]): continue
-					var chosen_status := str(a[1]) if op == "chance_status" else str(card.get("roulette_status", a[battle.rng.randi_range(1, a.size() - 1)]))
+					var chosen_status: String = str(a[1]) if op == "chance_status" else str(card.get("roulette_status", a[battle.rng.randi_range(1, a.size() - 1)]))
 					battle._add_status(victim, chosen_status, 1, 1, int(source["id"]))
 			"next_ravenous", "next_draw": source["pending"].append([{"kind": "STATUS", "id": "ravenous", "stacks": int(a[1])}] if op == "next_ravenous" else [{"kind": "DRAW", "amount": int(a[1])}])
 			"next_chain", "next_damage", "next_cost", "next_quick", "next_area": card[op] = int(a[1]) if a.size() > 1 else true
@@ -329,7 +329,7 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 					if victim["hp"] <= 0: victim["hp"] = maxi(1, roundi(float(victim["max_hp"]) * float(a[1])))
 			"mind_attack":
 				for victim in targets:
-					var foes := battle.living("ENEMY") if victim["side"] == "ENEMY" else battle.living("ALLY")
+					var foes: Array = battle.living("ENEMY") if victim["side"] == "ENEMY" else battle.living("ALLY")
 					for other in foes:
 						if other["id"] != victim["id"]:
 							battle._take_damage(victim, other, maxi(1, int(victim["attack"]))); break
@@ -470,7 +470,7 @@ func _activate_next(battle: Variant, card: Dictionary) -> void:
 	card["next_active"] = true
 
 func _bonus(battle: Variant, source: Dictionary, victim: Dictionary, def: Dictionary, card: Dictionary) -> float:
-	var bonus := float(card.get("bonus_attack", 0.0)) + float(card.get("upgrade", 0)) * 0.25
+	var bonus: float = float(card.get("bonus_attack", 0.0)) + float(card.get("upgrade", 0)) * 0.25
 	for a in def["actions"]:
 		match a[0]:
 			"bonus_status":

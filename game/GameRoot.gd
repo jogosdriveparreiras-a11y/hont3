@@ -763,7 +763,7 @@ func _choose_target(actor_id: int) -> void:
 			feedback = "Escolha o próximo acerto (%d/%d)." % [chain_targets.size(), definition["chain"]]
 			_render_battle()
 			return
-	var card_id := str(battle.hand[selected_card].get("id", ""))
+	var card_id: String = str(battle.hand[selected_card].get("id", ""))
 	var successful: bool = false
 	if packs.is_pack_card(card_id) or pack_mode != "default":
 		_animate_card_depart(selected_card)
