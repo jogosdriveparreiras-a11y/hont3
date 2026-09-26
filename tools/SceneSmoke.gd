@@ -40,6 +40,9 @@ func _run() -> void:
 	assert(game.get("essence") == 0 and game.get("improvements")["mago:raio"]["upgrade"] >= 1, "Melhoria deve gastar Essência")
 	game.call("_upgrade_card", "mago:raio")
 	assert(game.get("essence") == 0, "Melhoria sem recursos não deve progredir")
+	# Equipe sem conflito com inimigos da missão "road"
+	game.set("team", ["ent_adam", "ent_madelyn", "ent_ashlee"] as Array[String])
+	game.set("mission_id", "road")
 	game.call("_show_decks")
 	await process_frame
 	assert(game.call("_equip_card", "mago", 0, "fagulha_incerta"), "Equipar carta do pool deve funcionar")
@@ -47,6 +50,9 @@ func _run() -> void:
 	assert(not game.call("_equip_card", "mago", 2, "fagulha_incerta"), "A terceira cópia deve ser recusada")
 	assert(game.call("_equip_card", "paladino", 0, "cerco_frente"), "Carta rara deve equipar")
 	assert(not game.call("_equip_card", "paladino", 1, "cerco_frente"), "Carta de limite um não admite cópia adicional")
+	# Conflito de herói único vs pool inimigo
+	assert(game.call("_hero_conflicts_with_mission", "ent_akuji", "road"), "Akuji deve conflitar com a estrada")
+	assert(not game.call("_hero_conflicts_with_mission", "ent_adam", "road"), "Adam não conflita com a estrada")
 	game.call("_start_mission")
 	await process_frame
 	var battle: HotNBattle = game.get("battle")
@@ -62,13 +68,13 @@ func _run() -> void:
 		game.call("_render_battle")
 		await process_frame
 		var hud: Control = game.get("hud")
-		var left_panel: ScrollContainer = hud.get_node("LeftPanel")
-		var right_panel: ScrollContainer = hud.get_node("RightPanel")
-		var hand_scroller: ScrollContainer = hud.get_node("HandScroller")
+		var right_panel: ScrollContainer = hud.get_node_or_null("RightPanel")
+		assert(right_panel != null, "Painel direito deve existir")
+		assert(game.get("hero_hud") != null, "HUD do herói deve existir")
+		assert(game.get("economy_hud") != null, "HUD de economia deve existir")
 		var space := game.get_viewport().get_visible_rect().size
-		assert(left_panel.position.x + left_panel.size.x < right_panel.position.x, "Painéis laterais não podem se sobrepor")
-		assert(left_panel.position.y + left_panel.size.y < hand_scroller.position.y, "Painéis devem terminar antes da mão")
-		assert(hand_scroller.position.x + hand_scroller.size.x <= space.x + 1.0, "Mão precisa caber na viewport")
+		assert(right_panel.position.x + right_panel.size.x <= space.x + 1.0, "Painel direito precisa caber na viewport")
+		assert(right_panel.position.y + right_panel.size.y < space.y - 40.0, "Painel direito não pode cobrir a base inteira")
 	battle.end_player_turn()
 	await process_frame
 	assert(battle.phase in ["PLAYER", "FINISHED"] and battle.turn >= 2, "O turno inimigo deve terminar")
