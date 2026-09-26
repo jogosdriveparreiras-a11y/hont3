@@ -68,7 +68,7 @@ func _run() -> void:
 	_save(dirs, "playtest_hotn3_playflow_hover.png")
 
 	# --- Targeted damage: select → confirm → pick enemy ---
-	var dmg_idx := _ensure_hand_card(game, battle, "ENEMY", true)
+	var dmg_idx: int = _ensure_hand_card(game, battle, "ENEMY", true)
 	_assert(dmg_idx >= 0, "no ENEMY damage card available")
 	if dmg_idx < 0:
 		_finish()
@@ -87,9 +87,9 @@ func _run() -> void:
 
 	var enemies_before: Array = battle.living("ENEMY")
 	_assert(not enemies_before.is_empty(), "no enemies")
-	var target_id := int(enemies_before[0]["id"])
-	var hp_before := int(enemies_before[0]["hp"])
-	var hand_before := battle.hand.size()
+	var target_id: int = int(enemies_before[0]["id"])
+	var hp_before: int = int(enemies_before[0]["hp"])
+	var hand_before: int = battle.hand.size()
 
 	# 2nd click path: confirm (must enter targeting, not auto-play)
 	game.call("_confirm_inspected")
@@ -106,7 +106,7 @@ func _run() -> void:
 	for i in range(22):
 		await process_frame
 	_save(dirs, "playtest_hotn3_playflow_after_target.png")
-	var hp_after := int(battle.actor_by_id(target_id).get("hp", 0))
+	var hp_after: int = int(battle.actor_by_id(target_id).get("hp", 0))
 	_assert(hp_after < hp_before or battle.hand.size() < hand_before, "targeted play had no HP/hand effect (hp %d→%d, hand %d→%d)" % [hp_before, hp_after, hand_before, battle.hand.size()])
 	_assert(not bool(game.get("card_confirmed")), "card_confirmed stuck after play")
 	print("PLAYFLOW targeted OK hp %d→%d hand %d→%d" % [hp_before, hp_after, hand_before, battle.hand.size()])
@@ -116,13 +116,13 @@ func _run() -> void:
 		_fail("left PLAYER phase before auto SELF test")
 		_finish()
 		return
-	var self_idx := _ensure_hand_card(game, battle, "SELF", false)
+	var self_idx: int = _ensure_hand_card(game, battle, "SELF", false)
 	_assert(self_idx >= 0, "no SELF card available")
 	if self_idx >= 0:
-		var owner_id := int(battle.hand[self_idx].get("owner", -1))
+		var owner_id: int = int(battle.hand[self_idx].get("owner", -1))
 		var owner_before: Dictionary = battle.actor_by_id(owner_id)
-		var block_before := int(owner_before.get("block", 0)) + int(owner_before.get("shield", 0))
-		var hand_self_before := battle.hand.size()
+		var block_before: int = int(owner_before.get("block", 0)) + int(owner_before.get("shield", 0))
+		var hand_self_before: int = battle.hand.size()
 		game.set("inspected_card", self_idx)
 		game.set("hovered_card", self_idx)
 		game.set("selected_card", -1)
@@ -136,22 +136,22 @@ func _run() -> void:
 			await process_frame
 		_save(dirs, "playtest_hotn3_playflow_self_auto.png")
 		var owner_after: Dictionary = battle.actor_by_id(owner_id)
-		var block_after := int(owner_after.get("block", 0)) + int(owner_after.get("shield", 0))
-		var hand_self_after := battle.hand.size()
+		var block_after: int = int(owner_after.get("block", 0)) + int(owner_after.get("shield", 0))
+		var hand_self_after: int = battle.hand.size()
 		_assert(hand_self_after < hand_self_before or block_after > block_before or not bool(game.get("card_confirmed")), "SELF did not auto-resolve after confirm")
 		_assert(int(game.get("selected_card")) < 0 or not bool(game.get("card_confirmed")), "SELF left targeting pending")
 		print("PLAYFLOW self-auto OK hand %d→%d block+shield %d→%d" % [hand_self_before, hand_self_after, block_before, block_after])
 
 	# --- Auto ALL_ALLIES / RANDOM after confirm ---
 	if battle.phase == "PLAYER":
-		var team_idx := _ensure_hand_card(game, battle, "ALL_ALLIES", false)
+		var team_idx: int = _ensure_hand_card(game, battle, "ALL_ALLIES", false)
 		if team_idx < 0:
 			team_idx = _ensure_hand_card(game, battle, "RANDOM", false)
 		_assert(team_idx >= 0, "no ALL_ALLIES/RANDOM card for auto test")
 		if team_idx >= 0:
-			var kind := str(game.call("_card_def", str(battle.hand[team_idx]["id"])).get("target", ""))
-			var hand_auto_before := battle.hand.size()
-			var enemy_hp_sum_before := _enemy_hp_sum(battle)
+			var kind: String = str(game.call("_card_def", str(battle.hand[team_idx]["id"])).get("target", ""))
+			var hand_auto_before: int = battle.hand.size()
+			var enemy_hp_sum_before: int = _enemy_hp_sum(battle)
 			game.set("inspected_card", team_idx)
 			game.set("hovered_card", team_idx)
 			game.set("selected_card", -1)
@@ -163,7 +163,7 @@ func _run() -> void:
 			for i in range(20):
 				await process_frame
 			_save(dirs, "playtest_hotn3_playflow_auto_team_or_random.png")
-			var pending := bool(game.get("card_confirmed")) and int(game.get("selected_card")) >= 0
+			var pending: bool = bool(game.get("card_confirmed")) and int(game.get("selected_card")) >= 0
 			_assert(not pending, "%s still waiting for target after confirm" % kind)
 			_assert(battle.hand.size() < hand_auto_before or _enemy_hp_sum(battle) < enemy_hp_sum_before or kind == "ALL_ALLIES", "%s auto-play produced no effect" % kind)
 			print("PLAYFLOW auto-%s OK hand %d→%d" % [kind, hand_auto_before, battle.hand.size()])
@@ -195,8 +195,8 @@ func _ensure_hand_card(game, battle, target_kind: String, want_damage: bool) -> 
 	var allies: Array = battle.living("ALLY")
 	if allies.is_empty():
 		return -1
-	var owner_id := int(allies[0]["id"])
-	var card_id := ""
+	var owner_id: int = int(allies[0]["id"])
+	var card_id: String = ""
 	match target_kind:
 		"ENEMY":
 			card_id = "raio" if want_damage else "marca"
