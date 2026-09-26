@@ -5,6 +5,7 @@ const Battle = preload("res://game/BattleState.gd")
 const SoundBus = preload("res://game/SoundBus.gd")
 const Presentation = preload("res://game/CombatPresentation.gd")
 const PackBridge = preload("res://game/PackBridge.gd")
+const CardFace = preload("res://game/CardFace.gd")
 
 var battle
 var packs = PackBridge.new()
@@ -15,7 +16,7 @@ var units: Node3D
 var cards_3d: Node3D
 var viewport_hosts: Node
 var hud: Control
-var team: Array[String] = ["guerreiro", "mago", "clerigo"]
+var team: Array[String] = ["ent_adam", "ent_madelyn", "ent_ashlee"]
 var equipped: Dictionary = {}
 var improvements: Dictionary = {}
 var best_stars: Dictionary = {}
@@ -40,6 +41,7 @@ var presentation
 var fx_overlay: Control
 var hover_hint: Label
 var hovered_card := -1
+var seen_hand: Dictionary = {}
 var inspected_card := -1
 var card_confirmed := false
 var hovered_actor := -1
@@ -82,6 +84,7 @@ func _make_world() -> void:
 	add_child(camera)
 	camera.look_at(Vector3(0, 0.5, 0), Vector3.UP)
 	camera.current = true
+	cards_3d.reparent(camera)
 	var sun := DirectionalLight3D.new()
 	sun.rotation_degrees = Vector3(-58, 25, 0)
 	sun.light_energy = 1.3
@@ -189,6 +192,15 @@ func _button(text_value: String, on_click: Callable, hint: String = "") -> Butto
 	button.add_theme_font_size_override("font_size", 18)
 	button.tooltip_text = hint
 	button.pressed.connect(on_click)
+	if ResourceLoader.exists("res://assets/ui/button.png"):
+		var style := StyleBoxTexture.new()
+		style.texture = load("res://assets/ui/button.png")
+		style.set_texture_margin_all(16)
+		button.add_theme_stylebox_override("normal", style)
+		button.add_theme_stylebox_override("hover", style)
+		button.add_theme_stylebox_override("pressed", style)
+		button.add_theme_color_override("font_color", Color("f6edd8"))
+		button.add_theme_color_override("font_hover_color", Color("fff6df"))
 	return button
 
 func _center_panel(title: String) -> VBoxContainer:
@@ -199,6 +211,11 @@ func _center_panel(title: String) -> VBoxContainer:
 	frame.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var panel := PanelContainer.new()
 	panel.custom_minimum_size = Vector2(650, 0)
+	if ResourceLoader.exists("res://assets/ui/panel.png"):
+		var panel_style := StyleBoxTexture.new()
+		panel_style.texture = load("res://assets/ui/panel.png")
+		panel_style.set_texture_margin_all(28)
+		panel.add_theme_stylebox_override("panel", panel_style)
 	frame.add_child(panel)
 	var contents := VBoxContainer.new()
 	contents.add_theme_constant_override("separation", 10)
@@ -508,7 +525,8 @@ func _cycle_mod(key: String) -> void:
 	_show_decks()
 
 func _show_items() -> void:
-	var menu := _center_panel("ITENS · %d/%d" % [loadout.values().reduce(func(total, n): return total + n, 0), Content.RULES["items_max"]])
+	var menu := _center_panel("ITENS NO DECK · %d/%d" % [loadout.values().reduce(func(total, n): return total + n, 0), Content.RULES["items_max"]])
+	menu.add_child(_label("Cada item vira uma carta cinza, grátis e com Exaustão, embaralhada no deck.", 16))
 	for id in ["potion", "bomb", "antidote"]:
 		menu.add_child(_button("%s ×%d" % [id.capitalize(), loadout.get(id, 0)], func(): _cycle_item(id)))
 	menu.add_child(_button("Voltar", _show_menu))
@@ -618,6 +636,7 @@ func _render_battle() -> void:
 	var enemy_line := _label("ADVERSÁRIOS  " + _resource_line("ENEMY"), 18)
 	enemy_line.modulate = Color("ffd0c4") if battle.phase == "ENEMY" else Color(1, 0.78, 0.72, 0.38)
 	header.add_child(enemy_line)
+	_chrome(Vector2(12, 8), Vector2(viewport_size.x - 24, 118), "res://assets/ui/header.png")
 	var extra := ""
 	if battle.mission["objective"] == "PROTECT": extra += "SENTINELA %d PV" % battle.protect_hp
 	var next_turn: Array = battle.mission.get("reinforcements", {}).get(battle.turn + 1, [])
@@ -643,7 +662,9 @@ func _render_battle() -> void:
 	for actor in battle.living("ENEMY"):
 		_add_actor_button(left, actor)
 	left.add_child(_button("Trocar linha (1x/turno)", func(): selected_action = "move"; card_confirmed = false; inspected_card = -1; feedback = "Aponte o aliado e clique no sprite."; _render_battle()))
+	left.add_child(_button("Redesenhar carta", func(): selected_action = "redraw"; card_confirmed = false; inspected_card = -1; feedback = "Clique na carta para redesenhar."; _render_battle()))
 	left.add_child(_button("Encerrar turno", func(): _present_enemy_turn()))
+	_chrome(Vector2(20, 132), Vector2(290, maxf(120.0, hand_top - 144.0)), "res://assets/ui/panel.png")
 	var right_scroll := ScrollContainer.new()
 	right_scroll.name = "RightPanel"
 	right_scroll.position = Vector2(viewport_size.x - 295, 132)
@@ -658,8 +679,7 @@ func _render_battle() -> void:
 		var object: Dictionary = battle.mission["environment"][index]
 		right.add_child(_button("%s · %d Iniciativa" % [object["name"], object["cost"]], func(): battle.use_environment(index)))
 	right.add_child(_label("ITENS", 22))
-	for id in battle.items:
-		right.add_child(_button("%s ×%d" % [id.capitalize(), battle.items[id]], func(): selected_action = "item:" + id; selected_card = -1; _render_battle()))
+	right.add_child(_label("Poção, bomba e antídoto estão no deck: grátis e com Exaustão.", 15))
 	right.add_child(_label("LOG", 22))
 	for entry in event_history.slice(max(0, event_history.size() - 5)):
 		var line := _label(entry, 15)
@@ -679,11 +699,7 @@ func _render_battle() -> void:
 	for index in range(battle.hand.size()):
 		var card: Dictionary = battle.hand[index]
 		var definition: Dictionary = _card_def(str(card["id"]))
-		var host := _build_hand_card(index, card, definition, hand_h)
-		bottom.add_child(host)
 		_make_3d_card(index, card, definition)
-		if selected_card == index or inspected_card == index: host.modulate = Color("ffe3b0")
-	bottom.add_child(_button("Redesenhar carta", func(): selected_action = "redraw"; card_confirmed = false; inspected_card = -1; feedback = "Clique na carta para redesenhar."; _render_battle()))
 	hover_hint = _label("Passe o mouse na carta para destacá-la. Clique para ampliar, clique de novo para confirmar. O alvo é o sprite.", 16, Color("c9d1dd"))
 	hover_hint.position = Vector2(20, hand_top - 46)
 	hover_hint.custom_minimum_size.x = viewport_size.x - 40
@@ -826,17 +842,16 @@ func _create_actor_visual(actor: Dictionary) -> Node3D:
 	body.add_child(shadow)
 	if ResourceLoader.exists(actor["sprite"]):
 		var sheet: Texture2D = load(actor["sprite"])
-		var columns := 9
-		var rows := 6
-		var region := Rect2(0, 0, sheet.get_width() / 9.0, sheet.get_height() / 6.0)
-		if str(actor["sprite"]).ends_with("hero_rogue.png"):
-			columns = 1
-			rows = 1
-			region = Rect2(Vector2.ZERO, sheet.get_size())
-		elif str(actor["sprite"]).ends_with("hero_wizard.png"):
-			columns = 1
-			rows = 1
+		var columns := 1
+		var rows := 1
+		var region := Rect2(Vector2.ZERO, sheet.get_size())
+		var sheet_path := str(actor["sprite"])
+		if sheet_path.ends_with("hero_wizard.png"):
 			region = Rect2(0, 0, 420, 768)
+		elif not sheet_path.contains("assets/cast") and not sheet_path.ends_with("hero_rogue.png"):
+			columns = 9
+			rows = 6
+			region = Rect2(0, 0, sheet.get_width() / 9.0, sheet.get_height() / 6.0)
 		var atlas := AtlasTexture.new()
 		atlas.atlas = sheet
 		atlas.region = region
@@ -870,54 +885,50 @@ func _create_actor_visual(actor: Dictionary) -> Node3D:
 
 func _make_3d_card(index: int, card: Dictionary, definition: Dictionary) -> void:
 	var view := SubViewport.new()
-	view.size = Vector2i(320, 480)
-	view.transparent_bg = false
+	view.size = Vector2i(400, 620)
+	view.transparent_bg = true
 	view.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	viewport_hosts.add_child(view)
-	var panel := ColorRect.new()
-	panel.color = Color("28314a")
-	panel.size = Vector2(320, 480)
-	view.add_child(panel)
-	var trim := ColorRect.new()
-	trim.color = Color("c49f60")
-	trim.position = Vector2(12, 12)
-	trim.size = Vector2(296, 456)
-	panel.add_child(trim)
-	var interior := ColorRect.new()
-	interior.color = Color("202943")
-	interior.position = Vector2(18, 18)
-	interior.size = Vector2(284, 444)
-	panel.add_child(interior)
-	var owner: Dictionary = battle.actor_by_id(card["owner"])
-	var title := _label(definition["name"], 26, Color("f2dcad"))
-	title.position = Vector2(35, 30)
-	title.size = Vector2(250, 75)
-	title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	panel.add_child(title)
-	var owner_label := _label(str(owner.get("name", "")) + " · " + str(definition.get("class", "")), 20)
-	owner_label.position = Vector2(35, 105)
-	panel.add_child(owner_label)
-	var symbol := _label("✦", 90, Color("ad9273"))
-	symbol.position = Vector2(122, 170)
-	panel.add_child(symbol)
-	var description := _label(_card_description(definition, card), 18)
-	description.position = Vector2(35, 280)
-	description.size = Vector2(250, 160)
-	description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	panel.add_child(description)
-	var face := MeshInstance3D.new()
+	var owner: Dictionary = battle.actor_by_id(int(card.get("owner", 0)))
+	var face = CardFace.new()
+	face.size = Vector2(400, 620)
+	face.setup(_card_spec(card, definition, owner))
+	view.add_child(face)
+	var mesh := MeshInstance3D.new()
 	var plane := QuadMesh.new()
-	plane.size = Vector2(1.14, 1.72)
-	face.mesh = plane
+	plane.size = Vector2(1.05, 1.62)
+	mesh.mesh = plane
 	var material := _material(Color.WHITE, true)
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	material.albedo_texture = view.get_texture()
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
-	face.material_override = material
-	face.position = Vector3((index - (battle.hand.size() - 1) / 2.0) * 1.1, -40.0, 6.6)
-	face.visible = false
-	face.rotation_degrees.x = -18
-	cards_3d.add_child(face)
-	card_meshes.append(face)
+	mesh.material_override = material
+	var pose: Dictionary = _arc_pose(index, battle.hand.size())
+	var slot: Vector3 = pose["position"]
+	var spin: Vector3 = pose["rotation"]
+	var uid := int(card.get("uid", -1))
+	var entering := not seen_hand.has(uid)
+	mesh.position = slot
+	mesh.rotation = spin
+	if entering:
+		mesh.position = slot + Vector3(2.8, 0.45, 0.0)
+		mesh.rotation = spin + Vector3(0, 0, 0.95)
+	cards_3d.add_child(mesh)
+	if entering and not reduce_motion:
+		var arrive := create_tween()
+		arrive.set_parallel(true)
+		arrive.tween_property(mesh, "position", slot, 0.34)
+		arrive.tween_property(mesh, "rotation", spin, 0.34)
+	seen_hand[uid] = true
+	var area := Area3D.new()
+	area.set_meta("card_index", index)
+	var shape := CollisionShape3D.new()
+	var box := BoxShape3D.new()
+	box.size = Vector3(1.0, 1.55, 0.12)
+	shape.shape = box
+	area.add_child(shape)
+	mesh.add_child(area)
+	card_meshes.append(mesh)
 
 func _animate_card_depart(index: int) -> void:
 	if index < 0 or index >= card_meshes.size() or reduce_motion: return
@@ -925,13 +936,13 @@ func _animate_card_depart(index: int) -> void:
 	if not is_instance_valid(original): return
 	var ghost := MeshInstance3D.new()
 	ghost.mesh = original.mesh
-	ghost.material_override = _material(Color("d4ad73"), true)
-	ghost.position = original.global_position
-	add_child(ghost)
+	ghost.material_override = original.material_override
+	ghost.transform = original.transform
+	camera.add_child(ghost)
 	var tween := create_tween()
 	tween.set_parallel(true)
-	tween.tween_property(ghost, "position", Vector3(0, 2.0, 0), 0.3 / animation_speed)
-	tween.tween_property(ghost, "scale", Vector3.ZERO, 0.3 / animation_speed)
+	tween.tween_property(ghost, "position", original.position + Vector3(-3.4, 0.35, -0.15), 0.32 / animation_speed)
+	tween.tween_property(ghost, "rotation:z", original.rotation.z - 1.15, 0.32 / animation_speed)
 	tween.chain().tween_callback(ghost.queue_free)
 
 func _register_inputs() -> void:
@@ -963,6 +974,171 @@ func _target_ids() -> Array[int]:
 		ids.append(actor["id"])
 	return ids
 
+
+func _chrome(at: Vector2, box: Vector2, path: String) -> void:
+	if not ResourceLoader.exists(path): return
+	var plate := TextureRect.new()
+	plate.texture = load(path)
+	plate.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	plate.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	plate.z_index = -1
+	plate.position = at
+	plate.size = box
+	hud.add_child(plate)
+
+func _set_orbit(target: float) -> void:
+	if presentation == null: return
+	var tw := create_tween()
+	tw.tween_property(presentation, "orbit", target, 0.7 / maxf(animation_speed, 0.25))
+	await tw.finished
+
+func _arc_pose(index: int, count: int) -> Dictionary:
+	var t := 0.5
+	if count > 1:
+		t = float(index) / float(count - 1)
+	var spread := minf(0.95, 0.12 * float(maxi(count, 1)))
+	var ang := lerpf(-spread, spread, t)
+	return {
+		"position": Vector3(sin(ang) * 1.75, -1.08 + cos(ang) * 0.26, -2.7),
+		"rotation": Vector3(-0.05, 0.0, -ang * 0.92)
+	}
+
+func _type_color(kind: String) -> Color:
+	match kind:
+		"BRUTO": return Color("6e1c24")
+		"TECNICO": return Color("e07a2f")
+		"PSICOLOGICO": return Color("7a3ea1")
+		"MENTAL": return Color("e56aa8")
+		"PROJETIVO": return Color("3d4db8")
+		"QUIMICO": return Color("2ec4b6")
+		_: return Color("8d929a")
+
+func _load_tex(path: String) -> Texture2D:
+	if path != "" and ResourceLoader.exists(path):
+		return load(path)
+	return null
+
+func _stat_readout(owner: Dictionary, definition: Dictionary) -> Dictionary:
+	var stat_name := "attack"
+	var flat := 0
+	if str(definition.get("stat", "")) == "power":
+		stat_name = "power"
+	for effect in definition.get("effects", []):
+		if str(effect.get("kind", "")) != "DAMAGE":
+			continue
+		flat = int(effect.get("amount", 0))
+		var named := str(effect.get("stat", "attack"))
+		if named == "power":
+			stat_name = "power"
+		elif named == "attack":
+			stat_name = "attack"
+	var archetype := str(owner.get("archetype", ""))
+	var base_attr := int(owner.get(stat_name, 0))
+	if Content.HEROES.has(archetype):
+		base_attr = int(Content.HEROES[archetype].get(stat_name, base_attr))
+	var current_attr := int(owner.get(stat_name, base_attr))
+	var baseline := maxi(0, flat + base_attr)
+	var current := flat + current_attr
+	if battle != null and battle._has_status(owner, "weak"):
+		current = int(round(float(current) * 0.5))
+	if battle != null and battle._has_status(owner, "strengthened"):
+		current = int(round(float(current) * 1.5))
+	if battle != null and (battle._has_status(owner, "binary") or battle._has_status(owner, "overpowered")):
+		current = current * 2
+	current = maxi(0, current)
+	var tint := Color("f4f7fb")
+	if current > baseline:
+		tint = Color("7dE28a")
+	elif current < baseline:
+		tint = Color("e15b5b")
+	var label := "PODER" if stat_name == "power" else "ATAQUE"
+	return {"label": label, "value": current, "color": tint}
+
+func _rules_bbcode(definition: Dictionary, card: Dictionary) -> String:
+	var lines: Array[String] = []
+	if definition.get("quick", false): lines.append("[b]Quick[/b]: devolve a ação no nocaute")
+	if definition.get("free", false): lines.append("[b]Livre[/b]")
+	if definition.get("final", false): lines.append("[b]Final[/b]")
+	if definition.get("reach", false): lines.append("[b]Alcance[/b]")
+	if int(definition.get("chain", 0)) > 0: lines.append("[b]Chain[/b] %d" % int(definition["chain"]))
+	if definition.get("exhaust", false) or definition.get("item", false):
+		lines.append("[color=#e15b5b][b]Exaustão[/b][/color]")
+	var harmful := ["weak", "vulnerable", "bleed", "poison", "burn", "stun", "bind", "bound", "wound", "wounded"]
+	for effect in definition.get("effects", []):
+		var kind := str(effect.get("kind", ""))
+		if kind == "DAMAGE":
+			lines.append("Dano %d" % int(effect.get("amount", 0)))
+		elif kind == "HEAL":
+			lines.append("Cura %d" % int(effect.get("amount", 0)))
+		elif kind == "BLOCK":
+			lines.append("[b]Bloqueio[/b] %d" % int(effect.get("amount", 0)))
+		elif kind == "CURE":
+			lines.append("Remove veneno, sangramento e queimadura")
+		elif kind == "STATUS":
+			var status_id := str(effect.get("id", ""))
+			var piece := "[b]%s[/b]" % status_id
+			if bool(effect.get("self", false)) and status_id in harmful:
+				piece = "[color=#e15b5b]%s[/color]" % piece
+			lines.append(piece)
+		elif kind == "DISCARD":
+			lines.append("[color=#e15b5b]Descarte[/color]")
+	for action in definition.get("actions", []):
+		if typeof(action) != TYPE_ARRAY or action.is_empty():
+			continue
+		var op := str(action[0])
+		if op in ["hit", "hit_per_impulse", "hit_per_hand", "roulette_hit"]:
+			lines.append("Dano escalado")
+		elif op in ["self_damage", "self_damage_hp"]:
+			lines.append("[color=#e15b5b]Dano a si[/color]")
+		elif op in ["discard_hand", "discard_random"]:
+			lines.append("[color=#e15b5b]Descarta cartas[/color]")
+		elif op == "exhaust":
+			lines.append("[color=#e15b5b][b]Exaustão[/b][/color]")
+		elif op in ["heal", "heal_all", "full_heal"]:
+			lines.append("Cura")
+		elif op in ["block", "block_hp"]:
+			lines.append("[b]Bloqueio[/b]")
+		elif op in ["status", "self_status"]:
+			var status_id := str(action[1]) if action.size() > 1 else ""
+			var piece := "[b]%s[/b]" % status_id
+			if op == "self_status" and status_id in harmful:
+				piece = "[color=#e15b5b]%s[/color]" % piece
+			lines.append(piece)
+		elif op == "quick":
+			lines.append("[b]Quick[/b]")
+		elif op == "push":
+			lines.append("Empurra")
+		elif op == "pull":
+			lines.append("Puxa")
+	if card.get("infected", false):
+		lines.append("[color=#e15b5b]Infectada[/color]")
+	return "\n".join(lines)
+
+func _card_spec(card: Dictionary, definition: Dictionary, owner: Dictionary) -> Dictionary:
+	var item := bool(definition.get("item", false))
+	var art_path := str(definition.get("art", ""))
+	var art: Texture2D = _load_tex(art_path)
+	if art == null:
+		art = _load_tex(str(owner.get("portrait", "")))
+	if art == null:
+		art = _unit_portrait(owner)
+	var icon: Texture2D = _load_tex("res://assets/items/item_icon.png") if item else _load_tex(str(owner.get("signature_icon", "")))
+	var readout: Dictionary = _stat_readout(owner, definition)
+	var border := Color("8d929a") if item else _type_color(str(owner.get("type", "")))
+	return {
+		"title": str(definition.get("name", "")),
+		"chip": "Item" if item else str(owner.get("name", "")),
+		"item": item,
+		"art": art,
+		"icon": icon,
+		"border": border,
+		"stat_label": str(readout["label"]),
+		"stat_value": int(readout["value"]),
+		"stat_color": readout["color"],
+		"rules": _rules_bbcode(definition, card),
+		"gain": int(definition.get("gain", 0)),
+		"cost": int(definition.get("cost", 0))
+	}
 
 func _resource_line(side: String) -> String:
 	var plays: int = battle.card_plays if side == "ALLY" else battle.enemy_card_plays
@@ -1178,13 +1354,17 @@ func _add_inspect_overlay(index: int, viewport_size: Vector2) -> void:
 	blocker.pressed.connect(_cancel_inspect)
 	hud.add_child(blocker)
 	var height := viewport_size.y * 0.5
+	var width := height * 0.66
 	var card: Dictionary = battle.hand[index]
-	var host := _build_hand_card(index, card, _card_def(str(card["id"])), height)
-	host.scale = Vector2.ONE
-	host.z_index = 9
-	var width := height * 0.68
+	var definition: Dictionary = _card_def(str(card["id"]))
+	var owner: Dictionary = battle.actor_by_id(int(card.get("owner", 0)))
+	var host = CardFace.new()
 	host.size = Vector2(width, height)
 	host.position = Vector2((viewport_size.x - width) * 0.5, (viewport_size.y - height) * 0.5)
+	host.z_index = 9
+	host.mouse_filter = Control.MOUSE_FILTER_STOP
+	host.setup(_card_spec(card, definition, owner))
+	host.gui_input.connect(func(event: InputEvent) -> void: _on_card_gui(event, index))
 	hud.add_child(host)
 
 func _present_enemy_turn() -> void:
@@ -1197,19 +1377,25 @@ func _present_enemy_turn() -> void:
 	selected_action = ""
 	chain_targets.clear()
 	battle.begin_enemy_phase()
+	await _set_orbit(PI)
+	if battle == null or battle.phase != "ENEMY":
+		enemy_presenting = false
+		return
 	_step_enemy()
 
 func _step_enemy() -> void:
 	if battle == null or battle.phase != "ENEMY":
 		enemy_presenting = false
+		_set_orbit(0.0)
 		return
 	enemy_steps += 1
 	if enemy_steps > 16:
 		battle.finish_enemy_phase()
 		packs.on_player_turn_resumed(battle, pack_mode)
 		enemy_presenting = false
+		_set_orbit(0.0)
 		return
-	await get_tree().create_timer(0.48 / maxf(animation_speed, 0.25)).timeout
+	await get_tree().create_timer(0.5 / maxf(animation_speed, 0.25)).timeout
 	if battle == null or battle.phase != "ENEMY":
 		enemy_presenting = false
 		return
@@ -1219,6 +1405,7 @@ func _step_enemy() -> void:
 		battle.finish_enemy_phase()
 		packs.on_player_turn_resumed(battle, pack_mode)
 		enemy_presenting = false
+		_set_orbit(0.0)
 
 func _input(event: InputEvent) -> void:
 	if battle == null or battle.phase != "PLAYER" or enemy_presenting: return
@@ -1294,6 +1481,10 @@ func _unhandled_input(input: InputEvent) -> void:
 	query.collide_with_areas = true
 	query.collide_with_bodies = false
 	var hit := get_world_3d().direct_space_state.intersect_ray(query)
+	if hit.has("collider") and hit["collider"].has_meta("card_index"):
+		_on_card_gui(click, int(hit["collider"].get_meta("card_index")))
+		get_viewport().set_input_as_handled()
+		return
 	if hit.has("collider") and hit["collider"].has_meta("actor_id"):
 		_activate_actor(int(hit["collider"].get_meta("actor_id")))
 		get_viewport().set_input_as_handled()
@@ -1346,7 +1537,14 @@ func _process(delta: float) -> void:
 		query.collide_with_areas = true
 		query.collide_with_bodies = false
 		var hit := get_world_3d().direct_space_state.intersect_ray(query)
-		var new_actor := int(hit["collider"].get_meta("actor_id")) if hit.has("collider") and hit["collider"].has_meta("actor_id") else -1
+		var new_card := int(hit["collider"].get_meta("card_index")) if hit.has("collider") and hit["collider"].has_meta("card_index") else -1
+		var new_actor := int(hit["collider"].get_meta("actor_id")) if new_card < 0 and hit.has("collider") and hit["collider"].has_meta("actor_id") else -1
+		if new_card != hovered_card:
+			hovered_card = new_card
+			if hovered_card >= 0 and hovered_card < battle.hand.size():
+				_show_actor_portrait(int(battle.hand[hovered_card]["owner"]), false)
+				if is_instance_valid(hover_hint):
+					hover_hint.text = _card_description(_card_def(str(battle.hand[hovered_card]["id"])), battle.hand[hovered_card])
 		if new_actor != hovered_actor:
 			hovered_actor = new_actor
 			if hovered_actor >= 0:
@@ -1362,6 +1560,20 @@ func _process(delta: float) -> void:
 		if avatar == null: continue
 		var hot := int(id) == hovered_actor
 		avatar.modulate = Color("ffe1a8") if hot else Color.WHITE
+	for mesh_index in range(card_meshes.size()):
+		var card_mesh: MeshInstance3D = card_meshes[mesh_index]
+		if not is_instance_valid(card_mesh): continue
+		var raised := mesh_index == hovered_card or mesh_index == inspected_card
+		var target_scale := Vector3(1.48, 1.48, 1.48) if raised else Vector3.ONE
+		card_mesh.scale = card_mesh.scale.lerp(target_scale, 0.35)
+	if presentation != null and battle != null and battle.phase == "PLAYER":
+		var focus := Vector3.ZERO
+		if hovered_actor >= 0 and actor_nodes.has(hovered_actor):
+			var actor: Dictionary = battle.actor_by_id(hovered_actor)
+			if str(actor.get("side", "")) == "ALLY":
+				var body: Node3D = actor_nodes[hovered_actor]
+				focus = Vector3(body.position.x * 0.34, 0.18, 0.0)
+		presentation.ally_focus = presentation.ally_focus.lerp(focus, 1.0 - exp(-delta * 5.0))
 	if portrait_sticky_until > 0 and Time.get_ticks_msec() >= portrait_sticky_until:
 		portrait_sticky_until = 0
 		_hide_idle_portraits()

@@ -7,6 +7,7 @@ signal visual(kind: String, source_id: int, target_id: int, value: int)
 signal finished(victory: bool)
 
 const Content = preload("res://game/Content.gd")
+const PackBridge = preload("res://game/PackBridge.gd")
 var rng := RandomNumberGenerator.new()
 var rules: Dictionary = Content.RULES.duplicate(true)
 var mission: Dictionary = {}
@@ -75,6 +76,8 @@ func _add_plays(side: String, amount: int) -> void:
 	_set_plays(side, _get_plays(side) + amount)
 
 func begin(mission_id: String, team: Array[String], equipped: Dictionary, seed_value: int = 0, card_improvements: Dictionary = {}, selected_items: Dictionary = {}) -> void:
+	if not PackBridge.packs_merged:
+		PackBridge.new()
 	rng.seed = seed_value if seed_value != 0 else randi()
 	mission = Content.MISSIONS[mission_id].duplicate(true)
 	actors.clear()
@@ -104,12 +107,22 @@ func begin(mission_id: String, team: Array[String], equipped: Dictionary, seed_v
 	improvements = card_improvements.duplicate(true)
 	items = selected_items.duplicate(true) if not selected_items.is_empty() else {"potion": 1, "bomb": 1, "antidote": 1}
 	for id in team:
-		if Content.HEROES.has(id) and Content.HEROES[id].get("playable", true):
+		if Content.HEROES.has(id):
 			var hero := _create_actor(Content.HEROES[id], "ALLY", id)
 			var equipped_ids: Array = equipped.get(id, Content.HEROES[id]["cards"])
 			for card_id in equipped_ids:
 				if Content.CARDS.has(card_id):
 					deck.append(_create_card(card_id, hero["id"], improvements.get(id + ":" + card_id, {})))
+	var item_owner := 0
+	var allies_now: Array[Dictionary] = living("ALLY")
+	if not allies_now.is_empty():
+		item_owner = int(allies_now[0]["id"])
+	for item_key in ["potion", "bomb", "antidote"]:
+		var copies := int(items.get(item_key, 0))
+		for _copy in copies:
+			var item_card := "item_" + str(item_key)
+			if Content.CARDS.has(item_card):
+				deck.append(_create_card(item_card, item_owner))
 	for id in mission.get("enemies", []):
 		spawn_enemy(str(id))
 	_shuffle(deck)

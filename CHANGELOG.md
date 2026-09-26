@@ -3,6 +3,7 @@
 - Pacotes `ent_`/`ms_` mesclados ao conteúdo principal: heróis do anexo entram na seleção de equipe e cartas externas expandem os pools dos arquétipos via `owner_mapping.json`.
 - Removidas as demos separadas do menu (`Demo: elenco` / `Demo: cartas externas`).
 - Corrigida tipagem `Array[String]` em `HotNBattle.begin` / `EntityRuntime.deploy`.
+- Sprites do elenco `ent_` redesenhados a partir das descrições do HoeDex quando existiam (Kabuki ninja cibernética, Evelyn meio-monstro, Fate de cabelo azul e espada colossal, Mingau humanoide felino, Dominika parasita de vitrine, Hynda bruxa, Madelyn de pele marmórea, Techna com gadgets não letais, Taylor com a alienígena Zaphter). Sem descrição, o desenho segue espécie, papel e tags.
 
 # Histórico da cópia de desenvolvimento
 

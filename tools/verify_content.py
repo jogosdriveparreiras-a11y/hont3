@@ -84,7 +84,18 @@ for hero_id, hero in heroes.items():
         assert hero["cards"].count(card_id) <= cards[card_id].get("copy_limit", rules["copy_limit"]), (hero_id, card_id)
 
 playable = {hero_id: hero for hero_id, hero in heroes.items() if hero.get("playable", True)}
-assert len(playable) >= 6
+legacy = ["guerreiro", "mago", "ladino", "clerigo", "paladino", "patrulheiro"]
+for legacy_id in legacy:
+    assert heroes[legacy_id].get("playable") is False, legacy_id
+import json
+entity_pack = json.loads((ROOT / "addons/hotn3_entities/entities.json").read_text(encoding="utf-8"))["heroes"]
+assert len(entity_pack) == 27
+for hero_id, hero in entity_pack.items():
+    assert hero_id.startswith("ent_"), hero_id
+    for key in ("sprite", "portrait", "signature_icon"):
+        art = str(hero.get(key, ""))
+        assert art.startswith("res://assets/cast/"), (hero_id, key)
+        assert (ROOT / art.removeprefix("res://")).is_file(), (hero_id, art)
 assert any(hero.get("boss") and not hero.get("playable", True) for hero in heroes.values())
 assert any(hero.get("minion") and not hero.get("playable", True) for hero in heroes.values())
 
@@ -120,15 +131,17 @@ for mission_id, mission in missions.items():
     assert mission["objective"] in {"ELIMINATE", "SURVIVE", "PROTECT", "BOSS"}, mission_id
     seen = set()
     for enemy_id in mission["enemies"]:
-        assert enemy_id in heroes, (mission_id, enemy_id)
-        if not heroes[enemy_id].get("minion"):
+        assert enemy_id in heroes or enemy_id in entity_pack, (mission_id, enemy_id)
+        record = heroes.get(enemy_id, entity_pack.get(enemy_id, {}))
+        if not record.get("minion"):
             assert enemy_id not in seen, (mission_id, enemy_id)
             seen.add(enemy_id)
     for wave in mission.get("reinforcements", {}).values():
         wave_seen = set()
         for enemy_id in wave:
-            assert enemy_id in heroes, (mission_id, enemy_id)
-            if not heroes[enemy_id].get("minion"):
+            assert enemy_id in heroes or enemy_id in entity_pack, (mission_id, enemy_id)
+            record = heroes.get(enemy_id, entity_pack.get(enemy_id, {}))
+            if not record.get("minion"):
                 assert enemy_id not in wave_seen, (mission_id, enemy_id)
                 wave_seen.add(enemy_id)
 

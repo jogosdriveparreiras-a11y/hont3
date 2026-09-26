@@ -63,6 +63,8 @@ func _merge_entity_heroes() -> void:
 			"speed": int(src.get("speed", 5)),
 			"type": str(src.get("type", "TECNICO")),
 			"sprite": str(src.get("sprite", "res://hero_rogue.png")),
+			"portrait": str(src.get("portrait", "")),
+			"signature_icon": str(src.get("signature_icon", "")),
 			"row": str(src.get("row", "front")),
 			"passive": str(src.get("passive", "oportunista")),
 			"playable": true,

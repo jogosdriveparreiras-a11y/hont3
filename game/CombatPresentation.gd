@@ -8,6 +8,9 @@ var sprites: Dictionary = {}
 var positions: Dictionary = {}
 var camera_origin := Vector3(0, 11.5, 18)
 var camera_position := Vector3(0, 11.5, 18)
+var orbit := 0.0
+var ally_focus := Vector3.ZERO
+var punch := Vector3.ZERO
 var camera_tween: Tween
 var shake_time := 0.0
 var shake_strength := 0.0
@@ -39,6 +42,9 @@ func clear_actors() -> void:
 			if str(child.name) in ["PortraitLeft", "PortraitRight"]: continue
 			child.queue_free()
 	camera_position = camera_origin
+	punch = Vector3.ZERO
+	orbit = 0.0
+	ally_focus = Vector3.ZERO
 	shake_time = 0.0
 
 func show_action(kind: String, source_id: int, target_id: int, amount: int) -> void:
@@ -130,10 +136,9 @@ func _focus(id: int) -> void:
 	if camera == null or not positions.has(id) or motion_scale <= 0.0: return
 	if camera_tween != null and camera_tween.is_running(): camera_tween.kill()
 	var point: Vector3 = positions[id]
+	punch = Vector3(point.x * 0.12, -0.15, 0) * motion_scale
 	camera_tween = create_tween()
-	camera_tween.tween_property(self, "camera_position", camera_origin + Vector3(point.x * 0.16, -0.6, -2.0) * motion_scale, 0.16 / animation_speed)
-	camera_tween.tween_interval(0.08 / animation_speed)
-	camera_tween.tween_property(self, "camera_position", camera_origin, 0.28 / animation_speed)
+	camera_tween.tween_property(self, "punch", Vector3.ZERO, 0.34 / animation_speed)
 
 func _process(delta: float) -> void:
 	if camera != null:
@@ -141,8 +146,10 @@ func _process(delta: float) -> void:
 		var offset := Vector3.ZERO
 		if shake_enabled and shake_time > 0.0:
 			offset = Vector3(randf_range(-shake_strength, shake_strength), randf_range(-shake_strength, shake_strength), 0)
-		camera.position = camera_position + offset
-		camera.look_at(Vector3(0, 0.5, 0), Vector3.UP)
+		var radius := 16.8
+		var base := Vector3(sin(orbit) * radius, 11.15, cos(orbit) * radius)
+		camera.position = base + ally_focus + punch + offset
+		camera.look_at(Vector3(ally_focus.x * 2.1, 0.75, 0.0), Vector3.UP)
 	for id in sprites:
 		var sprite: Sprite3D = sprites[id]
 		if not is_instance_valid(sprite): continue
