@@ -2,11 +2,13 @@ extends SceneTree
 
 const Content = preload("res://game/Content.gd")
 const Battle = preload("res://game/BattleState.gd")
+const PackBridge = preload("res://game/PackBridge.gd")
 
 func _initialize() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	var _packs = PackBridge.new()
 	var team: Array[String] = ["guerreiro", "mago", "clerigo"]
 	for mission_id in Content.MISSIONS:
 		var battle: HotNBattle = Battle.new()

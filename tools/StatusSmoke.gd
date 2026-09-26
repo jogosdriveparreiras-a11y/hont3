@@ -2,8 +2,10 @@ extends SceneTree
 
 const Battle = preload("res://game/BattleState.gd")
 const Content = preload("res://game/Content.gd")
+const PackBridge = preload("res://game/PackBridge.gd")
 
 func _initialize() -> void:
+	var _packs = PackBridge.new()
 	var battle = Battle.new()
 	var team: Array[String] = ["guerreiro", "mago", "clerigo"]
 	battle.begin("road", team, {}, 42)

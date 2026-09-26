@@ -1062,7 +1062,7 @@ func _rules_bbcode(definition: Dictionary, card: Dictionary) -> String:
 	if definition.get("reach", false): lines.append("[b]Alcance[/b]")
 	if int(definition.get("chain", 0)) > 0: lines.append("[b]Chain[/b] %d" % int(definition["chain"]))
 	if definition.get("exhaust", false) or definition.get("item", false):
-		lines.append("[color=#e15b5b][b]Exaustão[/b][/color]")
+		lines.append("[color=#e15b5b][b]Exhaust[/b][/color]")
 	var harmful := ["weak", "vulnerable", "bleed", "poison", "burn", "stun", "bind", "bound", "wound", "wounded"]
 	for effect in definition.get("effects", []):
 		var kind := str(effect.get("kind", ""))
@@ -1077,7 +1077,7 @@ func _rules_bbcode(definition: Dictionary, card: Dictionary) -> String:
 		elif kind == "STATUS":
 			var status_id := str(effect.get("id", ""))
 			var piece := "[b]%s[/b]" % status_id
-			if bool(effect.get("self", false)) and status_id in harmful:
+			if status_id in harmful:
 				piece = "[color=#e15b5b]%s[/color]" % piece
 			lines.append(piece)
 		elif kind == "DISCARD":
@@ -1093,7 +1093,7 @@ func _rules_bbcode(definition: Dictionary, card: Dictionary) -> String:
 		elif op in ["discard_hand", "discard_random"]:
 			lines.append("[color=#e15b5b]Descarta cartas[/color]")
 		elif op == "exhaust":
-			lines.append("[color=#e15b5b][b]Exaustão[/b][/color]")
+			lines.append("[color=#e15b5b][b]Exhaust[/b][/color]")
 		elif op in ["heal", "heal_all", "full_heal"]:
 			lines.append("Cura")
 		elif op in ["block", "block_hp"]:
@@ -1101,7 +1101,7 @@ func _rules_bbcode(definition: Dictionary, card: Dictionary) -> String:
 		elif op in ["status", "self_status"]:
 			var status_id := str(action[1]) if action.size() > 1 else ""
 			var piece := "[b]%s[/b]" % status_id
-			if op == "self_status" and status_id in harmful:
+			if status_id in harmful:
 				piece = "[color=#e15b5b]%s[/color]" % piece
 			lines.append(piece)
 		elif op == "quick":
@@ -1170,7 +1170,7 @@ func _layout_portraits() -> void:
 	portrait_right.position = Vector2(vp.x - width - 12, (vp.y - height) * 0.42)
 
 func _sprite_region(path: String, sheet: Texture2D) -> Rect2:
-	if path.ends_with("hero_rogue.png") or path.ends_with("en_dog.png"):
+	if path.contains("assets/cast") or path.ends_with("hero_rogue.png") or path.ends_with("en_dog.png"):
 		return Rect2(Vector2.ZERO, sheet.get_size())
 	if path.ends_with("hero_wizard.png"):
 		return Rect2(0, 0, minf(420.0, sheet.get_width()), minf(768.0, sheet.get_height()))

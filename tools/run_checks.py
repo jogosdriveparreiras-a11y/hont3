@@ -31,6 +31,6 @@ if not re.match(r"^4\.6(?:\.|\D|$)", version):
     sys.exit(f"Godot 4.6 é necessário; executável encontrado: {version}")
 
 run(engine, "--headless", "--path", str(ROOT), "--editor", "--import", "--quit")
-for script in ("StatusSmoke.gd", "CampaignSmoke.gd", "SceneSmoke.gd"):
+for script in ("StatusSmoke.gd", "CampaignSmoke.gd", "SceneSmoke.gd", "MergeSmoke.gd"):
     run(engine, "--headless", "--path", str(ROOT), "-s", f"res://tools/{script}")
 print("OK: verificações estáticas, importação e testes de combate/cena")
