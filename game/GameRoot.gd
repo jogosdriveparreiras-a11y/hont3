@@ -216,8 +216,6 @@ func _show_menu() -> void:
 	menu.add_child(_button("Preparar itens", _show_items))
 	menu.add_child(_button("Configurações", _show_settings))
 	menu.add_child(_button("Iniciar missão: %s" % Content.MISSIONS[mission_id]["name"], _start_mission))
-	menu.add_child(_button("Demo: elenco do anexo (ent_)", _start_entities_demo))
-	menu.add_child(_button("Demo: cartas externas (ms_)", _start_external_demo))
 
 func _show_settings() -> void:
 	var menu := _center_panel("CONFIGURAÇÕES")
@@ -303,12 +301,26 @@ func _select_mission(id: String) -> void:
 
 func _show_team() -> void:
 	var menu := _center_panel("EQUIPE · %d/%d" % [team.size(), Content.RULES["team_size"]])
+	var menu_panel := menu.get_parent() as PanelContainer
+	menu_panel.custom_minimum_size = Vector2(720, 0)
+	var scroll := ScrollContainer.new()
+	scroll.custom_minimum_size = Vector2(680, minf(520.0, get_viewport().get_visible_rect().size.y - 260.0))
+	menu.add_child(scroll)
+	var list := VBoxContainer.new()
+	list.add_theme_constant_override("separation", 6)
+	scroll.add_child(list)
+	var playable_ids: Array[String] = []
 	for id in Content.HEROES:
+		if Content.HEROES[id].get("playable", true):
+			playable_ids.append(str(id))
+	playable_ids.sort()
+	for id in playable_ids:
 		var hero: Dictionary = Content.HEROES[id]
-		if not hero.get("playable", true): continue
 		var chosen := team.has(id)
-		var identity: Dictionary = Content.HERO_LORE[id]
-		menu.add_child(_button(("✓ " if chosen else "+ ") + "%s · %s · %d PV" % [hero["name"], identity["role"], hero["hp"]], _toggle_hero.bind(id), identity["history"] + "\n" + identity["trait"]))
+		var identity: Dictionary = Content.HERO_LORE.get(id, {"role": "Anexo", "trait": "Herói expandido.", "history": ""})
+		var button := _button(("✓ " if chosen else "+ ") + "%s · %s · %d PV" % [hero["name"], identity["role"], hero["hp"]], _toggle_hero.bind(id), identity["history"] + "\n" + identity["trait"])
+		button.custom_minimum_size = Vector2(640, 44)
+		list.add_child(button)
 	menu.add_child(_button("Voltar", _show_menu))
 
 func _toggle_hero(id: String) -> void:
@@ -533,37 +545,7 @@ func _begin_battle_session() -> void:
 	battle.changed.connect(_render_battle)
 	battle.finished.connect(_on_finished)
 
-func _start_entities_demo() -> void:
-	# Missão jogável com três entidades do pacote hotn3_entities.
-	pack_mode = "entities"
-	mission_id = "road"
-	_begin_battle_session()
-	var ids: Array[String] = ["ent_akuji", "ent_adam", "ent_techna"]
-	if not packs.deploy_entities(battle, mission_id, ids):
-		feedback = "Não foi possível montar o elenco do pacote."
-		pack_mode = "default"
-		battle = null
-		_show_menu()
-		return
-	feedback = "Elenco do anexo: Akuji, Adam e Techna."
-	_render_battle()
 
-func _start_external_demo() -> void:
-	# Missão com heróis padrão e baralho ms_ via owner_mapping.
-	pack_mode = "external"
-	mission_id = "road"
-	_begin_battle_session()
-	var demo_team: Array[String] = ["guerreiro", "mago", "ladino"]
-	battle.begin(mission_id, demo_team, {}, 0, {}, loadout)
-	var installed: int = packs.install_external_demo(battle)
-	if installed <= 0:
-		feedback = "Pacote de cartas externas sem cartas instaladas."
-		pack_mode = "default"
-		battle = null
-		_show_menu()
-		return
-	feedback = "Cartas externas instaladas: %d." % installed
-	_render_battle()
 
 func _card_def(card_id: String) -> Dictionary:
 	return packs.definition(str(card_id))

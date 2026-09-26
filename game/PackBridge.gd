@@ -1,10 +1,12 @@
 extends RefCounted
-# Ponte opcional para os pacotes em addons/. Não altera Content.gd nem BattleState.gd.
+# Ponte para pacotes em addons/. Injeta heróis/cartas no Content jogável na inicialização.
 
 const Content = preload("res://game/Content.gd")
 const ExternalRuntime = preload("res://addons/hotn3_external_cards/CardRuntime.gd")
 const EntityRuntime = preload("res://addons/hotn3_entities/EntityRuntime.gd")
 const OWNER_MAP_PATH := "res://addons/hotn3_external_cards/owner_mapping.json"
+
+static var packs_merged := false
 
 var external = ExternalRuntime.new()
 var entities = EntityRuntime.new()
@@ -12,6 +14,7 @@ var archetype_owners: Dictionary = {} # arquétipo HotN3 -> lista de donos ms_
 
 func _init() -> void:
 	_load_owner_mapping()
+	merge_into_content()
 
 func _load_owner_mapping() -> void:
 	archetype_owners.clear()
@@ -28,6 +31,86 @@ func _load_owner_mapping() -> void:
 		if not archetype_owners.has(archetype):
 			archetype_owners[archetype] = []
 		archetype_owners[archetype].append(str(owner_id))
+
+func merge_into_content() -> void:
+	# Idempotente: heróis ent_ e cartas ms_/ent_ entram no caminho principal uma vez.
+	if packs_merged:
+		return
+	packs_merged = true
+	_merge_entity_heroes()
+	_merge_entity_cards()
+	_merge_external_cards()
+	_expand_archetype_pools()
+
+func _merge_entity_heroes() -> void:
+	for hero_id in entities.catalog.heroes:
+		var id := str(hero_id)
+		if Content.HEROES.has(id):
+			continue
+		var src: Dictionary = entities.catalog.heroes[id]
+		var pool: Array = []
+		for card_id in src.get("pool", []):
+			pool.append(str(card_id))
+		var cards: Array = []
+		for card_id in src.get("cards", []):
+			cards.append(str(card_id))
+		Content.HEROES[id] = {
+			"name": str(src.get("name", id)),
+			"hp": int(src.get("hp", 20)),
+			"attack": int(src.get("attack", 4)),
+			"power": int(src.get("power", 4)),
+			"armor": int(src.get("armor", 0)),
+			"speed": int(src.get("speed", 5)),
+			"type": str(src.get("type", "TECNICO")),
+			"sprite": str(src.get("sprite", "res://hero_rogue.png")),
+			"row": str(src.get("row", "front")),
+			"passive": str(src.get("passive", "oportunista")),
+			"playable": true,
+			"pool": pool,
+			"cards": cards,
+		}
+		if not Content.HERO_LORE.has(id):
+			Content.HERO_LORE[id] = {
+				"role": str(src.get("archetype", "Anexo")),
+				"trait": "Herói do elenco expandido (pacote ent_).",
+				"history": "%s · %s" % [str(src.get("species", "Desconhecido")), str(src.get("source_page", "anexo"))],
+			}
+
+func _merge_entity_cards() -> void:
+	for card_id in entities.catalog.cards:
+		var id := str(card_id)
+		if Content.CARDS.has(id):
+			continue
+		Content.CARDS[id] = entities.catalog.cards[id].duplicate(true)
+
+func _merge_external_cards() -> void:
+	for card_id in external.catalog.cards:
+		var id := str(card_id)
+		if Content.CARDS.has(id):
+			continue
+		Content.CARDS[id] = external.catalog.cards[id].duplicate(true)
+
+func _expand_archetype_pools() -> void:
+	# Cartas ms_ entram no pool dos arquétipos HotN (guerreiro/mago/…) via owner_mapping.
+	for archetype in archetype_owners.keys():
+		var hero_id := str(archetype)
+		if not Content.HEROES.has(hero_id):
+			continue
+		var hero: Dictionary = Content.HEROES[hero_id]
+		var pool: Array = []
+		for entry in hero.get("pool", []):
+			pool.append(str(entry))
+		var seen: Dictionary = {}
+		for entry in pool:
+			seen[entry] = true
+		for owner_id in archetype_owners[archetype]:
+			for card_id in external.catalog.ids_for(str(owner_id)):
+				var cid := str(card_id)
+				if seen.has(cid):
+					continue
+				seen[cid] = true
+				pool.append(cid)
+		hero["pool"] = pool
 
 func definition(card_id: String) -> Dictionary:
 	if Content.CARDS.has(card_id):
@@ -56,74 +139,46 @@ func play_card(battle: Variant, mode: String, hand_index: int, target_id: int, c
 func redraw_card(battle: Variant, mode: String, hand_index: int) -> bool:
 	if battle == null:
 		return false
-	if mode == "entities":
+	if hand_index < 0 or hand_index >= battle.hand.size():
+		return false
+	var card_id: String = str(battle.hand[hand_index].get("id", ""))
+	if mode == "entities" or card_id.begins_with("ent_"):
 		return entities.redraw_card(battle, hand_index)
-	if mode == "external":
-		if hand_index < 0 or hand_index >= battle.hand.size():
-			return false
+	if mode == "external" or card_id.begins_with("ms_"):
 		var old: Dictionary = battle.hand[hand_index]
 		external.on_redraw(battle, old)
 		return battle.redraw(hand_index)
 	return battle.redraw(hand_index)
 
 func on_player_turn_resumed(battle: Variant, mode: String) -> void:
-	if battle == null or mode == "default" or battle.phase != "PLAYER":
+	if battle == null or battle.phase != "PLAYER":
 		return
-	var runtime = entities if mode == "entities" else external
+	var run_entities := mode == "entities"
+	var run_external := mode == "external"
 	for card in battle.hand:
-		runtime.on_draw(battle, card)
-	runtime.on_turn_start(battle)
+		var card_id := str(card.get("id", ""))
+		if card_id.begins_with("ent_"):
+			run_entities = true
+		elif card_id.begins_with("ms_"):
+			run_external = true
+	if run_entities:
+		for card in battle.hand:
+			if str(card.get("id", "")).begins_with("ent_"):
+				entities.on_draw(battle, card)
+		entities.on_turn_start(battle)
+	if run_external:
+		for card in battle.hand:
+			if str(card.get("id", "")).begins_with("ms_"):
+				external.on_draw(battle, card)
+		external.on_turn_start(battle)
 
 func deploy_entities(battle: Variant, mission_id: String, entity_ids: Array[String] = []) -> bool:
-	var ids: Array[String] = entity_ids
-	if ids.is_empty():
-		ids = ["ent_akuji", "ent_adam", "ent_techna"]
+	var ids: Array[String] = []
+	if entity_ids.is_empty():
+		ids.assign(["ent_akuji", "ent_adam", "ent_techna"])
+	else:
+		ids.assign(entity_ids)
 	return entities.deploy(battle, mission_id, ids)
-
-func install_external_demo(battle: Variant) -> int:
-	# Substitui o baralho aliado por cartas ms_ mapeadas aos arquétipos da equipe.
-	if battle == null:
-		return 0
-	var owner_map: Dictionary = {}
-	var selected: Dictionary = {}
-	var used_owners: Dictionary = {}
-	for ally in battle.living("ALLY"):
-		var archetype: String = str(ally.get("archetype", ""))
-		var candidates: Array = archetype_owners.get(archetype, [])
-		var chosen: String = ""
-		for candidate in candidates:
-			if not used_owners.has(candidate):
-				chosen = str(candidate)
-				break
-		if chosen == "" and not candidates.is_empty():
-			chosen = str(candidates[0])
-		if chosen == "":
-			continue
-		used_owners[chosen] = true
-		owner_map[chosen] = int(ally["id"])
-		var pool: Array = external.catalog.ids_for(chosen)
-		var deck: Array = []
-		for card_id in pool:
-			if deck.size() >= 8:
-				break
-			deck.append(card_id)
-			if deck.size() < 8 and deck.count(card_id) < 2:
-				deck.append(card_id)
-		while deck.size() < 8 and not pool.is_empty():
-			deck.append(pool[deck.size() % pool.size()])
-		selected[chosen] = deck.slice(0, 8)
-	battle.deck.clear()
-	battle.hand.clear()
-	battle.discard.clear()
-	battle.exhausted.clear()
-	battle.next_card_id = 0
-	var installed: int = external.install(battle, owner_map, selected)
-	battle._draw(int(battle.rules["opening_hand"]))
-	for card in battle.hand:
-		external.on_draw(battle, card)
-	external.on_turn_start(battle)
-	battle.changed.emit()
-	return installed
 
 func describe_actions(definition: Dictionary) -> Array[String]:
 	var parts: Array[String] = []

@@ -9,7 +9,13 @@ SOURCE = (ROOT / "game" / "Content.gd").read_text(encoding="utf-8")
 
 
 def dictionary(name):
-    marker = f"const {name} := "
+    marker = None
+    for candidate in (f"const {name} := ", f"static var {name} := "):
+        if candidate in SOURCE:
+            marker = candidate
+            break
+    if marker is None:
+        raise AssertionError(f"Dictionary not found: {name}")
     start = SOURCE.index(marker) + len(marker)
     level = 0
     quote = False

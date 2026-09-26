@@ -17,7 +17,7 @@ const TYPES := {
 	"QUIMICO": {"BRUTO": 1.25, "MENTAL": 0.75},
 }
 
-const HEROES := {
+static var HEROES := {
 	"guerreiro": {"name": "Guerreiro", "hp": 40, "attack": 8, "power": 2, "armor": 3, "speed": 5, "type": "BRUTO", "sprite": "res://hero_fighter.png", "row": "front", "passive": "vanguarda", "playable": true, "pool": ["corte", "guarda", "investida", "contra", "furia", "golpe_largo", "preparo", "ruptura", "frenesi_aco", "martelo_pesado", "furia_totem", "corte_adj"], "cards": ["corte", "corte", "guarda", "guarda", "investida", "investida", "contra", "furia"]},
 	"mago": {"name": "Mago", "hp": 26, "attack": 2, "power": 9, "armor": 1, "speed": 4, "type": "PROJETIVO", "sprite": "res://hero_wizard.png", "row": "back", "passive": "canalizar", "playable": true, "pool": ["raio", "barreira", "explosao", "runas", "tempestade", "centelha", "prisma", "eco", "visao", "selo_ruina", "dominio", "portal_impulso", "controlar_mente", "distorcer", "fagulha_incerta"], "cards": ["raio", "raio", "barreira", "barreira", "explosao", "explosao", "runas", "tempestade"]},
 	"ladino": {"name": "Ladino", "hp": 29, "attack": 7, "power": 3, "armor": 1, "speed": 9, "type": "TECNICO", "sprite": "res://hero_rogue.png", "row": "front", "passive": "oportunista", "playable": true, "pool": ["punhal", "esquiva", "marca", "corrente", "sombra", "armadilha", "furto", "golpe_oculto", "corte_dreno", "queda", "jogo_sombras"], "cards": ["punhal", "punhal", "esquiva", "esquiva", "marca", "marca", "corrente", "sombra"]},
@@ -29,7 +29,7 @@ const HEROES := {
 }
 
 # Effects are applied in order. Each card is an action of its owner, never a summoned unit.
-const CARDS := {
+static var CARDS := {
 	"corte": {"name": "Corte firme", "class": "ATTACK", "target": "ENEMY", "reach": false, "gain": 1, "quick": true, "effects": [{"kind": "DAMAGE", "amount": 5, "stat": "attack"}]},
 	"guarda": {"name": "Postura de guarda", "class": "SKILL", "target": "SELF", "gain": 1, "effects": [{"kind": "BLOCK", "amount": 10}, {"kind": "STATUS", "id": "counter", "duration": 1, "stacks": 1}]},
 	"investida": {"name": "Investida de ferro", "class": "ATTACK", "target": "ENEMY", "reach": false, "gain": 1, "effects": [{"kind": "DAMAGE", "amount": 6, "stat": "attack"}, {"kind": "PUSH", "force": 2}]},
@@ -156,7 +156,7 @@ const CAMPAIGN := {
 	"eclipse": {"requires": ["ritual", "watch"], "par": 6, "brief": "O Guardião do Eclipse ocupa a retaguarda, com Mago e Ladino. Reduza sua vida à metade para expor a segunda fase.", "goal": "Derrote o Guardião do Eclipse."},
 }
 
-const HERO_LORE := {
+static var HERO_LORE := {
 	"guerreiro": {"role": "Vanguarda", "trait": "Na frente recebe 2 de Bloqueio no começo de cada rodada.", "history": "Ex-sentinela que abandonou a Vigília após a queda da estrada."},
 	"mago": {"role": "Artilharia", "trait": "Canalizar gera 1 Iniciativa a cada rodada.", "history": "Estudou os selos que alimentam o ritual de cinzas."},
 	"ladino": {"role": "Execução", "trait": "Causa dano extra a alvos marcados.", "history": "Contrabandista que conhece as rotas entre os postos da Vigília."},

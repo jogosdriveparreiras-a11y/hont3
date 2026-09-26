@@ -1,10 +1,16 @@
+## Não publicado
+
+- Pacotes `ent_`/`ms_` mesclados ao conteúdo principal: heróis do anexo entram na seleção de equipe e cartas externas expandem os pools dos arquétipos via `owner_mapping.json`.
+- Removidas as demos separadas do menu (`Demo: elenco` / `Demo: cartas externas`).
+- Corrigida tipagem `Array[String]` em `HotNBattle.begin` / `EntityRuntime.deploy`.
+
 # Histórico da cópia de desenvolvimento
 
 ## Pacotes opcionais de cartas e entidades
 
 - Incluídos `addons/hotn3_external_cards/` (cartas `ms_`) e `addons/hotn3_entities/` (elenco `ent_`) sem sobrescrever `Content.gd` nem `BattleState.gd`.
-- `PackBridge.gd` mescla definições para a interface e roteia jogada/redesenho. O menu oferece demos jogáveis do elenco do anexo e das cartas externas.
-- O conteúdo padrão de HotN3 continua sendo o caminho principal; os pacotes só entram pelas demos ou por IDs `ms_`/`ent_` na mão.
+- `PackBridge.gd` injeta heróis `ent_` e cartas `ms_`/`ent_` em `Content` na inicialização e roteia jogada/redesenho por prefixo de ID.
+- O caminho principal (Play / campanha / decks) usa o elenco e as cartas expandidos; pastas `addons/` permanecem como fonte.
 
 ## Iniciativa, pool único e cartas
 

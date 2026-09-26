@@ -15,7 +15,8 @@ func deploy(battle: Variant, mission_id: String, entity_ids: Array[String], chos
 		if not deck_valid(id, proposed): return false
 	# begin() creates legal actor slots, mission enemies and turn state. Reuse its
 	# three actor IDs, replacing only their runtime dictionaries.
-	battle.begin(mission_id, ["guerreiro", "mago", "ladino"], {}, seed_value)
+	var placeholders: Array[String] = ["guerreiro", "mago", "ladino"]
+	battle.begin(mission_id, placeholders, {}, seed_value)
 	var slots: Array[Dictionary] = battle.living("ALLY")
 	if slots.size() != 3: return false
 	battle.deck.clear()
