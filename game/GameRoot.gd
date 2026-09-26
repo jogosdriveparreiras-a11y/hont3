@@ -428,8 +428,6 @@ func _matches_deck_filter(card_id: String, hero_id: String) -> bool:
 	return true
 
 func _card_type(definition: Dictionary) -> String:
-	for action_line in packs.describe_actions(definition):
-		parts.append(action_line)
 	for effect in definition.get("effects", []):
 		if effect.get("kind", "") == "DAMAGE":
 			return "MÁGICO" if effect.get("stat", "attack") == "power" else "FÍSICO"
@@ -1332,6 +1330,8 @@ func _card_description(definition: Dictionary, card: Dictionary = {}) -> String:
 	if definition.get("chain", 0) > 0: parts.append("CHAIN %d" % definition["chain"])
 	if definition.get("cost", 0) > 0: parts.append("−%d Iniciativa" % definition["cost"])
 	if definition.get("gain", 0) > 0: parts.append("+%d Iniciativa" % definition["gain"])
+	for action_line in packs.describe_actions(definition):
+		parts.append(action_line)
 	for effect in definition.get("effects", []):
 		match effect["kind"]:
 			"STATUS": parts.append("%s (%d turno(s), %d carga(s))" % [str(effect["id"]).replace("_", " ").capitalize(), effect.get("duration", 1), effect.get("stacks", 1)])
