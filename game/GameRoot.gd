@@ -772,7 +772,7 @@ func _render_battle() -> void:
 	recompra_ring.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	recompra_ring.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	hud.add_child(recompra_ring)
-	hover_hint = _label("Passe o mouse na carta (HUD esquerdo atualiza). Clique para inspecionar; clique de novo para escolher alvo. Segure ~2s para Recompra.", 15, Color("c9d1dd"))
+	hover_hint = _label("Passe o mouse na carta (HUD atualiza). Clique para selecionar; clique de novo para confirmar. Se precisar de alvo, clique no sprite; auto (si/equipe/aleatório) resolve na hora. Segure ~2s para Recompra.", 15, Color("c9d1dd"))
 	hover_hint.position = Vector2(20, viewport_size.y - 210)
 	hover_hint.custom_minimum_size.x = viewport_size.x * 0.42
 	hover_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -1045,7 +1045,7 @@ func _select_card(index: int) -> void:
 	selected_action = ""
 	# First click selects/inspects; second click on same card enters targeting (never deselects here)
 	if selected_card == index and card_confirmed:
-		feedback = "Aponte o sprite do alvo e clique para confirmar."
+		feedback = "Alvo: clique no sprite do personagem."
 		_render_battle()
 		return
 	if selected_card == index or inspected_card == index:
@@ -1056,7 +1056,7 @@ func _select_card(index: int) -> void:
 	selected_card = -1
 	card_confirmed = false
 	chain_targets.clear()
-	feedback = "Clique de novo na carta para escolher o alvo."
+	feedback = "Carta selecionada. Clique de novo para confirmar a jogada."
 	_render_battle()
 
 func _choose_target(actor_id: int) -> void:
@@ -1835,7 +1835,7 @@ func _on_card_gui(event: InputEvent, index: int) -> void:
 		return
 	if selected_card == index and card_confirmed:
 		# Already in targeting — keep targeting; do not deselect
-		feedback = "Aponte o sprite do alvo e clique para confirmar."
+		feedback = "Alvo: clique no sprite do personagem."
 		call_deferred("_render_battle")
 	elif inspected_card == index or (selected_card == index and not card_confirmed):
 		suppress_inspect_cancel = true
@@ -1846,6 +1846,7 @@ func _on_card_gui(event: InputEvent, index: int) -> void:
 		selected_card = -1
 		card_confirmed = false
 		chain_targets.clear()
+		feedback = "Carta selecionada. Clique de novo para confirmar a jogada."
 		_show_actor_portrait(int(battle.hand[index]["owner"]), false)
 		call_deferred("_render_battle")
 	get_viewport().set_input_as_handled()
@@ -1915,10 +1916,69 @@ func _update_recompra_meter(progress: float, label_text: String) -> void:
 	lbl.size = Vector2(120, 24)
 	wrap.add_child(lbl)
 
+func _target_needs_player_choice(kind: String) -> bool:
+	# Auto after confirm: no unit pick required (self / whole side / fixed row / random).
+	match kind:
+		"SELF", "ALL_ALLIES", "ALL_ENEMIES", "RANDOM", "FRONT_ROW", "BACK_ROW":
+			return false
+		_:
+			return true
+
+func _auto_primary_target_id(definition: Dictionary, owner_id: int) -> int:
+	var kind := str(definition.get("target", "ENEMY"))
+	match kind:
+		"SELF":
+			return owner_id
+		"ALL_ALLIES":
+			var allies: Array = battle.living("ALLY")
+			return int(allies[0]["id"]) if not allies.is_empty() else -1
+		"ALL_ENEMIES", "RANDOM":
+			var enemies: Array = battle.living("ENEMY")
+			return int(enemies[0]["id"]) if not enemies.is_empty() else -1
+		"FRONT_ROW", "BACK_ROW":
+			var row := "front" if kind == "FRONT_ROW" else "back"
+			for actor in battle.living("ENEMY"):
+				if str(actor.get("row", "")) == row:
+					return int(actor["id"])
+			var fallback: Array = battle.living("ENEMY")
+			return int(fallback[0]["id"]) if not fallback.is_empty() else -1
+		_:
+			return -1
+
+func _ray_card_index_at(screen_pos: Vector2) -> int:
+	if camera == null:
+		return -1
+	var origin := camera.project_ray_origin(screen_pos)
+	var query := PhysicsRayQueryParameters3D.create(origin, origin + camera.project_ray_normal(screen_pos) * 80.0)
+	query.collide_with_areas = true
+	query.collide_with_bodies = false
+	var hit := get_world_3d().direct_space_state.intersect_ray(query)
+	if hit.has("collider") and hit["collider"].has_meta("card_index"):
+		return int(hit["collider"].get_meta("card_index"))
+	return -1
+
+func _on_inspect_blocker_gui(event: InputEvent) -> void:
+	if battle == null or battle.phase != "PLAYER":
+		return
+	if not event is InputEventMouseButton:
+		return
+	var click := event as InputEventMouseButton
+	if click.button_index != MOUSE_BUTTON_LEFT or click.pressed:
+		return
+	# Release on dimmed area: 2nd click on the same 3D card confirms; empty space cancels.
+	var card_idx := _ray_card_index_at(click.position)
+	if card_idx >= 0 and card_idx == inspected_card:
+		suppress_inspect_cancel = true
+		_confirm_inspected()
+	else:
+		_cancel_inspect()
+	get_viewport().set_input_as_handled()
+
 func _confirm_inspected() -> void:
 	suppress_inspect_cancel = false
 	var index := inspected_card
-	if battle == null or index < 0 or index >= battle.hand.size(): return
+	if battle == null or index < 0 or index >= battle.hand.size():
+		return
 	var owner: Dictionary = battle.actor_by_id(int(battle.hand[index].get("owner", 0)))
 	if int(owner.get("hp", 0)) <= 0:
 		feedback = "Herói fora de combate — carta indisponível."
@@ -1931,15 +1991,16 @@ func _confirm_inspected() -> void:
 	card_confirmed = true
 	selected_action = ""
 	_show_actor_portrait(int(battle.hand[index]["owner"]), true)
-	if kind == "SELF":
-		_choose_target(int(battle.hand[index]["owner"]))
+	if not _target_needs_player_choice(kind):
+		var auto_id := _auto_primary_target_id(definition, int(battle.hand[index]["owner"]))
+		if auto_id >= 0:
+			_choose_target(auto_id)
+		else:
+			feedback = "Sem alvo automático disponível."
+			card_confirmed = false
+			_render_battle()
 		return
-	if kind == "ALL_ALLIES" or kind == "ALL_ENEMIES":
-		var pool: Array = battle.living("ALLY" if kind == "ALL_ALLIES" else "ENEMY")
-		if not pool.is_empty():
-			_choose_target(int(pool[0]["id"]))
-		return
-	feedback = "Aponte o sprite do alvo e clique para confirmar."
+	feedback = "Alvo: clique no sprite do personagem."
 	_render_battle()
 
 func _cancel_inspect() -> void:
@@ -1952,12 +2013,12 @@ func _cancel_inspect() -> void:
 	_render_battle()
 
 func _add_inspect_overlay(index: int, viewport_size: Vector2) -> void:
-	var blocker := Button.new()
-	blocker.flat = true
+	var blocker := Control.new()
 	blocker.focus_mode = Control.FOCUS_NONE
 	blocker.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	blocker.z_index = 8
-	blocker.pressed.connect(_cancel_inspect)
+	blocker.mouse_filter = Control.MOUSE_FILTER_STOP
+	blocker.gui_input.connect(_on_inspect_blocker_gui)
 	hud.add_child(blocker)
 	var height := viewport_size.y * 0.6
 	var width := height * 0.66
@@ -1968,8 +2029,9 @@ func _add_inspect_overlay(index: int, viewport_size: Vector2) -> void:
 	host.size = Vector2(width, height)
 	host.position = Vector2((viewport_size.x - width) * 0.5, (viewport_size.y - height) * 0.5)
 	host.z_index = 9
-	host.mouse_filter = Control.MOUSE_FILTER_STOP
+	# setup() forces IGNORE for SubViewport faces — restore STOP so 2nd click confirms.
 	host.setup(_card_spec(card, definition, owner))
+	host.mouse_filter = Control.MOUSE_FILTER_STOP
 	host.gui_input.connect(func(event: InputEvent) -> void: _on_card_gui(event, index))
 	hud.add_child(host)
 
