@@ -1,7 +1,8 @@
 ## Não publicado
 - Smokes de Status/Campanha passam a carregar `PackBridge` antes de `begin`, pois as missões agora usam inimigos `ent_`.
 - Fallback de sprite `assets/cast` em `_sprite_region` usa o quadro inteiro; regras da carta destacam Quick/Chain/Exhaust e efeitos negativos em vermelho.
-- `run_checks` redireciona a saída do Godot para log (evita deadlock de pipe no SceneSmoke com retratos grandes) e inclui MergeSmoke.
+- `run_checks` redireciona a saída do Godot para log e inclui MergeSmoke.
+- SceneSmoke força `reduce_motion=false` antes do toggle (config salva não pode fazer o assert falhar e travar o headless).
 
 - Pacotes `ent_`/`ms_` mesclados ao conteúdo principal: heróis do anexo entram na seleção de equipe e cartas externas expandem os pools dos arquétipos via `owner_mapping.json`.
 - Removidas as demos separadas do menu (`Demo: elenco` / `Demo: cartas externas`).
