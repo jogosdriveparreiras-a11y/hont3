@@ -1,0 +1,13 @@
+# Regras implementadas no código
+
+O jogador escolhe três dos seis heróis, uma missão e até três itens. Cada herói equipa oito cartas de seu conjunto; as 24 cartas são embaralhadas juntas. O jogo compra cinco no início, duas nas rodadas seguintes, permite três jogadas de carta, duas recompras, uma troca voluntária de linha e até um item por rodada. O máximo de mão é dez e de Ímpeto é dez. Descartes retornam ao deck após embaralhamento quando a compra esgota a pilha; cartas exauridas saem desse ciclo.
+
+Ataques e técnicas costumam gerar Ímpeto; poderes e combos gastam. Rápida e Marcado podem devolver uma jogada ao eliminar um alvo, no máximo uma por habilidade. Chain seleciona a quantidade exigida de acertos; o mesmo alvo pode receber mais de um acerto. Cartas gratuitas não consomem jogada; Final impede o dono de agir novamente na rodada. Cartas geradas podem ser temporárias. A descrição visível de cada carta é montada a partir dos seus efeitos e mostra custos, alcance, alvo e palavras-chave.
+
+Há duas linhas em cada lado. Contato sem alcance depende da formação; ataques de longo alcance, de linha, adjacentes e em área seguem a propriedade da carta. Empurrar e puxar mudam a linha e podem gerar dano de impacto. Um movimento voluntário consome a ação específica da rodada, salvo estados que alterem essa regra. A matriz de seis tipos multiplica dano antes da armadura; vantagens e resistências são apresentadas na prévia. Bloqueio, Escudo, Resistência, cura e os estados do catálogo são resolvidos por `BattleState`.
+
+Os inimigos escolhem habilidade e alvo por pontuação baseada em dano efetivo, efeitos, formação e perfis; chefes ganham segunda ação na fase dois. Quatro objetivos estão implementados: eliminar inimigos e reforços, sobreviver até a rodada exigida, defender a sentinela e derrotar o chefe. Objetos de cenário gastam Ímpeto, podem causar dano, aplicar estado ou curar. Itens são escolhidos antes da missão e usados no combate. O combo de equipe surge quando a condição de cartas jogadas é atendida.
+
+A campanha começa na Estrada, libera Círculo de cinzas e Defesa da sentinela, e exige ambas para o Eclipse. A primeira vitória numa missão dá três de Essência mais duas por estrela; melhorar recorde paga apenas a diferença de estrelas. Melhorias de cartas custam 3 e 6, e trocar modificação custa 4. Três estrelas dependem de sobrevivência e velocidade ou saúde conforme o objetivo. Consulte `BALANCE.md` para os números e as hipóteses ainda sem partidas medidas.
+
+O jogo não tem navegação espacial livre, crafting, personagens da Marvel, progressão social nem campanha narrativa fora das quatro missões. Alguns efeitos do catálogo original são reinterpretados para as regras de linhas; veja `EFFECTS_AUDIT.md`.

@@ -18,12 +18,12 @@ const TYPES := {
 }
 
 const HEROES := {
-	"guerreiro": {"name": "Guerreiro", "hp": 40, "attack": 8, "power": 2, "armor": 3, "speed": 5, "type": "BRUTO", "sprite": "res://hero_fighter.png", "row": "front", "passive": "vanguarda", "pool": ["corte", "guarda", "investida", "contra", "furia", "golpe_largo", "preparo", "ruptura", "frenesi_aco", "martelo_pesado", "furia_totem"], "cards": ["corte", "corte", "guarda", "guarda", "investida", "investida", "contra", "furia"]},
-	"mago": {"name": "Mago", "hp": 26, "attack": 2, "power": 9, "armor": 1, "speed": 4, "type": "PROJETIVO", "sprite": "res://hero_wizard.png", "row": "back", "passive": "canalizar", "pool": ["raio", "barreira", "explosao", "runas", "tempestade", "centelha", "prisma", "eco", "visao", "selo_ruina", "dominio", "portal_impulso", "controlar_mente", "distorcer"], "cards": ["raio", "raio", "barreira", "barreira", "explosao", "explosao", "runas", "tempestade"]},
+	"guerreiro": {"name": "Guerreiro", "hp": 40, "attack": 8, "power": 2, "armor": 3, "speed": 5, "type": "BRUTO", "sprite": "res://hero_fighter.png", "row": "front", "passive": "vanguarda", "pool": ["corte", "guarda", "investida", "contra", "furia", "golpe_largo", "preparo", "ruptura", "frenesi_aco", "martelo_pesado", "furia_totem", "corte_adj"], "cards": ["corte", "corte", "guarda", "guarda", "investida", "investida", "contra", "furia"]},
+	"mago": {"name": "Mago", "hp": 26, "attack": 2, "power": 9, "armor": 1, "speed": 4, "type": "PROJETIVO", "sprite": "res://hero_wizard.png", "row": "back", "passive": "canalizar", "pool": ["raio", "barreira", "explosao", "runas", "tempestade", "centelha", "prisma", "eco", "visao", "selo_ruina", "dominio", "portal_impulso", "controlar_mente", "distorcer", "fagulha_incerta"], "cards": ["raio", "raio", "barreira", "barreira", "explosao", "explosao", "runas", "tempestade"]},
 	"ladino": {"name": "Ladino", "hp": 29, "attack": 7, "power": 3, "armor": 1, "speed": 9, "type": "TECNICO", "sprite": "res://hero_rogue.png", "row": "front", "passive": "oportunista", "pool": ["punhal", "esquiva", "marca", "corrente", "sombra", "armadilha", "furto", "golpe_oculto", "corte_dreno", "queda", "jogo_sombras"], "cards": ["punhal", "punhal", "esquiva", "esquiva", "marca", "marca", "corrente", "sombra"]},
-	"clerigo": {"name": "Clérigo", "hp": 32, "attack": 3, "power": 7, "armor": 2, "speed": 3, "type": "MENTAL", "sprite": "res://hero_cleric.png", "row": "back", "passive": "devocao", "pool": ["luz", "cura", "benção", "purificar", "julgamento", "abrigo", "fervor", "resgate", "campo_sagrado", "elo_vital", "benzer", "prisma_sangue"], "cards": ["luz", "luz", "cura", "cura", "benção", "benção", "purificar", "julgamento"]},
-	"paladino": {"name": "Paladino", "hp": 44, "attack": 6, "power": 5, "armor": 4, "speed": 2, "type": "PSICOLOGICO", "sprite": "res://hero_paladin.png", "row": "front", "passive": "baluarte", "pool": ["martelo", "egide", "provocar", "escudo_forte", "sentenca", "muralha_viva", "juramento", "brilho", "estandarte", "guarda_absoluta", "pele_rigida", "furia_total"], "cards": ["martelo", "martelo", "egide", "egide", "provocar", "provocar", "escudo_forte", "sentenca"]},
-	"patrulheiro": {"name": "Patrulheiro", "hp": 31, "attack": 6, "power": 4, "armor": 1, "speed": 8, "type": "QUIMICO", "sprite": "res://hero_rogue.png", "row": "back", "passive": "rastreador", "pool": ["flecha", "foco", "salva", "rede", "veneno", "flanquear", "falcon", "chuva", "teia", "foco_ambiental", "predador", "armadilha_tempo", "agitar"], "cards": ["flecha", "flecha", "foco", "foco", "salva", "rede", "veneno", "chuva"]},
+	"clerigo": {"name": "Clérigo", "hp": 32, "attack": 3, "power": 7, "armor": 2, "speed": 3, "type": "MENTAL", "sprite": "res://hero_cleric.png", "row": "back", "passive": "devocao", "pool": ["luz", "cura", "benção", "purificar", "julgamento", "abrigo", "fervor", "resgate", "campo_sagrado", "elo_vital", "benzer", "prisma_sangue", "balanca"], "cards": ["luz", "luz", "cura", "cura", "benção", "benção", "purificar", "julgamento"]},
+	"paladino": {"name": "Paladino", "hp": 44, "attack": 6, "power": 5, "armor": 4, "speed": 2, "type": "PSICOLOGICO", "sprite": "res://hero_paladin.png", "row": "front", "passive": "baluarte", "pool": ["martelo", "egide", "provocar", "escudo_forte", "sentenca", "muralha_viva", "juramento", "brilho", "estandarte", "guarda_absoluta", "pele_rigida", "furia_total", "cerco_frente"], "cards": ["martelo", "martelo", "egide", "egide", "provocar", "provocar", "escudo_forte", "sentenca"]},
+	"patrulheiro": {"name": "Patrulheiro", "hp": 31, "attack": 6, "power": 4, "armor": 1, "speed": 8, "type": "QUIMICO", "sprite": "res://hero_rogue.png", "row": "back", "passive": "rastreador", "pool": ["flecha", "foco", "salva", "rede", "veneno", "flanquear", "falcon", "chuva", "teia", "foco_ambiental", "predador", "armadilha_tempo", "agitar", "tiro_retaguarda"], "cards": ["flecha", "flecha", "foco", "foco", "salva", "rede", "veneno", "chuva"]},
 }
 
 # Effects are applied in order. Each card is an action of its owner, never a summoned unit.
@@ -102,23 +102,28 @@ const CARDS := {
 	"predador": {"name": "Instinto do predador", "class": "SKILL", "target": "SELF", "gain": 1, "effects": [{"kind": "STATUS", "id": "ravenous", "duration": 3, "stacks": 5}, {"kind": "STATUS", "id": "naturalist", "duration": 2}, {"kind": "STATUS", "id": "full_force", "duration": 2}]},
 	"armadilha_tempo": {"name": "Laço instável", "class": "SKILL", "target": "ENEMY", "reach": true, "cost": 2, "effects": [{"kind": "STATUS", "id": "banished", "duration": 1}, {"kind": "STATUS", "id": "spike_bomb", "duration": 2}]},
 	"agitar": {"name": "Agitação dirigida", "class": "SKILL", "target": "ENEMY", "reach": true, "gain": 1, "effects": [{"kind": "STATUS", "id": "berserk_enemy", "duration": 1}, {"kind": "STATUS", "id": "taunted", "duration": 1}]},
+	"corte_adj": {"name": "Corte de flanco", "class": "ATTACK", "target": "ADJACENT", "rarity": "Incomum", "gain": 1, "effects": [{"kind": "DAMAGE", "amount": 3, "stat": "attack"}]},
+	"fagulha_incerta": {"name": "Fagulha incerta", "class": "ATTACK", "target": "RANDOM", "rarity": "Incomum", "reach": true, "gain": 2, "effects": [{"kind": "DAMAGE", "amount": 8, "stat": "power"}]},
+	"cerco_frente": {"name": "Cerco frontal", "class": "POWER", "target": "FRONT_ROW", "rarity": "Rara", "copy_limit": 1, "cost": 3, "effects": [{"kind": "DAMAGE", "amount": 5, "stat": "attack"}, {"kind": "STATUS", "id": "weak", "duration": 1}]},
+	"tiro_retaguarda": {"name": "Disparo de retaguarda", "class": "POWER", "target": "BACK_ROW", "rarity": "Rara", "copy_limit": 1, "reach": true, "cost": 3, "effects": [{"kind": "DAMAGE", "amount": 8, "stat": "attack"}]},
+	"balanca": {"name": "Balança de cinzas", "class": "SKILL", "target": "ANY_UNIT", "rarity": "Incomum", "reach": true, "gain": 1, "effects": [{"kind": "HEAL", "amount": 8}, {"kind": "STATUS", "id": "weak", "duration": 1}]},
 }
 
 const ENEMIES := {
-	"soldado": {"name": "Sentinela", "hp": 19, "attack": 5, "power": 1, "armor": 2, "speed": 5, "type": "BRUTO", "sprite": "res://en_elite.png", "row": "front", "skills": ["strike", "guard"]},
+	"soldado": {"name": "Sentinela", "hp": 19, "attack": 5, "power": 1, "armor": 2, "speed": 5, "type": "BRUTO", "ai": "DEFENSIVO", "sprite": "res://en_elite.png", "row": "front", "skills": ["strike", "guard"]},
 	"arqueiro": {"name": "Batedor", "hp": 16, "attack": 5, "power": 2, "armor": 1, "speed": 7, "type": "PROJETIVO", "sprite": "res://en_sniper.png", "row": "back", "skills": ["shot", "poison_shot"]},
-	"fera": {"name": "Fera noturna", "hp": 13, "attack": 7, "power": 0, "armor": 0, "speed": 8, "type": "QUIMICO", "sprite": "res://en_dog.png", "row": "front", "minion": true, "skills": ["strike"]},
-	"elite": {"name": "Capitão da Vigília", "hp": 35, "attack": 7, "power": 4, "armor": 4, "speed": 4, "type": "TECNICO", "sprite": "res://en_elite.png", "row": "front", "elite": true, "skills": ["strike", "guard", "sweep"]},
+	"fera": {"name": "Fera noturna", "hp": 13, "attack": 7, "power": 0, "armor": 0, "speed": 8, "type": "QUIMICO", "ai": "ASSASSINO", "sprite": "res://en_dog.png", "row": "front", "minion": true, "skills": ["strike"]},
+	"elite": {"name": "Capitão da Vigília", "hp": 35, "attack": 7, "power": 4, "armor": 4, "speed": 4, "type": "TECNICO", "ai": "DEFENSIVO", "sprite": "res://en_elite.png", "row": "front", "elite": true, "skills": ["strike", "guard", "sweep"]},
 	"boss": {"name": "Guardião do Eclipse", "hp": 70, "attack": 8, "power": 8, "armor": 4, "speed": 3, "type": "MENTAL", "faction": "abissal", "sprite": "res://en_elite.png", "row": "back", "boss": true, "skills": ["shot", "sweep", "ritual"]},
-	"batedor": {"name": "Escaramuçador", "hp": 18, "attack": 6, "power": 1, "armor": 0, "speed": 9, "type": "TECNICO", "sprite": "res://en_sniper.png", "row": "front", "skills": ["strike", "poison_shot"]},
+	"batedor": {"name": "Escaramuçador", "hp": 18, "attack": 6, "power": 1, "armor": 0, "speed": 9, "type": "TECNICO", "ai": "ASSASSINO", "sprite": "res://en_sniper.png", "row": "front", "skills": ["strike", "poison_shot"]},
 	"ocultista": {"name": "Ocultista", "hp": 22, "attack": 2, "power": 7, "armor": 1, "speed": 4, "type": "MENTAL", "sprite": "res://en_sniper.png", "row": "back", "skills": ["ritual", "shot", "invocacao"]},
-	"brutamontes": {"name": "Brutamontes", "hp": 28, "attack": 8, "power": 0, "armor": 3, "speed": 2, "type": "BRUTO", "sprite": "res://en_elite.png", "row": "front", "skills": ["strike", "sweep"]},
+	"brutamontes": {"name": "Brutamontes", "hp": 28, "attack": 8, "power": 0, "armor": 3, "speed": 2, "type": "BRUTO", "ai": "AGRESSIVO", "sprite": "res://en_elite.png", "row": "front", "skills": ["strike", "sweep"]},
 	"carrasco": {"name": "Carrasco", "hp": 24, "attack": 7, "power": 1, "armor": 1, "speed": 5, "type": "PSICOLOGICO", "sprite": "res://en_elite.png", "row": "front", "skills": ["strike", "ritual", "transe", "fome"]},
 	"alquimista": {"name": "Alquimista", "hp": 19, "attack": 3, "power": 6, "armor": 1, "speed": 6, "type": "QUIMICO", "sprite": "res://en_sniper.png", "row": "back", "skills": ["poison_shot", "guard"]},
 	"vigia": {"name": "Vigia", "hp": 18, "attack": 5, "power": 1, "armor": 2, "speed": 6, "type": "PROJETIVO", "sprite": "res://en_sniper.png", "row": "back", "skills": ["shot", "guard"]},
 	"sombrio": {"name": "Acólito sombrio", "hp": 16, "attack": 4, "power": 4, "armor": 0, "speed": 7, "type": "MENTAL", "faction": "abissal", "sprite": "res://en_dog.png", "row": "front", "skills": ["ritual", "strike"]},
 	"elite_alquimista": {"name": "Mestre dos Venenos", "hp": 40, "attack": 5, "power": 8, "armor": 3, "speed": 6, "type": "QUIMICO", "sprite": "res://en_elite.png", "row": "back", "elite": true, "skills": ["poison_shot", "ritual", "guard"]},
-	"elite_bruto": {"name": "General de Ferro", "hp": 48, "attack": 10, "power": 2, "armor": 5, "speed": 3, "type": "BRUTO", "sprite": "res://en_elite.png", "row": "front", "elite": true, "skills": ["strike", "sweep", "guard", "espinhos"]},
+	"elite_bruto": {"name": "General de Ferro", "hp": 48, "attack": 10, "power": 2, "armor": 5, "speed": 3, "type": "BRUTO", "ai": "DEFENSIVO", "sprite": "res://en_elite.png", "row": "front", "elite": true, "skills": ["strike", "sweep", "guard", "espinhos"]},
 }
 
 const ENEMY_CARDS := {
@@ -137,6 +142,23 @@ const ENEMY_CARDS := {
 const MISSIONS := {
 	"road": {"name": "Estrada abandonada", "objective": "ELIMINATE", "enemies": ["soldado", "batedor", "arqueiro", "fera"], "reinforcements": {3: ["fera", "vigia"]}, "environment": [{"name": "Coluna rachada", "cost": 2, "damage": 6, "target": "front"}]},
 	"ritual": {"name": "Círculo de cinzas", "objective": "SURVIVE", "turns": 5, "enemies": ["brutamontes", "ocultista", "elite"], "reinforcements": {3: ["sombrio", "alquimista"]}, "environment": [{"name": "Runa instável", "cost": 2, "status": "vulnerable", "target": "back"}]},
-	"watch": {"name": "Defesa da sentinela", "objective": "PROTECT", "turns": 4, "protect_hp": 30, "enemies": ["carrasco", "vigia", "fera"], "reinforcements": {2: ["elite_bruto"]}, "environment": [{"name": "Cristal de vigília", "cost": 2, "heal": 8, "target": "ally"}]},
+	"watch": {"name": "Defesa da sentinela", "objective": "PROTECT", "turns": 4, "protect_hp": 40, "enemies": ["carrasco", "vigia", "fera"], "reinforcements": {2: ["elite_bruto"]}, "environment": [{"name": "Cristal de vigília", "cost": 2, "heal": 8, "target": "ally"}]},
 	"eclipse": {"name": "Guardião do Eclipse", "objective": "BOSS", "enemies": ["boss", "soldado", "elite_alquimista"], "reinforcements": {3: ["fera", "fera"]}, "environment": [{"name": "Pilar selado", "cost": 3, "damage": 9, "target": "back"}]},
+}
+
+# Campaign order does not change the combat data: mission identifiers remain stable in saves.
+const CAMPAIGN := {
+	"road": {"requires": [], "par": 4, "brief": "Uma coluna da Vigília bloqueia a estrada. Elimine a patrulha; reforços chegam na terceira rodada.", "goal": "Elimine inimigos e reforços."},
+	"ritual": {"requires": ["road"], "par": 5, "brief": "O círculo permanece ativo por cinco rodadas. Mantenha a equipe viva enquanto a runa expõe a retaguarda.", "goal": "Resista por cinco rodadas."},
+	"watch": {"requires": ["road"], "par": 4, "brief": "Defenda a sentinela até a quarta rodada. Carrascos miram o objetivo e um general chega na segunda rodada.", "goal": "Proteja a sentinela por quatro rodadas."},
+	"eclipse": {"requires": ["ritual", "watch"], "par": 6, "brief": "O Guardião do Eclipse ocupa a retaguarda. Reduza sua vida à metade para expor sua segunda fase.", "goal": "Derrote o Guardião do Eclipse."},
+}
+
+const HERO_LORE := {
+	"guerreiro": {"role": "Vanguarda", "trait": "Na frente recebe 2 de Bloqueio no começo de cada rodada.", "history": "Ex-sentinela que abandonou a Vigília após a queda da estrada."},
+	"mago": {"role": "Artilharia", "trait": "Canalizar gera 1 Ímpeto a cada rodada.", "history": "Estudou os selos que alimentam o ritual de cinzas."},
+	"ladino": {"role": "Execução", "trait": "Causa dano extra a alvos marcados.", "history": "Contrabandista que conhece as rotas entre os postos da Vigília."},
+	"clerigo": {"role": "Sustento", "trait": "Amplia a cura das habilidades.", "history": "Guardião das últimas sentinelas que resistem à corrupção."},
+	"paladino": {"role": "Proteção", "trait": "Recebe 2 de Escudo a cada rodada.", "history": "Jurou manter o círculo de cinzas fechado."},
+	"patrulheiro": {"role": "Controle", "trait": "Ataca melhor da retaguarda.", "history": "Rastreia os reforços que atravessam a estrada abandonada."},
 }

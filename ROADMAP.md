@@ -6,16 +6,16 @@ Corrigir erros identificáveis pela leitura do motor, exigir todos os acertos de
 
 ## 2. Regras e interface de combate
 
-Completar os tipos de alvo e a prévia de consequências, testar todas as cartas em partidas, ajustar IA, movimentação de linhas, cenário e editor de decks. Critério: regras coerentes com as cartas e cenários de teste cobrindo turnos e condições de vitória.
+Implementados em código: alvo adjacente, aleatório, frente/trás e qualquer unidade; prévia de dano, defesa, resistência, status e mudança de linha; pontuação de IA por dano efetivo, estados e perfil; editor de decks com seleção de slot/carta, filtros por classe/tipo/raridade, melhorias independentes e limite de cópias. Cinco cartas equipáveis exercitam os novos alvos. As verificações estáticas passaram. Testar as cartas em partidas, regras de cenário, interface e IA no Godot permanece pendente; sem isso o passo não está validado integralmente.
 
-## 3. Apresentação e acesso
+## 3. Apresentação e acesso — implementado no código, aguardando teste no Godot
 
-Implementar animações dos personagens e da mão, feedback de dano/defesa, câmera por ação, efeitos, sons de interface/combate, entradas por teclado/controle e opções de acessibilidade. Critério: feedback reconhecível para cada ação e interface utilizável sem depender apenas do mouse.
+Adicionados animações dos sprites com recortes específicos dos arquivos existentes, movimento da mão e descarte, textos e partículas de dano/cura/defesa, câmera por ação, efeitos sonoros sintetizados, música e ambiente com controles separados, teclado/controle para cartas, alvos, recompra, movimento e turno, além de redução de tremor/flashes/movimento e velocidade de animação. As opções são salvas. Os testes estruturais passaram; as entradas, o enquadramento, a audibilidade e a renderização precisam de validação visual e de execução no Godot 4.6, ausente neste ambiente.
 
-## 4. Conteúdo e identidade
+## 4. Conteúdo e identidade — código e documentação realizados, validações pendentes
 
-Refinar personagens, inimigos, missões, progressão e balanceamento; confirmar proveniência e licenças dos recursos e registrar atribuições. Critério: conteúdo e recursos documentados e partidas com duração e dificuldade avaliadas no Godot.
+Seis heróis receberam função, história e descrição de passiva; a cura passiva do Clérigo foi implementada. As quatro missões ganharam briefing, objetivo e sequência de desbloqueio. Vitórias registram recorde de até três estrelas e concedem Essência sem recompensa repetida; melhorias e modificações de cartas agora gastam esse recurso. A proteção da sentinela foi ajustada para resistir à pressão passiva máxima. `BALANCE.md` registra números e hipóteses; partidas para medir dificuldade e duração no Godot permanecem pendentes. `ASSETS.md` registra origem local e hashes dos sprites; sua licença não pôde ser confirmada. Fontes de cenas antigas e música sem proveniência foram removidas; o áudio atual é sintetizado no código. Assim, a validação integral do passo 4 ainda depende de testes e dos direitos das imagens.
 
-## 5. Validação e entrega
+## 5. Validação e entrega — executado até o limite do ambiente
 
-Executar importação e testes no Godot 4.6, inspeção visual em 1366×768 e 1920×1080, corrigir console e fluxo completo, concluir documentação e exportar pacote final. Critério: jogo executável e todos os itens do checklist final do pedido verificados, com eventuais adaptações declaradas.
+Reorganizados HUD e editor de decks para as duas resoluções solicitadas, adicionadas verificações de limites das regiões da interface e dos quatro objetivos de missão, documentação de arquitetura/design/licenças/créditos e auditoria do checklist inicial. O projeto usa renderizador de compatibilidade e tem preset e comando para exportação Web após os testes. Verificações estáticas passaram. A tentativa de obter o editor oficial foi impedida pela rede; Godot 4.6 e templates não estão instalados. Importação, parsing, console, screenshots reais, partidas, desempenho e exportação permanecem pendentes. Licenças de oito sprites também não estão comprovadas. `FINAL_AUDIT.md` mantém os itens abertos; o ZIP é fonte de desenvolvimento, não executável final.

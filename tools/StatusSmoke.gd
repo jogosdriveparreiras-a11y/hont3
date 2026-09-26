@@ -92,7 +92,40 @@ func _initialize() -> void:
 	sixth._add_status(pushed, "marked", 2, 1, int(pusher["id"]))
 	sixth.hand.clear()
 	sixth.hand.append(sixth._create_card("investida", int(pusher["id"])))
+	var impact_preview: Dictionary = sixth.preview(0, int(pushed["id"]))
+	assert(impact_preview["targets"][pushed["id"]]["hp_after"] == 0 and impact_preview["targets"][pushed["id"]]["row_after"] == "back", "Prévia deve calcular colisão e mudança de linha")
+	assert(pushed["hp"] > 0 and pushed["row"] == "front", "Prévia não deve alterar combate")
 	assert(sixth.play(0, int(pushed["id"])), "Investida deve ser jogável")
 	assert(pushed["hp"] == 0 and sixth.card_plays == int(sixth.rules["card_plays"]), "Eliminação pelo impacto deve recuperar ação de Marcado")
-	print("OK: Weak, Vulnerable, Resist, Stun, Quick, Banished, Soulbound, Block, Cure, Slow, Chain, Make em Bleed, Fatal Fury, Corrupted, Bleed, Marked impact")
+	var seventh = Battle.new()
+	seventh.begin("road", team, {}, 97)
+	var warrior: Dictionary = seventh.living("ALLY")[0]
+	var mage: Dictionary = seventh.living("ALLY")[1]
+	var ranger = Battle.new()
+	var scout_team: Array[String] = ["patrulheiro", "paladino", "guerreiro"]
+	ranger.begin("road", scout_team, {}, 101)
+	var fronts: Array[Dictionary] = ranger._targets(ranger.living("ALLY")[1], ranger.living("ENEMY")[0], Content.CARDS["cerco_frente"])
+	assert(fronts.size() >= 2 and fronts.all(func(a): return a["row"] == "front"), "FRONT_ROW afeta apenas a frente")
+	var archer: Dictionary = ranger.living("ENEMY")[2]
+	var backs: Array[Dictionary] = ranger._targets(ranger.living("ALLY")[0], archer, Content.CARDS["tiro_retaguarda"])
+	assert(backs.size() == 1 and backs[0]["row"] == "back", "BACK_ROW afeta apenas a retaguarda")
+	var flanks: Array[Dictionary] = seventh._targets(warrior, seventh.living("ENEMY")[1], Content.CARDS["corte_adj"])
+	assert(flanks.size() >= 2, "ADJACENT deve alcançar vizinhos da mesma linha")
+	var cleric: Dictionary = seventh.living("ALLY")[2]
+	var any_card: Dictionary = Content.CARDS["balanca"]
+	assert(seventh._targets(cleric, warrior, any_card).size() == 1 and seventh._targets(cleric, seventh.living("ENEMY")[0], any_card).size() == 1, "ANY_UNIT deve admitir aliados e inimigos")
+	seventh.hand.clear()
+	seventh.hand.append(seventh._create_card("fagulha_incerta", int(mage["id"])))
+	var before_random: int = seventh.rng.state
+	var uncertain: Dictionary = seventh.preview(0, int(seventh.living("ENEMY")[0]["id"]))
+	assert(uncertain["random"] and uncertain["targets"].size() >= 2 and seventh.rng.state == before_random, "Prévia aleatória não deve consumir RNG")
+	var eighth = Battle.new()
+	eighth.begin("road", team, {}, 109)
+	var fading: Dictionary = eighth.living("ALLY")[0]
+	eighth._add_status(fading, "en_fuego", 99, 1, int(fading["id"]))
+	fading["hp"] = 1
+	eighth._add_status(fading, "bleed", 2, 1, int(fading["id"]))
+	eighth._tick_statuses()
+	assert(fading["hp"] == 0 and int(fading["statuses"]["en_fuego"]["stacks"]) == 1, "Dano próprio não deve contar como eliminação de inimigo")
+	print("OK: estados, Chain, Soulbound, impacto, prévia, alvos especiais e KO próprio")
 	quit(0)
