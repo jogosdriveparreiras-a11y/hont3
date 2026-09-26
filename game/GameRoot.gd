@@ -341,9 +341,9 @@ func _show_team() -> void:
 		var hero: Dictionary = Content.HEROES[id]
 		var chosen := team.has(id)
 		var identity: Dictionary = Content.HERO_LORE.get(id, {"role": "Anexo", "trait": "Herói expandido.", "history": ""})
-		var conflict := _hero_conflicts_with_mission(id) and not chosen
-		var prefix := "✓ " if chosen else ("⊘ " if conflict else "+ ")
-		var hint := identity["history"] + "\n" + identity["trait"]
+		var conflict: bool = _hero_conflicts_with_mission(id) and not chosen
+		var prefix: String = "✓ " if chosen else ("⊘ " if conflict else "+ ")
+		var hint: String = str(identity.get("history", "")) + "\n" + str(identity.get("trait", ""))
 		if conflict:
 			hint = "Indisponível: já aparece como inimigo em %s." % Content.MISSIONS[mission_id]["name"]
 		var button := _button(prefix + "%s · %s · %d PV" % [hero["name"], identity["role"], hero["hp"]], _toggle_hero.bind(id), hint)
@@ -355,7 +355,7 @@ func _show_team() -> void:
 	if feedback != "":
 		menu.add_child(_label(feedback, 16, Color("e9c891")))
 		feedback = ""
-	var conflicts := _team_mission_conflicts()
+	var conflicts: Array[String] = _team_mission_conflicts()
 	if not conflicts.is_empty():
 		var cnames: Array[String] = []
 		for cid in conflicts:
@@ -616,7 +616,7 @@ func _start_mission() -> void:
 		feedback = "Escolha três heróis para entrar na missão."
 		_show_team()
 		return
-	var conflicts := _team_mission_conflicts()
+	var conflicts: Array[String] = _team_mission_conflicts()
 	if not conflicts.is_empty():
 		_show_team_conflict_popup(conflicts)
 		return
@@ -837,7 +837,7 @@ func _build_hero_hud(viewport_size: Vector2) -> void:
 		var def_lbl := _label("DEF +%d" % defend, 14, Color("8fd6ff"))
 		def_lbl.position = Vector2(122, 100)
 		hero_hud.add_child(def_lbl)
-	var ini := battle.impulse if str(actor.get("side", "")) == "ALLY" else battle.enemy_impulse
+	var ini: int = battle.impulse if str(actor.get("side", "")) == "ALLY" else battle.enemy_impulse
 	var ini_lbl := _label("INICIATIVA %d/%d" % [ini, int(battle.rules["impulse_max"])], 14, Color("e9c891"))
 	ini_lbl.position = Vector2(122, 118)
 	hero_hud.add_child(ini_lbl)
