@@ -472,9 +472,12 @@ func _take_damage(source: Dictionary, target: Dictionary, amount: int, pierce: b
 	return died
 
 func _purge_dead_cards() -> void:
-	for pile in [deck, hand, discard, enemy_deck, enemy_hand, enemy_discard]:
+	# Deck/discard: remove dead owners (unless soulbound). Hand keeps dead-hero cards
+	# so the player can still hover/inspect them; play() already rejects dead owners.
+	for pile in [deck, discard, enemy_deck, enemy_discard]:
 		for index in range(pile.size() - 1, -1, -1):
-			if actor_by_id(pile[index]["owner"]).get("hp", 0) <= 0 and not actor_by_id(pile[index]["owner"]).get("statuses", {}).has("soulbound"):
+			var owner := actor_by_id(pile[index]["owner"])
+			if owner.get("hp", 0) <= 0 and not owner.get("statuses", {}).has("soulbound"):
 				pile.remove_at(index)
 
 func _resolve(source: Dictionary, targets: Array[Dictionary], card: Dictionary, card_data: Dictionary) -> Array[int]:

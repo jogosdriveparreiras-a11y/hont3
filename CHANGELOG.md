@@ -1,4 +1,7 @@
 ## Não publicado
+- Pacote visual UI/HUD/cartas estilo Midnight Suns: fundo opaco por tipo, caixas pretas semi-transparentes, ícone escudo+espada PNG, dano só em cartas ofensivas, nome do herói centrado sob o ícone de assinatura.
+- Mão 3D em 50% do tamanho, hover com glow elétrico, inspeção +20%. HUD inferior: retrato+PV à esquerda, economia (jogadas/recompras/movimentos) + Encerrar turno à direita. Anéis de chão por tipo no lugar das sombras.
+- Recompra por segurar ~2s (sem botão "Redesenhar"). Cartas de heróis mortos ficam na mão cinzas (inspecionáveis, não jogáveis). Equipe bloqueia heróis únicos que já são inimigos da missão.
 - `cards_3d.reparent(camera)` passa `keep_global_transform=false` para a mão 3D ficar no espaço da câmera (antes ficava sob o chão da arena).
 - Incluído `tools/VisualPlaytest.gd` para capturas de viewport sem gambiarra de Identity.
 - Smokes de Status/Campanha passam a carregar `PackBridge` antes de `begin`, pois as missões agora usam inimigos `ent_`.

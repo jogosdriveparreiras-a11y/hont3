@@ -58,6 +58,12 @@ var shake_level := 0.5
 var reduce_flashes := false
 var reduce_motion := false
 var animation_speed := 1.0
+var redraw_hold_index := -1
+var redraw_hold_time := 0.0
+const REDRAW_HOLD_SECONDS := 2.0
+var hero_hud: Control = null
+var economy_hud: Control = null
+var recompra_ring: Control = null
 
 func _ready() -> void:
 	_register_inputs()
@@ -335,18 +341,82 @@ func _show_team() -> void:
 		var hero: Dictionary = Content.HEROES[id]
 		var chosen := team.has(id)
 		var identity: Dictionary = Content.HERO_LORE.get(id, {"role": "Anexo", "trait": "Herói expandido.", "history": ""})
-		var button := _button(("✓ " if chosen else "+ ") + "%s · %s · %d PV" % [hero["name"], identity["role"], hero["hp"]], _toggle_hero.bind(id), identity["history"] + "\n" + identity["trait"])
+		var conflict := _hero_conflicts_with_mission(id) and not chosen
+		var prefix := "✓ " if chosen else ("⊘ " if conflict else "+ ")
+		var hint := identity["history"] + "\n" + identity["trait"]
+		if conflict:
+			hint = "Indisponível: já aparece como inimigo em %s." % Content.MISSIONS[mission_id]["name"]
+		var button := _button(prefix + "%s · %s · %d PV" % [hero["name"], identity["role"], hero["hp"]], _toggle_hero.bind(id), hint)
 		button.custom_minimum_size = Vector2(640, 44)
+		button.disabled = conflict
+		if conflict:
+			button.modulate = Color(0.7, 0.55, 0.55, 0.85)
 		list.add_child(button)
+	if feedback != "":
+		menu.add_child(_label(feedback, 16, Color("e9c891")))
+		feedback = ""
+	var conflicts := _team_mission_conflicts()
+	if not conflicts.is_empty():
+		var cnames: Array[String] = []
+		for cid in conflicts:
+			cnames.append(str(Content.HEROES.get(cid, {}).get("name", cid)))
+		menu.add_child(_label("Conflito na equipe atual: %s" % ", ".join(PackedStringArray(cnames)), 16, Color("e15b5b")))
 	menu.add_child(_button("Voltar", _show_menu))
 
 func _toggle_hero(id: String) -> void:
 	if team.has(id):
 		if team.size() > 1: team.erase(id)
 	elif team.size() < int(Content.RULES["team_size"]):
+		if _hero_conflicts_with_mission(id):
+			feedback = "%s já aparece como inimigo nesta missão (personagem único)." % Content.HEROES[id]["name"]
+			_show_team()
+			return
 		team.append(id)
 	_save_config()
 	_show_team()
+
+func _hero_is_repeatable(id: String) -> bool:
+	if not Content.HEROES.has(id):
+		return false
+	var hero: Dictionary = Content.HEROES[id]
+	return bool(hero.get("repeatable", false)) or bool(hero.get("minion", false))
+
+func _mission_enemy_ids(mid: String = "") -> Array[String]:
+	var key := mid if mid != "" else mission_id
+	var result: Array[String] = []
+	if not Content.MISSIONS.has(key):
+		return result
+	var mission: Dictionary = Content.MISSIONS[key]
+	for enemy_id in mission.get("enemies", []):
+		result.append(str(enemy_id))
+	var waves: Dictionary = mission.get("reinforcements", {})
+	for turn_key in waves.keys():
+		for enemy_id in waves[turn_key]:
+			result.append(str(enemy_id))
+	return result
+
+func _hero_conflicts_with_mission(id: String, mid: String = "") -> bool:
+	if _hero_is_repeatable(id):
+		return false
+	return id in _mission_enemy_ids(mid)
+
+func _team_mission_conflicts(mid: String = "") -> Array[String]:
+	var conflicts: Array[String] = []
+	for id in team:
+		if _hero_conflicts_with_mission(str(id), mid):
+			conflicts.append(str(id))
+	return conflicts
+
+func _show_team_conflict_popup(conflicts: Array[String]) -> void:
+	var names: Array[String] = []
+	for id in conflicts:
+		names.append(str(Content.HEROES.get(id, {}).get("name", id)))
+	var menu := _center_panel("EQUIPE EM CONFLITO")
+	menu.add_child(_label("Estes heróis únicos já aparecem como inimigos na missão selecionada:", 18))
+	menu.add_child(_label(", ".join(PackedStringArray(names)), 20, Color("e9c891")))
+	menu.add_child(_label("Edite a equipe antes de iniciar.", 17))
+	menu.add_child(_button("Editar equipe", _show_team))
+	menu.add_child(_button("Voltar ao menu", _show_menu))
 
 func _show_decks() -> void:
 	if not team.has(deck_hero): deck_hero = team[0]
@@ -546,6 +616,10 @@ func _start_mission() -> void:
 		feedback = "Escolha três heróis para entrar na missão."
 		_show_team()
 		return
+	var conflicts := _team_mission_conflicts()
+	if not conflicts.is_empty():
+		_show_team_conflict_popup(conflicts)
+		return
 	pack_mode = "default"
 	_begin_battle_session()
 	battle.begin(mission_id, team, equipped, 0, improvements, loadout)
@@ -622,100 +696,205 @@ func _render_battle() -> void:
 	if battle == null or battle.phase == "FINISHED": return
 	_clear_ui()
 	_clear_hand_visuals()
+	hero_hud = null
+	economy_hud = null
+	recompra_ring = null
 	var viewport_size := get_viewport().get_visible_rect().size
-	var hand_h := clampf(viewport_size.y * 0.28, 190.0, 320.0)
-	var hand_band := hand_h * 1.34
-	var hand_top := viewport_size.y - hand_band - 6.0
+	# Slim top chrome (MS-like: battlefield stays clear)
 	var header := VBoxContainer.new()
 	hud.add_child(header)
 	header.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
-	header.add_child(_label("%s  ·  RODADA %d" % [battle.mission["name"], battle.turn], 23, Color("e9c891")))
-	var ally_line := _label("JOGADORES  " + _resource_line("ALLY"), 18)
-	ally_line.modulate = Color.WHITE if battle.phase == "PLAYER" else Color(1, 1, 1, 0.38)
-	header.add_child(ally_line)
-	var enemy_line := _label("ADVERSÁRIOS  " + _resource_line("ENEMY"), 18)
-	enemy_line.modulate = Color("ffd0c4") if battle.phase == "ENEMY" else Color(1, 0.78, 0.72, 0.38)
-	header.add_child(enemy_line)
-	_chrome(Vector2(12, 8), Vector2(viewport_size.x - 24, 118), "res://assets/ui/header.png")
+	header.add_child(_label("%s  ·  RODADA %d" % [battle.mission["name"], battle.turn], 22, Color("e9c891")))
+	var phase_tint := Color.WHITE if battle.phase == "PLAYER" else Color(1, 1, 1, 0.45)
+	var phase_line := _label("FASE DO JOGADOR" if battle.phase == "PLAYER" else "FASE INIMIGA", 16, Color("c9d1dd"))
+	phase_line.modulate = phase_tint
+	header.add_child(phase_line)
+	_chrome(Vector2(12, 8), Vector2(viewport_size.x - 24, 72), "res://assets/ui/header.png")
 	var extra := ""
-	if battle.mission["objective"] == "PROTECT": extra += "SENTINELA %d PV" % battle.protect_hp
+	if battle.mission["objective"] == "PROTECT":
+		extra += "SENTINELA %d PV" % battle.protect_hp
 	var next_turn: Array = battle.mission.get("reinforcements", {}).get(battle.turn + 1, [])
-	if not next_turn.is_empty(): extra += ("  ·  " if extra != "" else "") + "REFORÇOS EM 1 TURNO"
+	if not next_turn.is_empty():
+		extra += ("  ·  " if extra != "" else "") + "REFORÇOS EM 1 TURNO"
 	if extra != "":
-		header.add_child(_label(extra, 17, Color("e9c891")))
-	var left_scroll := ScrollContainer.new()
-	left_scroll.name = "LeftPanel"
-	left_scroll.position = Vector2(20, 132)
-	left_scroll.size = Vector2(290, maxf(120.0, hand_top - 144.0))
-	left_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	hud.add_child(left_scroll)
-	var left := VBoxContainer.new()
-	left.custom_minimum_size.x = 270
-	left_scroll.add_child(left)
-	var objective := _label("OBJETIVO: %s" % Content.CAMPAIGN[mission_id]["goal"], 17, Color("e9c891"))
-	objective.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	left.add_child(objective)
-	left.add_child(_label("ALIADOS", 22))
-	for actor in battle.living("ALLY"):
-		_add_actor_button(left, actor)
-	left.add_child(_label("INIMIGOS", 22))
-	for actor in battle.living("ENEMY"):
-		_add_actor_button(left, actor)
-	left.add_child(_button("Trocar linha (1x/turno)", func(): selected_action = "move"; card_confirmed = false; inspected_card = -1; feedback = "Aponte o aliado e clique no sprite."; _render_battle()))
-	left.add_child(_button("Redesenhar carta", func(): selected_action = "redraw"; card_confirmed = false; inspected_card = -1; feedback = "Clique na carta para redesenhar."; _render_battle()))
-	left.add_child(_button("Encerrar turno", func(): _present_enemy_turn()))
-	_chrome(Vector2(20, 132), Vector2(290, maxf(120.0, hand_top - 144.0)), "res://assets/ui/panel.png")
+		header.add_child(_label(extra, 15, Color("e9c891")))
+	# Compact right tools (cenário / itens / log) — no exploding left lists
 	var right_scroll := ScrollContainer.new()
 	right_scroll.name = "RightPanel"
-	right_scroll.position = Vector2(viewport_size.x - 295, 132)
-	right_scroll.size = Vector2(275, maxf(120.0, hand_top - 144.0))
+	right_scroll.position = Vector2(viewport_size.x - 280, 90)
+	right_scroll.size = Vector2(260, maxf(100.0, viewport_size.y * 0.38))
 	right_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	hud.add_child(right_scroll)
 	var right := VBoxContainer.new()
-	right.custom_minimum_size.x = 260
+	right.custom_minimum_size.x = 240
 	right_scroll.add_child(right)
-	right.add_child(_label("CENÁRIO", 22))
+	var objective := _label("OBJETIVO: %s" % Content.CAMPAIGN[mission_id]["goal"], 15, Color("e9c891"))
+	objective.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	objective.custom_minimum_size.x = 230
+	right.add_child(objective)
+	right.add_child(_label("CENÁRIO", 18))
 	for index in range(battle.mission.get("environment", []).size()):
 		var object: Dictionary = battle.mission["environment"][index]
-		right.add_child(_button("%s · %d Iniciativa" % [object["name"], object["cost"]], func(): battle.use_environment(index)))
-	right.add_child(_label("ITENS", 22))
-	right.add_child(_label("Poção, bomba e antídoto estão no deck: grátis e com Exaustão.", 15))
-	right.add_child(_label("LOG", 22))
-	for entry in event_history.slice(max(0, event_history.size() - 5)):
-		var line := _label(entry, 15)
+		var env_btn := _button("%s · %d Ini" % [object["name"], object["cost"]], func(): battle.use_environment(index))
+		env_btn.custom_minimum_size = Vector2(230, 36)
+		right.add_child(env_btn)
+	right.add_child(_label("LOG", 18))
+	for entry in event_history.slice(max(0, event_history.size() - 4)):
+		var line := _label(entry, 13)
 		line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		line.custom_minimum_size.x = 260
+		line.custom_minimum_size.x = 230
 		right.add_child(line)
-	var bottom := HBoxContainer.new()
-	var hand_scroll := ScrollContainer.new()
-	hand_scroll.name = "HandScroller"
-	hand_scroll.position = Vector2(16, hand_top)
-	hand_scroll.size = Vector2(viewport_size.x - 32, hand_band)
-	hand_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	hand_scroll.clip_contents = false
-	hud.add_child(hand_scroll)
-	bottom.add_theme_constant_override("separation", 8)
-	hand_scroll.add_child(bottom)
+	_chrome(Vector2(viewport_size.x - 280, 90), Vector2(260, maxf(100.0, viewport_size.y * 0.38)), "res://assets/ui/panel.png")
+	# 3D hand arc (kept)
 	for index in range(battle.hand.size()):
 		var card: Dictionary = battle.hand[index]
 		var definition: Dictionary = _card_def(str(card["id"]))
 		_make_3d_card(index, card, definition)
-	hover_hint = _label("Passe o mouse na carta para destacá-la. Clique para ampliar, clique de novo para confirmar. O alvo é o sprite.", 16, Color("c9d1dd"))
-	hover_hint.position = Vector2(20, hand_top - 46)
-	hover_hint.custom_minimum_size.x = viewport_size.x - 40
+	# Bottom-left hero focus HUD
+	_build_hero_hud(viewport_size)
+	# Bottom-right action economy + end turn
+	_build_economy_hud(viewport_size)
+	# Hold-to-recompra progress ring host
+	recompra_ring = Control.new()
+	recompra_ring.name = "RecompraRing"
+	recompra_ring.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	recompra_ring.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	hud.add_child(recompra_ring)
+	hover_hint = _label("Passe o mouse na carta. Clique para inspecionar, clique de novo para confirmar. Segure ~2s para Recompra.", 15, Color("c9d1dd"))
+	hover_hint.position = Vector2(20, viewport_size.y - 210)
+	hover_hint.custom_minimum_size.x = viewport_size.x * 0.42
 	hover_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	hud.add_child(hover_hint)
-	var status := _label("%s%s" % [feedback, "  ·  ALVOS %d/%d" % [chain_targets.size(), _card_def(str(battle.hand[selected_card]["id"])).get("chain", 1)] if selected_card >= 0 and selected_card < battle.hand.size() and not chain_targets.is_empty() else ""], 19, Color("f7d499"))
-	status.position = Vector2(20, hand_top - 24)
-	status.custom_minimum_size.x = viewport_size.x - 40
+	var status := _label("%s%s" % [feedback, "  ·  ALVOS %d/%d" % [chain_targets.size(), _card_def(str(battle.hand[selected_card]["id"])).get("chain", 1)] if selected_card >= 0 and selected_card < battle.hand.size() and not chain_targets.is_empty() else ""], 17, Color("f7d499"))
+	status.position = Vector2(20, viewport_size.y - 186)
+	status.custom_minimum_size.x = viewport_size.x * 0.42
 	status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	hud.add_child(status)
 	_render_actors()
 	if inspected_card >= 0 and inspected_card < battle.hand.size() and battle.phase == "PLAYER":
 		_add_inspect_overlay(inspected_card, viewport_size)
 	visible_uids.clear()
-	for visible_card in battle.hand: visible_uids[visible_card["uid"]] = true
+	for visible_card in battle.hand:
+		visible_uids[visible_card["uid"]] = true
 
+func _build_hero_hud(viewport_size: Vector2) -> void:
+	hero_hud = Control.new()
+	hero_hud.name = "HeroHud"
+	hero_hud.position = Vector2(18, viewport_size.y - 168)
+	hero_hud.size = Vector2(420, 140)
+	hero_hud.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hud.add_child(hero_hud)
+	_chrome(hero_hud.position, hero_hud.size, "res://assets/ui/panel.png")
+	var actor_id := _focus_hero_id()
+	if actor_id < 0:
+		var empty := _label("Passe o mouse numa carta ou herói", 15, Color("aab2c0"))
+		empty.position = Vector2(16, 50)
+		hero_hud.add_child(empty)
+		return
+	var actor: Dictionary = battle.actor_by_id(actor_id)
+	if actor.is_empty():
+		return
+	var portrait := TextureRect.new()
+	portrait.texture = _unit_portrait(actor)
+	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	portrait.position = Vector2(12, 14)
+	portrait.size = Vector2(96, 112)
+	portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hero_hud.add_child(portrait)
+	var name_lbl := _label(str(actor.get("name", "")).to_upper(), 22, Color("f4f1ea"))
+	name_lbl.position = Vector2(122, 18)
+	name_lbl.size = Vector2(280, 30)
+	name_lbl.clip_text = true
+	hero_hud.add_child(name_lbl)
+	var type_lbl := _label(str(actor.get("type", "")), 14, _type_color(str(actor.get("type", ""))))
+	type_lbl.position = Vector2(122, 48)
+	hero_hud.add_child(type_lbl)
+	var hp := int(actor.get("hp", 0))
+	var max_hp := maxi(1, int(actor.get("max_hp", 1)))
+	var bar_bg := ColorRect.new()
+	bar_bg.color = Color(0.05, 0.07, 0.1, 0.85)
+	bar_bg.position = Vector2(122, 78)
+	bar_bg.size = Vector2(220, 14)
+	hero_hud.add_child(bar_bg)
+	var fill := ColorRect.new()
+	fill.color = Color("3ecf7a")
+	fill.position = bar_bg.position
+	fill.size = Vector2(220.0 * clampf(float(hp) / float(max_hp), 0.0, 1.0), 14)
+	hero_hud.add_child(fill)
+	# Soft glow edge
+	var glow := ColorRect.new()
+	glow.color = Color(0.24, 0.9, 0.55, 0.22)
+	glow.position = Vector2(122, 76)
+	glow.size = Vector2(fill.size.x + 2, 18)
+	hero_hud.add_child(glow)
+	hero_hud.move_child(glow, fill.get_index())
+	var hp_lbl := _label("%d/%d" % [hp, max_hp], 16, Color("f4f1ea"))
+	hp_lbl.position = Vector2(350, 72)
+	hero_hud.add_child(hp_lbl)
+	var defend := int(actor.get("block", 0)) + int(actor.get("shield", 0))
+	if defend > 0:
+		var def_lbl := _label("DEF +%d" % defend, 14, Color("8fd6ff"))
+		def_lbl.position = Vector2(122, 100)
+		hero_hud.add_child(def_lbl)
+	var ini := battle.impulse if str(actor.get("side", "")) == "ALLY" else battle.enemy_impulse
+	var ini_lbl := _label("INICIATIVA %d/%d" % [ini, int(battle.rules["impulse_max"])], 14, Color("e9c891"))
+	ini_lbl.position = Vector2(122, 118)
+	hero_hud.add_child(ini_lbl)
+
+func _focus_hero_id() -> int:
+	if inspected_card >= 0 and inspected_card < battle.hand.size():
+		return int(battle.hand[inspected_card].get("owner", -1))
+	if hovered_card >= 0 and hovered_card < battle.hand.size():
+		return int(battle.hand[hovered_card].get("owner", -1))
+	if selected_card >= 0 and selected_card < battle.hand.size():
+		return int(battle.hand[selected_card].get("owner", -1))
+	if hovered_actor >= 0:
+		return hovered_actor
+	var allies: Array = battle.living("ALLY")
+	if not allies.is_empty():
+		return int(allies[0]["id"])
+	return -1
+
+func _build_economy_hud(viewport_size: Vector2) -> void:
+	economy_hud = Control.new()
+	economy_hud.name = "EconomyHud"
+	economy_hud.position = Vector2(viewport_size.x - 310, viewport_size.y - 200)
+	economy_hud.size = Vector2(290, 200)
+	economy_hud.mouse_filter = Control.MOUSE_FILTER_STOP
+	hud.add_child(economy_hud)
+	_chrome(economy_hud.position, Vector2(290, 200), "res://assets/ui/panel.png")
+	var plays: int = battle.card_plays
+	var redraws_left: int = battle.redraws
+	var moves_left: int = battle.moves
+	var lines := [
+		("%d JOGADAS DE CARTA" % plays, plays, int(battle.rules["card_plays"])),
+		("%d RECOMPRAS" % redraws_left, redraws_left, int(battle.rules["redraws"])),
+		("%d MOVIMENTOS" % moves_left, moves_left, int(battle.rules["moves"])),
+	]
+	var y := 12.0
+	for entry in lines:
+		var lbl := _label(str(entry[0]), 16, Color("f4f1ea"))
+		lbl.position = Vector2(16, y)
+		lbl.size = Vector2(200, 22)
+		economy_hud.add_child(lbl)
+		var track := ColorRect.new()
+		track.color = Color(0.08, 0.1, 0.14, 0.9)
+		track.position = Vector2(16, y + 22)
+		track.size = Vector2(200, 6)
+		economy_hud.add_child(track)
+		var max_v := maxi(1, int(entry[2]))
+		var fill := ColorRect.new()
+		fill.color = Color("6eb6ff")
+		fill.position = track.position
+		fill.size = Vector2(200.0 * clampf(float(entry[1]) / float(max_v), 0.0, 1.0), 6)
+		economy_hud.add_child(fill)
+		y += 38.0
+	var end_btn := _button("ENCERRAR TURNO", func(): _present_enemy_turn())
+	end_btn.position = Vector2(16, 138)
+	end_btn.custom_minimum_size = Vector2(258, 40)
+	economy_hud.add_child(end_btn)
+	
 func _add_actor_button(parent: VBoxContainer, actor: Dictionary) -> void:
 	var text_value := "%s [%s] %d/%d PV +%d" % [actor["name"], "F" if actor["row"] == "front" else "T", actor["hp"], actor["max_hp"], actor["block"] + actor["shield"]]
 	var line := _label(text_value, 16)
@@ -817,7 +996,8 @@ func _render_actors() -> void:
 				unit_sprites.append(avatar)
 				presentation.bind_actor(id, avatar, location)
 			var nameplate: Label3D = actor_nodes[id].get_node("Nameplate")
-			nameplate.text = "%s · %d/%d" % [actor["name"], actor["hp"], actor["max_hp"]]
+			nameplate.text = "%d/%d" % [actor["hp"], actor["max_hp"]]
+			_update_world_hp_bar(actor_nodes[id], actor)
 	for id in actor_nodes.keys():
 		if not present.has(id):
 			var departing: Node3D = actor_nodes[id]
@@ -831,15 +1011,41 @@ func _render_actors() -> void:
 func _create_actor_visual(actor: Dictionary) -> Node3D:
 	var body := Node3D.new()
 	units.add_child(body)
-	var shadow := MeshInstance3D.new()
-	var disk := CylinderMesh.new()
-	disk.top_radius = 0.53
-	disk.bottom_radius = 0.53
-	disk.height = 0.02
-	shadow.mesh = disk
-	shadow.material_override = _material(Color(0.02, 0.02, 0.04, 0.55), true)
-	shadow.position.y = 0.01
-	body.add_child(shadow)
+	var ring := MeshInstance3D.new()
+	ring.name = "FloorRing"
+	var torus := TorusMesh.new()
+	torus.inner_radius = 0.46
+	torus.outer_radius = 0.54
+	torus.rings = 24
+	torus.ring_segments = 48
+	ring.mesh = torus
+	var type_tint: Color = _type_color(str(actor.get("type", "")))
+	var ring_color := Color(type_tint.r, type_tint.g, type_tint.b, 0.92)
+	var mat := _material(ring_color, true)
+	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	mat.emission_enabled = true
+	mat.emission = type_tint
+	mat.emission_energy_multiplier = 2.4
+	ring.material_override = mat
+	ring.position.y = 0.03
+	ring.rotation_degrees.x = 0
+	body.add_child(ring)
+	# Soft outer glow disc (hollow feel via transparent center cylinder rim)
+	var glow := MeshInstance3D.new()
+	glow.name = "FloorGlow"
+	var glow_disk := CylinderMesh.new()
+	glow_disk.top_radius = 0.58
+	glow_disk.bottom_radius = 0.58
+	glow_disk.height = 0.01
+	glow.mesh = glow_disk
+	var glow_mat := _material(Color(type_tint.r, type_tint.g, type_tint.b, 0.18), true)
+	glow_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	glow_mat.emission_enabled = true
+	glow_mat.emission = type_tint
+	glow_mat.emission_energy_multiplier = 1.2
+	glow.material_override = glow_mat
+	glow.position.y = 0.015
+	body.add_child(glow)
 	if ResourceLoader.exists(actor["sprite"]):
 		var sheet: Texture2D = load(actor["sprite"])
 		var columns := 1
@@ -867,11 +1073,35 @@ func _create_actor_visual(actor: Dictionary) -> Node3D:
 		body.add_child(sprite)
 	var plate := Label3D.new()
 	plate.name = "Nameplate"
-	plate.font_size = 36
+	plate.font_size = 32
 	plate.pixel_size = 0.006
 	plate.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	plate.position.y = 2.55
+	plate.position.y = 2.62
 	body.add_child(plate)
+	var hp_root := Node3D.new()
+	hp_root.name = "WorldHp"
+	hp_root.position.y = 2.38
+	body.add_child(hp_root)
+	var hp_bg := MeshInstance3D.new()
+	hp_bg.name = "HpBg"
+	var bg_box := BoxMesh.new()
+	bg_box.size = Vector3(0.9, 0.06, 0.02)
+	hp_bg.mesh = bg_box
+	var bg_mat := _material(Color(0.05, 0.06, 0.08, 0.85), true)
+	bg_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	hp_bg.material_override = bg_mat
+	hp_root.add_child(hp_bg)
+	var hp_fill := MeshInstance3D.new()
+	hp_fill.name = "HpFill"
+	var fill_box := BoxMesh.new()
+	fill_box.size = Vector3(0.88, 0.045, 0.025)
+	hp_fill.mesh = fill_box
+	var fill_mat := _material(Color("3ecf7a"), true)
+	fill_mat.emission_enabled = true
+	fill_mat.emission = Color("3ecf7a")
+	fill_mat.emission_energy_multiplier = 2.0
+	hp_fill.material_override = fill_mat
+	hp_root.add_child(hp_fill)
 	var area := Area3D.new()
 	area.set_meta("actor_id", int(actor["id"]))
 	body.add_child(area)
@@ -882,6 +1112,25 @@ func _create_actor_visual(actor: Dictionary) -> Node3D:
 	shape.position.y = 1.15
 	area.add_child(shape)
 	return body
+
+func _update_world_hp_bar(body: Node3D, actor: Dictionary) -> void:
+	var hp_root: Node3D = body.get_node_or_null("WorldHp")
+	if hp_root == null:
+		return
+	var fill: MeshInstance3D = hp_root.get_node_or_null("HpFill")
+	if fill == null or fill.mesh == null:
+		return
+	var hp := float(actor.get("hp", 0))
+	var max_hp := maxf(1.0, float(actor.get("max_hp", 1)))
+	var ratio := clampf(hp / max_hp, 0.0, 1.0)
+	var box: BoxMesh = fill.mesh
+	box.size = Vector3(0.88 * ratio, 0.045, 0.025)
+	fill.position.x = -0.44 * (1.0 - ratio)
+	var mat: StandardMaterial3D = fill.material_override
+	if mat != null:
+		var tint := Color("3ecf7a") if ratio > 0.45 else (Color("e0c35a") if ratio > 0.2 else Color("e15b5b"))
+		mat.albedo_color = tint
+		mat.emission = tint
 
 func _make_3d_card(index: int, card: Dictionary, definition: Dictionary) -> void:
 	var view := SubViewport.new()
@@ -896,7 +1145,7 @@ func _make_3d_card(index: int, card: Dictionary, definition: Dictionary) -> void
 	view.add_child(face)
 	var mesh := MeshInstance3D.new()
 	var plane := QuadMesh.new()
-	plane.size = Vector2(1.05, 1.62)
+	plane.size = Vector2(0.525, 0.81)
 	mesh.mesh = plane
 	var material := _material(Color.WHITE, true)
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
@@ -914,6 +1163,11 @@ func _make_3d_card(index: int, card: Dictionary, definition: Dictionary) -> void
 		mesh.position = slot + Vector3(2.8, 0.45, 0.0)
 		mesh.rotation = spin + Vector3(0, 0, 0.95)
 	cards_3d.add_child(mesh)
+	if int(owner.get("hp", 0)) <= 0:
+		mesh.transparency = 0.35
+		var dead_mat: StandardMaterial3D = mesh.material_override
+		if dead_mat != null:
+			dead_mat.albedo_color = Color(0.55, 0.55, 0.58, 0.75)
 	if entering and not reduce_motion:
 		var arrive := create_tween()
 		arrive.set_parallel(true)
@@ -924,10 +1178,25 @@ func _make_3d_card(index: int, card: Dictionary, definition: Dictionary) -> void
 	area.set_meta("card_index", index)
 	var shape := CollisionShape3D.new()
 	var box := BoxShape3D.new()
-	box.size = Vector3(1.0, 1.55, 0.12)
+	box.size = Vector3(0.52, 0.78, 0.12)
 	shape.shape = box
 	area.add_child(shape)
 	mesh.add_child(area)
+	# Electric / soft glow outline via second slightly larger quad
+	var glow_mesh := MeshInstance3D.new()
+	glow_mesh.name = "HoverGlow"
+	var glow_plane := QuadMesh.new()
+	glow_plane.size = Vector2(0.58, 0.88)
+	glow_mesh.mesh = glow_plane
+	var glow_mat := _material(Color(0.45, 0.78, 1.0, 0.0), true)
+	glow_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	glow_mat.emission_enabled = true
+	glow_mat.emission = Color(0.45, 0.85, 1.0)
+	glow_mat.emission_energy_multiplier = 0.0
+	glow_mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+	glow_mesh.material_override = glow_mat
+	glow_mesh.position.z = -0.01
+	mesh.add_child(glow_mesh)
 	card_meshes.append(mesh)
 
 func _animate_card_depart(index: int) -> void:
@@ -999,7 +1268,7 @@ func _arc_pose(index: int, count: int) -> Dictionary:
 	var spread := minf(0.95, 0.12 * float(maxi(count, 1)))
 	var ang := lerpf(-spread, spread, t)
 	return {
-		"position": Vector3(sin(ang) * 1.75, -1.08 + cos(ang) * 0.26, -2.7),
+		"position": Vector3(sin(ang) * 1.35, -1.22 + cos(ang) * 0.18, -2.55),
 		"rotation": Vector3(-0.05, 0.0, -ang * 0.92)
 	}
 
@@ -1054,64 +1323,104 @@ func _stat_readout(owner: Dictionary, definition: Dictionary) -> Dictionary:
 	var label := "PODER" if stat_name == "power" else "ATAQUE"
 	return {"label": label, "value": current, "color": tint}
 
+func _card_has_damage(definition: Dictionary) -> bool:
+	for effect in definition.get("effects", []):
+		if str(effect.get("kind", "")) == "DAMAGE":
+			return true
+	for action in definition.get("actions", []):
+		if typeof(action) != TYPE_ARRAY or action.is_empty():
+			continue
+		if str(action[0]) in ["hit", "hit_per_impulse", "hit_per_hand", "hit_from_block", "roulette_hit"]:
+			return true
+	return false
+
+func _status_label(status_id: String) -> String:
+	return str(status_id).replace("_", " ")
+
 func _rules_bbcode(definition: Dictionary, card: Dictionary) -> String:
 	var lines: Array[String] = []
-	if definition.get("quick", false): lines.append("[b]Quick[/b]: devolve a ação no nocaute")
-	if definition.get("free", false): lines.append("[b]Livre[/b]")
-	if definition.get("final", false): lines.append("[b]Final[/b]")
-	if definition.get("reach", false): lines.append("[b]Alcance[/b]")
-	if int(definition.get("chain", 0)) > 0: lines.append("[b]Chain[/b] %d" % int(definition["chain"]))
+	var target_names := {"SELF": "si mesmo", "ALLY": "aliado", "ALL_ALLIES": "todos os aliados", "ENEMY": "inimigo", "SINGLE": "inimigo", "ENEMY_ROW": "linha inimiga", "ROW": "linha inimiga", "FRONT_ROW": "frente inimiga", "BACK_ROW": "retaguarda inimiga", "ALL_ENEMIES": "todos os inimigos", "ADJACENT": "alvo e adjacentes", "RANDOM": "inimigo aleatório", "CHAIN": "sequência", "ANY_UNIT": "qualquer unidade"}
+	lines.append("[b]Alvo:[/b] %s" % target_names.get(str(definition.get("target", "ENEMY")), "inimigo"))
+	var keywords: Array[String] = []
+	if definition.get("quick", false): keywords.append("[b]Rápida[/b]")
+	if definition.get("free", false): keywords.append("[b]Livre[/b]")
+	if definition.get("final", false): keywords.append("[b]Final[/b]")
+	if definition.get("reach", false): keywords.append("[b]Alcance[/b]")
+	if int(definition.get("chain", 0)) > 0: keywords.append("[b]Chain[/b] %d" % int(definition["chain"]))
 	if definition.get("exhaust", false) or definition.get("item", false):
-		lines.append("[color=#e15b5b][b]Exhaust[/b][/color]")
-	var harmful := ["weak", "vulnerable", "bleed", "poison", "burn", "stun", "bind", "bound", "wound", "wounded"]
+		keywords.append("[color=#e15b5b][b]Exaustão[/b][/color]")
+	if not keywords.is_empty():
+		lines.append(" · ".join(PackedStringArray(keywords)))
+	var harmful := ["weak", "vulnerable", "bleed", "poison", "burn", "stun", "bind", "bound", "wound", "wounded", "blind", "silence", "dazed", "confused", "corrupted", "drop"]
+	var effect_lines: Array[String] = []
 	for effect in definition.get("effects", []):
 		var kind := str(effect.get("kind", ""))
 		if kind == "DAMAGE":
-			lines.append("Dano %d" % int(effect.get("amount", 0)))
+			continue  # damage lives on the shield readout
 		elif kind == "HEAL":
-			lines.append("Cura %d" % int(effect.get("amount", 0)))
+			effect_lines.append("Cura %d" % int(effect.get("amount", 0)))
 		elif kind == "BLOCK":
-			lines.append("[b]Bloqueio[/b] %d" % int(effect.get("amount", 0)))
-		elif kind == "CURE":
-			lines.append("Remove veneno, sangramento e queimadura")
+			effect_lines.append("[b]Bloqueio[/b] %d" % int(effect.get("amount", 0)))
+		elif kind == "SHIELD":
+			effect_lines.append("[b]Escudo[/b] %d" % int(effect.get("amount", 0)))
+		elif kind == "DRAW":
+			effect_lines.append("Compra %d" % int(effect.get("amount", 1)))
+		elif kind == "CURE" or kind == "CLEANSE":
+			effect_lines.append("Remove estados negativos")
+		elif kind == "PUSH":
+			effect_lines.append("Empurra")
+		elif kind == "PULL":
+			effect_lines.append("Puxa")
+		elif kind == "MOVE":
+			effect_lines.append("Troca de linha")
+		elif kind == "GENERATE":
+			effect_lines.append("Cria carta temporária")
 		elif kind == "STATUS":
 			var status_id := str(effect.get("id", ""))
-			var piece := "[b]%s[/b]" % status_id
+			var turns := int(effect.get("duration", 1))
+			var piece := "Adiciona o State [b]%s[/b] por %d turno(s)" % [_status_label(status_id), turns]
 			if status_id in harmful:
 				piece = "[color=#e15b5b]%s[/color]" % piece
-			lines.append(piece)
+			effect_lines.append(piece)
 		elif kind == "DISCARD":
-			lines.append("[color=#e15b5b]Descarte[/color]")
+			effect_lines.append("[color=#e15b5b]Descarte[/color]")
+		elif kind != "":
+			effect_lines.append("%s" % kind.capitalize())
 	for action in definition.get("actions", []):
 		if typeof(action) != TYPE_ARRAY or action.is_empty():
 			continue
 		var op := str(action[0])
-		if op in ["hit", "hit_per_impulse", "hit_per_hand", "roulette_hit"]:
-			lines.append("Dano escalado")
+		if op in ["hit", "hit_per_impulse", "hit_per_hand", "roulette_hit", "hit_from_block"]:
+			continue
 		elif op in ["self_damage", "self_damage_hp"]:
-			lines.append("[color=#e15b5b]Dano a si[/color]")
+			effect_lines.append("[color=#e15b5b]Dano a si[/color]")
 		elif op in ["discard_hand", "discard_random"]:
-			lines.append("[color=#e15b5b]Descarta cartas[/color]")
+			effect_lines.append("[color=#e15b5b]Descarta cartas[/color]")
 		elif op == "exhaust":
-			lines.append("[color=#e15b5b][b]Exhaust[/b][/color]")
+			effect_lines.append("[color=#e15b5b][b]Exaustão[/b][/color]")
 		elif op in ["heal", "heal_all", "full_heal"]:
-			lines.append("Cura")
+			effect_lines.append("Cura")
 		elif op in ["block", "block_hp"]:
-			lines.append("[b]Bloqueio[/b]")
-		elif op in ["status", "self_status"]:
+			effect_lines.append("[b]Bloqueio[/b]")
+		elif op in ["status", "self_status", "chance_status", "roulette_status"]:
 			var status_id := str(action[1]) if action.size() > 1 else ""
-			var piece := "[b]%s[/b]" % status_id
+			var turns := int(action[2]) if action.size() > 2 else 1
+			var piece := "Adiciona o State [b]%s[/b] por %d turno(s)" % [_status_label(status_id), turns]
 			if status_id in harmful:
 				piece = "[color=#e15b5b]%s[/color]" % piece
-			lines.append(piece)
+			effect_lines.append(piece)
 		elif op == "quick":
-			lines.append("[b]Quick[/b]")
+			effect_lines.append("[b]Rápida[/b]")
 		elif op == "push":
-			lines.append("Empurra")
+			effect_lines.append("Empurra")
 		elif op == "pull":
-			lines.append("Puxa")
+			effect_lines.append("Puxa")
 	if card.get("infected", false):
-		lines.append("[color=#e15b5b]Infectada[/color]")
+		effect_lines.append("[color=#e15b5b]Infectada[/color]")
+	if not effect_lines.is_empty():
+		lines.append("")
+		for piece in effect_lines:
+			lines.append("• %s" % piece)
 	return "\n".join(lines)
 
 func _card_spec(card: Dictionary, definition: Dictionary, owner: Dictionary) -> Dictionary:
@@ -1125,6 +1434,8 @@ func _card_spec(card: Dictionary, definition: Dictionary, owner: Dictionary) -> 
 	var icon: Texture2D = _load_tex("res://assets/items/item_icon.png") if item else _load_tex(str(owner.get("signature_icon", "")))
 	var readout: Dictionary = _stat_readout(owner, definition)
 	var border := Color("8d929a") if item else _type_color(str(owner.get("type", "")))
+	var show_damage := (not item) and _card_has_damage(definition)
+	var dead := int(owner.get("hp", 0)) <= 0
 	return {
 		"title": str(definition.get("name", "")),
 		"chip": "Item" if item else str(owner.get("name", "")),
@@ -1132,12 +1443,15 @@ func _card_spec(card: Dictionary, definition: Dictionary, owner: Dictionary) -> 
 		"art": art,
 		"icon": icon,
 		"border": border,
+		"show_damage": show_damage,
 		"stat_label": str(readout["label"]),
 		"stat_value": int(readout["value"]),
 		"stat_color": readout["color"],
 		"rules": _rules_bbcode(definition, card),
 		"gain": int(definition.get("gain", 0)),
-		"cost": int(definition.get("cost", 0))
+		"cost": int(definition.get("cost", 0)),
+		"dead": dead,
+		"shield_icon": _load_tex("res://assets/ui/impact_shield_sword.png")
 	}
 
 func _resource_line(side: String) -> String:
@@ -1296,11 +1610,27 @@ func _note_card_hover(index: int, host: Control, width: float, height: float) ->
 func _on_card_gui(event: InputEvent, index: int) -> void:
 	if battle == null or battle.phase != "PLAYER" or not event is InputEventMouseButton: return
 	var click := event as InputEventMouseButton
-	if click.button_index != MOUSE_BUTTON_LEFT or not click.pressed: return
+	if click.button_index != MOUSE_BUTTON_LEFT: return
+	if click.pressed:
+		redraw_hold_index = index
+		redraw_hold_time = 0.0
+		hovered_card = index
+		get_viewport().set_input_as_handled()
+		return
+	# Release: short tap = inspect/confirm; long hold already fired recompra
+	var held := redraw_hold_time
+	var was_index := redraw_hold_index
+	redraw_hold_index = -1
+	redraw_hold_time = 0.0
+	_clear_recompra_meter()
+	if was_index != index:
+		return
+	if held >= REDRAW_HOLD_SECONDS:
+		get_viewport().set_input_as_handled()
+		return
 	if selected_action == "redraw":
 		selected_action = ""
-		_animate_card_depart(index)
-		packs.redraw_card(battle, pack_mode, index)
+		_try_recompra(index)
 		get_viewport().set_input_as_handled()
 		return
 	if inspected_card == index:
@@ -1314,10 +1644,80 @@ func _on_card_gui(event: InputEvent, index: int) -> void:
 		call_deferred("_render_battle")
 	get_viewport().set_input_as_handled()
 
+func _try_recompra(index: int) -> bool:
+	if battle == null or battle.phase != "PLAYER":
+		return false
+	if index < 0 or index >= battle.hand.size():
+		return false
+	if battle.redraws <= 0:
+		feedback = "Sem recompras"
+		_render_battle()
+		return false
+	_animate_card_depart(index)
+	var ok: bool = packs.redraw_card(battle, pack_mode, index)
+	if ok:
+		feedback = "Recompra realizada."
+		if sound != null:
+			sound.cue("redraw", "UI")
+	inspected_card = -1
+	selected_card = -1
+	card_confirmed = false
+	return ok
+
+func _clear_recompra_meter() -> void:
+	if recompra_ring == null or not is_instance_valid(recompra_ring):
+		return
+	for child in recompra_ring.get_children():
+		child.queue_free()
+
+func _update_recompra_meter(progress: float, label_text: String) -> void:
+	if recompra_ring == null or not is_instance_valid(recompra_ring):
+		return
+	_clear_recompra_meter()
+	var vp := get_viewport().get_visible_rect().size
+	var wrap := Control.new()
+	wrap.position = Vector2(vp.x * 0.5 - 70, vp.y * 0.55)
+	wrap.size = Vector2(140, 140)
+	wrap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	recompra_ring.add_child(wrap)
+	var bg := ColorRect.new()
+	bg.color = Color(0, 0, 0, 0.45)
+	bg.position = Vector2(20, 20)
+	bg.size = Vector2(100, 100)
+	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	wrap.add_child(bg)
+	var bar := ProgressBar.new()
+	bar.min_value = 0
+	bar.max_value = 1
+	bar.value = clampf(progress, 0.0, 1.0)
+	bar.show_percentage = false
+	bar.position = Vector2(30, 58)
+	bar.size = Vector2(80, 14)
+	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var fill := StyleBoxFlat.new()
+	fill.bg_color = Color("3ecf7a")
+	fill.set_corner_radius_all(8)
+	bar.add_theme_stylebox_override("fill", fill)
+	var back := StyleBoxFlat.new()
+	back.bg_color = Color(0.1, 0.14, 0.12, 0.9)
+	back.set_corner_radius_all(8)
+	bar.add_theme_stylebox_override("background", back)
+	wrap.add_child(bar)
+	var lbl := _label(label_text, 16, Color("9dffb0") if progress < 1.0 else Color("3ecf7a"))
+	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lbl.position = Vector2(10, 78)
+	lbl.size = Vector2(120, 24)
+	wrap.add_child(lbl)
+
 func _confirm_inspected() -> void:
 	suppress_inspect_cancel = false
 	var index := inspected_card
 	if battle == null or index < 0 or index >= battle.hand.size(): return
+	var owner: Dictionary = battle.actor_by_id(int(battle.hand[index].get("owner", 0)))
+	if int(owner.get("hp", 0)) <= 0:
+		feedback = "Herói fora de combate — carta indisponível."
+		_render_battle()
+		return
 	var definition: Dictionary = _card_def(str(battle.hand[index]["id"]))
 	var kind := str(definition.get("target", "ENEMY"))
 	inspected_card = -1
@@ -1353,7 +1753,7 @@ func _add_inspect_overlay(index: int, viewport_size: Vector2) -> void:
 	blocker.z_index = 8
 	blocker.pressed.connect(_cancel_inspect)
 	hud.add_child(blocker)
-	var height := viewport_size.y * 0.5
+	var height := viewport_size.y * 0.6
 	var width := height * 0.66
 	var card: Dictionary = battle.hand[index]
 	var definition: Dictionary = _card_def(str(card["id"]))
@@ -1437,11 +1837,12 @@ func _input(event: InputEvent) -> void:
 			inspected_card = hovered_card
 			_render_battle()
 	elif event.is_action_pressed("hotn_redraw"):
-		selected_action = "redraw"
-		card_confirmed = false
-		inspected_card = -1
-		feedback = "Clique na carta para redesenhar."
-		_render_battle()
+		var idx := inspected_card if inspected_card >= 0 else hovered_card
+		if idx >= 0:
+			_try_recompra(idx)
+		else:
+			feedback = "Segure ~2s numa carta (ou selecione e pressione de novo) para Recompra."
+			_render_battle()
 	elif event.is_action_pressed("hotn_move"):
 		selected_action = "move"
 		card_confirmed = false
@@ -1473,7 +1874,7 @@ func _unhandled_input(input: InputEvent) -> void:
 	if battle == null or battle.phase != "PLAYER" or enemy_presenting or not input is InputEventMouseButton:
 		return
 	var click := input as InputEventMouseButton
-	if click.button_index != MOUSE_BUTTON_LEFT or not click.pressed:
+	if click.button_index != MOUSE_BUTTON_LEFT:
 		return
 	var origin := camera.project_ray_origin(click.position)
 	var end := origin + camera.project_ray_normal(click.position) * 80.0
@@ -1485,9 +1886,14 @@ func _unhandled_input(input: InputEvent) -> void:
 		_on_card_gui(click, int(hit["collider"].get_meta("card_index")))
 		get_viewport().set_input_as_handled()
 		return
-	if hit.has("collider") and hit["collider"].has_meta("actor_id"):
+	if click.pressed and hit.has("collider") and hit["collider"].has_meta("actor_id"):
 		_activate_actor(int(hit["collider"].get_meta("actor_id")))
 		get_viewport().set_input_as_handled()
+	elif not click.pressed and redraw_hold_index >= 0:
+		# Released off-card: cancel hold without playing click
+		redraw_hold_index = -1
+		redraw_hold_time = 0.0
+		_clear_recompra_meter()
 
 func _card_description(definition: Dictionary, card: Dictionary = {}) -> String:
 	var parts: Array[String] = []
@@ -1526,10 +1932,46 @@ func _card_description(definition: Dictionary, card: Dictionary = {}) -> String:
 	if card.get("infected", false): parts.append("INFECTADA: recebe 1 Sangramento ao jogar")
 	return " · ".join(PackedStringArray(parts))
 
+func _tick_recompra_hold(delta: float) -> void:
+	var focus := inspected_card if inspected_card >= 0 else hovered_card
+	if redraw_hold_index < 0:
+		# Allow hold on already-selected/inspected without new press if LMB down on same focus
+		if focus >= 0 and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and not card_confirmed:
+			# only continue if press started on a card (avoid steal from UI buttons)
+			pass
+		_clear_recompra_meter()
+		return
+	if battle.redraws <= 0:
+		_update_recompra_meter(0.0, "Sem recompras")
+		return
+	if not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+		return
+	redraw_hold_time += delta
+	var progress := clampf(redraw_hold_time / REDRAW_HOLD_SECONDS, 0.0, 1.0)
+	_update_recompra_meter(progress, "Recompra")
+	# Soft green glow on the held card
+	if redraw_hold_index >= 0 and redraw_hold_index < card_meshes.size():
+		var held_mesh: MeshInstance3D = card_meshes[redraw_hold_index]
+		if is_instance_valid(held_mesh):
+			var glow_node: MeshInstance3D = held_mesh.get_node_or_null("HoverGlow")
+			if glow_node != null and glow_node.material_override != null:
+				var gmat: StandardMaterial3D = glow_node.material_override
+				gmat.albedo_color = Color(0.35, 0.95, 0.55, 0.35 + 0.45 * progress)
+				gmat.emission = Color(0.35, 0.95, 0.55)
+				gmat.emission_energy_multiplier = 2.0 + 3.0 * progress
+	if redraw_hold_time >= REDRAW_HOLD_SECONDS:
+		var idx := redraw_hold_index
+		redraw_hold_index = -1
+		redraw_hold_time = 0.0
+		_clear_recompra_meter()
+		_try_recompra(idx)
+
 func _process(delta: float) -> void:
 	for i in range(unit_sprites.size()):
 		if is_instance_valid(unit_sprites[i]):
 			unit_sprites[i].position.y = 1.1 + (0.0 if reduce_motion else sin(Time.get_ticks_msec() * 0.002 + i) * 0.045)
+	if battle != null and battle.phase == "PLAYER":
+		_tick_recompra_hold(delta)
 	if battle != null and battle.phase == "PLAYER" and camera != null:
 		var pointer := get_viewport().get_mouse_position()
 		var origin := camera.project_ray_origin(pointer)
@@ -1564,8 +2006,16 @@ func _process(delta: float) -> void:
 		var card_mesh: MeshInstance3D = card_meshes[mesh_index]
 		if not is_instance_valid(card_mesh): continue
 		var raised := mesh_index == hovered_card or mesh_index == inspected_card
-		var target_scale := Vector3(1.48, 1.48, 1.48) if raised else Vector3.ONE
+		var target_scale := Vector3(1.32, 1.32, 1.32) if raised else Vector3.ONE
 		card_mesh.scale = card_mesh.scale.lerp(target_scale, 0.35)
+		var glow_node: MeshInstance3D = card_mesh.get_node_or_null("HoverGlow")
+		if glow_node != null and glow_node.material_override != null:
+			var gmat: StandardMaterial3D = glow_node.material_override
+			var glow_on := mesh_index == hovered_card or mesh_index == inspected_card or mesh_index == selected_card
+			var target_a := 0.55 if glow_on else 0.0
+			var target_e := 3.2 if glow_on else 0.0
+			gmat.albedo_color.a = lerpf(gmat.albedo_color.a, target_a, 0.35)
+			gmat.emission_energy_multiplier = lerpf(gmat.emission_energy_multiplier, target_e, 0.35)
 	if presentation != null and battle != null and battle.phase == "PLAYER":
 		var focus := Vector3.ZERO
 		if hovered_actor >= 0 and actor_nodes.has(hovered_actor):

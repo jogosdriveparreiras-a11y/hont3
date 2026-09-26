@@ -68,6 +68,8 @@ func _merge_entity_heroes() -> void:
 			"row": str(src.get("row", "front")),
 			"passive": str(src.get("passive", "oportunista")),
 			"playable": true,
+			"minion": bool(src.get("minion", false)),
+			"repeatable": bool(src.get("repeatable", src.get("minion", false))),
 			"pool": pool,
 			"cards": cards,
 		}
