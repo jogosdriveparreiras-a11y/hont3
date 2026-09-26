@@ -867,10 +867,10 @@ func _build_economy_hud(viewport_size: Vector2) -> void:
 	var plays: int = battle.card_plays
 	var redraws_left: int = battle.redraws
 	var moves_left: int = battle.moves
-	var lines := [
-		("%d JOGADAS DE CARTA" % plays, plays, int(battle.rules["card_plays"])),
-		("%d RECOMPRAS" % redraws_left, redraws_left, int(battle.rules["redraws"])),
-		("%d MOVIMENTOS" % moves_left, moves_left, int(battle.rules["moves"])),
+	var lines: Array = [
+		["%d JOGADAS DE CARTA" % plays, plays, int(battle.rules["card_plays"])],
+		["%d RECOMPRAS" % redraws_left, redraws_left, int(battle.rules["redraws"])],
+		["%d MOVIMENTOS" % moves_left, moves_left, int(battle.rules["moves"])],
 	]
 	var y := 12.0
 	for entry in lines:
