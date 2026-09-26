@@ -549,7 +549,7 @@ func _mission_stars() -> int:
 	var stars := 1 + (1 if survivors.size() >= 2 else 0)
 	var goal: Dictionary = Content.CAMPAIGN[mission_id]
 	if battle.mission["objective"] in ["SURVIVE", "PROTECT"]:
-		var healthy := survivors.size() == 3 and survivors.all(func(actor): return int(actor["hp"]) * 2 >= int(actor["max_hp"]))
+		var healthy: bool = survivors.size() == 3 and survivors.all(func(actor): return int(actor["hp"]) * 2 >= int(actor["max_hp"]))
 		if battle.mission["objective"] == "PROTECT": healthy = healthy and battle.protect_hp >= int(battle.mission["protect_hp"]) / 2
 		if healthy: stars += 1
 	elif battle.turn <= int(goal["par"]):
@@ -665,7 +665,7 @@ func _add_actor_button(parent: VBoxContainer, actor: Dictionary) -> void:
 				var victim: Dictionary = battle.actor_by_id(id)
 				var factor: float = Content.TYPES.get(owner.get("type", ""), {}).get(victim.get("type", ""), 1.0)
 				var type_note := " · vantagem" if factor > 1.0 else " · resistência" if factor < 1.0 else ""
-				var chance_note := "possível alvo · " if estimate.get("random", false) else ""
+				var chance_note: String = "possível alvo · " if bool(estimate.get("random", false)) else ""
 				hint += "\n%s%s: −%d PV, resta %d%s%s" % [chance_note, victim["name"], line["damage"], line["hp_after"], " · KO" if line["hp_after"] == 0 else "", type_note]
 				if line["absorbed"] > 0: hint += " · %d absorvido" % line["absorbed"]
 				if line["resist_used"] > 0: hint += " · %d Resistência consumida" % line["resist_used"]
@@ -1029,7 +1029,7 @@ func _process(delta: float) -> void:
 		query.collide_with_areas = true
 		query.collide_with_bodies = false
 		var hit := get_world_3d().direct_space_state.intersect_ray(query)
-		var new_hover := int(hit["collider"].get_meta("card_index")) if hit.has("collider") and hit["collider"].has_meta("card_index") else -1
+		var new_hover: int = int(hit["collider"].get_meta("card_index")) if hit.has("collider") and hit["collider"].has_meta("card_index") else -1
 		if new_hover != hovered_card:
 			hovered_card = new_hover
 			if hovered_card >= 0 and hovered_card < battle.hand.size():
