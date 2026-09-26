@@ -1,0 +1,4234 @@
+# MISSÃO: CRIAR HOTN3 A PARTIR DO HOTN2 E TRANSFORMÁ-LO EM UM RPG TÁTICO DE CARTAS DE ALTA QUALIDADE
+
+Você está assumindo o papel de **lead game designer, lead Godot developer, technical artist, UI/UX designer, gameplay programmer e responsável por integração de assets** do projeto **Heroes of the Nightmare 3 — HotN3**.
+
+Você tem acesso ao meu GitHub e deve trabalhar diretamente sobre ele.
+
+O projeto de origem é:
+
+**Repository:** `jogosdriveparreiras-a11y/HotN2`
+
+O projeto atual é um jogo Godot 4.x chamado internamente de:
+
+**Heroes of the Nightmare — Godot Edition**
+
+O arquivo `project.godot` indica atualmente Godot 4.6.
+
+Sua primeira tarefa é analisar integralmente o HotN2 antes de alterar qualquer coisa.
+
+Depois disso, crie um NOVO repositório chamado:
+
+`jogosdriveparreiras-a11y/HotN3`
+
+O HotN2 deve permanecer intacto.
+
+O HotN3 deve começar como uma cópia funcional do estado atual do HotN2, preservando código, assets, cenas e dados que sejam úteis.
+
+A partir dessa base, você deverá continuar o desenvolvimento até transformar HotN3 em um jogo de combate tático por cartas inspirado profundamente na estrutura de combate de **Marvel's Midnight Suns**, mas totalmente adaptado ao universo próprio de fantasia de **Heroes of the Nightmare**.
+
+## PRINCÍPIO FUNDAMENTAL
+
+O objetivo não é copiar código, arquivos, textos, personagens, imagens, efeitos visuais, interface, nomes de habilidades ou outros materiais proprietários de Marvel's Midnight Suns.
+
+Faça uma implementação **clean-room**, recriando conceitos e comportamentos de gameplay observáveis, mas usando:
+
+- código original;
+- nomenclatura própria;
+- UI própria;
+- personagens do universo HotN;
+- habilidades próprias;
+- efeitos próprios;
+- iconografia própria;
+- modelos gratuitos;
+- sprites gratuitos;
+- sons gratuitos;
+- músicas gratuitas;
+- fontes gratuitas;
+- shaders e efeitos implementados no próprio Godot.
+
+Nenhum asset proprietário da Marvel, Firaxis, 2K ou de outra franquia comercial deve entrar no projeto.
+
+Não use screenshots de Midnight Suns como assets.
+
+Não copie diretamente layout de UI, ilustrações, efeitos, sons, textos ou qualquer arquivo do jogo original.
+
+Pode estudar o jogo como referência funcional e de UX.
+
+O objetivo é atingir **profundidade mecânica comparável**, não reproduzir propriedade intelectual visual ou narrativa.
+
+---
+
+# 1. ESCOPO DO HOTN3
+
+HotN3 deve ser um:
+
+**RPG tático de equipes + deckbuilding de personagens + combate por cartas.**
+
+A unidade fundamental do combate não é uma criatura invocada pela carta.
+
+Cada carta representa uma ação executada por um personagem.
+
+Exemplos:
+
+- ataque;
+- magia;
+- defesa;
+- cura;
+- controle;
+- contra-ataque;
+- manipulação de posição;
+- ataque em área;
+- debuff;
+- buff;
+- combinação;
+- habilidade especial;
+- habilidade de classe;
+- habilidade definitiva.
+
+O jogador controla uma equipe de heróis.
+
+Cada herói possui:
+
+- atributos próprios;
+- tipo;
+- papel tático;
+- deck próprio;
+- habilidades próprias;
+- animações próprias;
+- identidade visual;
+- sinergias;
+- pontos fortes;
+- vulnerabilidades.
+
+Ao entrar na batalha, os decks dos personagens escolhidos são combinados em um **deck de combate compartilhado**.
+
+A mão do jogador representa as ações que estão momentaneamente disponíveis para a equipe.
+
+---
+
+# 2. O QUE DEVE SER APROVEITADO DO HOTN2
+
+Analise primeiro todo o projeto.
+
+Não presuma que `Main.gd` contém tudo.
+
+Percorra:
+
+- scripts;
+- scenes;
+- resources;
+- addons;
+- imagens;
+- sprites;
+- arquivos de áudio;
+- fontes;
+- configurações;
+- shaders;
+- autoloads;
+- dados;
+- JSON;
+- CSV;
+- arquivos de documentação;
+- histórico Git relevante.
+
+Identifique o que já está funcionando e preserve o que puder.
+
+O HotN2 atualmente já contém pelo menos conceitos como:
+
+- equipe;
+- inimigos;
+- seleção de personagens;
+- batalha por turnos;
+- cartas;
+- deck;
+- mão;
+- pilha de descarte;
+- pontos de ação;
+- iniciativa;
+- redraw/recompra;
+- personagens em posições distintas;
+- linha da frente;
+- linha de trás;
+- ataques físicos;
+- ataques mágicos/projetivos;
+- buffs;
+- cura;
+- escudo;
+- armadura;
+- tipos de poder;
+- matriz de vantagem;
+- efeitos visuais;
+- retratos;
+- música;
+- câmera;
+- screen shake.
+
+Preserve e refatore isso ao invés de simplesmente jogar fora e recomeçar sem necessidade.
+
+Entretanto, se algum componente estiver excessivamente monolítico, especialmente se `Main.gd` estiver assumindo dezenas de responsabilidades, refatore.
+
+Não deixe HotN3 depender de um gigantesco script central.
+
+---
+
+# 3. DIFERENÇA FUNDAMENTAL EM RELAÇÃO A MIDNIGHT SUNS
+
+HotN3 NÃO terá movimentação livre de personagens pelo cenário.
+
+Não haverá:
+
+- grid;
+- hexágonos;
+- navegação livre;
+- seleção de ponto no chão;
+- pathfinding tático;
+- deslocamento 360º;
+- necessidade de caminhar até inimigos;
+- mecânica baseada em coordenadas espaciais complexas.
+
+Em vez disso, use o sistema próprio do HotN:
+
+## ROW SYSTEM
+
+Cada lado da batalha possui:
+
+**FRONT ROW**
+
+e
+
+**BACK ROW**
+
+A disposição básica deve funcionar visualmente como:
+
+BACK ROW ALIADA
+
+FRONT ROW ALIADA
+
+———— CENTRO DA ARENA ————
+
+FRONT ROW INIMIGA
+
+BACK ROW INIMIGA
+
+Os personagens ocupam slots visuais dentro dessas linhas.
+
+O sistema deve suportar pelo menos 3 personagens aliados simultaneamente e quantidade variável de inimigos.
+
+Não limite a arquitetura a exatamente três inimigos.
+
+Chefes podem ocupar mais espaço visual ou slots especiais.
+
+Reforços podem entrar durante a batalha.
+
+---
+
+# 4. REGRAS DO SISTEMA DE LINHAS
+
+Transforme posicionamento em uma decisão tática relevante.
+
+Ataques devem possuir propriedades como:
+
+`MELEE`
+
+`RANGED`
+
+`MAGIC`
+
+`AREA`
+
+`PIERCING`
+
+`CHAIN`
+
+`ROW`
+
+`ALL`
+
+Ataques melee normalmente devem atingir personagens acessíveis na linha da frente.
+
+A linha de trás deve receber alguma proteção enquanto personagens aliados estiverem protegendo a linha da frente.
+
+Ataques ranged devem poder contornar parte dessas restrições.
+
+Magias podem possuir suas próprias regras.
+
+Algumas cartas podem:
+
+- mover o usuário para a frente;
+- mover o usuário para trás;
+- trocar posição com aliado;
+- puxar inimigo da back row para front row;
+- empurrar inimigo da front row para back row;
+- quebrar formação;
+- impedir mudança de row;
+- proteger aliados da linha de trás;
+- atacar toda uma row;
+- perfurar front row e atingir back row;
+- encadear ataque entre personagens;
+- atacar os dois slots mais próximos;
+- atravessar um alvo;
+- atingir todos em uma linha.
+
+Essa será a substituição estrutural das decisões espaciais de Midnight Suns.
+
+Não tente simular movimentação livre escondida.
+
+O sistema de rows deve ser tratado como mecânica própria.
+
+---
+
+# 5. COMBATE POR CARTAS
+
+O sistema de cartas deve possuir profundidade equivalente à principal camada de combate de Midnight Suns.
+
+Implemente um sistema data-driven.
+
+Não codifique cada carta manualmente com grandes blocos `if card.name ==`.
+
+Cada carta deve ser um Resource ou estrutura equivalente com propriedades configuráveis.
+
+Uma carta deve poder definir, entre outras coisas:
+
+- ID;
+- nome;
+- personagem proprietário;
+- classe;
+- tipo;
+- raridade;
+- custo;
+- geração de recurso;
+- modificador de iniciativa;
+- número de ações consumidas;
+- tipo de alvo;
+- condição de alvo;
+- row válida;
+- alcance;
+- dano;
+- escalonamento;
+- atributo usado;
+- tipo de dano;
+- número de hits;
+- chain;
+- knockback de row;
+- cura;
+- escudo;
+- armadura;
+- duração;
+- buff;
+- debuff;
+- status;
+- draw;
+- discard;
+- redraw;
+- exhaust;
+- retain;
+- quick;
+- refund;
+- counter;
+- mark;
+- vulnerable;
+- weak;
+- stun;
+- bind;
+- taunt;
+- conceal;
+- resist;
+- strengthened;
+- block;
+- shield;
+- cleanse;
+- dispel;
+- summon;
+- trigger;
+- condição;
+- upgrade;
+- efeitos visuais;
+- efeitos sonoros;
+- animação;
+- descrição automática.
+
+Uma carta pode conter múltiplos efeitos.
+
+Por exemplo:
+
+DANO
+
++
+
+APLICAR VULNERÁVEL
+
++
+
+PUXAR PARA FRONT ROW
+
+Tudo deve ser representável através do mesmo sistema de efeitos.
+
+---
+
+# 6. DECK INDIVIDUAL DOS PERSONAGENS
+
+Cada personagem jogável deve possuir deck próprio.
+
+Use como ponto de partida uma estrutura de aproximadamente:
+
+**8 cartas equipadas por personagem**
+
+mas deixe esse valor configurável.
+
+O grupo padrão deve ser de:
+
+**3 personagens**
+
+Logo, uma equipe típica forma um deck combinado de aproximadamente:
+
+**24 cartas.**
+
+Entretanto, nunca escreva lógica dependente do número 24.
+
+O sistema deve calcular o deck dinamicamente.
+
+Implemente tela de montagem de deck.
+
+O jogador deve poder ver:
+
+- personagem;
+- deck disponível;
+- cartas equipadas;
+- cartas disponíveis;
+- custo;
+- tipo;
+- raridade;
+- tags;
+- upgrade;
+- descrição;
+- estatísticas.
+
+Implemente limites configuráveis de cópias.
+
+Exemplo inicial:
+
+máximo de duas cópias da maioria das cartas.
+
+Cartas especiais podem possuir limite de uma.
+
+---
+
+# 7. MÃO DE CARTAS
+
+Durante batalha:
+
+- cartas são compradas do deck;
+- entram na mão;
+- podem ser jogadas;
+- podem ser descartadas;
+- podem ser redesenhadas;
+- algumas podem permanecer na mão;
+- algumas podem ser exauridas.
+
+Mantenha mão máxima configurável.
+
+Use valores próximos à experiência desejada, mas todos os números devem ficar centralizados em configurações de balanceamento.
+
+Nada importante deve estar espalhado como magic numbers pelo código.
+
+---
+
+# 8. CARD PLAYS
+
+O jogador deve possuir um número limitado de **Card Plays** por turno.
+
+Comece com:
+
+**3 ações principais por turno.**
+
+Isso combina com o que aparentemente já existe no HotN2.
+
+Cartas comuns normalmente consomem uma ação.
+
+Algumas cartas podem:
+
+- custar zero;
+- devolver a ação caso cumpram condição;
+- consumir duas ações;
+- gerar ação;
+- não consumir ação;
+- modificar o máximo de ações.
+
+Crie interface clara indicando:
+
+**AÇÕES: 3/3**
+
+O número deve atualizar imediatamente.
+
+---
+
+# 9. REDRAW
+
+Preserve e amplie o sistema de redraw já existente.
+
+Comece com aproximadamente:
+
+**2 redraws por turno.**
+
+O jogador pode selecionar uma carta e redesenhá-la.
+
+A animação deve mostrar:
+
+carta sendo descartada visualmente
+
+→
+
+movimento até discard pile
+
+→
+
+nova carta vindo do deck
+
+→
+
+reposicionamento da mão.
+
+Algumas cartas podem possuir efeitos ao serem redesenhadas.
+
+Exemplos:
+
+- ganhar escudo;
+- causar pequeno dano;
+- gerar recurso;
+- comprar outra carta;
+- aplicar buff;
+- mudar de row;
+- transformar a carta.
+
+O sistema de cartas deve possuir trigger:
+
+`ON_REDRAW`
+
+---
+
+# 10. RECURSO HEROICO PRÓPRIO DO HOTN
+
+Midnight Suns utiliza Heroism.
+
+HotN3 deve possuir um equivalente próprio do universo.
+
+Primeiro examine o HotN2 e veja se já existe uma nomenclatura adequada.
+
+Caso ainda não exista, use provisoriamente:
+
+**ÍMPETO**
+
+mas centralize o nome para que possa ser alterado depois sem modificar dezenas de scripts.
+
+Cartas básicas e técnicas normalmente podem gerar Ímpeto.
+
+Cartas mais poderosas consomem Ímpeto.
+
+Interface:
+
+`ÍMPETO 4/10`
+
+O valor máximo deve ser configurável.
+
+Exemplo:
+
+ATAQUE SIMPLES
+
+gera +1 Ímpeto.
+
+DEFESA
+
+gera +1.
+
+MAGIA HEROICA
+
+custa 3.
+
+ATAQUE DEFINITIVO
+
+custa 5.
+
+Não copie os valores do jogo de referência cegamente.
+
+Faça testes de balanceamento.
+
+---
+
+# 11. CLASSES DE CARTA
+
+Use uma taxonomia clara.
+
+Por exemplo:
+
+**ATAQUE**
+
+causa dano diretamente.
+
+**TÉCNICA**
+
+controle, suporte, defesa ou geração de recurso.
+
+**PODER**
+
+habilidades fortes que gastam Ímpeto.
+
+**REAÇÃO**
+
+ativada por determinadas condições.
+
+**ESPECIAL**
+
+cartas geradas temporariamente.
+
+Os nomes podem ser ajustados para o universo HotN.
+
+---
+
+# 12. QUICK / AÇÃO RÁPIDA
+
+Implemente uma propriedade equivalente ao comportamento de Quick.
+
+No HotN, chame inicialmente de:
+
+**RÁPIDA**
+
+Se uma carta RÁPIDA derrotar o alvo principal, devolva o Card Play consumido.
+
+A UI precisa comunicar isso claramente.
+
+Exemplo:
+
+`RÁPIDA — recupera a ação se este ataque derrotar o alvo.`
+
+---
+
+# 13. MARK / MARCADO
+
+Implemente status equivalente a Mark.
+
+Nome sugerido:
+
+**MARCADO**
+
+Se um inimigo MARCADO for derrotado por uma carta, o Card Play correspondente pode ser recuperado.
+
+A duração deve ser configurável.
+
+---
+
+# 14. KNOCKBACK ADAPTADO PARA ROWS
+
+Como não existe movimentação livre, transforme Knockback em manipulação das linhas.
+
+Crie:
+
+**RECUO**
+
+Front → Back.
+
+**PUXÃO**
+
+Back → Front.
+
+**RECUO FORTE**
+
+pode:
+
+- mover de row;
+- causar dano adicional;
+- colidir com outro personagem;
+- quebrar defesa da formação.
+
+Personagens que já estejam na back row podem sofrer:
+
+**COLISÃO COM CENÁRIO**
+
+quando receberem Recuo Forte, caso a missão tenha um objeto ambiental apropriado.
+
+Tudo isso deve funcionar sem coordenadas táticas complexas.
+
+---
+
+# 15. CHAIN
+
+Implemente ataques encadeados.
+
+Uma carta `CHAIN 3`, por exemplo, permite distribuir três hits.
+
+O jogador deve poder:
+
+- acertar o mesmo alvo múltiplas vezes;
+- dividir hits entre inimigos;
+- encadear em ordem diferente.
+
+A interface deve mostrar:
+
+`1/3`
+
+`2/3`
+
+`3/3`
+
+e pré-visualizar o dano acumulado.
+
+---
+
+# 16. ATAQUES EM ÁREA
+
+Suporte pelo menos:
+
+`SINGLE`
+
+`ROW`
+
+`ALL_ENEMIES`
+
+`ALL_ALLIES`
+
+`ADJACENT`
+
+`RANDOM`
+
+`CHAIN`
+
+`SELF`
+
+`ALLY`
+
+`ENEMY`
+
+`ANY_UNIT`
+
+`FRONT_ROW`
+
+`BACK_ROW`
+
+A preview visual precisa indicar todos os alvos que serão afetados.
+
+---
+
+# 17. STATUS SYSTEM
+
+Implemente um sistema genérico de status.
+
+Não coloque status como dezenas de booleanos desconectados dentro do personagem.
+
+Crie uma arquitetura de `StatusEffect`.
+
+Cada status deve possuir:
+
+- ID;
+- nome;
+- duração;
+- stacks;
+- valor;
+- origem;
+- ícone;
+- descrição;
+- callbacks;
+- regra de remoção.
+
+Suporte inicialmente:
+
+ARMADURA
+
+ESCUDO
+
+BLOQUEIO
+
+FORTALECIDO
+
+FRACO
+
+VULNERÁVEL
+
+MARCADO
+
+ATORDOADO
+
+PRESO
+
+OCULTO
+
+RESISTÊNCIA
+
+CONTRA-ATAQUE
+
+PROVOCADO
+
+VENENO
+
+SANGRAMENTO
+
+QUEIMADURA
+
+REGENERAÇÃO
+
+BARREIRA
+
+SILÊNCIO
+
+CEGUEIRA
+
+Esses nomes podem ser adaptados conforme o lore.
+
+---
+
+# 18. COUNTER
+
+Personagem com COUNTER deve poder reagir automaticamente após ser atacado.
+
+A animação deve acontecer de forma clara.
+
+Ataque inimigo
+
+→
+
+hit
+
+→
+
+pequena pausa
+
+→
+
+indicador `CONTRA-ATAQUE`
+
+→
+
+animação do defensor
+
+→
+
+dano retornado.
+
+---
+
+# 19. BLOCK / SHIELD / ARMOR
+
+Separe conceitos defensivos.
+
+Por exemplo:
+
+HP = vida real.
+
+BLOCK = recurso defensivo temporário.
+
+ARMOR = redução de dano.
+
+SHIELD = proteção especial ou mágica.
+
+Não misture tudo em um único número.
+
+Centralize as fórmulas de dano.
+
+---
+
+# 20. SISTEMA DE TIPOS DO HOTN
+
+O HotN2 já possui:
+
+BRUTO
+
+TÉCNICO
+
+PSICOLÓGICO
+
+MENTAL
+
+PROJETIVO
+
+QUÍMICO
+
+e uma matriz de vantagens aproximadamente baseada em:
+
+1.25×
+
+1.00×
+
+0.75×.
+
+Preserve esse sistema como uma identidade própria do HotN.
+
+Refatore para um arquivo de dados central.
+
+Não espalhe a tabela em vários scripts.
+
+Ao mirar um alvo, mostre discretamente:
+
+`VANTAGEM`
+
+`NEUTRO`
+
+ou
+
+`DESVANTAGEM`
+
+Não use estética Pokémon.
+
+Use linguagem visual adequada ao universo HotN.
+
+---
+
+# 21. ATRIBUTOS
+
+Analise os atributos atuais.
+
+O HotN2 aparentemente já trabalha com algo próximo de:
+
+HP
+
+Impacto
+
+Armadura
+
+Poder
+
+Escudo
+
+Velocidade
+
+Não altere isso arbitrariamente.
+
+Documente primeiro o significado dos atributos.
+
+Depois organize as fórmulas.
+
+Crie uma camada central como:
+
+`CombatMath`
+
+ou equivalente.
+
+Toda fórmula importante deve ficar em local rastreável.
+
+Exemplo conceitual:
+
+`final_damage = base + scaling - defense`
+
+seguido de:
+
+type modifier
+
+status modifiers
+
+critical modifier
+
+outros efeitos.
+
+Não espalhe fórmulas inconsistentes entre cartas.
+
+---
+
+# 22. INICIATIVA
+
+Preserve o conceito de iniciativa existente no HotN2.
+
+Mas faça dele um sistema consistente.
+
+Cartas podem possuir modificadores de iniciativa.
+
+Velocidade pode influenciar ordem.
+
+A interface deve deixar claro:
+
+- quem age;
+- quem agirá depois;
+- alterações provocadas por cartas.
+
+Se a arquitetura de turnos atual não for adequada, refatore.
+
+---
+
+# 23. IA INIMIGA
+
+A IA não deve escolher cartas aleatoriamente.
+
+Crie uma IA baseada em utilidade.
+
+Cada ação possível deve receber score.
+
+Considere:
+
+- possibilidade de matar;
+- dano esperado;
+- vantagem de tipo;
+- alvo vulnerável;
+- proteção;
+- HP;
+- status;
+- row;
+- valor estratégico;
+- buffs;
+- debuffs;
+- possibilidade de interromper combo;
+- prioridade de missão.
+
+Personagens inimigos podem possuir personalidade de IA.
+
+Exemplos:
+
+AGRESSIVO
+
+DEFENSIVO
+
+SUPORTE
+
+CONTROLADOR
+
+ASSASSINO
+
+PROTETOR
+
+CAÓTICO
+
+CHEFE
+
+---
+
+# 24. PREVIEW DE AÇÃO
+
+Antes de jogar qualquer carta ofensiva, mostre:
+
+- alvo;
+- dano previsto;
+- HP restante previsto;
+- status aplicado;
+- mudança de row;
+- gasto de recurso;
+- geração de recurso;
+- número de hits;
+- vantagem ou desvantagem;
+- possibilidade de KO.
+
+Nunca obrigue o jogador a descobrir resultados básicos depois de jogar a carta.
+
+---
+
+# 25. MINIONS
+
+Implemente inimigos do tipo MINION.
+
+Minions podem morrer com qualquer hit válido, independentemente de HP tradicional, caso isso seja desejável para a missão.
+
+Isso permite situações com muitos inimigos.
+
+Use isso para criar ritmo.
+
+---
+
+# 26. ELITES
+
+Crie inimigos Elite com:
+
+- HP maior;
+- mais habilidades;
+- comportamento especializado;
+- status próprios;
+- resistência.
+
+---
+
+# 27. BOSSES
+
+O sistema deve suportar bosses.
+
+Boss pode possuir:
+
+- múltiplas fases;
+- múltiplas ações;
+- imunidades;
+- barra especial;
+- cartas próprias;
+- summons;
+- mudança de comportamento;
+- transformação;
+- scripts de fase.
+
+Arquitetura deve permitir isso sem hacks específicos no `Main.gd`.
+
+---
+
+# 28. REINFORCEMENTS
+
+Implemente reforços.
+
+Em determinadas rodadas:
+
+novos inimigos entram.
+
+Use animação apropriada.
+
+A UI deve poder avisar:
+
+`REFORÇOS EM 1 TURNO`
+
+quando pertinente.
+
+---
+
+# 29. MISSÕES
+
+Crie sistema de objetivos de missão.
+
+Não restrinja todas as batalhas a “mate todos”.
+
+Suporte:
+
+ELIMINAR TODOS
+
+DERROTAR CHEFE
+
+SOBREVIVER X TURNOS
+
+PROTEGER ALVO
+
+DESTRUIR OBJETO
+
+ESCOLTAR/NÃO PERDER PERSONAGEM
+
+IMPEDIR RITUAL
+
+DERROTAR X ALVOS
+
+CAPTURAR ALVO
+
+VENCER ANTES DO LIMITE
+
+Objetivos devem ser Resource/data-driven.
+
+---
+
+# 30. OBJETOS DE CENÁRIO
+
+Mesmo sem movimentação livre, o cenário 3D pode participar do combate.
+
+Exemplos:
+
+- coluna;
+- barril;
+- cristal;
+- runa;
+- altar;
+- armadilha;
+- estátua;
+- portal;
+- rocha;
+- mecanismo.
+
+O jogador pode usar recurso para ativar interações ambientais.
+
+Exemplo:
+
+`DERRUBAR COLUNA — custa 2 Ímpeto`
+
+atinge front row inimiga.
+
+Outro:
+
+`ATIVAR RUNA`
+
+aplica Vulnerável na back row.
+
+Não dependa de física imprevisível.
+
+Essas ações devem ser controladas e legíveis.
+
+---
+
+# 31. ITENS DE COMBATE
+
+Implemente itens consumíveis.
+
+Itens não devem consumir necessariamente Card Play.
+
+Exemplos:
+
+poção
+
+bomba
+
+antídoto
+
+pergaminho
+
+cristal
+
+artefato.
+
+Limite o número levado para a missão.
+
+Crie tela de loadout.
+
+---
+
+# 32. HERO COMBOS
+
+Implemente cartas especiais de combinação entre dois personagens.
+
+Quando condições forem satisfeitas, uma carta especial pode entrar na mão.
+
+Ela deve:
+
+- identificar dois personagens;
+- usar animação conjunta;
+- causar efeito poderoso;
+- consumir recurso significativo.
+
+Não copie animações ou nomes de Marvel.
+
+Faça isso com personagens HotN.
+
+---
+
+# 33. CARTAS GERADAS
+
+O sistema deve permitir que cartas criem outras cartas.
+
+Exemplo:
+
+uma habilidade de mago gera:
+
+`RAIO INSTÁVEL`
+
+na mão.
+
+A carta gerada pode possuir:
+
+`EXHAUST`
+
+e desaparecer após usada.
+
+---
+
+# 34. UPGRADES DE CARTA
+
+Implemente versão melhorada das cartas.
+
+Cada carta deve poder possuir:
+
+NORMAL
+
+UPGRADED
+
+A versão melhorada pode alterar:
+
+- dano;
+- custo;
+- status;
+- número de hits;
+- geração de Ímpeto;
+- alcance;
+- efeitos.
+
+A UI deve mostrar claramente a diferença.
+
+Não implemente upgrade simplesmente adicionando `+1` ao nome sem diferença visual.
+
+---
+
+# 35. MODS DE CARTA
+
+Arquitetura deve aceitar modificadores futuros.
+
+Exemplo:
+
+`+1 Ímpeto`
+
+`Compra 1`
+
+`Rápida`
+
+`+20% dano`
+
+Não é obrigatório criar dezenas de mods agora, mas a estrutura precisa permitir.
+
+---
+
+# 36. ESTRUTURA DE PERSONAGEM
+
+Crie recursos de personagem.
+
+Algo conceitualmente como:
+
+`CharacterDefinition`
+
+contendo:
+
+ID
+
+nome
+
+classe
+
+tipo
+
+atributos
+
+sprite
+
+portrait
+
+animations
+
+deck pool
+
+passive
+
+audio
+
+UI metadata.
+
+Não deixe personagem definido diretamente dentro de um enorme dictionary no Main.
+
+Converta os dados existentes.
+
+---
+
+# 37. PASSIVAS
+
+Cada personagem deve poder possuir passiva.
+
+Exemplos:
+
+ganhar Block ao mudar para front row.
+
+ganhar Ímpeto ao curar aliado.
+
+ataques contra Marcados causam dano extra.
+
+primeira carta de Técnica por turno compra uma carta.
+
+Passivas devem reagir a eventos genéricos.
+
+Crie Event Bus ou sistema equivalente.
+
+---
+
+# 38. ARQUITETURA DE EVENTOS
+
+Implemente eventos como:
+
+TURN_STARTED
+
+TURN_ENDED
+
+CARD_DRAWN
+
+CARD_PLAYED
+
+CARD_REDRAWN
+
+CARD_DISCARDED
+
+DAMAGE_DEALT
+
+DAMAGE_RECEIVED
+
+UNIT_KILLED
+
+STATUS_APPLIED
+
+STATUS_REMOVED
+
+UNIT_MOVED_ROW
+
+HEROISM_CHANGED
+
+MISSION_STARTED
+
+MISSION_COMPLETED
+
+Isso permitirá efeitos complexos sem acoplamento excessivo.
+
+---
+
+# 39. 3D COMO CENÁRIO
+
+Agora vem uma mudança visual fundamental em relação ao HotN2.
+
+O fundo da batalha NÃO deve continuar sendo uma simples imagem 2D.
+
+A arena deve existir em **3D real no Godot**.
+
+Use:
+
+Node3D
+
+Camera3D
+
+DirectionalLight3D
+
+WorldEnvironment
+
+meshes
+
+fog
+
+particles
+
+decal
+
+shadows
+
+lights.
+
+A aparência deve ser de um cenário 3D de fantasia.
+
+Entretanto:
+
+## PERSONAGENS CONTINUAM 2D.
+
+Eles devem aparecer como sprites 2D flat inseridos dentro do cenário 3D.
+
+Considere usar:
+
+`Sprite3D`
+
+ou
+
+`AnimatedSprite3D`
+
+com billboard.
+
+Os personagens devem parecer ilustrações/sprites dentro de um cenário tridimensional.
+
+Essa mistura é intencional.
+
+Referência visual conceitual:
+
+**personagens 2D estilizados + palco 3D cinematográfico.**
+
+Não tente substituir os personagens por modelos 3D.
+
+---
+
+# 40. PERSONAGENS 2D FLAT
+
+Cada personagem precisa parecer deliberadamente 2D.
+
+Não tente esconder isso.
+
+Utilize:
+
+- outlines;
+- iluminação simulada;
+- shadow blob ou shadow plane;
+- shaders;
+- pequenas deformações;
+- squash;
+- flash de impacto;
+- recoil;
+- bounce;
+- antecipação.
+
+Mesmo usando sprites gratuitos, faça a apresentação parecer consistente.
+
+Se sprites de fontes diferentes destoarem, aplique:
+
+- escala;
+- shader;
+- outline;
+- color grading;
+- sombra;
+- tratamento comum.
+
+---
+
+# 41. ANIMAÇÕES DOS PERSONAGENS
+
+Sempre que possível, use sprite sheets gratuitos existentes.
+
+Mapeie animações:
+
+IDLE
+
+ATTACK
+
+CAST
+
+HIT
+
+BLOCK
+
+HEAL
+
+BUFF
+
+DEBUFF
+
+VICTORY
+
+DEATH
+
+SPECIAL.
+
+Se o asset gratuito não possuir todas essas animações, complemente com animações procedurais em Godot:
+
+- translate;
+- squash;
+- scale;
+- rotate;
+- shader flash;
+- after-image;
+- partículas;
+- camera motion.
+
+Não deixe combate parecer apenas “sprite parado + número aparecendo”.
+
+---
+
+# 42. CÂMERA
+
+A câmera deve participar das ações.
+
+Crie sistema de câmera com estados.
+
+Exemplos:
+
+OVERVIEW
+
+ALLY_FOCUS
+
+ENEMY_FOCUS
+
+CARD_FOCUS
+
+SPECIAL_ATTACK
+
+BOSS_INTRO.
+
+Ao usar ataque importante:
+
+câmera aproxima
+
+→
+
+personagem inicia animação
+
+→
+
+efeito atravessa arena
+
+→
+
+câmera acompanha
+
+→
+
+hit
+
+→
+
+micro hit-stop
+
+→
+
+shake
+
+→
+
+retorno suave.
+
+Evite movimentos excessivos que causem enjoo.
+
+---
+
+# 43. HIT STOP
+
+Implemente pequenos hit stops em ataques fortes.
+
+Algo entre algumas dezenas de milissegundos, ajustado por intensidade.
+
+O objetivo é comunicar impacto.
+
+Não congele o jogo exageradamente.
+
+---
+
+# 44. SCREEN SHAKE
+
+Use screen shake baseado em intensidade.
+
+Ataque leve:
+
+quase nenhum.
+
+Ataque pesado:
+
+moderado.
+
+Ultimate:
+
+forte, mas curto.
+
+Configuração centralizada.
+
+---
+
+# 45. PARTÍCULAS
+
+Use GPUParticles3D/2D para:
+
+- fogo;
+- magia;
+- impacto;
+- poeira;
+- cura;
+- veneno;
+- shield;
+- sparks;
+- dark energy;
+- raios;
+- runas.
+
+Priorize efeitos procedurais e texturas gratuitas.
+
+---
+
+# 46. ILUMINAÇÃO 3D
+
+A arena precisa parecer integrada.
+
+Use iluminação para reagir a habilidades.
+
+Exemplo:
+
+magia azul:
+
+point light azul temporária.
+
+explosão:
+
+flash quente.
+
+cura:
+
+luz suave.
+
+Ultimate:
+
+alteração momentânea da iluminação.
+
+Faça isso através de animação, não recriando o WorldEnvironment inteiro a cada ataque.
+
+---
+
+# 47. CARTAS DEVEM SER OBJETOS 3D
+
+A mão de cartas não deve parecer um simples conjunto de `Control` retangulares 2D.
+
+Crie apresentação 3D.
+
+Cada carta deve ser um objeto renderizado com:
+
+- espessura;
+- mesh;
+- leve curvatura ou plano com espessura;
+- iluminação;
+- sombra;
+- animação;
+- rotação;
+- hover.
+
+Pode usar `MeshInstance3D` + `SubViewportTexture`, ou solução equivalente.
+
+O texto da carta pode ser gerado em SubViewport.
+
+---
+
+# 48. TODAS AS CARTAS DEVEM USAR O MESMO FUNDO BASE
+
+Isto é obrigatório.
+
+Não use uma ilustração de fundo diferente para cada carta.
+
+Crie um **card template visual único e coerente**.
+
+Todas as cartas compartilham o mesmo fundo/base.
+
+O que muda:
+
+- nome;
+- ícone;
+- personagem;
+- custo;
+- cor de categoria;
+- descrição;
+- tags;
+- números;
+- símbolo;
+- eventualmente um pequeno retrato ou ícone.
+
+Mas a arte principal/base da carta deve permanecer a mesma.
+
+Isso facilita consistência e evita necessidade de centenas de artworks.
+
+Crie variantes discretas de moldura por categoria se necessário, sem mudar o background fundamental.
+
+---
+
+# 49. ANIMAÇÃO DA MÃO
+
+As cartas devem entrar na mão formando um arco.
+
+Ao passar o mouse:
+
+carta sobe
+
+→
+
+aumenta discretamente
+
+→
+
+gira para ficar legível
+
+→
+
+vai à frente das outras.
+
+Ao selecionar:
+
+carta desloca para posição de destaque.
+
+Ao arrastar:
+
+acompanha cursor.
+
+Ao escolher alvo:
+
+a carta permanece destacada.
+
+Ao jogar:
+
+carta sai da mão em direção ao centro
+
+→
+
+ativa efeito
+
+→
+
+vai para discard/exhaust.
+
+---
+
+# 50. TARGETING
+
+Targeting deve ser intuitivo.
+
+Ao selecionar uma carta:
+
+alvos inválidos ficam visualmente reduzidos.
+
+alvos válidos recebem destaque.
+
+Ao passar cursor sobre alvo:
+
+mostrar preview.
+
+Clique confirma.
+
+ESC/click direito cancela.
+
+Não execute carta imediatamente no primeiro clique se ela exigir alvo.
+
+---
+
+# 51. CONTROLLER
+
+Estruture o input para permitir posteriormente controle/gamepad.
+
+Idealmente implemente desde já:
+
+mouse
+
+teclado
+
+controle.
+
+Use InputMap.
+
+Não hardcode teclas em scripts.
+
+---
+
+# 52. UI
+
+Crie uma UI original para HotN.
+
+Não copie interface de Midnight Suns.
+
+A interface deve possuir hierarquia clara.
+
+Elementos principais:
+
+objetivo atual
+
+turno
+
+ações
+
+Ímpeto
+
+redraws
+
+mão
+
+deck
+
+discard
+
+heróis
+
+HP
+
+status
+
+inimigos
+
+status
+
+ordem/iniciativa
+
+botão End Turn.
+
+Não encha a tela de painéis grandes.
+
+---
+
+# 53. TOOLTIP
+
+Tudo importante precisa de tooltip.
+
+Hover em:
+
+status
+
+ícone
+
+atributo
+
+keyword
+
+tipo
+
+Ímpeto
+
+ação
+
+redraw.
+
+Crie glossary de keywords.
+
+Descrições devem ser geradas consistentemente.
+
+---
+
+# 54. BATTLE LOG
+
+Implemente log de batalha opcional.
+
+Exemplo:
+
+`Magnus usou Feixe Arcano em Cultista.`
+
+`Cultista sofreu 14 de dano.`
+
+`Vulnerável aplicado por 2 turnos.`
+
+Não use linguagem excessivamente técnica para o jogador.
+
+Internamente mantenha logs detalhados para debug.
+
+---
+
+# 55. NÚMEROS DE DANO
+
+Mostre damage numbers.
+
+Use animações diferentes para:
+
+DANO
+
+CRÍTICO
+
+CURA
+
+BLOCK
+
+RESIST
+
+IMMUNE.
+
+Não use fontes difíceis de ler.
+
+---
+
+# 56. BARRAS DE VIDA
+
+Cada personagem deve ter HUD discreto.
+
+Exibir:
+
+nome
+
+HP
+
+Block
+
+status.
+
+Chefes podem ter barra superior maior.
+
+---
+
+# 57. ASSETS: REGRA ABSOLUTA
+
+Use apenas assets:
+
+- gratuitos;
+- preexistentes na internet;
+- legalmente reutilizáveis;
+- compatíveis com redistribuição em um repositório.
+
+PREFERÊNCIA:
+
+CC0
+
+CC-BY
+
+MIT
+
+OFL
+
+licenças explicitamente permissivas.
+
+Evite:
+
+NC
+
+ND
+
+assets “free for personal use” sem permissão clara.
+
+Não use conteúdo pirateado.
+
+Não use rip de jogos.
+
+Não use Spriters Resource com assets comerciais.
+
+Não use imagens retiradas do Google sem licença.
+
+Não use Midjourney, DALL-E, Stable Diffusion ou geração de imagens para criar assets.
+
+A exigência é utilizar assets gratuitos **já existentes na internet**.
+
+---
+
+# 58. FONTES RECOMENDADAS DE ASSETS
+
+Pesquise recursos adequados em fontes como:
+
+Kenney
+
+OpenGameArt
+
+Poly Haven
+
+ambientCG
+
+Quaternius
+
+itch.io com licença explicitamente gratuita e redistribuível
+
+Freesound para CC0/CC-BY
+
+Google Fonts
+
+Game-icons.net, respeitando licença e atribuição.
+
+Esses exemplos não são exclusivos.
+
+Verifique licença individualmente.
+
+---
+
+# 59. LICENÇAS
+
+Crie:
+
+`ASSET_LICENSES.md`
+
+Para CADA asset externo registre:
+
+nome
+
+arquivo
+
+autor
+
+URL
+
+licença
+
+data de acesso
+
+modificações realizadas.
+
+Também crie:
+
+`CREDITS.md`
+
+Não deixe para fazer isso no final.
+
+Atualize conforme baixar assets.
+
+---
+
+# 60. ARENA 3D
+
+Construa pelo menos uma arena visualmente completa.
+
+Tema sugerido:
+
+fantasia sombria.
+
+Ela pode incluir:
+
+ruínas
+
+pedras
+
+arcos
+
+velas
+
+cristais
+
+fog
+
+runas
+
+vegetação
+
+estátuas
+
+portal.
+
+Mas use os elementos coerentes encontrados no universo já existente do HotN2 quando possível.
+
+Não transforme arbitrariamente o universo em medieval genérico se houver identidade visual estabelecida.
+
+---
+
+# 61. PERFORMANCE
+
+O cenário 3D precisa rodar de forma razoável em computadores comuns.
+
+Use:
+
+LOD quando necessário.
+
+texturas de resolução moderada.
+
+compressão.
+
+occlusion.
+
+limite de partículas.
+
+sombras configuráveis.
+
+Crie opções:
+
+LOW
+
+MEDIUM
+
+HIGH.
+
+---
+
+# 62. RESPONSIVIDADE
+
+Base visual:
+
+1920×1080.
+
+Entretanto a interface deve funcionar em:
+
+1366×768
+
+1600×900
+
+1920×1080
+
+2560×1440.
+
+Não use coordenadas absolutas em toda a UI como solução final.
+
+Use Containers/Anchors.
+
+---
+
+# 63. AUDIO
+
+Crie sistema centralizado.
+
+Categorias:
+
+MASTER
+
+MUSIC
+
+SFX
+
+UI
+
+AMBIENCE.
+
+Adicione sliders de configuração.
+
+Use música gratuita licenciada.
+
+Sons:
+
+card draw
+
+card hover
+
+card play
+
+hit
+
+heal
+
+buff
+
+magic
+
+death
+
+victory
+
+UI.
+
+Não deixe som em volume inconsistente.
+
+---
+
+# 64. MENU PRINCIPAL
+
+HotN3 precisa possuir menu principal real.
+
+Opções:
+
+CONTINUAR
+
+NOVO JOGO / BATALHA
+
+DECKS
+
+PERSONAGENS
+
+CONFIGURAÇÕES
+
+CRÉDITOS
+
+SAIR.
+
+Durante desenvolvimento pode haver:
+
+DEBUG BATTLE
+
+mas não deixe a experiência depender exclusivamente disso.
+
+---
+
+# 65. SELEÇÃO DE EQUIPE
+
+Antes da missão:
+
+mostrar personagens.
+
+Permitir selecionar 3.
+
+Exibir:
+
+portrait
+
+tipo
+
+atributos
+
+papel
+
+passiva
+
+deck.
+
+Não permita personagens duplicados.
+
+---
+
+# 66. DECK BUILDER
+
+A tela precisa ser utilizável.
+
+Layout aproximado:
+
+personagem selecionado à esquerda
+
+deck atual no centro
+
+pool de cartas à direita
+
+painel de detalhes.
+
+Filtros:
+
+ATAQUE
+
+TÉCNICA
+
+PODER
+
+UPGRADED
+
+TIPO.
+
+---
+
+# 67. SALVAMENTO
+
+Implemente save system.
+
+Salvar:
+
+configurações
+
+deck de cada personagem
+
+upgrades
+
+loadout
+
+progresso básico.
+
+Use JSON ou Resources serializáveis apropriados.
+
+Crie versão do save.
+
+Exemplo:
+
+`save_version: 1`
+
+Isso permitirá migração futura.
+
+---
+
+# 68. NÃO CRIE META-JOGO GIGANTESCO
+
+Neste momento NÃO é necessário recriar:
+
+- Abbey;
+- exploração de base;
+- relacionamentos;
+- diálogos;
+- crafting complexo;
+- open world;
+- movimentação fora do combate.
+
+O foco é recriar **profundamente o sistema de combate e preparação de combate**.
+
+Pode haver menus de:
+
+personagem
+
+deck
+
+missão
+
+inventário.
+
+---
+
+# 69. CONTEÚDO DO UNIVERSO HOTN
+
+Antes de inventar lore:
+
+procure no repositório por nomes, personagens e termos existentes.
+
+Por exemplo, HotN2 aparentemente já possui `Magnus`.
+
+Preserve personagens canônicos quando existirem.
+
+Arquétipos temporários como:
+
+Guerreiro
+
+Mago
+
+Ladino
+
+Clérigo
+
+Patrulheiro
+
+Paladino
+
+podem ser mantidos durante desenvolvimento, mas organize-os para futura substituição.
+
+Se precisar criar conteúdo para demonstrar sistemas, prefira conteúdo genérico e claramente isolado em arquivos de dados.
+
+Não espalhe lore inventado pelo código.
+
+---
+
+# 70. QUANTIDADE DE CONTEÚDO PARA VERSÃO JOGÁVEL
+
+Para considerar HotN3 funcional, quero pelo menos:
+
+6 personagens jogáveis completos.
+
+Cada um com:
+
+8+ cartas equipáveis relevantes
+
+passiva
+
+tipo
+
+atributos
+
+identidade mecânica.
+
+Isso significa um pool mínimo aproximado de:
+
+48 cartas jogáveis.
+
+Idealmente mais para permitir deckbuilding.
+
+Crie no mínimo:
+
+10 tipos de inimigos.
+
+3 elites.
+
+1 boss completo.
+
+3 missões.
+
+1 arena 3D principal.
+
+Pode reutilizar arena com variações de iluminação para as primeiras missões.
+
+---
+
+# 71. ARQUÉTIPOS MECÂNICOS
+
+Garanta diversidade.
+
+Exemplo:
+
+TANK
+
+DAMAGE
+
+SUPPORT
+
+CONTROL
+
+RANGED
+
+COMBO.
+
+Não faça seis personagens que apenas possuem ataques com números diferentes.
+
+---
+
+# 72. BALANCEAMENTO
+
+Crie:
+
+`BALANCE.md`
+
+Documente:
+
+HP típico
+
+dano médio
+
+ações por turno
+
+Ímpeto
+
+duração esperada de batalha
+
+curva de inimigos
+
+valores de status
+
+fórmulas.
+
+Não ajuste números aleatoriamente.
+
+---
+
+# 73. DEBUG TOOLS
+
+Crie menu de debug acessível apenas em build de desenvolvimento.
+
+Deve permitir:
+
+adicionar carta
+
+dar Ímpeto
+
+curar
+
+matar unidade
+
+adicionar status
+
+mudar row
+
+pular turno
+
+spawnar inimigo
+
+vencer missão
+
+recarregar batalha.
+
+Isso reduzirá drasticamente custo de testes.
+
+---
+
+# 74. LOGGING
+
+Use logs claros.
+
+Não polua release build.
+
+Crie níveis:
+
+INFO
+
+WARNING
+
+ERROR
+
+COMBAT
+
+AI.
+
+---
+
+# 75. TESTES
+
+Teste sistematicamente:
+
+deck vazio
+
+hand cheia
+
+sem alvo válido
+
+todos aliados mortos
+
+todos inimigos mortos
+
+boss morto
+
+reinforcement
+
+status expirando
+
+counter
+
+chain
+
+quick kill
+
+marked kill
+
+row cheia
+
+movimento front→back
+
+movimento back→front
+
+healing máximo
+
+block
+
+armor
+
+vulnerable
+
+weak
+
+redraw
+
+exhaust
+
+generated card
+
+hero combo.
+
+---
+
+# 76. TESTES AUTOMATIZADOS OU SEMIAUTOMATIZADOS
+
+Quando possível, crie testes/headless scripts para:
+
+CombatMath
+
+deck
+
+draw
+
+discard
+
+status duration
+
+damage
+
+AI scoring
+
+mission completion.
+
+Se não houver framework de teste configurado, crie pelo menos um pequeno test harness.
+
+---
+
+# 77. QUALIDADE DE CÓDIGO
+
+Use:
+
+typed GDScript quando apropriado.
+
+classes pequenas.
+
+Resources.
+
+signals.
+
+composition.
+
+Evite:
+
+God Objects.
+
+strings mágicas.
+
+duplicação.
+
+hardcoded paths espalhados.
+
+`get_node("../../../../")`.
+
+grandes dictionaries em `Main.gd`.
+
+---
+
+# 78. ESTRUTURA DE PASTAS
+
+Organize algo aproximadamente semelhante a:
+
+`/scenes`
+
+`/scenes/battle`
+
+`/scenes/ui`
+
+`/scenes/menus`
+
+`/scripts`
+
+`/scripts/battle`
+
+`/scripts/cards`
+
+`/scripts/characters`
+
+`/scripts/ai`
+
+`/scripts/ui`
+
+`/scripts/core`
+
+`/data`
+
+`/data/cards`
+
+`/data/characters`
+
+`/data/enemies`
+
+`/data/missions`
+
+`/assets`
+
+`/assets/characters`
+
+`/assets/environment`
+
+`/assets/cards`
+
+`/assets/audio`
+
+`/assets/ui`
+
+`/shaders`
+
+`/tests`
+
+`/docs`
+
+Não reorganize cegamente arquivos se quebrar import paths.
+
+Faça migração incremental.
+
+---
+
+# 79. CENAS
+
+Evite gerar tudo dinamicamente em código como ocorre parcialmente no HotN2.
+
+Use cenas quando fizer sentido.
+
+Exemplo:
+
+Battle
+
+Character
+
+Card3D
+
+HealthBar
+
+StatusIcon
+
+TargetMarker
+
+DamageNumber
+
+BattleEnvironment
+
+Enemy
+
+Hero
+
+DeckBuilder
+
+MainMenu.
+
+Scripts devem controlar comportamento.
+
+Scenes devem organizar apresentação.
+
+---
+
+# 80. BATTLE MANAGER
+
+Crie algo como:
+
+`BattleManager`
+
+responsável por:
+
+estado geral da batalha
+
+turnos
+
+vitória
+
+derrota
+
+ações.
+
+Não deve também desenhar cards e controlar partículas.
+
+---
+
+# 81. CARD MANAGER
+
+Responsável por:
+
+deck
+
+hand
+
+discard
+
+exhaust
+
+draw
+
+redraw.
+
+---
+
+# 82. TARGETING MANAGER
+
+Responsável por:
+
+alvos válidos
+
+preview
+
+seleção
+
+cancelamento.
+
+---
+
+# 83. EFFECT RESOLVER
+
+Crie um resolvedor genérico.
+
+Fluxo:
+
+Card
+
+→
+
+CardEffects
+
+→
+
+EffectResolver
+
+→
+
+CombatEvents.
+
+Assim uma carta não precisa saber diretamente como modificar cada classe.
+
+---
+
+# 84. AI CONTROLLER
+
+IA usa os mesmos efeitos do jogador.
+
+Nunca implemente versão paralela simplificada das regras.
+
+---
+
+# 85. TURN STATE MACHINE
+
+Use máquina de estados explícita.
+
+Exemplo:
+
+SETUP
+
+PLAYER_TURN_START
+
+PLAYER_INPUT
+
+CARD_TARGETING
+
+CARD_RESOLUTION
+
+ENEMY_TURN
+
+TURN_END
+
+VICTORY
+
+DEFEAT.
+
+Evite múltiplos booleans contraditórios.
+
+---
+
+# 86. ANIMATION QUEUE
+
+Crie fila de animações.
+
+Efeitos não devem ocorrer visualmente todos ao mesmo tempo.
+
+Gameplay pode resolver rapidamente, mas a apresentação precisa respeitar sequência.
+
+Exemplo:
+
+Card played
+
+→
+
+camera
+
+→
+
+caster animation
+
+→
+
+projectile
+
+→
+
+impact
+
+→
+
+damage number
+
+→
+
+status
+
+→
+
+death
+
+→
+
+camera reset.
+
+---
+
+# 87. NÃO BLOQUEAR O JOGO COM TIMERS ESPALHADOS
+
+Evite dezenas de:
+
+`await get_tree().create_timer(...)`
+
+espalhados.
+
+Crie sistema coerente de animation sequencing.
+
+---
+
+# 88. CARTA 3D — DETALHES
+
+Crie uma cena reutilizável:
+
+`Card3D.tscn`
+
+Ela deve possuir:
+
+Mesh
+
+material
+
+SubViewport ou textura gerada
+
+collision
+
+hover detector
+
+shadow
+
+animation controller.
+
+A interface da carta deve mostrar:
+
+custo
+
+nome
+
+tipo
+
+ícone do personagem
+
+texto
+
+keywords
+
+raridade/modificador.
+
+O fundo visual permanece compartilhado.
+
+---
+
+# 89. EFEITO DE HOVER 3D
+
+Ao hover:
+
+scale 1.0 → 1.12
+
+levantar no eixo vertical
+
+inclinar levemente para a câmera
+
+aumentar iluminação/emission discreta.
+
+Não exagere em glow.
+
+---
+
+# 90. MESA/HAND SPACE
+
+Mesmo que as cartas sejam objetos 3D, elas devem continuar perfeitamente legíveis.
+
+Se a perspectiva prejudicar leitura:
+
+ao hover, faça a carta alinhar-se temporariamente com a câmera.
+
+---
+
+# 91. TRANSIÇÕES
+
+Use transições entre:
+
+menu
+
+seleção
+
+deck
+
+missão
+
+battle
+
+victory.
+
+Não faça mudanças bruscas de scene sem feedback.
+
+---
+
+# 92. VITÓRIA
+
+Ao vencer:
+
+pare IA
+
+resolva animações pendentes
+
+toque stinger
+
+mostre heróis
+
+mostre resultados.
+
+Resumo:
+
+turnos
+
+dano causado
+
+dano recebido
+
+cartas usadas
+
+KOs.
+
+Não precisa construir sistema de XP complexo inicialmente.
+
+---
+
+# 93. DERROTA
+
+Tela de derrota deve permitir:
+
+RETRY
+
+LOADOUT
+
+MAIN MENU.
+
+---
+
+# 94. ACESSIBILIDADE
+
+Inclua:
+
+volume independente
+
+screen shake slider
+
+reduzir flashes
+
+velocidade de animação
+
+tooltips
+
+tamanho de UI razoável.
+
+---
+
+# 95. ASPECTOS VISUAIS
+
+Objetivo:
+
+parecer um jogo completo.
+
+Não um protótipo acadêmico.
+
+Evite:
+
+default Godot buttons sem tema
+
+caixas cinzas genéricas
+
+fontes padrão
+
+ícones inconsistentes
+
+sprites com tamanhos aleatórios
+
+cenas vazias.
+
+Crie Theme próprio.
+
+---
+
+# 96. FONTES
+
+Use fontes gratuitas.
+
+Preferencialmente OFL.
+
+Uma para títulos.
+
+Uma para interface/texto.
+
+Não use mais do que o necessário.
+
+---
+
+# 97. CARD ART
+
+Como todas as cartas devem compartilhar fundo, não procure ilustração individual para cada uma.
+
+Isso reduz drasticamente dependência de assets.
+
+Use:
+
+ícones
+
+símbolos
+
+retratos dos personagens
+
+tipografia
+
+cores de categoria.
+
+---
+
+# 98. RETRATOS
+
+Se houver portraits existentes no HotN2, preserve.
+
+Se precisar usar placeholders novos, use assets gratuitos existentes e registre licenças.
+
+---
+
+# 99. NÃO GERE ARTE NOVA POR IA
+
+Não utilize ferramentas generativas para produzir imagens.
+
+Meu requisito é:
+
+**assets gratuitos e preexistentes da internet.**
+
+Shaders, partículas, iluminação e composições feitas dentro do Godot são permitidos.
+
+---
+
+# 100. GIT
+
+Crie HotN3 preservando histórico quando razoável.
+
+Não modifique HotN2.
+
+Use `main` como branch principal.
+
+Faça commits incrementais e coerentes.
+
+Exemplos conceituais:
+
+`chore: bootstrap HotN3 from HotN2`
+
+`refactor: split battle systems from Main`
+
+`feat: add data-driven card resources`
+
+`feat: implement row combat`
+
+`feat: add status engine`
+
+`feat: add 3D battle arena`
+
+`feat: add 3D card presentation`
+
+`feat: add enemy utility AI`
+
+etc.
+
+Não coloque toda a implementação em um único commit gigante se puder evitar.
+
+---
+
+# 101. README
+
+Reescreva README do HotN3.
+
+Explique:
+
+o que é HotN3
+
+Godot version
+
+como executar
+
+estrutura
+
+controles
+
+arquitetura
+
+licenças
+
+estado atual.
+
+---
+
+# 102. DOCUMENTAÇÃO
+
+Crie:
+
+`README.md`
+
+`ARCHITECTURE.md`
+
+`GAME_DESIGN.md`
+
+`BALANCE.md`
+
+`ASSET_LICENSES.md`
+
+`CREDITS.md`
+
+`CHANGELOG.md`
+
+`TESTING.md`
+
+---
+
+# 103. GAME_DESIGN.md
+
+Documente formalmente:
+
+core loop
+
+deck
+
+hand
+
+card plays
+
+Ímpeto
+
+redraw
+
+rows
+
+status
+
+tipos
+
+iniciativa
+
+enemy AI
+
+missions
+
+bosses
+
+items.
+
+Esse arquivo deve refletir o jogo realmente implementado.
+
+Não crie documentação de features inexistentes marcando-as como prontas.
+
+---
+
+# 104. QUALITY GATE
+
+Uma feature só é considerada completa se:
+
+funciona
+
+possui interface
+
+possui feedback visual
+
+não quebra outras features
+
+foi testada
+
+está documentada quando necessário.
+
+---
+
+# 105. NÃO ACEITO PLACEHOLDER COMO RESULTADO FINAL
+
+Placeholder pode ser utilizado temporariamente durante desenvolvimento.
+
+Mas não considere a tarefa encerrada deixando:
+
+botões TODO
+
+texto lorem ipsum
+
+retângulos vazios
+
+sprites ausentes
+
+ações sem animação
+
+cartas sem descrição
+
+menus sem função.
+
+---
+
+# 106. NÃO PARE NO PRIMEIRO PROTÓTIPO FUNCIONAL
+
+Continue até obter um vertical slice sólido.
+
+A sequência esperada é aproximadamente:
+
+HotN2 funcional copiado
+
+→
+
+arquitetura refatorada
+
+→
+
+card engine
+
+→
+
+status engine
+
+→
+
+row engine
+
+→
+
+IA
+
+→
+
+missões
+
+→
+
+arena 3D
+
+→
+
+personagens 2D no 3D
+
+→
+
+cartas 3D
+
+→
+
+animações
+
+→
+
+UI
+
+→
+
+deck builder
+
+→
+
+áudio
+
+→
+
+balanceamento
+
+→
+
+testes
+
+→
+
+polimento.
+
+Não interrompa após apenas três ou quatro dessas fases.
+
+---
+
+# 107. PRIMEIRA ENTREGA JOGÁVEL
+
+A primeira versão realmente jogável precisa permitir:
+
+abrir o jogo
+
+→
+
+menu
+
+→
+
+selecionar missão
+
+→
+
+selecionar três heróis
+
+→
+
+ver decks
+
+→
+
+entrar na batalha 3D
+
+→
+
+comprar cartas
+
+→
+
+jogar cartas
+
+→
+
+selecionar alvos
+
+→
+
+usar Ímpeto
+
+→
+
+redraw
+
+→
+
+manipular front/back row
+
+→
+
+receber ataques inimigos
+
+→
+
+status funcionarem
+
+→
+
+reinforcements
+
+→
+
+vencer ou perder
+
+→
+
+tela de resultado.
+
+---
+
+# 108. POLIMENTO OBRIGATÓRIO
+
+Antes de considerar concluído:
+
+analise erros de console.
+
+Procure:
+
+warnings importantes
+
+recursos faltantes
+
+paths quebrados
+
+textures inválidas
+
+sinais duplicados
+
+null references
+
+erros de parsing
+
+problemas de input
+
+problemas de escala.
+
+Corrija.
+
+---
+
+# 109. INSPEÇÃO VISUAL
+
+Execute o jogo.
+
+Não confie exclusivamente em leitura de código.
+
+Observe:
+
+menu
+
+deck builder
+
+arena
+
+mão
+
+cartas
+
+personagens
+
+tooltips
+
+targeting
+
+animações
+
+damage numbers
+
+HUD.
+
+Corrija problemas visuais encontrados.
+
+---
+
+# 110. RESOLUÇÕES
+
+Teste pelo menos:
+
+1920×1080
+
+1366×768.
+
+Se possível também:
+
+2560×1440.
+
+---
+
+# 111. FRAME RATE
+
+Cheque se efeitos não criam quedas absurdas de performance.
+
+Não instancie centenas de objetos sem cleanup.
+
+---
+
+# 112. MEMÓRIA
+
+Liberar:
+
+partículas
+
+damage numbers
+
+objetos temporários
+
+cartas descartadas visualmente
+
+efeitos.
+
+Use pooling apenas quando trouxer benefício real.
+
+---
+
+# 113. GODOT 4.6
+
+Mantenha compatibilidade com a versão configurada no projeto.
+
+Evite APIs de versões antigas sem necessidade.
+
+---
+
+# 114. ADDONS
+
+HotN2 já possui addon relacionado a barra de vida.
+
+Verifique se ele ainda é útil.
+
+Não carregue addons quebrados indefinidamente.
+
+Se remover, remova referências corretamente.
+
+---
+
+# 115. MIGRAÇÃO DE MAIN.GD
+
+Caso `Main.gd` continue monolítico, sua prioridade arquitetural é quebrá-lo gradualmente.
+
+Não faça uma reescrita total arriscada de uma vez.
+
+Extraia subsistemas mantendo o jogo executável entre commits.
+
+---
+
+# 116. DADOS EXISTENTES
+
+O HotN2 aparentemente contém `HERO_DB`, `ENEMY_DB` e `CARD_DB`.
+
+Migre esses dados para Resources/data files.
+
+Não os descarte.
+
+Use-os como seed inicial do HotN3.
+
+---
+
+# 117. HERO_DB
+
+Converter para recursos individuais de personagem.
+
+---
+
+# 118. ENEMY_DB
+
+Converter para recursos/templates de inimigo.
+
+---
+
+# 119. CARD_DB
+
+Converter para sistema extensível de cartas.
+
+---
+
+# 120. TYPE_CHART
+
+Mover para configuração própria.
+
+---
+
+# 121. ANIMAÇÕES EXISTENTES
+
+Preserve qualquer animação boa do HotN2.
+
+Só substitua quando a nova implementação realmente for melhor.
+
+---
+
+# 122. FIDELIDADE AO CORE DE MIDNIGHT SUNS
+
+Ao pesquisar e estudar Midnight Suns, quero que você capture especialmente a qualidade de decisões geradas por:
+
+mão compartilhada
+
+cartas vinculadas aos heróis
+
+ações limitadas
+
+redraw limitado
+
+recurso gerado/gasto
+
+cards rápidos
+
+status
+
+chain
+
+knockback
+
+ações ambientais
+
+hero combos
+
+variedade de inimigos
+
+target preview
+
+sequência cinematográfica dos ataques.
+
+Esses são os princípios que devem ser traduzidos para HotN3.
+
+---
+
+# 123. NÃO REPRODUZA O QUE NÃO COMBINA COM HOTN3
+
+Movimentação espacial livre deve ser removida.
+
+A mecânica espacial deve ser substituída por:
+
+FRONT/BACK ROW
+
+targeting por row
+
+proteção da formação
+
+push/pull
+
+range
+
+row attacks.
+
+---
+
+# 124. CONSISTÊNCIA
+
+A row não pode ser apenas decorativa.
+
+Ela precisa influenciar diversas decisões.
+
+No mínimo:
+
+melee
+
+ranged
+
+proteção
+
+targeting
+
+push
+
+pull
+
+AOE
+
+tank
+
+backline.
+
+---
+
+# 125. INDICADORES VISUAIS DE ROW
+
+Não desenhe necessariamente grandes quadrados no chão.
+
+Use composição da arena.
+
+Personagens de front row ficam fisicamente mais próximos do centro.
+
+Back row fica visualmente recuada.
+
+Use slots discretos.
+
+Ao mover:
+
+sprite desliza entre posições.
+
+---
+
+# 126. DEPTH
+
+Como personagens são Sprite3D, ajuste:
+
+render priority
+
+transparency
+
+sorting
+
+depth.
+
+Evite sprites atravessando objetos incorretamente.
+
+---
+
+# 127. SOMBRA DOS PERSONAGENS
+
+Cada sprite deve possuir sombra visual no chão.
+
+Pode ser:
+
+decal
+
+plane transparente
+
+blob shadow.
+
+Isso ajuda a integrar personagem 2D no cenário 3D.
+
+---
+
+# 128. CARTAS E CÂMERA
+
+Cards 3D não podem sofrer clipping estranho.
+
+Considere renderizá-los em uma camada/câmera separada se necessário.
+
+Visualmente continuam 3D.
+
+---
+
+# 129. INPUT DAS CARTAS
+
+O jogador deve conseguir:
+
+click
+
+drag
+
+hover
+
+cancel
+
+confirm.
+
+Não dependa somente de drag.
+
+Click-to-select deve funcionar.
+
+---
+
+# 130. INFORMAÇÃO DE DECK
+
+Durante batalha permita visualizar:
+
+quantas cartas no deck
+
+quantas no discard
+
+quantas exauridas.
+
+Clique pode abrir painel, sem revelar ordem aleatória.
+
+---
+
+# 131. RNG
+
+Centralize RNG.
+
+Permita seed em debug.
+
+Isso permitirá reproduzir bugs.
+
+---
+
+# 132. DETERMINISMO DE TESTE
+
+Quando seed for fixa:
+
+draw
+
+AI
+
+random effects
+
+devem ser reproduzíveis quando possível.
+
+---
+
+# 133. CRITICAL
+
+Se HotN utiliza críticos, implemente através de sistema coerente.
+
+Não faça críticos invisíveis sem explicar.
+
+Preview pode mostrar chance.
+
+---
+
+# 134. RESISTÊNCIAS
+
+Bosses podem resistir a certos status.
+
+UI precisa mostrar:
+
+RESISTIDO
+
+ou
+
+IMUNE.
+
+---
+
+# 135. DEATH
+
+Quando HP chega a zero:
+
+interromper ações incompatíveis
+
+tocar animação
+
+remover targeting
+
+verificar triggers
+
+verificar missão.
+
+Não delete node imediatamente antes das animações relevantes.
+
+---
+
+# 136. VFX LAYERS
+
+Organize efeitos em categorias.
+
+Não deixe partículas aparecerem atrás de tudo por acidente.
+
+---
+
+# 137. AUDIO SYNC
+
+Sincronize sons com impacto real, não início arbitrário da animação.
+
+---
+
+# 138. CARD TEXT
+
+Crie keyword system.
+
+Ao invés de textos inconsistentes:
+
+`Causa 8 de dano. Aplica Vulnerável por 2 turnos.`
+
+Use gerador de descrição sempre que possível.
+
+Mas permita descrição customizada quando necessário.
+
+---
+
+# 139. LOCALIZAÇÃO
+
+Estruture textos para futura localização.
+
+Não espalhe texto diretamente em scripts.
+
+Português pode ser idioma principal agora.
+
+---
+
+# 140. CONTEÚDO MÍNIMO DO VERTICAL SLICE
+
+O vertical slice deve transmitir claramente:
+
+“este é HotN3.”
+
+Não apenas:
+
+“esta é uma tech demo de card combat.”
+
+Ele deve possuir:
+
+identidade visual
+
+personagens
+
+menus
+
+arena
+
+música
+
+efeitos
+
+missão
+
+vitória
+
+derrota
+
+progressão mínima.
+
+---
+
+# 141. PESQUISA DE ASSETS
+
+Ao procurar assets na internet:
+
+não escolha simplesmente o primeiro.
+
+Avalie:
+
+qualidade
+
+licença
+
+coerência
+
+resolução
+
+animações
+
+formato
+
+peso
+
+facilidade de integração.
+
+Prefira poucos packs coerentes a dezenas de assets desconexos.
+
+---
+
+# 142. DOWNLOAD DE ASSETS
+
+Faça download apenas dos assets realmente necessários.
+
+Não coloque packs gigantes inteiros no Git se usa três arquivos.
+
+Extraia somente recursos utilizados, se a licença permitir.
+
+---
+
+# 143. OTIMIZAÇÃO DO REPOSITÓRIO
+
+Evite arquivos enormes.
+
+Use Git LFS apenas se necessário e disponível.
+
+Caso contrário, comprima assets sensatamente.
+
+---
+
+# 144. ATRIBUIÇÃO
+
+CC-BY precisa de atribuição real.
+
+Não escreva apenas “assets from OpenGameArt”.
+
+Identifique autor e URL.
+
+---
+
+# 145. SEGURANÇA DO HOTN2
+
+Antes de criar HotN3, confirme que operações Git estão apontando para o novo repo.
+
+Nunca faça force push em HotN2.
+
+---
+
+# 146. TRABALHO AUTÔNOMO
+
+Não me interrompa a cada pequena decisão.
+
+Faça decisões razoáveis de implementação.
+
+Se existir ambiguidade não crítica:
+
+escolha a solução que melhor atende a este documento.
+
+Só solicite minha intervenção se houver bloqueio real como:
+
+permissão de conta
+
+autenticação
+
+decisão impossível sem informação externa.
+
+Não pare por questões cosméticas.
+
+---
+
+# 147. NÃO RESPONDA APENAS COM UM PLANO
+
+Este pedido é de execução.
+
+Não quero apenas:
+
+“Eu faria A, B, C.”
+
+Quero que:
+
+abra o repositório
+
+analise
+
+crie HotN3
+
+faça commits
+
+implemente
+
+teste
+
+corrija.
+
+Continue trabalhando até obter a melhor versão executável possível no ambiente disponível.
+
+---
+
+# 148. SE ALGUMA FERRAMENTA NÃO ESTIVER DISPONÍVEL
+
+Se não houver Godot instalado no ambiente:
+
+continue com tudo que puder fazer de forma estática
+
+e tente instalar/usar versão compatível quando permitido.
+
+Se não puder executar o editor, deixe isso explicitamente documentado.
+
+Mas não use isso como motivo para interromper todo o trabalho.
+
+---
+
+# 149. COMMITS
+
+Ao final de cada grande subsistema estável:
+
+commit.
+
+Não faça commit de build quebrada quando puder evitar.
+
+---
+
+# 150. CHECKPOINT FINAL
+
+Antes de encerrar o trabalho, faça auditoria completa.
+
+Verifique:
+
+[ ] HotN3 existe como repo próprio.
+
+[ ] HotN2 não foi alterado.
+
+[ ] projeto abre em Godot 4.6.
+
+[ ] nenhuma referência de arquivo está quebrada.
+
+[ ] menu principal funciona.
+
+[ ] seleção de missão funciona.
+
+[ ] seleção de equipe funciona.
+
+[ ] deck builder funciona.
+
+[ ] batalha começa.
+
+[ ] arena é 3D.
+
+[ ] personagens são 2D flat dentro do 3D.
+
+[ ] personagens possuem sombra/integração visual.
+
+[ ] cartas são apresentadas como objetos 3D.
+
+[ ] todas as cartas usam o mesmo fundo base.
+
+[ ] mão possui animação.
+
+[ ] hover funciona.
+
+[ ] targeting funciona.
+
+[ ] preview de dano funciona.
+
+[ ] Card Plays funcionam.
+
+[ ] redraw funciona.
+
+[ ] deck/discard funcionam.
+
+[ ] Ímpeto funciona.
+
+[ ] Ataque funciona.
+
+[ ] Técnica funciona.
+
+[ ] Poder funciona.
+
+[ ] Quick/Rápida funciona.
+
+[ ] Marcado funciona.
+
+[ ] Chain funciona.
+
+[ ] AOE funciona.
+
+[ ] buffs funcionam.
+
+[ ] debuffs funcionam.
+
+[ ] status expirando funciona.
+
+[ ] Counter funciona.
+
+[ ] Block funciona.
+
+[ ] Armor funciona.
+
+[ ] Shield funciona.
+
+[ ] cura funciona.
+
+[ ] sistema de tipos funciona.
+
+[ ] vantagem/desvantagem aparece no preview.
+
+[ ] front/back row influencia combate.
+
+[ ] melee respeita row.
+
+[ ] ranged respeita regras próprias.
+
+[ ] push funciona.
+
+[ ] pull funciona.
+
+[ ] mudança voluntária de row funciona quando permitida.
+
+[ ] inimigos utilizam IA.
+
+[ ] IA não é totalmente aleatória.
+
+[ ] minions funcionam.
+
+[ ] elites funcionam.
+
+[ ] boss funciona.
+
+[ ] reinforcements funcionam.
+
+[ ] objetivos de missão funcionam.
+
+[ ] objetos de cenário podem participar do combate.
+
+[ ] itens funcionam.
+
+[ ] Hero Combo equivalente funciona.
+
+[ ] cartas geradas funcionam.
+
+[ ] cartas upgraded funcionam.
+
+[ ] passivas funcionam.
+
+[ ] animações de ataque existem.
+
+[ ] animações de hit existem.
+
+[ ] morte possui apresentação.
+
+[ ] câmera reage ao combate.
+
+[ ] screen shake funciona.
+
+[ ] opção para reduzir shake existe.
+
+[ ] hit stop existe.
+
+[ ] partículas existem.
+
+[ ] áudio existe.
+
+[ ] configurações de volume existem.
+
+[ ] vitória funciona.
+
+[ ] derrota funciona.
+
+[ ] retry funciona.
+
+[ ] save funciona.
+
+[ ] assets possuem licença registrada.
+
+[ ] nenhum asset proprietário de Marvel foi usado.
+
+[ ] nenhuma arte gerada por IA foi usada.
+
+[ ] README está atualizado.
+
+[ ] GAME_DESIGN está atualizado.
+
+[ ] ARCHITECTURE está atualizado.
+
+[ ] BALANCE está atualizado.
+
+[ ] TESTING está atualizado.
+
+[ ] ASSET_LICENSES está completo.
+
+[ ] CREDITS está completo.
+
+[ ] não existem erros críticos no console.
+
+[ ] não existem TODOs bloqueadores.
+
+[ ] não existem cenas essenciais vazias.
+
+[ ] jogo parece um produto jogável, não apenas um protótipo técnico.
+
+---
+
+# RESULTADO ESPERADO
+
+Ao concluir, **Heroes of the Nightmare 3** deve ser um RPG tático por cartas no qual três personagens entram em uma arena 3D de fantasia como sprites 2D flat, ocupando posições de front e back row.
+
+O jogador utiliza uma mão compartilhada de cartas pertencentes aos integrantes do grupo.
+
+As cartas possuem apresentação física 3D e utilizam uma identidade gráfica comum, incluindo o mesmo background base.
+
+O jogador precisa administrar:
+
+ações
+
+mão
+
+deck
+
+redraws
+
+Ímpeto
+
+tipos
+
+status
+
+sinergias
+
+front/back row
+
+prioridade dos inimigos
+
+missão.
+
+As batalhas precisam combinar:
+
+decisão tática
+
+deckbuilding
+
+gestão de recurso
+
+composição de equipe
+
+sinergias
+
+controle
+
+dano
+
+defesa
+
+combos
+
+animações cinematográficas.
+
+A apresentação deve misturar deliberadamente:
+
+**ambiente 3D detalhado**
+
++
+
+**personagens 2D flat**
+
++
+
+**cartas 3D**
+
++
+
+**UI 2D limpa**
+
+criando uma identidade visual própria.
+
+O sistema deve buscar a riqueza tática e a fluidez que tornam o combate de Marvel's Midnight Suns interessante, mas o produto final deve ser inequivocamente:
+
+**Heroes of the Nightmare.**
+
+Não pare na descrição do que deve ser feito.
+
+Execute o projeto.
