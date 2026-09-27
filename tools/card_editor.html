@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>HotN3 — Editor de Cartas</title>
+<title>HotN3 — Editor de Cartas e Personagens</title>
 <style>
   :root {
     --bg: #0f1218;
@@ -27,15 +27,15 @@
     min-height: 100vh;
   }
   header {
-    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
     padding: 12px 18px; border-bottom: 1px solid var(--border);
     background: var(--panel); position: sticky; top: 0; z-index: 10;
   }
   header h1 { font-size: 1.05rem; margin: 0; font-weight: 650; }
-  header .hint { color: var(--muted); font-size: 0.85rem; flex: 1; }
+  header .hint { color: var(--muted); font-size: 0.82rem; flex: 1; min-width: 180px; }
   .btn {
     appearance: none; border: 1px solid var(--border); background: var(--panel2);
-    color: var(--text); padding: 7px 12px; border-radius: 8px; cursor: pointer;
+    color: var(--text) !important; padding: 7px 12px; border-radius: 8px; cursor: pointer;
     font-size: 0.85rem; font-weight: 560;
   }
   .btn:hover { border-color: var(--accent); }
@@ -43,13 +43,17 @@
   .btn.ok { background: #1a3d2a; border-color: #2d6b45; }
   .btn.danger { background: #3d1a1a; border-color: #6b2d2d; }
   .btn.active { outline: 2px solid var(--accent); }
+  .mode-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); background: var(--panel); padding: 0 18px; }
+  .mode-tabs .btn {
+    border-radius: 0; border: 0; border-bottom: 3px solid transparent;
+    background: transparent; padding: 10px 18px; color: var(--muted) !important;
+  }
+  .mode-tabs .btn.active { color: var(--text) !important; border-bottom-color: var(--accent); }
   .layout {
     display: grid; grid-template-columns: 260px 1fr 340px;
-    gap: 0; min-height: calc(100vh - 58px);
+    gap: 0; min-height: calc(100vh - 108px);
   }
-  @media (max-width: 1100px) {
-    .layout { grid-template-columns: 1fr; }
-  }
+  @media (max-width: 1100px) { .layout { grid-template-columns: 1fr; } }
   aside, main, .preview {
     border-right: 1px solid var(--border); padding: 14px; overflow: auto;
   }
@@ -69,7 +73,7 @@
   .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
   .chip-row { display: flex; flex-wrap: wrap; gap: 6px; }
   .chip {
-    border: 1px solid var(--border); background: var(--panel2); color: var(--text);
+    border: 1px solid var(--border); background: var(--panel2); color: var(--text) !important;
     padding: 6px 10px; border-radius: 999px; cursor: pointer; font-size: 0.8rem;
   }
   .chip.on { background: #2a4a7a; border-color: var(--accent); }
@@ -80,12 +84,13 @@
     display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px;
     border: 1px solid var(--border); border-radius: 8px; cursor: pointer;
     background: var(--panel2); font-size: 0.8rem; user-select: none;
+    color: #ffffff !important; appearance: none;
   }
-  .toggle.on { border-color: var(--ok); background: #1a3d2a; }
-  .card-list { display: flex; flex-direction: column; gap: 4px; max-height: calc(100vh - 160px); overflow: auto; }
+  .toggle.on { border-color: var(--ok); background: #1a3d2a; color: #ffffff !important; }
+  .card-list { display: flex; flex-direction: column; gap: 4px; max-height: calc(100vh - 200px); overflow: auto; }
   .card-item {
     text-align: left; padding: 8px 10px; border-radius: 8px; border: 1px solid transparent;
-    background: transparent; color: var(--text); cursor: pointer; font-size: 0.82rem;
+    background: transparent; color: var(--text) !important; cursor: pointer; font-size: 0.82rem;
   }
   .card-item:hover { background: var(--panel2); }
   .card-item.sel { border-color: var(--accent); background: #1a2740; }
@@ -99,12 +104,25 @@
   .face.ATTACK { border-color: var(--attack); }
   .face.SKILL { border-color: var(--skill); }
   .face.POWER { border-color: var(--power); }
-  .face .top { display: flex; justify-content: space-between; padding: 10px 12px; font-size: 0.75rem; }
-  .face .cname { padding: 0 12px; font-weight: 700; font-size: 1rem; line-height: 1.2; }
+  .face .art {
+    position: absolute; top: 42px; left: 12px; right: 12px; height: 120px;
+    border-radius: 8px; background: #0a0c10 center/cover no-repeat;
+    border: 1px solid #fff1;
+  }
+  .face .top { display: flex; justify-content: space-between; padding: 10px 12px; font-size: 0.75rem; position: relative; z-index: 1; }
+  .face .cname { padding: 130px 12px 0; font-weight: 700; font-size: 1rem; line-height: 1.2; position: relative; z-index: 1; }
   .face .ctarget { padding: 4px 12px; color: var(--muted); font-size: 0.75rem; }
-  .face .body { padding: 12px; font-size: 0.82rem; line-height: 1.35; min-height: 140px; }
+  .face .body { padding: 8px 12px; font-size: 0.78rem; line-height: 1.35; min-height: 80px; }
   .face .tags { position: absolute; bottom: 10px; left: 10px; right: 10px; display: flex; flex-wrap: wrap; gap: 4px; }
   .face .tag { font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; background: #0008; border: 1px solid #fff2; }
+  .hero-face {
+    width: 220px; margin: 0 auto 14px; border-radius: 14px; border: 2px solid var(--accent);
+    overflow: hidden; background: #151922; box-shadow: 0 12px 40px rgba(0,0,0,.45);
+  }
+  .hero-face .art { height: 200px; background: #0a0c10 center/cover no-repeat; }
+  .hero-face .info { padding: 10px 12px; }
+  .hero-face .info strong { display: block; font-size: 1rem; }
+  .hero-face .stats { font-size: 0.75rem; color: var(--muted); margin-top: 6px; }
   .action-block {
     border: 1px solid var(--border); border-radius: 10px; padding: 10px; margin-bottom: 8px;
     background: var(--panel2);
@@ -115,40 +133,68 @@
   }
   .action-block .args { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .muted { color: var(--muted); font-size: 0.8rem; }
+  .hint-box {
+    background: #1a2740; border: 1px solid #3d6aad; border-radius: 8px;
+    padding: 8px 10px; font-size: 0.78rem; color: #c5d8f5; margin: 8px 0 12px;
+  }
   .toast {
     position: fixed; bottom: 18px; right: 18px; background: #1a3d2a; border: 1px solid var(--ok);
-    padding: 10px 14px; border-radius: 10px; display: none; z-index: 50;
+    padding: 10px 14px; border-radius: 10px; display: none; z-index: 50; color: #fff;
   }
   .tabs { display: flex; gap: 6px; margin-bottom: 8px; }
   .tabs .btn { flex: 1; }
   .num-step { display: flex; gap: 4px; align-items: center; }
-  .num-step button { width: 28px; height: 28px; padding: 0; }
+  .num-step button { width: 28px; height: 28px; padding: 0; color: #fff !important; }
   .num-step input { width: 72px; text-align: center; }
+  .art-box {
+    border: 1px dashed var(--border); border-radius: 10px; padding: 10px; background: var(--panel2);
+  }
+  .art-box img { max-width: 100%; max-height: 140px; display: block; margin: 8px auto; border-radius: 8px; }
+  .pool-box {
+    max-height: 180px; overflow: auto; border: 1px solid var(--border); border-radius: 8px;
+    padding: 6px; background: var(--panel2);
+  }
+  .pool-box label {
+    display: flex; gap: 8px; align-items: center; padding: 3px 4px; font-size: 0.78rem; cursor: pointer;
+  }
+  .hidden { display: none !important; }
+  .asset-status { font-size: 0.75rem; color: var(--ok); margin-top: 4px; }
+  .asset-status.empty { color: var(--warn); }
 </style>
 </head>
 <body>
 <header>
-  <h1>HotN3 · Editor de Cartas</h1>
-  <div class="hint">Digite só o nome. O resto é clique. Exporta JSON do pack <code>ent_</code> (não mexe no Content.gd).</div>
-  <button class="btn" id="btnNew">Nova carta</button>
+  <h1>HotN3 · Editor</h1>
+  <div class="hint">Cartas e personagens do pack <code>ent_</code>. Não edita Content.gd.</div>
   <button class="btn" id="btnImport">Importar entities.json</button>
+  <button class="btn" id="btnLoadAssets">Carregar pasta de assets</button>
   <button class="btn ok" id="btnExportPatch">Exportar patch JSON</button>
   <button class="btn primary" id="btnExportFull">Exportar entities.json completo</button>
   <input type="file" id="fileImport" accept=".json,application/json" hidden />
+  <input type="file" id="fileAssets" webkitdirectory multiple hidden />
+  <input type="file" id="fileArt" accept="image/*" hidden />
+  <input type="file" id="fileHeroArt" accept="image/*" hidden />
 </header>
-<div class="layout">
+<div class="mode-tabs">
+  <button class="btn active" data-mode="cards" id="tabCards">Cartas</button>
+  <button class="btn" data-mode="heroes" id="tabHeroes">Personagens</button>
+</div>
+<div class="layout" id="layoutCards">
   <aside>
     <div class="section-title">Filtro</div>
     <label class="field"><span>Personagem (owner)</span>
       <select id="filterOwner"><option value="">Todos</option></select>
     </label>
     <input type="text" id="filterText" placeholder="Buscar nome ou id…" />
-    <div class="section-title">Cartas neste editor (<span id="count">0</span>)</div>
+    <div class="section-title">Cartas (<span id="count">0</span>)</div>
     <div class="card-list" id="cardList"></div>
   </aside>
   <main>
+    <div class="row" style="margin-bottom:8px">
+      <button class="btn" id="btnNew">Nova carta</button>
+    </div>
     <div class="section-title">Identidade</div>
-    <label class="field"><span>Nome da carta (única coisa que você digita de verdade)</span>
+    <label class="field"><span>Nome da carta</span>
       <input type="text" id="name" placeholder="Ex.: Golpe de titânio" />
     </label>
     <div class="row">
@@ -158,6 +204,17 @@
       <label class="field" style="flex:1"><span>Dono</span>
         <select id="owner"></select>
       </label>
+    </div>
+    <div class="section-title">Imagem da carta</div>
+    <div class="art-box">
+      <div class="row">
+        <button class="btn" id="btnPickArt">Escolher imagem do PC</button>
+        <button class="btn" id="btnClearArt">Limpar arte custom</button>
+        <button class="btn" id="btnDlArt">Baixar PNG da arte</button>
+      </div>
+      <img id="artPreview" alt="" class="hidden" />
+      <div class="muted" id="artHint">Sem arte custom: usa portrait (ou sprite) do dono se a pasta de assets estiver carregada.</div>
+      <div class="asset-status empty" id="assetStatus">Pasta de assets: não carregada</div>
     </div>
     <div class="section-title">Classe</div>
     <div class="chip-row" id="classChips"></div>
@@ -192,14 +249,12 @@
     </div>
     <div class="section-title" style="margin-top:12px">Stat de dano</div>
     <div class="chip-row" id="statChips"></div>
+    <div class="hint-box">Dano final ≈ <strong>Carta + Impacto/Poder − Escudo + Mods</strong>. O valor de «hit» é o dano base da carta (somado ao ataque/poder do herói no Content; no pack atual o runtime ainda multiplica — ver CARD_EDITOR.md).</div>
     <div class="section-title">Flags</div>
     <div class="row" id="flags"></div>
-    <div class="section-title">Raridade / unlock</div>
-    <div class="row">
-      <div class="chip-row" id="rarityChips"></div>
-    </div>
-    <div class="chip-row" id="unlockChips" style="margin-top:8px"></div>
-    <div class="section-title">Efeitos (ações) — clique pra adicionar</div>
+    <div class="section-title">Unlock</div>
+    <div class="chip-row" id="unlockChips"></div>
+    <div class="section-title">Efeitos (ações)</div>
     <div class="chip-row" id="actionPalette"></div>
     <div id="actionList" style="margin-top:10px"></div>
     <div class="row" style="margin-top:14px">
@@ -212,6 +267,7 @@
     <div class="section-title">Prévia</div>
     <div class="face" id="face">
       <div class="top"><span id="faceClass">ATTACK</span><span id="faceCost">0</span></div>
+      <div class="art" id="faceArt"></div>
       <div class="cname" id="faceName">Nova carta</div>
       <div class="ctarget" id="faceTarget">ENEMY</div>
       <div class="body" id="faceBody"></div>
@@ -229,18 +285,111 @@
     </div>
   </div>
 </div>
+<div class="layout hidden" id="layoutHeroes">
+  <aside>
+    <div class="section-title">Buscar</div>
+    <input type="text" id="heroFilterText" placeholder="Buscar personagem…" />
+    <div class="section-title">Personagens (<span id="heroCount">0</span>)</div>
+    <div class="card-list" id="heroList"></div>
+  </aside>
+  <main>
+    <div class="row" style="margin-bottom:8px">
+      <button class="btn" id="btnNewHero">Novo personagem</button>
+    </div>
+    <div class="section-title">Identidade</div>
+    <label class="field"><span>Nome</span>
+      <input type="text" id="hName" placeholder="Ex.: Alyssa Wine" />
+    </label>
+    <label class="field"><span>Id</span>
+      <input type="text" id="hId" placeholder="ent_…" />
+    </label>
+    <div class="section-title">Atributos</div>
+    <div class="row">
+      <label class="field" style="flex:1"><span>HP</span><input type="number" id="hHp" min="1" value="24" /></label>
+      <label class="field" style="flex:1"><span>Ataque</span><input type="number" id="hAttack" min="0" value="4" /></label>
+      <label class="field" style="flex:1"><span>Poder</span><input type="number" id="hPower" min="0" value="4" /></label>
+      <label class="field" style="flex:1"><span>Armadura</span><input type="number" id="hArmor" min="0" value="1" /></label>
+      <label class="field" style="flex:1"><span>Velocidade</span><input type="number" id="hSpeed" min="0" value="5" /></label>
+    </div>
+    <div class="row">
+      <label class="field" style="flex:1"><span>Tipo</span>
+        <select id="hType">
+          <option>BRUTO</option><option>PROJETIVO</option><option>TECNICO</option>
+          <option>MENTAL</option><option>PSICOLOGICO</option><option>QUIMICO</option>
+        </select>
+      </label>
+      <label class="field" style="flex:1"><span>Fileira</span>
+        <select id="hRow"><option value="front">front</option><option value="back">back</option></select>
+      </label>
+      <label class="field" style="flex:1"><span>Passiva</span>
+        <select id="hPassive">
+          <option value="rastreador">rastreador</option>
+          <option value="vanguarda">vanguarda</option>
+          <option value="canalizar">canalizar</option>
+          <option value="oportunista">oportunista</option>
+          <option value="devocao">devocao</option>
+          <option value="baluarte">baluarte</option>
+        </select>
+      </label>
+    </div>
+    <div class="section-title">Arte (portrait / sprite / ícone)</div>
+    <div class="art-box">
+      <div class="row">
+        <button class="btn" data-hero-art="portrait">Portrait do PC</button>
+        <button class="btn" data-hero-art="sprite">Sprite do PC</button>
+        <button class="btn" data-hero-art="signature_icon">Ícone do PC</button>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <label class="field" style="flex:1"><span>portrait (res://)</span><input type="text" id="hPortrait" /></label>
+      </div>
+      <div class="row">
+        <label class="field" style="flex:1"><span>sprite (res://)</span><input type="text" id="hSprite" /></label>
+      </div>
+      <div class="row">
+        <label class="field" style="flex:1"><span>signature_icon (res://)</span><input type="text" id="hIcon" /></label>
+      </div>
+      <img id="heroArtPreview" alt="" class="hidden" />
+      <div class="muted">Com a pasta de assets carregada, a prévia resolve portrait → sprite automaticamente.</div>
+    </div>
+    <div class="section-title">Pool de cartas</div>
+    <input type="text" id="poolFilter" placeholder="Filtrar cartas do pool…" style="margin-bottom:6px" />
+    <div class="pool-box" id="poolBox"></div>
+    <div class="row" style="margin-top:14px">
+      <button class="btn ok" id="btnSaveHero">Salvar personagem</button>
+      <button class="btn danger" id="btnDeleteHero">Remover</button>
+      <button class="btn" id="btnDupHero">Duplicar</button>
+    </div>
+  </main>
+  <div class="preview">
+    <div class="section-title">Prévia</div>
+    <div class="hero-face">
+      <div class="art" id="heroFaceArt"></div>
+      <div class="info">
+        <strong id="heroFaceName">—</strong>
+        <div class="stats" id="heroFaceStats"></div>
+      </div>
+    </div>
+    <div class="tabs">
+      <button class="btn active" data-htab="json">JSON</button>
+      <button class="btn" data-htab="help">Como usar</button>
+    </div>
+    <textarea id="hout" readonly></textarea>
+    <div class="row" style="margin-top:8px">
+      <button class="btn primary" id="btnCopyHero">Copiar</button>
+      <button class="btn" id="btnDownloadHero">Baixar este herói .json</button>
+    </div>
+  </div>
+</div>
 <div class="toast" id="toast"></div>
 <script>
-const HEROES = [{"id":"ent_adam","name":"Adam"},{"id":"ent_akuji","name":"Akuji"},{"id":"ent_alexis","name":"Alexis"},{"id":"ent_alistair","name":"Alistair"},{"id":"ent_alyssa_wine","name":"Alyssa Wine (Titânio)"},{"id":"ent_ashlee","name":"Ashlee"},{"id":"ent_daeva","name":"Daeva"},{"id":"ent_damian_alrosa","name":"Damian Alrosa"},{"id":"ent_dominika_seur","name":"Dominika Seur"},{"id":"ent_dylan","name":"Dylan"},{"id":"ent_evelyn_graves","name":"Evelyn Graves (Sombria)"},{"id":"ent_fate","name":"Fate"},{"id":"ent_hynda_valdtagen","name":"Hynda Valdtagen"},{"id":"ent_kabuki","name":"Kabuki"},{"id":"ent_konrad","name":"Konrad (Armagedom)"},{"id":"ent_leona","name":"Leona (Marbas)"},{"id":"ent_lust","name":"Lust"},{"id":"ent_madelyn","name":"Madelyn"},{"id":"ent_mingau_o_feiticeiro","name":"Mingau, o Feiticeiro"},{"id":"ent_mutante_generico","name":"Mutante (Genérico)"},{"id":"ent_nero","name":"Nero"},{"id":"ent_niu_valdtagen","name":"Niu Valdtagen"},{"id":"ent_pesadelo_vivo","name":"Pesadelo Vivo"},{"id":"ent_pietro_caos","name":"Pietro"},{"id":"ent_quasar","name":"Quasar"},{"id":"ent_taylor","name":"Taylor (Nave-Mãe)"},{"id":"ent_techna","name":"Techna"}];
+
+const HEROES_FALLBACK = [{"id":"ent_adam","name":"Adam"},{"id":"ent_akuji","name":"Akuji"},{"id":"ent_alexis","name":"Alexis"},{"id":"ent_alistair","name":"Alistair"},{"id":"ent_alyssa_wine","name":"Alyssa Wine (Titânio)"},{"id":"ent_ashlee","name":"Ashlee"},{"id":"ent_daeva","name":"Daeva"},{"id":"ent_damian_alrosa","name":"Damian Alrosa"},{"id":"ent_dominika_seur","name":"Dominika Seur"},{"id":"ent_dylan","name":"Dylan"},{"id":"ent_evelyn_graves","name":"Evelyn Graves (Sombria)"},{"id":"ent_fate","name":"Fate"},{"id":"ent_hynda_valdtagen","name":"Hynda Valdtagen"},{"id":"ent_kabuki","name":"Kabuki"},{"id":"ent_konrad","name":"Konrad (Armagedom)"},{"id":"ent_leona","name":"Leona (Marbas)"},{"id":"ent_lust","name":"Lust"},{"id":"ent_madelyn","name":"Madelyn"},{"id":"ent_mingau_o_feiticeiro","name":"Mingau, o Feiticeiro"},{"id":"ent_mutante_generico","name":"Mutante (Genérico)"},{"id":"ent_nero","name":"Nero"},{"id":"ent_niu_valdtagen","name":"Niu Valdtagen"},{"id":"ent_pesadelo_vivo","name":"Pesadelo Vivo"},{"id":"ent_pietro_caos","name":"Pietro"},{"id":"ent_quasar","name":"Quasar"},{"id":"ent_taylor","name":"Taylor (Nave-Mãe)"},{"id":"ent_techna","name":"Techna"}];
 
 const STATUSES = ["bleed","burn","weak","vulnerable","stun","bind","marked","conceal","counter","resist","strengthened","slow","dazed","confused","banished","portal","unleashed","drop","taunted","berserk_enemy","block_on_hit","corrupted"];
-
 const CLASSES = ["ATTACK","SKILL","POWER"];
 const TARGETS = ["ENEMY","ENEMY_ROW","ALL_ENEMIES","ALLY","ALL_ALLIES","SELF","CHAIN","RANDOM","ANY_UNIT"];
-const RARITIES = ["COMMON","RARE","EPIC","LEGENDARY"];
 const UNLOCKS = ["starting","progression"];
 const STATS = ["attack","power"];
-
 const FLAGS = [
   {key:"reach", label:"Alcance (reach)"},
   {key:"quick", label:"Rápida (quick)"},
@@ -249,9 +398,8 @@ const FLAGS = [
   {key:"final", label:"Final"},
 ];
 
-/** Catálogo de ações com UI amigável. args: campos do formulário. */
 const ACTIONS = [
-  {op:"hit", label:"Dano (×ATK/POW)", tip:"Fator multiplicador", args:[{k:"n", t:"number", label:"Fator", def:"1"}]},
+  {op:"hit", label:"Dano base (carta)", tip:"Somado ao ATK/POW do herói (meta). No pack atual o runtime multiplica.", args:[{k:"n", t:"number", label:"Dano base", def:"1"}]},
   {op:"block", label:"Bloqueio", tip:"Valor fixo", args:[{k:"n", t:"number", label:"Valor", def:"8"}]},
   {op:"block_hp", label:"Bloqueio (% HP)", tip:"Fração do max HP", args:[{k:"n", t:"number", label:"Fração", def:"0.1"}]},
   {op:"heal", label:"Cura (×ATK)", args:[{k:"n", t:"number", label:"Fator", def:"1"}]},
@@ -292,74 +440,122 @@ const ACTIONS = [
   ]},
   {op:"revive_ally", label:"Revivir aliado", args:[{k:"n", t:"number", label:"Fração HP", def:"0.5"}]},
   {op:"choice", label:"Escolha hit/cura", args:[
-    {k:"hit", t:"number", label:"Hit fator", def:"1"},
+    {k:"hit", t:"number", label:"Hit base", def:"1"},
     {k:"heal", t:"number", label:"Heal fator", def:"2"},
   ]},
 ];
 
-const HELP = `COMO USAR (recomendado: pack acoplável)
+const HELP = `COMO USAR
 
-1) Importe o entities.json atual do projeto
-   (addons/hotn3_entities/entities.json)
-2) Crie/edite cartas clicando — digite só o nome.
-3) "Exportar patch JSON" gera só as cartas novas/alteradas.
-4) Ou "Exportar entities.json completo" e substitua o arquivo no addon.
-5) Abra o Godot: PackBridge já carrega o JSON. Sem editar Content.gd.
+1) Importe addons/hotn3_entities/entities.json
+2) (Opcional) "Carregar pasta de assets" → escolha assets/ ou assets/cast/
+   para prévia automática de portrait/sprite do dono.
+3) Aba Cartas: edite / crie cartas. Escolha imagem do PC se quiser arte própria.
+4) Aba Personagens: edite heróis (stats, arte, pool).
+5) Exportar patch JSON (cartas e/ou heróis alterados).
+6) python tools/merge_card_patch.py hotn3_cards_patch.json --write
+   Com --art-dir pasta/ com PNGs, copia arte para assets/cards/.
 
-Por que não editar Content.gd?
-- Content.gd é o núcleo (cartas base dos arquétipos).
-- Cartas do elenco (ent_*) já vivem em entities.json.
-- Assim o editor não quebra o script e o merge é seguro.
+Imagem da carta:
+- Sem arte custom: prévia usa portrait do dono, senão sprite (se assets indexados).
+- Com arte: export define art = res://assets/cards/<id>.png e oferece download do PNG.
+- Coloque o PNG em assets/cards/ (ou use merge --art-dir).
 
-GDScript (aba ao lado) é só se você quiser colar uma carta base
-no Content.CARDS no formato effects — raramente necessário.`;
+Dano:
+- Meta desejada: Carta + Impacto/Poder − Escudo + Mods (aditivo, como Content.gd).
+- Pack ent_* (EntityRuntime): ainda multiplica ofensa × fator hit.
+- Este editor rotula hit como dano base aditivo; não altera o GDScript nesta versão.
+
+Raridade: removida da UI. Cartas novas omitem o campo.`;
+
+const HELP_HERO = `PERSONAGENS
+- Edite nome, HP, ataque, poder, armadura, velocidade, tipo, fileira, passiva.
+- Portrait / sprite / ícone: caminhos res:// ou escolha arquivo do PC (baixa PNG + define path em assets/cast/).
+- Pool: marque as cartas disponíveis para o herói.
+- Exportar patch inclui heroes{} + cards{} sujos.`;
 
 let catalog = { format: 1, heroes: {}, cards: {} };
 let draft = blankCard();
+let heroDraft = blankHero();
 let selectedId = null;
+let selectedHeroId = null;
 let outTab = "json";
-let dirtyIds = new Set(); // cards created/edited this session
+let heroOutTab = "json";
+let dirtyIds = new Set();
+let dirtyHeroIds = new Set();
+let mode = "cards";
+let assetIndex = new Map(); // basename -> {url, file, rel}
+let pendingArtBlob = null; // {blob, url, name} for current card custom art
+let pendingHeroArt = {}; // field -> {blob, url, name}
+let heroArtField = "portrait";
+
+function heroList() {
+  const ids = Object.keys(catalog.heroes || {});
+  if (ids.length) {
+    return ids.sort().map(id => ({ id, name: (catalog.heroes[id].name || id) }));
+  }
+  return HEROES_FALLBACK;
+}
 
 function blankCard(owner) {
-  owner = owner || (HEROES[0] && HEROES[0].id) || "ent_adam";
+  owner = owner || (heroList()[0] && heroList()[0].id) || "ent_adam";
   return {
-    id: "",
-    name: "",
-    owner,
-    class: "ATTACK",
-    target: "ENEMY",
-    actions: [["hit","1"]],
-    reach: false,
-    stat: "attack",
-    rarity: "COMMON",
-    unlock: "starting",
-    exhaust: false,
-    gain: 1,
+    id: "", name: "", owner, class: "ATTACK", target: "ENEMY",
+    actions: [["hit","1"]], reach: false, stat: "attack",
+    unlock: "starting", exhaust: false, gain: 1, art: "",
+  };
+}
+
+function blankHero() {
+  return {
+    id: "", name: "", hp: 24, attack: 4, power: 4, armor: 1, speed: 5,
+    type: "TECNICO", row: "back", passive: "rastreador",
+    sprite: "", portrait: "", signature_icon: "",
+    pool: [], cards: [], archetype: "Nenhum", species: "Humano",
+    level_reference: 1, power_reference: 10, tags: [],
   };
 }
 
 function slugify(s) {
   return String(s || "")
     .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "_")
-    .replace(/^_|_$/g, "")
-    .slice(0, 48);
+    .toLowerCase().replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_|_$/g, "").slice(0, 48);
 }
 
 function toast(msg) {
   const t = document.getElementById("toast");
   t.textContent = msg;
   t.style.display = "block";
-  setTimeout(() => t.style.display = "none", 2200);
+  setTimeout(() => t.style.display = "none", 2400);
+}
+
+function basename(path) {
+  if (!path) return "";
+  const s = String(path).replace(/\\/g, "/");
+  return s.split("/").pop();
+}
+
+function resolveAssetUrl(resPath) {
+  if (!resPath) return null;
+  const base = basename(resPath);
+  const hit = assetIndex.get(base) || assetIndex.get(base.toLowerCase());
+  return hit ? hit.url : null;
+}
+
+function ownerArtUrl(ownerId) {
+  const h = (catalog.heroes || {})[ownerId];
+  if (!h) return null;
+  return resolveAssetUrl(h.portrait) || resolveAssetUrl(h.sprite) || null;
 }
 
 function fillSelects() {
   const fo = document.getElementById("filterOwner");
   const ow = document.getElementById("owner");
+  const heroes = heroList();
   fo.innerHTML = '<option value="">Todos</option>';
   ow.innerHTML = "";
-  HEROES.forEach(h => {
+  heroes.forEach(h => {
     fo.insertAdjacentHTML("beforeend", `<option value="${h.id}">${h.name}</option>`);
     ow.insertAdjacentHTML("beforeend", `<option value="${h.id}">${h.name}</option>`);
   });
@@ -372,7 +568,6 @@ function makeChips(el, items, get, set, clsMap) {
     b.type = "button";
     b.className = "chip" + (clsMap && clsMap[v] ? " " + clsMap[v] : "");
     b.textContent = v;
-    b.dataset.v = v;
     if (get() === v) b.classList.add("on");
     b.onclick = () => { set(v); syncForm(); };
     el.appendChild(b);
@@ -383,7 +578,6 @@ function syncChips() {
   makeChips(document.getElementById("classChips"), CLASSES, () => draft.class, v => draft.class = v, {ATTACK:"attack",SKILL:"skill",POWER:"power"});
   makeChips(document.getElementById("targetChips"), TARGETS, () => draft.target, v => draft.target = v);
   makeChips(document.getElementById("statChips"), STATS, () => draft.stat, v => draft.stat = v);
-  makeChips(document.getElementById("rarityChips"), RARITIES, () => draft.rarity, v => draft.rarity = v);
   makeChips(document.getElementById("unlockChips"), UNLOCKS, () => draft.unlock, v => draft.unlock = v);
 
   const flags = document.getElementById("flags");
@@ -406,10 +600,12 @@ function syncChips() {
     b.textContent = "+ " + a.label;
     b.title = a.tip || a.op;
     b.onclick = () => {
-      const row = [a.op];
-      a.args.forEach(arg => row.push(String(arg.def)));
       if (a.op === "choice") draft.actions.push(["choice","hit",String(a.args[0].def),"heal",String(a.args[1].def)]);
-      else draft.actions.push(row);
+      else {
+        const row = [a.op];
+        a.args.forEach(arg => row.push(String(arg.def)));
+        draft.actions.push(row);
+      }
       syncForm();
     };
     pal.appendChild(b);
@@ -450,7 +646,7 @@ function renderActions() {
       const args = document.createElement("div");
       args.className = "args";
       args.innerHTML = `
-        <label class="field"><span>Hit fator</span><input type="number" step="0.25" value="${act[2]||1}" data-f="hit" /></label>
+        <label class="field"><span>Hit base</span><input type="number" step="0.25" value="${act[2]||1}" data-f="hit" /></label>
         <label class="field"><span>Heal fator</span><input type="number" step="0.25" value="${act[4]||2}" data-f="heal" /></label>`;
       args.querySelectorAll("input").forEach(inp => {
         inp.onchange = () => {
@@ -519,7 +715,7 @@ function describeAction(a) {
   if (!a || !a.length) return "";
   const op = a[0];
   const map = {
-    hit: `Causa ${a[1]}× dano`,
+    hit: `Dano base ${a[1]} (+ ATK/POW − escudo)`,
     block: `+${a[1]} bloqueio`,
     block_hp: `Bloqueio ${a[1]}× HP máx`,
     heal: `Cura ${a[1]}×`,
@@ -543,6 +739,10 @@ function describeAction(a) {
   return map[op] || a.join(" ");
 }
 
+function cardArtPath(id) {
+  return `res://assets/cards/${id}.png`;
+}
+
 function buildCardObject() {
   const c = {
     id: draft.id,
@@ -553,10 +753,10 @@ function buildCardObject() {
     actions: draft.actions.map(a => a.map(String)),
     reach: !!draft.reach,
     stat: draft.stat || "attack",
-    rarity: draft.rarity || "COMMON",
     unlock: draft.unlock || "starting",
     exhaust: !!draft.exhaust,
   };
+  // omit rarity on purpose
   const cost = Number(document.getElementById("cost").value || 0);
   const gain = Number(document.getElementById("gain").value || 0);
   if (draft.class === "POWER" || cost > 0) c.cost = cost;
@@ -566,22 +766,23 @@ function buildCardObject() {
   if (draft.free) c.free = true;
   if (draft.final) c.final = true;
   if (draft.target === "CHAIN") c.chain = Number(document.getElementById("chain").value || 2);
-  // mirror flags into actions if toggled but missing
   const has = (op) => c.actions.some(a => a[0] === op);
   if (c.quick && !has("quick")) c.actions.push(["quick"]);
   if (c.free && !has("free")) c.actions.push(["free"]);
   if (c.exhaust && !has("exhaust")) c.actions.push(["exhaust"]);
   if (c.final && !has("final")) c.actions.push(["final"]);
+  if (pendingArtBlob || draft.art) {
+    c.art = draft.art || cardArtPath(c.id);
+  }
   return c;
 }
 
 function toGDScript(c) {
-  // Aproximação effects a partir de actions (para Content.CARDS)
   const effects = [];
   for (const a of c.actions) {
     switch (a[0]) {
       case "hit":
-        effects.push({kind:"DAMAGE", amount: Math.max(1, Math.round(5 * Number(a[1]||1))), stat: c.stat || "attack"});
+        effects.push({kind:"DAMAGE", amount: Math.max(1, Math.round(Number(a[1]||1))), stat: c.stat || "attack"});
         break;
       case "block": effects.push({kind:"BLOCK", amount: Number(a[1]||0)}); break;
       case "heal": effects.push({kind:"HEAL", amount: Math.max(1, Math.round(8 * Number(a[1]||1)))}); break;
@@ -607,10 +808,35 @@ function toGDScript(c) {
   if (c.exhaust) parts.push(`"exhaust": true`);
   if (c.final) parts.push(`"final": true`);
   if (c.chain) parts.push(`"chain": ${c.chain}`);
-  parts.push(`"effects": ${JSON.stringify(effects).replace(/"/g, '"')}`);
-  // GDScript uses double quotes; keep JSON-like dict
-  const body = parts.join(", ");
-  return `\t"${c.id}": {${body}},`;
+  if (c.art) parts.push(`"art": ${JSON.stringify(c.art)}`);
+  parts.push(`"effects": ${JSON.stringify(effects)}`);
+  return `\t"${c.id}": {${parts.join(", ")}},`;
+}
+
+function currentCardPreviewUrl() {
+  if (pendingArtBlob && pendingArtBlob.url) return pendingArtBlob.url;
+  if (draft.art) {
+    const u = resolveAssetUrl(draft.art);
+    if (u) return u;
+  }
+  return ownerArtUrl(draft.owner);
+}
+
+function updateArtPreviewUI() {
+  const url = currentCardPreviewUrl();
+  const img = document.getElementById("artPreview");
+  const faceArt = document.getElementById("faceArt");
+  const hint = document.getElementById("artHint");
+  if (url) {
+    img.src = url; img.classList.remove("hidden");
+    faceArt.style.backgroundImage = `url("${url}")`;
+  } else {
+    img.classList.add("hidden"); img.removeAttribute("src");
+    faceArt.style.backgroundImage = "";
+  }
+  if (pendingArtBlob) hint.textContent = "Arte custom carregada — no export: " + cardArtPath(draft.id || "id");
+  else if (draft.art) hint.textContent = "Arte: " + draft.art;
+  else hint.textContent = "Sem arte custom: usa portrait (ou sprite) do dono se a pasta de assets estiver carregada.";
 }
 
 function updatePreview() {
@@ -629,8 +855,9 @@ function updatePreview() {
   if (c.exhaust) tags.push("exhaust");
   if (c.final) tags.push("final");
   if (c.chain) tags.push("chain " + c.chain);
-  tags.push(c.rarity);
+  if (c.art) tags.push("art");
   document.getElementById("faceTags").innerHTML = tags.map(t => `<span class="tag">${t}</span>`).join("");
+  updateArtPreviewUI();
 
   const out = document.getElementById("out");
   if (outTab === "json") out.value = JSON.stringify(c, null, 2);
@@ -640,7 +867,6 @@ function updatePreview() {
 
 function syncForm(fromDraft) {
   if (!fromDraft) {
-    // pull numeric fields
     draft.cost = Number(document.getElementById("cost").value || 0);
     draft.gain = Number(document.getElementById("gain").value || 0);
     draft.chain = Number(document.getElementById("chain").value || 2);
@@ -684,68 +910,258 @@ function loadCard(id) {
   const c = catalog.cards[id];
   if (!c) return;
   selectedId = id;
+  pendingArtBlob = null;
   draft = JSON.parse(JSON.stringify(c));
   draft.quick = !!c.quick || (c.actions||[]).some(a => a[0]==="quick");
   draft.free = !!c.free || (c.actions||[]).some(a => a[0]==="free");
   draft.final = !!c.final || (c.actions||[]).some(a => a[0]==="final");
   draft.exhaust = !!c.exhaust;
   draft.reach = !!c.reach;
+  // keep rarity in data if present but never show UI
   syncForm(true);
 }
 
 function ensureId() {
   if (!draft.name) { toast("Digite o nome da carta"); return false; }
-  if (!draft.id) {
-    const base = slugify(draft.name);
-    draft.id = draft.owner + "_" + base;
-  }
-  if (!draft.id.startsWith("ent_")) {
-    // keep as-is but warn softly
-  }
+  if (!draft.id) draft.id = draft.owner + "_" + slugify(draft.name);
   return true;
 }
 
 function saveDraft() {
   if (!ensureId()) return;
   document.getElementById("id").value = draft.id;
+  if (pendingArtBlob) draft.art = cardArtPath(draft.id);
   const c = buildCardObject();
+  // strip rarity if dirty save
+  delete c.rarity;
   catalog.cards[c.id] = c;
   dirtyIds.add(c.id);
   selectedId = c.id;
-  // also ensure hero pool mention? leave to user / separate
   toast("Salva na sessão: " + c.id);
   syncForm(true);
 }
 
-function download(filename, text) {
-  const blob = new Blob([text], {type:"application/json;charset=utf-8"});
+function download(filename, text, mime) {
+  const blob = text instanceof Blob ? text : new Blob([text], {type: mime || "application/json;charset=utf-8"});
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
   a.download = filename;
   a.click();
-  URL.revokeObjectURL(a.href);
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
 }
 
 function exportPatch() {
   const cards = {};
+  const heroes = {};
   dirtyIds.forEach(id => { if (catalog.cards[id]) cards[id] = catalog.cards[id]; });
-  if (!Object.keys(cards).length && selectedId && catalog.cards[selectedId]) {
+  dirtyHeroIds.forEach(id => { if (catalog.heroes[id]) heroes[id] = catalog.heroes[id]; });
+  if (!Object.keys(cards).length && selectedId && catalog.cards[selectedId] && mode === "cards") {
     cards[selectedId] = catalog.cards[selectedId];
   }
-  if (!Object.keys(cards).length) { toast("Nada pra exportar — salve uma carta antes"); return; }
-  const patch = { format: 1, note: "Merge estas cartas em addons/hotn3_entities/entities.json → cards", cards };
+  if (!Object.keys(heroes).length && selectedHeroId && catalog.heroes[selectedHeroId] && mode === "heroes") {
+    heroes[selectedHeroId] = catalog.heroes[selectedHeroId];
+  }
+  if (!Object.keys(cards).length && !Object.keys(heroes).length) {
+    toast("Nada pra exportar — salve antes");
+    return;
+  }
+  const patch = {
+    format: 1,
+    note: "Merge em addons/hotn3_entities/entities.json. Arte: assets/cards/<id>.png (merge --art-dir).",
+    cards, heroes,
+  };
   download("hotn3_cards_patch.json", JSON.stringify(patch, null, 2));
-  toast("Patch baixado (" + Object.keys(cards).length + " cartas)");
+  // also offer art downloads for cards with pending blobs
+  if (pendingArtBlob && selectedId) {
+    download(selectedId + ".png", pendingArtBlob.blob, pendingArtBlob.blob.type || "image/png");
+  }
+  toast("Patch baixado (" + Object.keys(cards).length + " cartas, " + Object.keys(heroes).length + " heróis)");
 }
 
 function exportFull() {
-  if (!Object.keys(catalog.cards).length) { toast("Importe entities.json primeiro"); return; }
+  if (!Object.keys(catalog.cards).length && !Object.keys(catalog.heroes||{}).length) {
+    toast("Importe entities.json primeiro"); return;
+  }
   download("entities.json", JSON.stringify(catalog, null, 2));
   toast("entities.json completo baixado");
 }
 
+/* ——— Heroes ——— */
+function buildHeroObject() {
+  const h = JSON.parse(JSON.stringify(heroDraft));
+  h.id = document.getElementById("hId").value.trim() || h.id;
+  h.name = document.getElementById("hName").value.trim() || h.name;
+  h.hp = Number(document.getElementById("hHp").value || 24);
+  h.attack = Number(document.getElementById("hAttack").value || 0);
+  h.power = Number(document.getElementById("hPower").value || 0);
+  h.armor = Number(document.getElementById("hArmor").value || 0);
+  h.speed = Number(document.getElementById("hSpeed").value || 0);
+  h.type = document.getElementById("hType").value;
+  h.row = document.getElementById("hRow").value;
+  h.passive = document.getElementById("hPassive").value;
+  h.portrait = document.getElementById("hPortrait").value.trim();
+  h.sprite = document.getElementById("hSprite").value.trim();
+  h.signature_icon = document.getElementById("hIcon").value.trim();
+  // pool from checkboxes
+  const pool = [];
+  document.querySelectorAll("#poolBox input[type=checkbox]:checked").forEach(cb => pool.push(cb.value));
+  h.pool = pool;
+  if (!h.cards || !h.cards.length) h.cards = pool.slice(0, Math.min(8, pool.length));
+  return h;
+}
+
+function renderPool() {
+  const box = document.getElementById("poolBox");
+  const q = (document.getElementById("poolFilter").value || "").trim().toLowerCase();
+  const selected = new Set(heroDraft.pool || []);
+  const ids = Object.keys(catalog.cards).sort();
+  box.innerHTML = "";
+  ids.forEach(id => {
+    const c = catalog.cards[id];
+    if (q && !(id.includes(q) || String(c.name).toLowerCase().includes(q))) return;
+    // prefer owner's cards first visually — still show all
+    const lab = document.createElement("label");
+    const cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.value = id;
+    cb.checked = selected.has(id);
+    cb.onchange = () => {
+      if (cb.checked) {
+        if (!heroDraft.pool.includes(id)) heroDraft.pool.push(id);
+      } else {
+        heroDraft.pool = heroDraft.pool.filter(x => x !== id);
+      }
+      updateHeroPreview();
+    };
+    lab.appendChild(cb);
+    lab.appendChild(document.createTextNode(` ${c.name || id} (${id})`));
+    box.appendChild(lab);
+  });
+}
+
+function heroPreviewUrl() {
+  if (pendingHeroArt.portrait) return pendingHeroArt.portrait.url;
+  if (pendingHeroArt.sprite) return pendingHeroArt.sprite.url;
+  const p = document.getElementById("hPortrait").value.trim();
+  const s = document.getElementById("hSprite").value.trim();
+  return resolveAssetUrl(p) || resolveAssetUrl(s) || null;
+}
+
+function updateHeroPreview() {
+  const h = buildHeroObject();
+  document.getElementById("heroFaceName").textContent = h.name || "(sem nome)";
+  document.getElementById("heroFaceStats").textContent =
+    `HP ${h.hp} · ATK ${h.attack} · POW ${h.power} · ARM ${h.armor} · SPD ${h.speed} · ${h.type} · ${h.row}`;
+  const url = heroPreviewUrl();
+  const face = document.getElementById("heroFaceArt");
+  const img = document.getElementById("heroArtPreview");
+  if (url) {
+    face.style.backgroundImage = `url("${url}")`;
+    img.src = url; img.classList.remove("hidden");
+  } else {
+    face.style.backgroundImage = "";
+    img.classList.add("hidden");
+  }
+  const out = document.getElementById("hout");
+  out.value = heroOutTab === "help" ? HELP_HERO : JSON.stringify(h, null, 2);
+}
+
+function syncHeroForm() {
+  document.getElementById("hName").value = heroDraft.name || "";
+  document.getElementById("hId").value = heroDraft.id || "";
+  document.getElementById("hHp").value = heroDraft.hp != null ? heroDraft.hp : 24;
+  document.getElementById("hAttack").value = heroDraft.attack != null ? heroDraft.attack : 4;
+  document.getElementById("hPower").value = heroDraft.power != null ? heroDraft.power : 4;
+  document.getElementById("hArmor").value = heroDraft.armor != null ? heroDraft.armor : 1;
+  document.getElementById("hSpeed").value = heroDraft.speed != null ? heroDraft.speed : 5;
+  document.getElementById("hType").value = heroDraft.type || "TECNICO";
+  document.getElementById("hRow").value = heroDraft.row || "back";
+  document.getElementById("hPassive").value = heroDraft.passive || "rastreador";
+  document.getElementById("hPortrait").value = heroDraft.portrait || "";
+  document.getElementById("hSprite").value = heroDraft.sprite || "";
+  document.getElementById("hIcon").value = heroDraft.signature_icon || "";
+  renderPool();
+  updateHeroPreview();
+  renderHeroList();
+}
+
+function renderHeroList() {
+  const q = document.getElementById("heroFilterText").value.trim().toLowerCase();
+  const list = document.getElementById("heroList");
+  list.innerHTML = "";
+  const ids = Object.keys(catalog.heroes || {}).sort();
+  let n = 0;
+  ids.forEach(id => {
+    const h = catalog.heroes[id];
+    if (q && !(String(h.name).toLowerCase().includes(q) || id.includes(q))) return;
+    n++;
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "card-item" + (selectedHeroId === id ? " sel" : "");
+    const dirty = dirtyHeroIds.has(id) ? " · editado" : "";
+    b.innerHTML = `<div>${h.name || id}</div><div class="meta">${id} · HP ${h.hp}${dirty}</div>`;
+    b.onclick = () => loadHero(id);
+    list.appendChild(b);
+  });
+  document.getElementById("heroCount").textContent = String(n);
+}
+
+function loadHero(id) {
+  const h = catalog.heroes[id];
+  if (!h) return;
+  selectedHeroId = id;
+  pendingHeroArt = {};
+  heroDraft = JSON.parse(JSON.stringify(h));
+  if (!Array.isArray(heroDraft.pool)) heroDraft.pool = [];
+  syncHeroForm();
+}
+
+function saveHero() {
+  const h = buildHeroObject();
+  if (!h.name) { toast("Digite o nome do personagem"); return; }
+  if (!h.id) h.id = "ent_" + slugify(h.name);
+  document.getElementById("hId").value = h.id;
+  // apply pending art paths
+  [["portrait","portrait"],["sprite","sprite"],["signature_icon","signature_icon"]].forEach(([field, key]) => {
+    if (pendingHeroArt[field]) {
+      h[key] = `res://assets/cast/${h.id}_${field === "signature_icon" ? "icon" : field}.png`;
+    }
+  });
+  catalog.heroes[h.id] = h;
+  dirtyHeroIds.add(h.id);
+  selectedHeroId = h.id;
+  heroDraft = h;
+  fillSelects();
+  toast("Personagem salvo: " + h.id);
+  syncHeroForm();
+}
+
+function setMode(m) {
+  mode = m;
+  document.getElementById("tabCards").classList.toggle("active", m === "cards");
+  document.getElementById("tabHeroes").classList.toggle("active", m === "heroes");
+  document.getElementById("layoutCards").classList.toggle("hidden", m !== "cards");
+  document.getElementById("layoutHeroes").classList.toggle("hidden", m !== "heroes");
+}
+
+function updateAssetStatus() {
+  const el = document.getElementById("assetStatus");
+  if (assetIndex.size) {
+    el.textContent = `Pasta de assets: ${assetIndex.size} arquivos indexados`;
+    el.classList.remove("empty");
+  } else {
+    el.textContent = "Pasta de assets: não carregada";
+    el.classList.add("empty");
+  }
+}
+
 function wire() {
   fillSelects();
+  updateAssetStatus();
+
+  document.getElementById("tabCards").onclick = () => setMode("cards");
+  document.getElementById("tabHeroes").onclick = () => setMode("heroes");
+
   document.getElementById("name").oninput = (e) => {
     draft.name = e.target.value;
     if (!selectedId || !catalog.cards[selectedId]) {
@@ -777,8 +1193,10 @@ function wire() {
   });
   document.getElementById("filterOwner").onchange = renderList;
   document.getElementById("filterText").oninput = renderList;
+
   document.getElementById("btnNew").onclick = () => {
     selectedId = null;
+    pendingArtBlob = null;
     draft = blankCard(document.getElementById("filterOwner").value || undefined);
     syncForm(true);
   };
@@ -788,6 +1206,7 @@ function wire() {
     delete catalog.cards[selectedId];
     dirtyIds.delete(selectedId);
     selectedId = null;
+    pendingArtBlob = null;
     draft = blankCard();
     syncForm(true);
     toast("Removida da sessão");
@@ -797,27 +1216,86 @@ function wire() {
     const c = buildCardObject();
     c.id = c.id + "_copy";
     c.name = c.name + " (cópia)";
+    delete c.rarity;
     catalog.cards[c.id] = c;
     dirtyIds.add(c.id);
     loadCard(c.id);
     toast("Duplicada");
   };
+
   document.getElementById("btnImport").onclick = () => document.getElementById("fileImport").click();
   document.getElementById("fileImport").onchange = async (e) => {
     const f = e.target.files[0];
     if (!f) return;
     try {
       const data = JSON.parse(await f.text());
-      if (!data.cards) throw new Error("JSON sem 'cards'");
-      catalog = { format: data.format || 1, heroes: data.heroes || {}, cards: data.cards };
+      if (!data.cards && !data.heroes) throw new Error("JSON sem cards/heroes");
+      catalog = { format: data.format || 1, heroes: data.heroes || {}, cards: data.cards || {} };
       dirtyIds.clear();
-      toast("Importado: " + Object.keys(catalog.cards).length + " cartas");
+      dirtyHeroIds.clear();
+      fillSelects();
+      toast("Importado: " + Object.keys(catalog.cards).length + " cartas, " + Object.keys(catalog.heroes).length + " heróis");
       renderList();
+      renderHeroList();
     } catch (err) {
       toast("Falha ao importar: " + err.message);
     }
     e.target.value = "";
   };
+
+  document.getElementById("btnLoadAssets").onclick = () => document.getElementById("fileAssets").click();
+  document.getElementById("fileAssets").onchange = async (e) => {
+    const files = Array.from(e.target.files || []);
+    let n = 0;
+    for (const f of files) {
+      if (!/\.(png|webp|jpg|jpeg|gif)$/i.test(f.name)) continue;
+      const url = URL.createObjectURL(f);
+      const entry = { url, file: f, rel: f.webkitRelativePath || f.name };
+      assetIndex.set(f.name, entry);
+      assetIndex.set(f.name.toLowerCase(), entry);
+      n++;
+    }
+    updateAssetStatus();
+    updatePreview();
+    updateHeroPreview();
+    toast(n ? `Indexados ${n} arquivos de imagem` : "Nenhuma imagem encontrada");
+    e.target.value = "";
+  };
+
+  document.getElementById("btnPickArt").onclick = () => document.getElementById("fileArt").click();
+  document.getElementById("fileArt").onchange = (e) => {
+    const f = e.target.files[0];
+    if (!f) return;
+    if (pendingArtBlob && pendingArtBlob.url) URL.revokeObjectURL(pendingArtBlob.url);
+    pendingArtBlob = { blob: f, url: URL.createObjectURL(f), name: f.name };
+    if (draft.id) draft.art = cardArtPath(draft.id);
+    updatePreview();
+    toast("Arte carregada: " + f.name);
+    e.target.value = "";
+  };
+  document.getElementById("btnClearArt").onclick = () => {
+    if (pendingArtBlob && pendingArtBlob.url) URL.revokeObjectURL(pendingArtBlob.url);
+    pendingArtBlob = null;
+    delete draft.art;
+    updatePreview();
+    toast("Arte custom removida");
+  };
+  document.getElementById("btnDlArt").onclick = () => {
+    if (!ensureId()) return;
+    if (pendingArtBlob) {
+      download(draft.id + ".png", pendingArtBlob.blob, pendingArtBlob.blob.type || "image/png");
+      toast("PNG baixado — coloque em assets/cards/");
+      return;
+    }
+    const url = currentCardPreviewUrl();
+    if (!url) { toast("Sem imagem para baixar"); return; }
+    // try fetch blob from object URL
+    fetch(url).then(r => r.blob()).then(b => {
+      download(draft.id + ".png", b, b.type || "image/png");
+      toast("PNG baixado — coloque em assets/cards/");
+    }).catch(() => toast("Não foi possível baixar a imagem"));
+  };
+
   document.getElementById("btnExportPatch").onclick = exportPatch;
   document.getElementById("btnExportFull").onclick = exportFull;
   document.getElementById("btnCopy").onclick = async () => {
@@ -827,20 +1305,107 @@ function wire() {
   document.getElementById("btnDownloadOne").onclick = () => {
     if (!ensureId()) return;
     const c = buildCardObject();
+    delete c.rarity;
     download(c.id + ".json", JSON.stringify(c, null, 2));
   };
-  document.querySelectorAll(".tabs .btn").forEach(b => {
+  document.querySelectorAll("#layoutCards .tabs .btn").forEach(b => {
     b.onclick = () => {
-      document.querySelectorAll(".tabs .btn").forEach(x => x.classList.remove("active"));
+      document.querySelectorAll("#layoutCards .tabs .btn").forEach(x => x.classList.remove("active"));
       b.classList.add("active");
       outTab = b.dataset.tab;
       updatePreview();
     };
   });
+
+  // Hero wiring
+  document.getElementById("btnNewHero").onclick = () => {
+    selectedHeroId = null;
+    pendingHeroArt = {};
+    heroDraft = blankHero();
+    syncHeroForm();
+  };
+  document.getElementById("btnSaveHero").onclick = saveHero;
+  document.getElementById("btnDeleteHero").onclick = () => {
+    if (!selectedHeroId) return;
+    delete catalog.heroes[selectedHeroId];
+    dirtyHeroIds.delete(selectedHeroId);
+    selectedHeroId = null;
+    heroDraft = blankHero();
+    fillSelects();
+    syncHeroForm();
+    toast("Personagem removido da sessão");
+  };
+  document.getElementById("btnDupHero").onclick = () => {
+    const h = buildHeroObject();
+    if (!h.name) { toast("Digite o nome"); return; }
+    h.id = (h.id || "ent_" + slugify(h.name)) + "_copy";
+    h.name = h.name + " (cópia)";
+    catalog.heroes[h.id] = h;
+    dirtyHeroIds.add(h.id);
+    loadHero(h.id);
+    toast("Duplicado");
+  };
+  document.getElementById("heroFilterText").oninput = renderHeroList;
+  document.getElementById("poolFilter").oninput = renderPool;
+  ["hName","hId","hHp","hAttack","hPower","hArmor","hSpeed","hType","hRow","hPassive","hPortrait","hSprite","hIcon"].forEach(id => {
+    document.getElementById(id).oninput = updateHeroPreview;
+    document.getElementById(id).onchange = updateHeroPreview;
+  });
+  document.getElementById("hName").oninput = (e) => {
+    heroDraft.name = e.target.value;
+    if (!selectedHeroId || !catalog.heroes[selectedHeroId]) {
+      heroDraft.id = "ent_" + slugify(heroDraft.name);
+      document.getElementById("hId").value = heroDraft.id;
+    }
+    updateHeroPreview();
+  };
+  document.querySelectorAll("[data-hero-art]").forEach(btn => {
+    btn.onclick = () => {
+      heroArtField = btn.dataset.heroArt;
+      document.getElementById("fileHeroArt").click();
+    };
+  });
+  document.getElementById("fileHeroArt").onchange = (e) => {
+    const f = e.target.files[0];
+    if (!f) return;
+    const field = heroArtField;
+    if (pendingHeroArt[field] && pendingHeroArt[field].url) URL.revokeObjectURL(pendingHeroArt[field].url);
+    pendingHeroArt[field] = { blob: f, url: URL.createObjectURL(f), name: f.name };
+    const hid = document.getElementById("hId").value.trim() || "ent_novo";
+    const suffix = field === "signature_icon" ? "icon" : field;
+    const path = `res://assets/cast/${hid}_${suffix}.png`;
+    if (field === "portrait") document.getElementById("hPortrait").value = path;
+    if (field === "sprite") document.getElementById("hSprite").value = path;
+    if (field === "signature_icon") document.getElementById("hIcon").value = path;
+    updateHeroPreview();
+    download(`${hid}_${suffix}.png`, f, f.type || "image/png");
+    toast("Imagem definida + PNG baixado → assets/cast/");
+    e.target.value = "";
+  };
+  document.getElementById("btnCopyHero").onclick = async () => {
+    await navigator.clipboard.writeText(document.getElementById("hout").value);
+    toast("Copiado");
+  };
+  document.getElementById("btnDownloadHero").onclick = () => {
+    const h = buildHeroObject();
+    if (!h.id) { toast("Defina o id"); return; }
+    download(h.id + ".json", JSON.stringify(h, null, 2));
+  };
+  document.querySelectorAll("#layoutHeroes .tabs .btn").forEach(b => {
+    b.onclick = () => {
+      document.querySelectorAll("#layoutHeroes .tabs .btn").forEach(x => x.classList.remove("active"));
+      b.classList.add("active");
+      heroOutTab = b.dataset.htab;
+      updateHeroPreview();
+    };
+  });
+
   syncForm(true);
+  syncHeroForm();
 }
 
 wire();
+
 </script>
 </body>
 </html>
