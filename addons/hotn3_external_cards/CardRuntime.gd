@@ -98,12 +98,17 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 		if acted.has(op) and op in ["quick", "free", "exhaust", "final"]: continue
 		acted.append(op)
 		match op:
-			"hit", "hit_per_impulse", "hit_per_hand", "hit_from_block", "roulette_hit":
+			"hit", "hit_per_impulse", "hit_per_hand", "hit_from_block", "hit_from_protecao", "hit_from_barrier", "roulette_hit":
 				# Dano aditivo: Carta + Impacto − Armadura  OU  Carta + Poder − Escudo (+ mods).
 				var card_amt := float(a[1]) if a.size() > 1 else 0.0
 				if op == "hit_per_impulse": card_amt *= float(spent_impulse)
 				if op == "hit_per_hand": card_amt *= float(battle.hand.size())
-				if op == "hit_from_block": card_amt = float(source.get("block", 0))
+				if op == "hit_from_block": card_amt = float(source.get("block", 0))  # legado
+				if op == "hit_from_protecao":
+					card_amt = float(source.get("statuses", {}).get("protecao", {}).get("stacks", 0))
+				if op == "hit_from_barrier":
+					var _bh: Dictionary = source.get("statuses", {}).get("barrier", {})
+					card_amt = float(_bh.get("barrier_hp", _bh.get("stacks", 0)))
 				if op == "roulette_hit": card_amt = float(card.get("roulette_factor", a[battle.rng.randi_range(1, a.size() - 1)]))
 				for victim in targets:
 					var before_hp := int(victim["hp"])
@@ -136,7 +141,9 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 					var keep_stun: bool = bool(def.get("lethargic", false)) or _has_action(def, "lethargic")
 					if battle._take_damage(source, victim, last_hit, penetrating, true, false, targets.size() > 1, not bool(def.get("reach", false)), _is_damage_card(def), true, not keep_stun):
 						if not kos.has(victim["id"]): kos.append(victim["id"])
-					if _has_action(def, "block_from_hit"): source["block"] += last_hit
+					if _has_action(def, "block_from_hit"): source["block"] += last_hit  # legado
+					if _has_action(def, "barrier_from_hit") and last_hit > 0:
+						battle._add_status(source, "barrier", 1, last_hit, int(source["id"]))
 					if _has_action(def, "lifesteal"):
 						source["hp"] = mini(int(source["max_hp"]), int(source["hp"]) + maxi(0, before_hp - int(victim["hp"])))
 					if _has_action(def, "drain") or bool(def.get("drain", false)):
@@ -158,7 +165,18 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 					battle._add_status(victim, str(a[1]), maxi(1, stacks), stacks, int(source["id"]))
 					if a[1] == "all_together_now": battle.team_ko_charges = stacks
 			"block", "block_hp":
-				for victim in targets: victim["block"] += int(a[1]) if op == "block" else roundi(float(victim["max_hp"]) * float(a[1]))
+				# Legado: redireciona para Barreira (pool). Cap usa protecao.
+				for victim in targets:
+					var bamt: int = int(a[1]) if op == "block" else roundi(float(victim["max_hp"]) * float(a[1]))
+					var br: int = 2 if bamt >= 10 else 1
+					battle._add_status(victim, "barrier", br, maxi(1, bamt), int(source["id"]))
+			"barreira_hp":
+				# ["barreira_hp", rounds, fraction_of_max_hp]
+				var br2: int = int(a[1]) if a.size() > 1 else 1
+				var frac: float = float(a[2]) if a.size() > 2 else 0.3
+				for victim in targets:
+					var bamt2: int = maxi(1, roundi(float(victim["max_hp"]) * frac))
+					battle._add_status(victim, "barrier", maxi(1, br2), bamt2, int(source["id"]))
 			"heal", "full_heal", "heal_all":
 				var healed: Array = battle.living("ALLY") if op == "heal_all" else targets
 				for victim in healed:
@@ -314,8 +332,32 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 				for item in battle.items.keys(): battle.items[item] = int(battle.items[item]) + 1
 			"hazard": battle.environmental_used["pack_hazard_" + str(a[1])] = 0
 			"grow", "grow_chain": _stack(source, str(a[1]), 1)
-			"spend_all_block": source["block"] = 0
-			"spend_block": source["block"] = roundi(float(source["block"]) * (1.0 - float(a[1])))
+			"spend_all_block": source["block"] = 0  # legado
+			"spend_block": source["block"] = roundi(float(source["block"]) * (1.0 - float(a[1])))  # legado
+			"spend_all_protecao":
+				if source.get("statuses", {}).has("protecao"): source["statuses"].erase("protecao")
+			"spend_protecao":
+				if source.get("statuses", {}).has("protecao"):
+					var _ps: Dictionary = source["statuses"]["protecao"]
+					var _cur: int = int(_ps.get("stacks", 0))
+					var _left: int = maxi(0, roundi(float(_cur) * (1.0 - float(a[1]))))
+					if _left <= 0: source["statuses"].erase("protecao")
+					else:
+						_ps["stacks"] = _left
+						source["statuses"]["protecao"] = _ps
+			"spend_all_barrier":
+				if source.get("statuses", {}).has("barrier"): source["statuses"].erase("barrier")
+				source["block"] = 0
+			"spend_barrier":
+				if source.get("statuses", {}).has("barrier"):
+					var _bs: Dictionary = source["statuses"]["barrier"]
+					var _bhp: int = int(_bs.get("barrier_hp", _bs.get("stacks", 0)))
+					var _bleft: int = maxi(0, roundi(float(_bhp) * (1.0 - float(a[1]))))
+					if _bleft <= 0: source["statuses"].erase("barrier")
+					else:
+						_bs["barrier_hp"] = _bleft
+						_bs["stacks"] = _bleft
+						source["statuses"]["barrier"] = _bs
 			"consume_all": battle.impulse = 0
 			"activate_next_turn":
 				for held in battle.hand: _activate_next(battle, held)
@@ -356,7 +398,7 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 				var ix: int = int(a[1]) if a.size() > 1 else 1
 				for victim in targets:
 					battle._add_status(victim, "invulnerable", maxi(1, ix), 1, int(source["id"]))
-			"quick", "free", "exhaust", "final", "chain", "chain_hand_owner", "random_chain", "full_combo", "bonus_status", "bonus_damaged", "bonus_block", "bonus_targeting_self", "bonus_full_hp", "bonus_en_fuego", "force_if_damaged", "hand_block", "hand_cost_down", "hand_damage_growth", "hand_resist", "overheal_max", "cost_down_en_fuego", "area_en_fuego", "requires_status", "enhanced", "redraw_force", "redraw_bonus", "redraw_strengthened", "play_while_disabled", "penetrating", "lethargic", "recoil", "drain", "instant", "ephemeral", "warmup": pass # Evaluated in preplay, hooks, or _bonus.
+			"quick", "free", "exhaust", "final", "chain", "chain_hand_owner", "random_chain", "full_combo", "bonus_status", "bonus_damaged", "bonus_block", "bonus_targeting_self", "bonus_full_hp", "bonus_en_fuego", "force_if_damaged", "hand_block", "hand_cost_down", "hand_damage_growth", "hand_resist", "overheal_max", "cost_down_en_fuego", "area_en_fuego", "requires_status", "enhanced", "redraw_force", "redraw_bonus", "redraw_strengthened", "play_while_disabled", "penetrating", "lethargic", "recoil", "drain", "instant", "ephemeral", "warmup", "barrier_from_hit": pass # Evaluated in preplay, hooks, or _bonus.
 			_:
 				push_error("Unsupported external card action: " + op)
 	if (def.get("quick", false) or card.get("next_quick_active", false) or battle._has_status(source, "assimilation")) and kos.has(target_id) or kos.any(func(id): return battle._has_status(battle.actor_by_id(id), "marked")):
@@ -395,7 +437,8 @@ func on_turn_start(battle: Variant) -> void:
 		if _has_action(def, "hand_cost_down"): card["cost_override"] = maxi(0, int(card.get("cost_override", def.get("cost", 0))) - 1)
 		if _has_action(def, "hand_block"):
 			var actor: Dictionary = battle.actor_by_id(int(card["owner"]))
-			actor["block"] += roundi(float(actor["max_hp"]) * 0.1)
+			# Migrado: hand_block → Proteção 1 (ignore-hit), não mais pool block.
+			battle._add_status(actor, "protecao", 1, 1, int(actor["id"]))
 		if _has_action(def, "hand_resist"):
 			var holder: Dictionary = battle.actor_by_id(int(card["owner"]))
 			battle._add_status(holder, "protecao", 1, 1, int(holder["id"]))
@@ -422,7 +465,8 @@ func on_damage(battle: Variant, victim_id: int, actual_hp_loss: int) -> void:
 	var actor: Dictionary = battle.actor_by_id(victim_id)
 	if actor.is_empty(): return
 	if battle._has_status(actor, "block_on_hit"):
-		actor["block"] += actual_hp_loss
+		# Migrado: Proteção 1 ao perder Vida (Cap The Best Defense / similares).
+		battle._add_status(actor, "protecao", 1, 1, int(actor["id"]))
 	for card in battle.hand:
 		if int(card.get("owner", -1)) != victim_id: continue
 		var def: Dictionary = catalog.definition(str(card.get("id", "")))
@@ -459,7 +503,10 @@ func _bonus(battle: Variant, source: Dictionary, victim: Dictionary, def: Dictio
 			"bonus_damaged":
 				if int(victim.get("hp", 0)) < int(victim.get("max_hp", 0)): bonus += float(a[1])
 			"bonus_block":
-				if int(victim.get("block", 0)) > 0: bonus += float(a[1])
+				var _has_def: bool = int(victim.get("block", 0)) > 0
+				if not _has_def and battle._has_status(victim, "protecao"): _has_def = true
+				if not _has_def and battle._has_status(victim, "barrier"): _has_def = true
+				if _has_def: bonus += float(a[1])
 			"bonus_targeting_self":
 				if int(victim.get("intent_target", -1)) == int(source["id"]): bonus += float(a[1])
 			"bonus_full_hp":
@@ -483,7 +530,7 @@ func _action(def: Dictionary, name: String) -> Array:
 
 func _is_damage_card(def: Dictionary) -> bool:
 	for a in def.get("actions", []):
-		if typeof(a) == TYPE_ARRAY and not a.is_empty() and str(a[0]) in ["hit", "hit_per_impulse", "hit_per_hand", "hit_from_block", "roulette_hit"]:
+		if typeof(a) == TYPE_ARRAY and not a.is_empty() and str(a[0]) in ["hit", "hit_per_impulse", "hit_per_hand", "hit_from_block", "hit_from_protecao", "hit_from_barrier", "roulette_hit"]:
 			return true
 	for e in def.get("effects", []):
 		if str(e.get("kind", "")) == "DAMAGE":

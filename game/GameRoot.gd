@@ -1183,11 +1183,20 @@ func _build_economy_hud(viewport_size: Vector2) -> void:
 	view_btn.custom_minimum_size = Vector2(258, 36)
 	view_btn.tooltip_text = "Alterna vista Normal (atual) e Lateral (aliados à esquerda)."
 	economy_hud.add_child(view_btn)
-	var end_btn := _button("ENCERRAR TURNO", func(): _present_enemy_turn())
 	var instant_blocks: bool = battle != null and battle.has_method("hand_has_instantaneo") and battle.hand_has_instantaneo("ALLY")
-	end_btn.disabled = battle.phase != "PLAYER" or enemy_presenting or recover_pick_active or instant_blocks or (battle.has_method("can_end_turn") and not battle.can_end_turn())
+	var end_btn := _button("ENCERRAR TURNO", func():
+		if battle != null and battle.has_method("hand_has_instantaneo") and battle.hand_has_instantaneo("ALLY"):
+			feedback = "Instantâneo na mão — jogue antes de encerrar."
+			_render_battle()
+			return
+		_present_enemy_turn()
+	)
+	# Não desabilita por Instantâneo: clique mostra toast curto (sem modal). Tooltip explica.
+	end_btn.disabled = battle.phase != "PLAYER" or enemy_presenting or recover_pick_active
 	if instant_blocks:
-		end_btn.tooltip_text = "Jogue as cartas Instantâneo da mão antes de encerrar."
+		end_btn.tooltip_text = "Há Instantâneo na mão: jogue essas cartas antes de encerrar o turno."
+	else:
+		end_btn.tooltip_text = "Encerrar o turno do jogador."
 	end_btn.position = Vector2(16, 240)
 	end_btn.custom_minimum_size = Vector2(258, 40)
 	economy_hud.add_child(end_btn)
@@ -1834,7 +1843,7 @@ func _rules_bbcode(definition: Dictionary, card: Dictionary) -> String:
 		elif kind == "HEAL":
 			effect_lines.append("Cura %d" % int(effect.get("amount", 0)))
 		elif kind == "BLOCK":
-			effect_lines.append("[b]Bloqueio[/b] %d" % int(effect.get("amount", 0)))
+			effect_lines.append("[b]Barreira[/b] %d" % int(effect.get("amount", 0)))
 		elif kind == "SHIELD":
 			effect_lines.append("[b]Escudo[/b] %d" % int(effect.get("amount", 0)))
 		elif kind == "DRAW":
@@ -1864,7 +1873,7 @@ func _rules_bbcode(definition: Dictionary, card: Dictionary) -> String:
 		if typeof(action) != TYPE_ARRAY or action.is_empty():
 			continue
 		var op := str(action[0])
-		if op in ["hit", "hit_per_impulse", "hit_per_hand", "roulette_hit", "hit_from_block"]:
+		if op in ["hit", "hit_per_impulse", "hit_per_hand", "roulette_hit", "hit_from_block", "hit_from_protecao", "hit_from_barrier"]:
 			continue
 		elif op in ["self_damage", "self_damage_hp"]:
 			effect_lines.append("[color=#e15b5b]Dano a si[/color]")
@@ -1875,7 +1884,19 @@ func _rules_bbcode(definition: Dictionary, card: Dictionary) -> String:
 		elif op in ["heal", "heal_all", "full_heal"]:
 			effect_lines.append("Cura")
 		elif op in ["block", "block_hp"]:
-			effect_lines.append("[b]Bloqueio[/b]")
+			effect_lines.append("[b]Barreira[/b] (legado)")
+		elif op in ["protecao", "protection"]:
+			effect_lines.append("[b]Proteção[/b]")
+		elif op in ["barreira", "barrier", "barreira_hp"]:
+			effect_lines.append("[b]Barreira[/b]")
+		elif op in ["spend_protecao", "spend_all_protecao"]:
+			effect_lines.append("Gasta Proteção")
+		elif op in ["spend_barrier", "spend_all_barrier"]:
+			effect_lines.append("Gasta Barreira")
+		elif op == "barrier_from_hit":
+			effect_lines.append("Barreira = dano causado")
+		elif op == "resistente":
+			effect_lines.append("[b]Resistente[/b]")
 		elif op in ["status", "self_status", "chance_status", "roulette_status"]:
 			var status_id := str(action[1]) if action.size() > 1 else ""
 			var turns := int(action[2]) if action.size() > 2 else 1
@@ -2568,7 +2589,7 @@ func _card_description(definition: Dictionary, card: Dictionary = {}) -> String:
 			"STATUS": parts.append("%s (%d turno(s), %d carga(s))" % [str(effect["id"]).replace("_", " ").capitalize(), effect.get("duration", 1), effect.get("stacks", 1)])
 			"DAMAGE": parts.append("Dano base %d + atributo" % int(effect.get("amount", 0)))
 			"HEAL": parts.append("Cura %d" % int(effect.get("amount", 0)))
-			"BLOCK": parts.append("Bloqueio %d" % int(effect.get("amount", 0)))
+			"BLOCK", "SHIELD": parts.append("Barreira %d" % int(effect.get("amount", 0)))
 			"SHIELD": parts.append("Escudo %d" % int(effect.get("amount", 0)))
 			"DRAW": parts.append("Compra %d" % int(effect.get("amount", 1)))
 			"GENERATE": parts.append("Cria %s (temporária)" % _card_def(str(effect.get("id", ""))).get("name", "carta"))

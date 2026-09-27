@@ -202,14 +202,31 @@ func describe_actions(definition: Dictionary) -> Array[String]:
 			continue
 		var op := str(action[0])
 		match op:
-			"hit", "hit_per_impulse", "hit_per_hand", "hit_from_block", "roulette_hit":
-				parts.append("Dano base %s (+Impacto−Armadura / +Poder−Escudo)" % str(action[1] if action.size() > 1 else "0"))
+			"hit", "hit_per_impulse", "hit_per_hand", "hit_from_block", "hit_from_protecao", "hit_from_barrier", "roulette_hit":
+				if op == "hit_from_protecao":
+					parts.append("Dano = stacks de Proteção")
+				elif op == "hit_from_barrier":
+					parts.append("Dano = HP da Barreira")
+				elif op == "hit_from_block":
+					parts.append("Dano = Bloqueio legado")
+				else:
+					parts.append("Dano base %s (+Impacto−Armadura / +Poder−Escudo)" % str(action[1] if action.size() > 1 else "0"))
 			"heal", "heal_all", "full_heal":
 				parts.append("Cura %s Vida" % str(action[1] if action.size() > 1 else ""))
 			"block", "block_hp":
-				parts.append("Bloqueio (legado)")
+				parts.append("Barreira (via bloqueio legado)")
+			"barreira_hp":
+				parts.append("Barreira %s rodadas / %% Vida" % str(action[1] if action.size() > 1 else "1"))
 			"protecao", "protection":
 				parts.append("Proteção %s" % str(action[1] if action.size() > 1 else "1"))
+			"spend_protecao":
+				parts.append("Gasta %s%% da Proteção" % str(round(float(action[1]) * 100) if action.size() > 1 else 25))
+			"spend_all_protecao":
+				parts.append("Gasta toda a Proteção")
+			"spend_all_barrier", "spend_barrier":
+				parts.append("Gasta Barreira")
+			"barrier_from_hit":
+				parts.append("Ganha Barreira = dano causado")
 			"barreira", "barrier":
 				if action.size() >= 3:
 					parts.append("Barreira %s rodadas / %s HP" % [str(action[1]), str(action[2])])

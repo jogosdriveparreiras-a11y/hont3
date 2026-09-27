@@ -33,8 +33,9 @@
 - `resist` (cancelar 1 instância) — mapeado para `protecao`
 - Barreira antiga (bloqueava alvo sem reach) — substituída pelo pool de HP
 
-### Legado ainda absorvendo
-- `block` / `shield` de carta (ex.: kit Cap) ainda absorvem **depois** da Barreira, para não quebrar sinergias `hit_from_block` / `spend_block`.
+### Legado / Cap
+- Conteúdo migrado: Cap gasta **Proteção**; geral gera **Barreira**.
+- `block` / `shield` de ator ainda absorvem **depois** da Barreira se restarem valores residuais (passivas antigas / edge cases).
 
 ## Pipeline ao receber golpe
 

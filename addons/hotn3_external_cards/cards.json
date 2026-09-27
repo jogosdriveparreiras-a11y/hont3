@@ -579,7 +579,8 @@
       "target": "SELF",
       "actions": [
         [
-          "block_hp",
+          "barreira_hp",
+          "1",
           "0.3"
         ],
         [
@@ -1027,7 +1028,7 @@
           "taunt_attackers"
         ],
         [
-          "block",
+          "protecao",
           "12"
         ]
       ],
@@ -1045,7 +1046,7 @@
       "target": "SELF",
       "actions": [
         [
-          "block",
+          "protecao",
           "10"
         ],
         [
@@ -1090,7 +1091,7 @@
           "0"
         ],
         [
-          "spend_block",
+          "spend_protecao",
           "0.25"
         ]
       ],
@@ -1163,11 +1164,11 @@
       "target": "ENEMY_ROW",
       "actions": [
         [
-          "hit_from_block",
+          "hit_from_protecao",
           "0"
         ],
         [
-          "spend_all_block"
+          "spend_all_protecao"
         ]
       ],
       "rarity": "LEGENDARY",
@@ -1192,7 +1193,7 @@
           "taunt"
         ],
         [
-          "block_from_hit"
+          "barrier_from_hit"
         ]
       ],
       "rarity": "UNVERIFIED",
@@ -1254,7 +1255,8 @@
       "target": "SELF",
       "actions": [
         [
-          "block",
+          "barreira",
+          "1",
           "8"
         ],
         [
@@ -1305,7 +1307,7 @@
           "consume_all"
         ],
         [
-          "spend_all_block"
+          "spend_all_barrier"
         ]
       ],
       "rarity": "UNVERIFIED",
@@ -1417,7 +1419,8 @@
           "1"
         ],
         [
-          "block_hp",
+          "barreira_hp",
+          "1",
           "0.5"
         ],
         [
@@ -2141,7 +2144,8 @@
       "target": "ALLY",
       "actions": [
         [
-          "block",
+          "barreira",
+          "1",
           "9"
         ]
       ],
@@ -3818,7 +3822,8 @@
           "2"
         ],
         [
-          "block_hp",
+          "barreira_hp",
+          "1",
           "0.25"
         ],
         [

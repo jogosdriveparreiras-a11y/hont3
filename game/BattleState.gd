@@ -280,9 +280,9 @@ func start_turn() -> void:
 			ally["statuses"].erase("neurally_enhanced")
 		match ally.get("passive", ""):
 			"vanguarda":
-				if ally["row"] == "front": ally["block"] += 2
+				if ally["row"] == "front": _add_status(ally, "barrier", 1, 2, int(ally["id"]))
 			"canalizar": impulse = min(int(rules["impulse_max"]), impulse + 1)
-			"baluarte": ally["shield"] += 2
+			"baluarte": _add_status(ally, "barrier", 1, 2, int(ally["id"]))
 	if turn > 1:
 		var has_strongest: bool = living("ALLY").any(func(a): return _has_status(a, "strongest_there_is"))
 		var extra: int = 1 if has_strongest else 0
@@ -554,7 +554,7 @@ func _add_status(actor: Dictionary, id: String, duration: int, stacks: int, sour
 	elif id == "protecao":
 		# stacks = ataques ignorados; duration alta só para o status viver até stacks zerarem.
 		state["duration"] = max(int(state.get("duration", 0)), maxi(duration, maxi(stacks, 1)))
-		state["stacks"] = mini(9, int(state.get("stacks", 0)) + maxi(1, stacks))
+		state["stacks"] = mini(15, int(state.get("stacks", 0)) + maxi(1, stacks))
 	elif id in ["resistente", "fragil"]:
 		state["duration"] = max(int(state.get("duration", 0)), maxi(1, duration))
 		state["stacks"] = mini(5, int(state.get("stacks", 0)) + maxi(1, stacks))
@@ -798,7 +798,7 @@ func _take_damage(source: Dictionary, target: Dictionary, amount: int, pierce: b
 		if source["id"] != target["id"] and from_card and _has_status(source, "make_em_bleed"):
 			_add_status(target, "bleed", 2, 2, int(source["id"]))
 		if not melee: target["statuses"].erase("symbiote_skin")
-	if target["block"] <= 0:
+	if int(target.get("block", 0)) <= 0 and _barrier_hp(target) <= 0:
 		for id in ["binary", "bloodlust"]: target["statuses"].erase(id)
 	if hp_lost > 0: visual.emit("hit", int(source["id"]), int(target["id"]), hp_lost)
 	elif amount > 0: visual.emit("block", int(source["id"]), int(target["id"]), amount)
@@ -904,12 +904,12 @@ func _resolve(source: Dictionary, targets: Array[Dictionary], card: Dictionary, 
 						target["hp"] = min(int(target["max_hp"]), int(target["hp"]) + int(effect.get("amount", 0)) + bonus)
 						visual.emit("heal", int(source["id"]), int(target["id"]), int(target["hp"]) - before_heal)
 						_log("%s recuperou vida (%d PV)." % [target["name"], target["hp"]])
-					"BLOCK":
-						target["block"] += int(effect.get("amount", 0)) + (int(card.get("upgrade", 0)) + (1 if _has_status(source, "strongest_there_is") else 0)) * 2
-						visual.emit("guard", int(source["id"]), int(target["id"]), int(effect.get("amount", 0)))
-					"SHIELD":
-						target["shield"] += int(effect.get("amount", 0)) + (int(card.get("upgrade", 0)) + (1 if _has_status(source, "strongest_there_is") else 0)) * 2
-						visual.emit("guard", int(source["id"]), int(target["id"]), int(effect.get("amount", 0)))
+					"BLOCK", "SHIELD":
+						# Migrado: BLOCK/SHIELD de Content → Barreira (pool). Cap usa Proteção via packs.
+						var bamt: int = int(effect.get("amount", 0)) + (int(card.get("upgrade", 0)) + (1 if _has_status(source, "strongest_there_is") else 0)) * 2
+						var br: int = 2 if bamt >= 10 else 1
+						_add_status(target, "barrier", br, maxi(1, bamt), int(source["id"]))
+						visual.emit("guard", int(source["id"]), int(target["id"]), bamt)
 					"STATUS":
 						if effect["id"] == "all_together_now": team_ko_charges = int(effect.get("stacks", 2))
 						_add_status(target, effect["id"], int(effect.get("duration", 1)), int(effect.get("stacks", 1)), int(source["id"]))
@@ -1361,9 +1361,9 @@ func begin_enemy_phase() -> void:
 			enemy["statuses"].erase("neurally_enhanced")
 		match enemy.get("passive", ""):
 			"vanguarda":
-				if enemy["row"] == "front": enemy["block"] += 2
+				if enemy["row"] == "front": _add_status(enemy, "barrier", 1, 2, int(enemy["id"]))
 			"canalizar": enemy_impulse = min(int(rules["impulse_max"]), enemy_impulse + 1)
-			"baluarte": enemy["shield"] += 2
+			"baluarte": _add_status(enemy, "barrier", 1, 2, int(enemy["id"]))
 	if turn > 1:
 		var has_strongest: bool = living("ENEMY").any(func(actor): return _has_status(actor, "strongest_there_is"))
 		var extra: int = 1 if has_strongest else 0
@@ -1514,7 +1514,7 @@ func _tick_statuses() -> void:
 						state["duration"] = 1
 					else: state["armed"] = true
 			if not actor["statuses"].has(id): continue
-			if id in ["binary", "bloodlust"] and actor["block"] > 0: continue
+			if id in ["binary", "bloodlust"] and (int(actor.get("block", 0)) > 0 or _barrier_hp(actor) > 0): continue
 			# Proteção / Resistente / Frágil: stacks −1 por rodada; some em 0.
 			if id in ["protecao", "resistente", "fragil"]:
 				state["stacks"] = int(state.get("stacks", 1)) - 1

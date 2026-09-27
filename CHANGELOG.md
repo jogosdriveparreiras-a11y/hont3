@@ -1,5 +1,12 @@
 ## Não publicado
 
+## 2026-09-27 — Migração block/shield → Proteção/Barreira + Instantâneo UX + Dicionário
+
+- Migração completa do inventário legado (`LEGACY_BLOCK_MIGRATION.md`): Cap America usa **Proteção** como Escudo (`spend_protecao` / `hit_from_protecao`); Marvel Knee/Rain em **Barreira**; resto do catálogo → Barreira / Resistente / Proteção conforme regra.
+- Instantâneo: tooltip no Encerrar + toast curto ao clicar (botão não fica só disabled).
+- Editor: aba **Dicionário** com statuses, flags, ops e atributos (pt-BR).
+
+
 ## 2026-09-27
 
 - Penetrante ignora **Barreira** por completo (não gasta HP da barreira; dano segue ao personagem).
