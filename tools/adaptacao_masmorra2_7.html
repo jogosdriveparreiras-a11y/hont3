@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HotN3 — Adaptação Masmorra 2 (7 personagens)</title>
+<style>
+:root {
+  --bg: #0e1018;
+  --panel: #171b28;
+  --panel2: #1c2233;
+  --border: #2a3148;
+  --text: #e8eef8;
+  --muted: #9aa6bf;
+  --accent: #f0c27a;
+  --green: #6dffa3;
+  --red: #ff6b7a;
+  --blue: #7eb6ff;
+  --purple: #c9a0ff;
+  --attack: #d24b4b;
+  --estado: #3ecf7a;
+  --desv: #f0c27a;
+  --gap: #ff9f43;
+  --ok: #3ecf7a;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  background: radial-gradient(1200px 600px at 10% -10%, #1a2240 0%, var(--bg) 55%);
+  color: var(--text);
+  line-height: 1.45;
+}
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 28px 20px 80px; }
+header.hero {
+  background: linear-gradient(135deg, #1a2035 0%, #12182a 100%);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px 32px;
+  margin-bottom: 28px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.35);
+}
+header.hero h1 {
+  margin: 0 0 8px;
+  font-size: 1.85rem;
+  color: var(--accent);
+  letter-spacing: .02em;
+}
+header.hero .sub { color: var(--muted); margin: 0 0 16px; }
+.badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--panel2); border: 1px solid var(--border);
+  border-radius: 999px; padding: 4px 12px; font-size: .78rem; color: var(--muted);
+}
+.badge b { color: var(--accent); font-weight: 600; }
+nav.toc {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin-bottom: 28px;
+  position: sticky; top: 8px; z-index: 5;
+  backdrop-filter: blur(8px);
+}
+nav.toc h2 { margin: 0 0 10px; font-size: .95rem; color: var(--accent); }
+nav.toc ol { margin: 0; padding-left: 20px; columns: 2; gap: 24px; }
+nav.toc li { margin: 4px 0; break-inside: avoid; }
+@media (max-width: 700px) { nav.toc ol { columns: 1; } }
+section.method, section.char, section.summary {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 22px 24px;
+  margin-bottom: 22px;
+}
+h2.sec {
+  margin: 0 0 12px;
+  font-size: 1.35rem;
+  color: var(--green);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+}
+h3 { color: var(--accent); margin: 18px 0 8px; font-size: 1.05rem; }
+p, li { color: var(--text); }
+.muted { color: var(--muted); }
+.char-head {
+  display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start;
+  margin-bottom: 14px;
+}
+.identity {
+  flex: 1 1 280px;
+  background: var(--panel2);
+  border-radius: 12px;
+  padding: 14px 16px;
+  border-left: 4px solid var(--accent);
+}
+.identity h2 { margin: 0 0 6px; color: var(--text); font-size: 1.4rem; border: 0; padding: 0; }
+.identity .alter { color: var(--accent); font-weight: 600; margin-bottom: 8px; }
+.identity dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0; font-size: .9rem; }
+.identity dt { color: var(--muted); }
+.identity dd { margin: 0; }
+.desv-box {
+  flex: 1 1 260px;
+  background: rgba(240,194,122,.08);
+  border: 1px solid var(--desv);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+.desv-box .label {
+  text-align: center; color: var(--desv); font-weight: 800;
+  letter-spacing: .06em; text-transform: uppercase; font-size: .85rem; margin-bottom: 8px;
+}
+.note {
+  background: rgba(126,182,255,.08);
+  border: 1px solid rgba(126,182,255,.25);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: .88rem;
+  color: var(--muted);
+  margin: 10px 0;
+}
+.warn {
+  background: rgba(255,159,67,.1);
+  border: 1px solid rgba(255,159,67,.35);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: .88rem;
+  margin: 10px 0;
+}
+table.map {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .82rem;
+  margin: 10px 0 16px;
+}
+table.map th, table.map td {
+  border: 1px solid var(--border);
+  padding: 8px 10px;
+  vertical-align: top;
+  text-align: left;
+}
+table.map th {
+  background: #121624;
+  color: var(--accent);
+  font-weight: 600;
+  position: sticky; top: 70px;
+}
+table.map tr:nth-child(even) td { background: rgba(255,255,255,.02); }
+table.map td.manobra { color: var(--purple); font-weight: 600; white-space: nowrap; }
+.chip {
+  display: inline-block;
+  background: #2a3148;
+  border-radius: 999px;
+  padding: 1px 8px;
+  margin: 1px 2px;
+  font-size: .75rem;
+  color: var(--muted);
+}
+.chip.ok { background: rgba(62,207,122,.18); color: var(--ok); }
+.chip.gap { background: rgba(255,159,67,.18); color: var(--gap); }
+.chip.atk { background: rgba(210,75,75,.2); color: #ff8a8a; }
+.chip.est { background: rgba(62,207,122,.2); color: #8dffb8; }
+.chip.des { background: rgba(240,194,122,.2); color: var(--desv); }
+.deck {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+@media (max-width: 700px) { .deck { grid-template-columns: 1fr; } }
+.deck .col {
+  background: var(--panel2);
+  border-radius: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+}
+.deck h4 { margin: 0 0 8px; color: var(--blue); font-size: .9rem; }
+.deck ul { margin: 0; padding-left: 18px; font-size: .88rem; }
+.flags { margin-top: 6px; }
+code, .mono {
+  font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+  font-size: .85em;
+  background: #0c0e16;
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+.summary table { font-size: .85rem; }
+footer {
+  text-align: center; color: var(--muted); font-size: .8rem; margin-top: 24px;
+}
+ul.compact li { margin: 4px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <h1>HotN3 — Adaptação Masmorra 2</h1>
+  <p class="sub">Proposta de cartas para 7 personagens a partir da planilha Masmorra 2 (Fichas 3 / FICHAS — Manobras / Fichas 2). <b>Alyssa Wine já feita</b> (padrão Escuridão) — fora deste documento.</p>
+  <div class="badge-row">
+    <span class="badge"><b>Fonte</b> masmorra2.xlsx + Sheet 1GC4sxZQ5…</span>
+    <span class="badge"><b>Ignorar</b> Extract / cartas HotN3 atuais destes 7</span>
+    <span class="badge"><b>Mapear</b> regras HotN3 existentes</span>
+    <span class="badge"><b>Idioma</b> pt-BR · offline</span>
+  </div>
+</header>
+
+<nav class="toc">
+  <h2>Índice</h2>
+  <ol>
+    <li><a href="#metodo">Método</a></li>
+    <li><a href="#nomenclatura">Nomenclatura oficial</a></li>
+    <li><a href="#evelyn">Evelyn Graves (Sombria)</a></li>
+    <li><a href="#techna">Techna (Delevingne)</a></li>
+    <li><a href="#taylor">Taylor (Nave-Mãe)</a></li>
+    <li><a href="#konrad">Konrad (Sicário / Armagedom)</a></li>
+    <li><a href="#madelyn">Madelyn</a></li>
+    <li><a href="#dominika">Dominika Seur</a></li>
+    <li><a href="#nero">Nero Granger</a></li>
+    <li><a href="#resumo">Resumo + lacunas compartilhadas</a></li>
+  </ol>
+</nav>
+
+<section class="method" id="metodo">
+  <h2 class="sec">Método</h2>
+  <ol class="compact">
+    <li><b>Fonte de verdade:</b> blocos em <code>Fichas 3</code> (Evelyn, Techna, Taylor, Konrad, Madelyn). Dominika e Nero: lista em <code>FICHAS - Manobras</code> (+ nomes em Lista). Completar com <code>Fichas 2</code> / Manobras quando Fichas 3 estiver vazia.</li>
+    <li><b>Ignorar</b> nomes/efeitos atuais no Extract e em <code>entities.json</code>/<code>cards.json</code> destes sete — redesenho só a partir da planilha.</li>
+    <li><b>Padrão Alyssa (referência):</b> <b>Aprimoramento</b> com stacks (Escuridão → variável <code>E</code>), Manobras ATTACK / ESTADO + DESVANTAGEM, flags (<code>reach</code>, <code>free</code>, <code>exhaust</code>, <code>instant</code>, <code>lethargic</code>, <code>penetrating</code>, <code>final</code>), ops (<code>hit</code>, <code>protecao</code>, <code>barreira</code>, <code>resistente</code>, <code>status</code>, <code>heal</code>, <code>push</code>/<code>pull</code>, <code>summon</code>, <code>actions</code>, <code>requires_*</code>, <code>when_stacks</code>), alvos (<code>ENEMY</code>, <code>ENEMY_ROW</code>, <code>ALL_*</code>, <code>SELF</code>, <code>CHAIN</code>…).</li>
+    <li><b>Desvantagem:</b> carta classe <code>DESVANTAGEM</code>, tipicamente Instantânea na mão. Se a planilha colou lixo (ex.: Evelyn = “Munição” da Techna), <b>inventar</b> desvantagem temática e marcar.</li>
+    <li><b>Já existe</b> = regra/op/status/flag já no motor HotN3. <b>Precisa sistema novo</b> = Aprimoramento novo, marcador, invocação especial, condição de derrota, etc.</li>
+    <li><b>Deck:</b> exatamente <b>5 Iniciais</b> (únicas) + Evoluídas no pool + Melhoradas (<code>Nome+</code>) + 1 Desvantagem. Combate: 15 Manobras (3×5) + 3 Desvantagens + Combos se grupo compartilhado.</li>
+  </ol>
+  <div class="note">
+    <b>Léxico rápido planilha → HotN3:</b>
+    Impacto→<span class="chip atk">ATTACK / attack</span> · Poder→<span class="chip atk">ATTACK / power + reach</span> ·
+    Armadura/Escudo manobra→<span class="chip est">protecao / barreira / resistente</span> ·
+    Atordoado→<code>stun</code> · Ferido→<code>wounded</code> · Fraco→<code>weak</code> · Forte→<code>strengthened</code> ·
+    Lento→<code>slow</code> · Frágil→<code>fragil</code> · Invulnerável→<code>invulnerable</code> ·
+    Sangramento→<code>bleed</code> · Grátis→<code>free</code> · Exaustão→<code>exhaust</code> ·
+    Letárgico→<code>lethargic</code> · Penetrante→<code>penetrating</code> · Instantâneo→<code>instant</code> ·
+    Final→<code>final</code> · Empurrar/Repulsão→<code>push</code> · Deslocamento→push/pull ·
+    Contra-ataque→<code>counter</code> · Atento (Alyssa)→ignora desvantagem de tipo / fere Invulnerável.
+  </div>
+</section>
+
+
+<section class="method" id="nomenclatura">
+  <h2 class="sec">Nomenclatura oficial HotN3</h2>
+  <p class="muted">Ver também <code>docs/NOMENCLATURA.md</code> no repositório.</p>
+  <ul class="compact">
+    <li><b>Manobras</b> = cartas Impacto / Poder / Estado. Cada personagem: <b>5 Iniciais</b> (kit), <b>Evoluídas</b> (progresso), <b>Melhoradas</b> (versões <code>Nome+</code>, chrome 3D, <code>melhorada_de</code>).</li>
+    <li><b>Deck inicial de combate</b> = 15 Manobras (3×5) + 3 Desvantagens (+ até 4 Combos se os 3 compartilham um grupo). Sem editor de deck in-game.</li>
+    <li><b>Reshuffle</b> descarte→baralho: equipe aliada recebe <b>Lento 1</b> (fadiga).</li>
+    <li><b>Desvantagem</b> = 1 carta negativa por personagem.</li>
+    <li><b>Aprimoramento</b> = passiva sempre ativa (substitui recurso / passive / assinatura como termos de design). Campo <code>aprimoramento</code>; aliases <code>passive</code>/<code>signature</code>.</li>
+    <li><b>Grupos</b> (≈3 por personagem) → se time inteiro compartilha um grupo: +4 <b>Combo Manobras</b> Efêmeras (pares + trio). Jogável só com membros vivos; ao jogar, Manobras deles custam 0 INI no round.</li>
+    <li><b>UI ficha</b>: retrato, attrs, tipo, Biografia, cartas (clique amplia + glossário de efeitos).</li>
+    <li><b>Batalha</b>: botão <b>Inspecionar</b>; após alvo, prévia de dano (HP vermelho) + efeitos.</li>
+    <li><b>Editor</b>: seções Inicial | Evoluídas | Melhoradas | Desvantagem; toggle Melhorada.</li>
+  </ul>
+  <div class="note"><b>Pós-missão:</b> sorteia 3 Manobras entre as dos participantes (incl. Evoluídas); se já possuem, oferece Melhorada.</div>
+</section>
+
+<!-- ===================== EVELYN ===================== -->
+<section class="char" id="evelyn">
+  <div class="char-head">
+    <div class="identity">
+      <h2>Evelyn Graves</h2>
+      <div class="alter">Alterego: Sombria · Raça: Meio-Monstro</div>
+      <dl>
+        <dt>Vida (ficha)</dt><dd>d8 (+1)</dd>
+        <dt>Velocidade</dt><dd>7 passos</dd>
+        <dt>Aprimoramento</dt><dd><b>Sonho</b> — marcador aplicado em alvos (e às vezes em si). Escala cartas de controle. Variável opcional <code>S</code> = stacks de Sonho no alvo ou no campo.</dd>
+        <dt>Manobra destaque</dt><dd>Porta do Reino Quebrado (stun + área letárgica)</dd>
+        <dt>Fonte</dt><dd>Fichas 3 R30–51 (mais completa); Fichas 2 incompleta; Manobras R24–45 (esboço)</dd>
+      </dl>
+    </div>
+    <div class="desv-box">
+      <div class="label">Desvantagem (inventada)</div>
+      <p><b>Porta Entornada</b> — Instantâneo. Se houver ≥2 alvos com <code>stun</code> ou Sonho no fim do turno dela, Evelyn sofre 1 de dano penetrante <em>ou</em> aplica Frágil 1 em si. (A planilha colou “Munição / Todas as Manobras da Techna ganham Exaustão” — lixo de paste; descartar.)</p>
+    </div>
+  </div>
+  <div class="warn">⚠ Desvantagem da planilha é paste da Techna. Identidade de controle/pesadelo: stun → letárgico → sonho → invocação.</div>
+
+  <h3>Manobra planilha → carta HotN3</h3>
+  <table class="map">
+    <thead>
+      <tr><th>Manobra (planilha)</th><th>Tipo</th><th>Carta sugerida</th><th>Classe / custo</th><th>Efeitos mapeados</th><th>Flags</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="manobra">Garras Oníricas</td><td>1-Inicial</td>
+        <td>Garras Oníricas</td>
+        <td><span class="chip atk">ATTACK</span> gain 1 · ENEMY · attack</td>
+        <td><code>hit 2</code>; crítico/efeito: <code>status wounded 1</code></td>
+        <td>—</td>
+        <td><span class="chip ok">Já existe</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Aikido</td><td>1-Inicial</td>
+        <td>Aikido</td>
+        <td><span class="chip est">ESTADO</span> gain 1 · SELF</td>
+        <td><code>protecao 1</code> + <code>fragil 1</code> (trade-off da ficha: Armadura 1, Frágil 1, Prioridade→jogar cedo / free-ish)</td>
+        <td>opcional <code>quick</code></td>
+        <td><span class="chip ok">Já existe</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Sedução</td><td>1-Inicial</td>
+        <td>Sedução</td>
+        <td><span class="chip est">ESTADO</span> · SELF/ALLY</td>
+        <td>F3: Grátis, Impulso → <code>free</code> + <code>gain</code> INI (ex. +2). F2 variante Massivo: preferir F3.</td>
+        <td><code>free</code></td>
+        <td><span class="chip ok">Já existe</span> (gain/free)</td>
+      </tr>
+      <tr>
+        <td class="manobra">Bons Sonhos</td><td>1-Inicial</td>
+        <td>Bons Sonhos</td>
+        <td><span class="chip atk">ATTACK</span> cost 1 · ENEMY_ROW / seletivo</td>
+        <td>Req: HP≤50% <em>ou</em> marcador negativo. <code>status stun 1</code>; alcance; área seletiva.</td>
+        <td><code>reach</code></td>
+        <td><span class="chip gap">Req HP%/marcador</span> parcial</td>
+      </tr>
+      <tr>
+        <td class="manobra">Reino Quebrado</td><td>1-Inicial</td>
+        <td>Reino Quebrado</td>
+        <td><span class="chip atk">ATTACK</span> cost/gain · power</td>
+        <td>Req: alvo stun. <code>hit 1</code> (poder); área 2 seletiva; <code>lethargic</code></td>
+        <td><code>reach</code> <code>lethargic</code></td>
+        <td><span class="chip ok">Já existe</span> (+ req stun)</td>
+      </tr>
+      <tr>
+        <td class="manobra">Sonambulismo</td><td>2-Evoluída</td>
+        <td>Sonambulismo</td>
+        <td><span class="chip est">ESTADO</span> · ENEMY</td>
+        <td>Req stun. <code>push</code>/<code>pull</code> 1; <code>lethargic</code></td>
+        <td><code>lethargic</code></td>
+        <td><span class="chip ok">Já existe</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Sonhos Eróticos</td><td>2-Evoluída</td>
+        <td>Sonhos Eróticos</td>
+        <td><span class="chip est">ESTADO</span> · ENEMY</td>
+        <td>Req stun. <code>free</code>; <code>status strengthened 1</code> (nela) + <code>weak 1</code> (alvo) + <code>status sonho 1</code></td>
+        <td><code>free</code></td>
+        <td><span class="chip gap">Marcador Sonho</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Sonhar Acordado</td><td>2-Evoluída</td>
+        <td>Sonhar Acordado</td>
+        <td><span class="chip est">ESTADO</span> · ANY_UNIT c/ Sonho</td>
+        <td>Jogar 1 manobra “copiada” do personagem com Sonho sem custo INI → precisa regra de <em>proxy play</em></td>
+        <td><code>free</code>?</td>
+        <td><span class="chip gap">Precisa sistema novo</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Invocar Pesadelos</td><td>2-Evoluída</td>
+        <td>Invocar Pesadelos</td>
+        <td><span class="chip est">ESTADO</span> · SELF</td>
+        <td>Req alvo stun. <code>summon</code> lacaio 1; dura enquanto stun no âncora</td>
+        <td>—</td>
+        <td><span class="chip gap">Summon + vínculo stun</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Hora de Acordar</td><td>2-Evoluída</td>
+        <td>Hora de Acordar</td>
+        <td><span class="chip est">ESTADO</span> · ALL_OTHERS / área</td>
+        <td><code>free</code>; remove todos <code>stun</code>; jogável sob stun (exceção)</td>
+        <td><code>free</code> <code>reach</code></td>
+        <td><span class="chip gap">Purge stun + sob stun</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Munição (errado)</td><td>4-Desv.</td>
+        <td colspan="5"><em>Ignorar — paste Techna. Usar Porta Entornada.</em></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="deck">
+    <div class="col">
+      <h4>Iniciais (5) + Desvantagem</h4>
+      <ul>
+        <li>Garras Oníricas ×2</li>
+        <li>Aikido ×2</li>
+        <li>Sedução ×1</li>
+        <li>Bons Sonhos ×1</li>
+        <li>Reino Quebrado ×1</li>
+        <li>Porta Entornada (DESV) ×1</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h4>Evoluídas / Melhoradas</h4>
+      <ul>
+        <li>Sonambulismo, Sonhos Eróticos, Sonhar Acordado</li>
+        <li>Invocar Pesadelos, Hora de Acordar</li>
+        <li>Melhorias “+” da F3 (Reino Quebrado+: cura 1 + INI por alvo)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== TECHNA ===================== -->
+<section class="char" id="techna">
+  <div class="char-head">
+    <div class="identity">
+      <h2>Techna</h2>
+      <div class="alter">Nome: Delevingne · Alterego: Techna · Raça: Ciborgue</div>
+      <dl>
+        <dt>Vida</dt><dd>d8</dd>
+        <dt>Defesa ficha</dt><dd>Armadura +2 · Escudo +1 · Impacto/Poder 0 · Vel 5</dd>
+        <dt>Aprimoramento</dt><dd><b>Kit tático</b> — sem stack numérico; ênfase em stun + exhaust por Munição. Alternativa: passiva “Contenção” (+1 Proteção ao aplicar stun).</dd>
+        <dt>Fonte</dt><dd>Fichas 3 R53–74 (nomes + 2 efeitos); Manobras R501–502 (Munição); Fichas 2 igual</dd>
+      </dl>
+    </div>
+    <div class="desv-box">
+      <div class="label">Desvantagem (planilha)</div>
+      <p><b>Munição</b> — Sustentável / Instantâneo / Desvantagem. Texto F3: “Todas as Manobras da Techna ganham Exaustão.” Manobras: “Instantâneo. Persistente. Exile a próxima manobra.” <b>Sugestão HotN3:</b> Instantâneo na mão; enquanto ativa, cartas ATTACK dela ganham <code>exhaust</code>; ao jogar a desvantagem, a <em>próxima</em> carta jogada também é exilada (<code>exhaust</code>).</p>
+    </div>
+  </div>
+  <div class="note">Vários nomes em Fichas 3 sem coluna Efeitos preenchida — propostas abaixo preenchem com temática de contenção não-letal (choque, rede, gás, escudo balístico), alinhada aos nomes e aos 2 efeitos explícitos.</div>
+
+  <h3>Manobra planilha → carta HotN3</h3>
+  <table class="map">
+    <thead>
+      <tr><th>Manobra</th><th>Tipo</th><th>Carta</th><th>Classe / custo</th><th>Efeitos</th><th>Flags</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="manobra">Bastão de Choque</td><td>Inicial</td>
+        <td>Bastão de Choque</td>
+        <td><span class="chip atk">ATTACK</span> gain 1 · ENEMY · attack</td>
+        <td>Ficha: Impacto; Crítico Atordoado → <code>hit 1</code> + <code>status stun 1</code> (sempre ou on-hit, sem crit RNG: aplicar stun se alvo já Ferido <em>ou</em> sempre stun 1 fraco)</td>
+        <td>—</td>
+        <td><span class="chip ok">Já existe</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Taser Disparável</td><td>Inicial</td>
+        <td>Taser Disparável</td>
+        <td><span class="chip atk">ATTACK</span> gain 1 · ENEMY · power</td>
+        <td>Poder + Alcance + Atordoado → <code>hit 1</code> + <code>stun 1</code></td>
+        <td><code>reach</code></td>
+        <td><span class="chip ok">Já existe</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Protetor de Antebraço</td><td>Inicial</td>
+        <td>Protetor de Antebraço</td>
+        <td><span class="chip est">ESTADO</span> · SELF</td>
+        <td>Sugestão (nome vazio na ficha): <code>protecao 1</code> + <code>resistente 1</code></td>
+        <td>—</td>
+        <td><span class="chip ok">Já existe</span> · efeito inventado</td>
+      </tr>
+      <tr>
+        <td class="manobra">Granada de Fumaça</td><td>Inicial</td>
+        <td>Granada de Fumaça</td>
+        <td><span class="chip est">ESTADO</span> · ENEMY_ROW</td>
+        <td><code>status conceal 1</code> em si <em>ou</em> <code>weak 1</code> na fileira (fumaça)</td>
+        <td><code>reach</code></td>
+        <td><span class="chip ok">conceal/weak</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Granada de Gás Sonífero</td><td>Inicial</td>
+        <td>Gás Sonífero</td>
+        <td><span class="chip atk">ATTACK</span> cost 2 · ENEMY_ROW · power</td>
+        <td><code>status stun 1</code> na fileira; pouco/nenhum hit</td>
+        <td><code>reach</code> <code>lethargic</code>?</td>
+        <td><span class="chip ok">stun área</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Lançador de Rede</td><td>Evoluída</td>
+        <td>Lançador de Rede</td>
+        <td><span class="chip est">ESTADO</span> · ENEMY</td>
+        <td><code>status bind 1</code> (impede ação) + opcional <code>pull 1</code></td>
+        <td><code>reach</code></td>
+        <td><span class="chip ok">bind</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Scanner</td><td>Evoluída</td>
+        <td>Scanner</td>
+        <td><span class="chip est">ESTADO</span> · ENEMY</td>
+        <td><code>status marked 1</code> + <code>draw 1</code></td>
+        <td><code>free</code>?</td>
+        <td><span class="chip ok">Já existe</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Escudo Balístico Retrátil</td><td>Evoluída</td>
+        <td>Escudo Balístico</td>
+        <td><span class="chip est">ESTADO</span> · SELF</td>
+        <td><code>barreira 2 8</code> ou <code>protecao 2</code></td>
+        <td>—</td>
+        <td><span class="chip ok">Já existe</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Arpéu Tático</td><td>Evoluída</td>
+        <td>Arpéu Tático</td>
+        <td><span class="chip atk">ATTACK</span> · ENEMY · attack</td>
+        <td><code>hit 1</code> + <code>pull 1</code></td>
+        <td><code>reach</code></td>
+        <td><span class="chip ok">Já existe</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Munição</td><td>Desv.</td>
+        <td>Munição</td>
+        <td><span class="chip des">DESVANTAGEM</span> · SELF</td>
+        <td>Instantâneo; ATTACKs ganham exhaust; próxima carta exhaust</td>
+        <td><code>instant</code></td>
+        <td><span class="chip gap">Aura “cartas ganham exhaust”</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="deck">
+    <div class="col">
+      <h4>Iniciais (5) + Desvantagem</h4>
+      <ul>
+        <li>Bastão de Choque ×2</li>
+        <li>Taser Disparável ×2</li>
+        <li>Protetor de Antebraço ×1</li>
+        <li>Granada de Fumaça ×1</li>
+        <li>Gás Sonífero ×1</li>
+        <li>Munição (DESV) ×1</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h4>Evoluídas / Melhoradas</h4>
+      <ul>
+        <li>Lançador de Rede, Scanner</li>
+        <li>Escudo Balístico Retrátil, Arpéu Tático</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== TAYLOR ===================== -->
+<section class="char" id="taylor">
+  <div class="char-head">
+    <div class="identity">
+      <h2>Taylor Snut</h2>
+      <div class="alter">Alterego: Nave-Mãe · Raça: Meio-Alien (ficha) / Mutante (lore)</div>
+      <dl>
+        <dt>Vida</dt><dd>d6</dd>
+        <dt>Atributos ficha</dt><dd>Escudo +2 · Poder +1 · Vel 6 · Armadura 0</dd>
+        <dt>Aprimoramento</dt><dd><b>Zaphter / Elo psíquico</b> — stacks <code>elo</code> ao ganhar Proteção/Barreira; variável opcional. Ou passiva baluarte: ao receber hit, +1 Proteção (já próximo de passivas HotN3).</dd>
+        <dt>Fonte</dt><dd>Fichas 3 R76–97 (nomes); <b>Manobras R47–68</b> (efeitos completos Telecinese/Rajada/…)</dd>
+      </dl>
+    </div>
+    <div class="desv-box">
+      <div class="label">Desvantagem (planilha)</div>
+      <p><b>Eletricidade</b> — Sustentável, Instantâneo, Desvantagem 1 (sem texto longo). <b>Sugestão:</b> Instantâneo; enquanto na mão/ativa, Taylor é <code>vulnerable 1</code> a ATTACK tipo Impacto <em>ou</em> sofre 1 dano ao jogar carta de Poder (curto-circuito). Alternativa limpa: Frágil 1 permanente até descartar a desvantagem jogando-a.</p>
+    </div>
+  </div>
+
+  <h3>Manobra planilha → carta HotN3</h3>
+  <table class="map">
+    <thead>
+      <tr><th>Manobra</th><th>Fonte efeito</th><th>Carta</th><th>Classe</th><th>Efeitos</th><th>Flags</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="manobra">Rajada Mental</td><td>F3 nome · Manobras: Poder, Alcance, Penetrante, Recuo</td>
+        <td>Rajada Mental</td>
+        <td><span class="chip atk">ATTACK</span> · power</td>
+        <td><code>hit 1</code>; F3 também lista crítico Atordoado</td>
+        <td><code>reach</code> <code>penetrating</code> <code>recoil</code></td>
+        <td><span class="chip ok">Já existe</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Defesa Pessoal</td><td>Manobras: Armadura, Proteção 1, Prioridade</td>
+        <td>Defesa Pessoal</td>
+        <td><span class="chip est">ESTADO</span> · SELF</td>
+        <td><code>protecao 1</code> (+ resistente 1 opcional)</td>
+        <td><code>quick</code>?</td>
+        <td><span class="chip ok">Já existe</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Barreira Psíquica</td><td>Manobras: Escudo, Área 1, Recuo, Proteção 1, Prioridade, Sustentável</td>
+        <td>Barreira Psíquica</td>
+        <td><span class="chip est">ESTADO</span> · ALL_ALLIES / ENEMY_ROW?</td>
+        <td><code>barreira 2 6</code> em si + <code>protecao 1</code> em aliados da fileira; recoil se ofensiva</td>
+        <td><code>recoil</code> (se mantiver)</td>
+        <td><span class="chip ok">Já existe</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Telecinese</td><td>Manobras: Deslocamento 1, Alcance, Recuo; Crit Atordoado</td>
+        <td>Telecinese</td>
+        <td><span class="chip est">ESTADO</span> · ENEMY</td>
+        <td><code>push</code> ou <code>pull</code> 1; opcional <code>stun 1</code></td>
+        <td><code>reach</code> <code>recoil</code></td>
+        <td><span class="chip ok">Já existe</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Eu Tenho Um Plano!</td><td>Manobras: Corajoso (evolução)</td>
+        <td>Eu Tenho Um Plano!</td>
+        <td><span class="chip est">ESTADO</span> · SELF</td>
+        <td><code>actions 1</code> no próximo turno + <code>draw 1</code> (plano)</td>
+        <td><code>free</code>?</td>
+        <td><span class="chip ok">actions/draw</span> · “Corajoso” vague</td>
+      </tr>
+      <tr>
+        <td class="manobra">Ligação Psíquica</td><td>Manobras: Presença</td>
+        <td>Ligação Psíquica</td>
+        <td><span class="chip est">ESTADO</span> · ALLY</td>
+        <td>Transferir 1 Proteção para aliado <em>ou</em> <code>heal 2</code> aliado</td>
+        <td>—</td>
+        <td><span class="chip gap">Transfer proteção</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Paralisar Sentidos</td><td>Manobras evol.</td>
+        <td>Paralisar Sentidos</td>
+        <td><span class="chip est">ESTADO</span> · ENEMY</td>
+        <td><code>stun 1</code> + <code>weak 1</code></td>
+        <td><code>reach</code></td>
+        <td><span class="chip ok">Já existe</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Persuasão / Mudança de Forma</td><td>Manobras evol. (sem efeito)</td>
+        <td>Persuasão · Forma</td>
+        <td><span class="chip est">ESTADO</span></td>
+        <td>Persuasão: <code>taunt</code> / slow. Forma: <code>conceal 1</code> + move livre</td>
+        <td>—</td>
+        <td><span class="chip gap">Efeitos inventados</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Eletricidade</td><td>Desv.</td>
+        <td>Eletricidade</td>
+        <td><span class="chip des">DESVANTAGEM</span></td>
+        <td>Instantâneo; Frágil 1 em si enquanto “ativa”</td>
+        <td><code>instant</code></td>
+        <td><span class="chip ok">fragil+instant</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="deck">
+    <div class="col">
+      <h4>Iniciais (5) + Desvantagem</h4>
+      <ul>
+        <li>Rajada Mental ×2</li>
+        <li>Defesa Pessoal ×2</li>
+        <li>Barreira Psíquica ×1</li>
+        <li>Telecinese ×1</li>
+        <li>Eu Tenho Um Plano! ×1</li>
+        <li>Eletricidade (DESV) ×1</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h4>Evoluídas / Melhoradas</h4>
+      <ul>
+        <li>Ligação Psíquica, Paralisar Sentidos</li>
+        <li>Persuasão, Mudança de Forma</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== KONRAD ===================== -->
+<section class="char" id="konrad">
+  <div class="char-head">
+    <div class="identity">
+      <h2>Konrad</h2>
+      <div class="alter">Alterego: Sicário · Codinome lore: Armagedom · Raça: Meio-Sangue</div>
+      <dl>
+        <dt>Vida</dt><dd>d6</dd>
+        <dt>Atributos</dt><dd>Armadura +1 · Impacto +1 · Vel 7 · Escudo 0</dd>
+        <dt>Aprimoramento</dt><dd><b>Penumbra</b> — +1 dano penetrante se estiver na retaguarda / conceal. Ou stacks ao KO furtivo.</dd>
+        <dt>Fonte</dt><dd>Fichas 3 R99–120; Manobras R483–486 (Facada / Invisível / Substituto)</dd>
+      </dl>
+    </div>
+    <div class="desv-box">
+      <div class="label">Desvantagem (planilha)</div>
+      <p><b>Magia de Sangue</b> — “O último aliado alvo, o mais próximo ou o Konrad recebe Fraco, Frágil e Lento.” HotN3: Instantâneo; ao jogar (ou no tick), aplica <code>weak 1</code> + <code>fragil 1</code> + <code>slow 1</code> no aliado com menos HP (ou nele se solo).</p>
+    </div>
+  </div>
+
+  <h3>Manobra planilha → carta HotN3</h3>
+  <table class="map">
+    <thead>
+      <tr><th>Manobra</th><th>Tipo</th><th>Carta</th><th>Classe</th><th>Efeitos</th><th>Flags</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="manobra">Emboscada</td><td>Inicial</td>
+        <td>Emboscada</td>
+        <td><span class="chip atk">ATTACK</span> · attack</td>
+        <td>Req: “só como Crítico” → HotN3: req conceal/retaguarda <em>ou</em> alvo marked. <code>hit 2</code> + penetrating; “Ágil”→<code>quick</code></td>
+        <td><code>penetrating</code> <code>quick</code></td>
+        <td><span class="chip gap">Req posição/crit</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Leve como Pena</td><td>Inicial</td>
+        <td>Leve como Pena</td>
+        <td><span class="chip est">ESTADO</span> · SELF</td>
+        <td>Voar → trocar de fileira + <code>free</code>; opcional conceal 1</td>
+        <td><code>free</code></td>
+        <td><span class="chip gap">Voar = move linha</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Dividir a Dor</td><td>Inicial</td>
+        <td>Dividir a Dor</td>
+        <td><span class="chip est">ESTADO</span> · SELF</td>
+        <td><code>protecao 1</code> + <code>self_status counter 1</code></td>
+        <td>—</td>
+        <td><span class="chip ok">Já existe</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Invisibilidade</td><td>Inicial</td>
+        <td>Invisibilidade</td>
+        <td><span class="chip est">ESTADO</span> · SELF</td>
+        <td><code>invulnerable 1</code> + <code>protecao 1</code> (+ conceal)</td>
+        <td>—</td>
+        <td><span class="chip ok">Já existe</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Substituto</td><td>Inicial</td>
+        <td>Substituto</td>
+        <td><span class="chip est">ESTADO</span> · ALLY</td>
+        <td>Redireciona próximo hit ao Konrad <em>ou</em> troca fileira com aliado</td>
+        <td>—</td>
+        <td><span class="chip gap">Redirect hit</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Aterrorizar / Intimidação</td><td>Evoluída</td>
+        <td>Aterrorizar</td>
+        <td><span class="chip est">ESTADO</span> · ENEMY / ALL_ENEMIES</td>
+        <td><code>weak 1</code> + <code>slow 1</code></td>
+        <td>—</td>
+        <td><span class="chip ok">Já existe</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Corajoso</td><td>Evoluída</td>
+        <td>Corajoso</td>
+        <td><span class="chip est">ESTADO</span> · SELF</td>
+        <td><code>strengthened 1</code> + remove weak/slow próprio</td>
+        <td>—</td>
+        <td><span class="chip ok">Já existe</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Buffs / Debuffs / Transmutação</td><td>Evoluída</td>
+        <td>(especificar na implementação)</td>
+        <td><span class="chip est">ESTADO</span></td>
+        <td>Placeholders da ficha — Buffs: resistente; Debuffs: vulnerable; Transmutação: cure + draw</td>
+        <td>—</td>
+        <td><span class="chip gap">Nomes sem efeito</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Facada pelas Costas</td><td>Manobras lista</td>
+        <td>Facada pelas Costas</td>
+        <td><span class="chip atk">ATTACK</span></td>
+        <td>Sinônimo Emboscada: hit penetrante da retaguarda</td>
+        <td><code>penetrating</code></td>
+        <td><span class="chip ok">Já existe</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Magia de Sangue</td><td>Desv.</td>
+        <td>Magia de Sangue</td>
+        <td><span class="chip des">DESVANTAGEM</span></td>
+        <td>weak+fragil+slow em aliado frágil</td>
+        <td><code>instant</code></td>
+        <td><span class="chip ok">status trio</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="deck">
+    <div class="col">
+      <h4>Iniciais (5) + Desvantagem</h4>
+      <ul>
+        <li>Emboscada ×2</li>
+        <li>Leve como Pena ×1</li>
+        <li>Dividir a Dor ×2</li>
+        <li>Invisibilidade ×1</li>
+        <li>Substituto ×1</li>
+        <li>Magia de Sangue (DESV) ×1</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h4>Evoluídas / Melhoradas</h4>
+      <ul>
+        <li>Aterrorizar, Corajoso</li>
+        <li>Buffs / Debuffs / Transmutação (definir)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== MADELYN ===================== -->
+<section class="char" id="madelyn">
+  <div class="char-head">
+    <div class="identity">
+      <h2>Madelyn</h2>
+      <div class="alter">Alterego: (vazio na ficha) · Raça: Meio-Monstro · Lore: Madelyn Quinn</div>
+      <dl>
+        <dt>Vida</dt><dd>d10</dd>
+        <dt>Velocidade</dt><dd>8 passos</dd>
+        <dt>Aprimoramento</dt><dd><b>Fome / Ferido</b> — escala com <code>wounded</code> no alvo (A Fome). Passiva: ao causar wounded, gain +1 INI.</dd>
+        <dt>Fonte</dt><dd>Fichas 3 R190–211 (bem preenchida nas iniciais)</dd>
+      </dl>
+    </div>
+    <div class="desv-box">
+      <div class="label">Desvantagem (planilha)</div>
+      <p><b>A Fome</b> — Req: alvo com Ferido. Instantâneo, Final, Impacto 1, Aniquilação. HotN3: Instantâneo; req <code>wounded</code> no alvo; <code>hit 1</code> + <code>ko</code> se HP do alvo ≤ limiar (ex. 25%) <em>ou</em> hit alto + <code>final</code> nela. “Aniquilação” = <span class="chip gap">precisa regra KO condicional</span>.</p>
+    </div>
+  </div>
+
+  <h3>Manobra planilha → carta HotN3</h3>
+  <table class="map">
+    <thead>
+      <tr><th>Manobra</th><th>Tipo</th><th>Carta</th><th>Classe</th><th>Efeitos</th><th>Flags</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="manobra">Katana Enferrujada</td><td>1-Inicial</td>
+        <td>Katana Enferrujada</td>
+        <td><span class="chip atk">ATTACK</span> gain 1 · attack</td>
+        <td>Impacto 1, Ferido 1; Crit Combo → <code>hit 1</code> + <code>wounded 1</code> + <code>chain 1</code></td>
+        <td><code>chain</code>?</td>
+        <td><span class="chip ok">Já existe</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Pistola</td><td>1-Inicial</td>
+        <td>Pistola</td>
+        <td><span class="chip atk">ATTACK</span> · power</td>
+        <td>Poder 1, Alcance, Ferido 1; Crit Ágil → <code>hit 1</code> + <code>wounded 1</code> + <code>quick</code></td>
+        <td><code>reach</code> <code>quick</code></td>
+        <td><span class="chip ok">Já existe</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Rapidez</td><td>1-Inicial</td>
+        <td>Rapidez</td>
+        <td><span class="chip est">ESTADO</span> · SELF</td>
+        <td>Reação/Prioridade/Armadura → <code>protecao 1</code> + <code>quick</code> aura curta</td>
+        <td><code>quick</code></td>
+        <td><span class="chip ok">Já existe</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Premonição</td><td>1-Inicial</td>
+        <td>Premonição</td>
+        <td><span class="chip est">ESTADO</span> · SELF</td>
+        <td>Escudo 1 / Prioridade → <code>protecao 1</code> ou <code>barreira 1 4</code> (vs Poder)</td>
+        <td>—</td>
+        <td><span class="chip ok">Já existe</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Compartimento Secreto</td><td>1-Inicial</td>
+        <td>Compartimento Secreto</td>
+        <td><span class="chip est">ESTADO</span> · SELF</td>
+        <td>Comprar (próprio) 3 → <code>draw_own 3</code></td>
+        <td>—</td>
+        <td><span class="chip ok">draw_own</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Beleza Vampírica</td><td>2-Evoluída</td>
+        <td>Beleza Vampírica</td>
+        <td><span class="chip est">ESTADO</span> · SELF</td>
+        <td>Grátis, Instantâneo → carta free que <em>deve</em> ser jogada; efeito: <code>strengthened 1</code> ou taunt sensual</td>
+        <td><code>free</code> <code>instant</code></td>
+        <td><span class="chip ok">flags</span> · efeito fino inventar</td>
+      </tr>
+      <tr>
+        <td class="manobra">Manto das Sombras</td><td>2-Evoluída</td>
+        <td>Manto das Sombras</td>
+        <td><span class="chip atk">ATTACK</span> · attack</td>
+        <td>Impacto 1, Ferido 1, Invulnerável 1 → hit + wounded + <code>invulnerable 1</code> em si</td>
+        <td>—</td>
+        <td><span class="chip ok">Já existe</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Transe</td><td>2-Evoluída</td>
+        <td>Transe</td>
+        <td><span class="chip est">ESTADO</span> · ENEMY</td>
+        <td>Atordoado 1, Final, Frágil 1 → stun + fragil; <code>final</code> nela</td>
+        <td><code>final</code></td>
+        <td><span class="chip ok">Já existe</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Assombro / Negação</td><td>2-Evoluída</td>
+        <td>Assombro · Negação</td>
+        <td><span class="chip est">ESTADO</span></td>
+        <td>Ficha sem efeitos (INI −3 placeholder). Sugestão: Assombro = slow ALL_ENEMIES; Negação = cure negativos próprios / cancel 1 hit (<code>protecao 2</code>)</td>
+        <td>—</td>
+        <td><span class="chip gap">Efeitos vazios na ficha</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">A Fome</td><td>Desv.</td>
+        <td>A Fome</td>
+        <td><span class="chip des">DESVANTAGEM</span> · ENEMY</td>
+        <td>Req wounded; instant; final; hit 1; aniquilação</td>
+        <td><code>instant</code> <code>final</code></td>
+        <td><span class="chip gap">Aniquilação</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="deck">
+    <div class="col">
+      <h4>Iniciais (5) + Desvantagem</h4>
+      <ul>
+        <li>Katana Enferrujada ×2</li>
+        <li>Pistola ×2</li>
+        <li>Rapidez ×1</li>
+        <li>Premonição ×1</li>
+        <li>Compartimento Secreto ×1</li>
+        <li>A Fome (DESV) ×1</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h4>Evoluídas / Melhoradas</h4>
+      <ul>
+        <li>Beleza Vampírica, Manto das Sombras, Transe</li>
+        <li>Assombro, Negação (+ versões)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== DOMINIKA ===================== -->
+<section class="char" id="dominika">
+  <div class="char-head">
+    <div class="identity">
+      <h2>Dominika Seur</h2>
+      <div class="alter">Alterego: (lista) · Inumana / “Herdeira de Vitrine”</div>
+      <dl>
+        <dt>Atributos (Manobras)</dt><dd>PRE 8 · VID 7+11 · IMP 8 · ARM 10 · POD 5 · ESC 9 · VEL 5</dd>
+        <dt>Passiva sugerida</dt><dd><b>Ricochete</b> — “Passivo, Superior, Refletir”: ao bloquear com Proteção/Barreira, devolve 1 dano penetrante ao atacante corpo-a-corpo.</dd>
+        <dt>Fonte</dt><dd><b>FICHAS - Manobras R364–380</b> (não está em Fichas 3)</dd>
+      </dl>
+    </div>
+    <div class="desv-box">
+      <div class="label">Desvantagem (inventada — ficha sem slot 4)</div>
+      <p><b>Eu Sou a Vítima!</b> aparece como manobra permanente (“Se receber ERP, INI”). Como DESV: Instantâneo; se Dominika tiver Proteção≥2 no fim do turno, perde 1 Proteção e o inimigo com mais Impacto ganha <code>strengthened 1</code> (drama de vítima). Alternativa: Frágil 1 permanente por excesso de massa (lentidão).</p>
+    </div>
+  </div>
+  <div class="note">Lista é esparsa (nomes + flavor). Mapeamento abaixo fecha kit tanque/colosso com regras HotN3 existentes.</div>
+
+  <h3>Manobra planilha → carta HotN3</h3>
+  <table class="map">
+    <thead>
+      <tr><th>Manobra / nota</th><th>Carta</th><th>Classe</th><th>Efeitos</th><th>Flags</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="manobra">Peitada / Barrigada</td>
+        <td>Peitada</td>
+        <td><span class="chip atk">ATTACK</span> · attack</td>
+        <td>Impacto; Crit/Atordoar → <code>hit 2</code> + <code>stun 1</code> + <code>push 1</code></td>
+        <td>—</td>
+        <td><span class="chip ok">Já existe</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Abalo Sísmico</td>
+        <td>Abalo Sísmico</td>
+        <td><span class="chip atk">ATTACK</span> · power · ENEMY_ROW</td>
+        <td>Poder + Adjacente → <code>hit 1</code> fileira + <code>push 1</code></td>
+        <td>—</td>
+        <td><span class="chip ok">Já existe</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Sedução (Presença)</td>
+        <td>Sedução</td>
+        <td><span class="chip est">ESTADO</span> · ENEMY</td>
+        <td><code>taunt</code> / <code>weak 1</code></td>
+        <td><code>free</code>?</td>
+        <td><span class="chip ok">taunt/weak</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Gordura (Armadura)</td>
+        <td>Gordura</td>
+        <td><span class="chip est">ESTADO</span> · SELF</td>
+        <td><code>resistente 2</code> + <code>protecao 1</code></td>
+        <td>—</td>
+        <td><span class="chip ok">Já existe</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Ricochete (Escudo)</td>
+        <td>Ricochete</td>
+        <td><span class="chip est">ESTADO</span> · SELF</td>
+        <td><code>barreira 2 10</code> + ativar passiva refletir 1 rodada</td>
+        <td>—</td>
+        <td><span class="chip gap">Refletir dano</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Rolar</td>
+        <td>Rolar</td>
+        <td><span class="chip est">ESTADO</span> · SELF</td>
+        <td>Rápido → <code>quick</code> + troca de fileira + <code>protecao 1</code></td>
+        <td><code>quick</code> <code>free</code>?</td>
+        <td><span class="chip ok">Já existe</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Sentar / Esmagar</td>
+        <td>Esmagar</td>
+        <td><span class="chip atk">ATTACK</span> · attack</td>
+        <td><code>hit 2</code> + <code>bind 1</code> (prende no chão) + <code>final</code>?</td>
+        <td><code>final</code>?</td>
+        <td><span class="chip ok">bind/hit</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Espremer</td>
+        <td>Espremer</td>
+        <td><span class="chip atk">ATTACK</span></td>
+        <td><code>hit 1</code> + <code>bleed 2</code> (compressão)</td>
+        <td>—</td>
+        <td><span class="chip ok">Já existe</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Eu Sou a Vítima!</td>
+        <td>Eu Sou a Vítima!</td>
+        <td><span class="chip est">ESTADO</span> / DESV</td>
+        <td>Permanente: ao receber hit, +1 INI (gain). Como carta: <code>actions</code>/<code>gain</code> on-hit</td>
+        <td><code>instant</code>?</td>
+        <td><span class="chip gap">On-hit gain INI</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="deck">
+    <div class="col">
+      <h4>Iniciais (5) + Desvantagem</h4>
+      <ul>
+        <li>Peitada ×2</li>
+        <li>Gordura ×2</li>
+        <li>Ricochete ×1</li>
+        <li>Abalo Sísmico ×1</li>
+        <li>Sedução ×1</li>
+        <li>Eu Sou a Vítima! (DESV ou ESTADO) ×1</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h4>Evoluídas / Melhoradas</h4>
+      <ul>
+        <li>Rolar, Esmagar, Espremer</li>
+        <li>Barrigada+ / upgrade de Peitada</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== NERO ===================== -->
+<section class="char" id="nero">
+  <div class="char-head">
+    <div class="identity">
+      <h2>Nero Granger</h2>
+      <div class="alter">Necromante · Lista: Nero Granger</div>
+      <dl>
+        <dt>Aprimoramento</dt><dd><b>Naomi</b> — como Escuridão da Alyssa: modo/recurso. Planilha: “Requer INI 10. Persistente. Remova se terminar a fase com INI &lt; 5”. Stacks <code>N</code> ou flag booleana Naomi ativa. Cartas “Naomi: …” escalam com o modo.</dd>
+        <dt>Manobra destaque</dt><dd>Invocações (Zumbi/Ghoul, Fantasma/Banshee, Vampiro/Strigoi, Esqueleto/Golem, Múmia/Lich)</dd>
+        <dt>Fonte</dt><dd><b>FICHAS - Manobras R457–468</b></dd>
+      </dl>
+    </div>
+    <div class="desv-box">
+      <div class="label">Desvantagem (planilha)</div>
+      <p><b>Solidão</b> — “Se for o último sobrevivente, derrota.” HotN3: condição de missão/herói — se Nero é o único aliado vivo, derrota imediata (ou Instantâneo auto-KO). <span class="chip gap">Precisa sistema novo</span> (defeat condition por herói).</p>
+    </div>
+  </div>
+
+  <h3>Manobra planilha → carta HotN3</h3>
+  <table class="map">
+    <thead>
+      <tr><th>Manobra</th><th>Carta</th><th>Classe</th><th>Efeitos (base → Naomi)</th><th>Flags</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="manobra">Faca de Osso / Foice de Sangue</td>
+        <td>Foice de Sangue</td>
+        <td><span class="chip atk">ATTACK</span> · attack</td>
+        <td>Base: <code>hit 1</code> + <code>bleed 1</code>. Naomi: hit 2 + bleed 2 / lifesteal</td>
+        <td><code>drain</code>?</td>
+        <td><span class="chip ok">hit/bleed</span> · <span class="chip gap">ramo Naomi</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Armadura de Ossos</td>
+        <td>Armadura de Ossos</td>
+        <td><span class="chip est">ESTADO</span> · SELF</td>
+        <td><code>protecao 1</code> + <code>resistente 1</code>. Naomi: <code>heal 1</code> por stack <code>wounded</code> no campo inimigo</td>
+        <td>—</td>
+        <td><span class="chip gap">Heal por wounded global</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Intimidação</td>
+        <td>Intimidação</td>
+        <td><span class="chip est">ESTADO</span> · ALL_ENEMIES</td>
+        <td>Req Naomi. <code>weak 1</code> + <code>slow 1</code></td>
+        <td>—</td>
+        <td><span class="chip ok">+</span> <span class="chip gap">requires Naomi</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Naomi</td>
+        <td>Naomi</td>
+        <td><span class="chip est">ESTADO</span> · SELF</td>
+        <td>Req INI≥4 (HotN3 enhanced) ou cost alto. Ativa modo Naomi (persistente). Remove se INI&lt; limiar no fim</td>
+        <td><code>exhaust</code>? / persistente</td>
+        <td><span class="chip gap">Aprimoramento Naomi (padrão Escuridão)</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Invocar Zumbi → Ghoul</td>
+        <td>Invocar Inferi</td>
+        <td><span class="chip est">ESTADO</span></td>
+        <td><code>summon</code> minion; Naomi: upgrade Ghoul (mais HP/atk)</td>
+        <td>—</td>
+        <td><span class="chip gap">Summon tiers</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Invocar Fantasma → Banshee</td>
+        <td>Invocar Banshee</td>
+        <td><span class="chip est">ESTADO</span></td>
+        <td>summon com power reach; Naomi: +stun on hit</td>
+        <td>—</td>
+        <td><span class="chip gap">Summon</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Invocar Vampiro → Strigoi</td>
+        <td>Strigoi</td>
+        <td><span class="chip est">ESTADO</span></td>
+        <td>summon + drain</td>
+        <td><code>drain</code></td>
+        <td><span class="chip gap">Summon</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Explodir Cadáver</td>
+        <td>Explodir Cadáver</td>
+        <td><span class="chip atk">ATTACK</span> · power · ENEMY_ROW</td>
+        <td>Poder, Alcance, Área; Naomi: Massivo → <code>hit 2</code> ALL_ENEMIES; consome 1 summon aliado?</td>
+        <td><code>reach</code></td>
+        <td><span class="chip gap">Sacrificar minion</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Invocar Esqueleto / Múmia → Golem / Lich</td>
+        <td>Golem · Lich</td>
+        <td><span class="chip est">ESTADO</span></td>
+        <td>summons de elite (custo alto / exhaust)</td>
+        <td><code>exhaust</code></td>
+        <td><span class="chip gap">Summon elite</span></td>
+      </tr>
+      <tr>
+        <td class="manobra">Solidão</td>
+        <td>Solidão</td>
+        <td><span class="chip des">DESVANTAGEM</span></td>
+        <td>Derrota se último aliado vivo</td>
+        <td><code>instant</code></td>
+        <td><span class="chip gap">Defeat condition</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="deck">
+    <div class="col">
+      <h4>Iniciais (5) + Desvantagem</h4>
+      <ul>
+        <li>Foice de Sangue ×2</li>
+        <li>Armadura de Ossos ×2</li>
+        <li>Invocar Inferi ×1</li>
+        <li>Naomi ×1</li>
+        <li>Explodir Cadáver ×1</li>
+        <li>Solidão (DESV) ×1</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h4>Evoluídas / Melhoradas</h4>
+      <ul>
+        <li>Intimidação (req Naomi)</li>
+        <li>Banshee, Strigoi, Golem, Lich</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SUMMARY ===================== -->
+<section class="summary" id="resumo">
+  <h2 class="sec">Resumo dos 7 + lacunas compartilhadas</h2>
+  <table class="map">
+    <thead>
+      <tr>
+        <th>Personagem</th>
+        <th>Alterego</th>
+        <th>Passiva / recurso</th>
+        <th>Desvantagem</th>
+        <th>Completude ficha</th>
+        <th>Maior lacuna</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Evelyn Graves</td><td>Sombria</td><td>Sonho / stun engine</td>
+        <td><b>Porta Entornada</b> (inventada; paste Munição)</td>
+        <td>Alta (F3)</td>
+        <td>Marcador Sonho + Sonhar Acordado + summon vinculado</td>
+      </tr>
+      <tr>
+        <td>Techna</td><td>Delevingne</td><td>Contenção / Kit</td>
+        <td>Munição (exhaust aura)</td>
+        <td>Média (nomes; poucos efeitos)</td>
+        <td>Preencher 5 manobras vazias; aura exhaust</td>
+      </tr>
+      <tr>
+        <td>Taylor Snut</td><td>Nave-Mãe</td><td>Elo / Zaphter</td>
+        <td>Eletricidade</td>
+        <td>Média-alta (Manobras)</td>
+        <td>Transferir Proteção; “Corajoso”</td>
+      </tr>
+      <tr>
+        <td>Konrad</td><td>Sicário / Armagedom</td><td>Penumbra</td>
+        <td>Magia de Sangue</td>
+        <td>Média</td>
+        <td>Emboscada “só crítico”; Substituto redirect; Voar</td>
+      </tr>
+      <tr>
+        <td>Madelyn</td><td>—</td><td>Fome / wounded</td>
+        <td>A Fome (aniquilação)</td>
+        <td>Alta (iniciais)</td>
+        <td>Aniquilação; Assombro/Negação vazios</td>
+      </tr>
+      <tr>
+        <td>Dominika Seur</td><td>—</td><td>Ricochete (refletir)</td>
+        <td>Eu Sou a Vítima! (ajustada)</td>
+        <td>Lista curta</td>
+        <td>Refletir; on-hit INI; sem Fichas 3</td>
+      </tr>
+      <tr>
+        <td>Nero Granger</td><td>—</td><td><b>Naomi</b> (≈ Escuridão)</td>
+        <td>Solidão (last-stand defeat)</td>
+        <td>Lista boa</td>
+        <td>Aprimoramento Naomi; summon tiers; derrota Solidão</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Lacunas compartilhadas (sistema)</h3>
+  <ul class="compact">
+    <li><span class="chip gap">Aprimoramento estilo Escuridão</span> — Naomi (Nero), Sonho (Evelyn), possivelmente Elo (Taylor). Reusar padrão <code>E</code> / <code>when_stacks</code> / <code>requires_self_status</code>.</li>
+    <li><span class="chip gap">Summon / lacaios</span> — Evelyn Pesadelos, Nero Inferi/…; vínculo duração (stun âncora); sacrificar minion (Explodir Cadáver).</li>
+    <li><span class="chip gap">DESVANTAGEM Instantânea</span> — já esboçada (Alyssa Tormenta); generalizar editor + tick rules (Munição aura exhaust, Solidão defeat, A Fome aniquilação).</li>
+    <li><span class="chip gap">Req situacionais</span> — HP≤50%, alvo stun, alvo wounded, retaguarda/conceal, INI limiar.</li>
+    <li><span class="chip gap">Proxy / copiar manobra</span> — Sonhar Acordado (Evelyn).</li>
+    <li><span class="chip gap">Voar / redirect / refletir</span> — Leve como Pena, Substituto, Ricochete.</li>
+    <li><span class="chip ok">Já sólido no motor</span> — hit, protecao, barreira, resistente/fragil, invulnerable, stun, bleed, wounded, slow, weak, strengthened, push/pull, free/exhaust/instant/final/reach/lethargic/penetrating, chain, heal, draw, actions, counter, bind, conceal, marked, taunt, ko parcial.</li>
+  </ul>
+
+  <h3>Ordem sugerida de implementação</h3>
+  <ol class="compact">
+    <li><b>Madelyn</b> — ficha mais completa; kit ferido/fome próximo do motor.</li>
+    <li><b>Techna</b> — stun kit simples; Munição como primeira DESV “aura exhaust”.</li>
+    <li><b>Taylor</b> — defesa psíquica com barreira/protecao.</li>
+    <li><b>Konrad</b> — furtivo penetrante; Magia de Sangue fácil.</li>
+    <li><b>Evelyn</b> — após stun+Sonho estável.</li>
+    <li><b>Dominika</b> — tanque + refletir.</li>
+    <li><b>Nero</b> — por último: Naomi + summons + Solidão.</li>
+  </ol>
+</section>
+
+<footer>
+  Gerado a partir de /workspace/masmorra2.xlsx · HotN3 rules (DICTIONARY / FLAGS / EFFECTS) · Padrão Alyssa Wine · Documento de proposta (não altera cards.json)
+</footer>
+
+</div>
+</body>
+</html>

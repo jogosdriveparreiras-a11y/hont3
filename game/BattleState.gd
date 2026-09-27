@@ -27,6 +27,7 @@ var protect_hp := 0
 var items: Dictionary = {"potion": 1, "bomb": 1, "antidote": 1}
 var environmental_used: Dictionary = {}
 var combo_used := false
+var combo_zero_owners: Dictionary = {}  # actor_id -> true (Manobras custam 0 INI neste round)
 var team_ko_charges := 0
 var improvements: Dictionary = {}
 var next_actor_id := 0
@@ -105,6 +106,7 @@ func begin(mission_id: String, team: Array[String], equipped: Dictionary, seed_v
 	protect_hp = int(mission.get("protect_hp", 0))
 	environmental_used.clear()
 	combo_used = false
+	combo_zero_owners.clear()
 	request_end_turn = false
 	pending_recover = {}
 	team_ko_charges = 0
@@ -204,6 +206,30 @@ func living(side: String) -> Array[Dictionary]:
 			found.append(actor)
 	return found
 
+
+func apply_combo_zero_cost(member_actor_ids: Array) -> void:
+	# Combo jogado: Manobras desses atores custam 0 Iniciativa neste round.
+	for aid in member_actor_ids:
+		combo_zero_owners[int(aid)] = true
+	_log("Combo: Manobras dos membros custam 0 Iniciativa neste round.")
+
+func manobra_initiative_cost(source: Dictionary, base_cost: int) -> int:
+	var cost := base_cost
+	if combo_zero_owners.get(int(source.get("id", -1)), false):
+		return 0
+	if _has_status(source, "fast"):
+		cost -= 1
+	if _has_status(source, "slow"):
+		cost += 1
+	return maxi(0, cost)
+
+func _apply_reshuffle_fatigue() -> void:
+	# Quando o descarte volta ao baralho, toda a equipe aliada recebe Lento 1.
+	for ally in living("ALLY"):
+		_add_status(ally, "slow", 1, 1, int(ally["id"]))
+	_log("Fadiga: equipe aliada recebe Lento 1 (reshuffle).")
+	changed.emit()
+
 func _shuffle(pile: Array[Dictionary]) -> void:
 	for i in range(pile.size() - 1, 0, -1):
 		var j := rng.randi_range(0, i)
@@ -228,6 +254,9 @@ func _draw_side(side: String, amount: int) -> void:
 				pile_deck.append(used_card)
 			pile_discard.clear()
 			_shuffle(pile_deck)
+			# Fadiga: reshuffle do time aliado aplica Lento 1 em todos os aliados vivos.
+			if side == "ALLY":
+				_apply_reshuffle_fatigue()
 		var card: Dictionary = pile_deck.pop_back()
 		var owner := actor_by_id(card["owner"])
 		if owner.get("hp", 0) > 0:
@@ -265,6 +294,7 @@ func start_turn() -> void:
 	_check_end()
 	if phase == "FINISHED": return
 	phase = "PLAYER"
+	combo_zero_owners.clear()
 	card_plays = int(rules["card_plays"])
 	redraws = int(rules["redraws"])
 	moves = int(rules["moves"])
@@ -1040,6 +1070,9 @@ func _resolve(source: Dictionary, targets: Array[Dictionary], card: Dictionary, 
 func _cost(source: Dictionary, definition: Dictionary) -> int:
 	# Único recurso de turno compartilhado: Iniciativa (impulse). Sem pool de "Poder".
 	var cost: int = int(definition.get("cost", 0))
+	if combo_zero_owners.get(int(source.get("id", -1)), false):
+		if str(definition.get("tier", "")) != "combo":
+			return 0
 	if cost > 0:
 		if _has_status(source, "fast"): cost -= 1
 		if _has_status(source, "slow"): cost += 1

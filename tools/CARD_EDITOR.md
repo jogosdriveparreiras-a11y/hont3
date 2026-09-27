@@ -75,3 +75,10 @@ Cartas/heróis `ent_*` em `addons/hotn3_entities/entities.json`; `PackBridge` in
 | `warmup` X | Aquecimento | Indisponível por X rodadas após comprar (`drawn_turn + X`). |
 
 **Não implementar no editor (ainda):** Voar; aba dicionário de status/flags/ops.
+
+## Nomenclatura (2026-09)
+
+- Lista filtrada por personagem mostra secoes **Iniciais | Evoluidas | Melhoradas | Desvantagem**.
+- Toggle **Melhorada (+)**: tier=melhorada, nome com +, campo melhorada_de, chrome 3D na previa.
+- Personagem: campo **Aprimoramento** (alias passiva), **Grupos**, **Biografia**.
+- Ver `docs/NOMENCLATURA.md`.

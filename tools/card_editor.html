@@ -95,6 +95,16 @@
   .card-item:hover { background: var(--panel2); }
   .card-item.sel { border-color: var(--accent); background: #1a2740; }
   .card-item .meta { color: var(--muted); font-size: 0.72rem; }
+  .tier-head {
+    font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--accent); margin: 10px 0 4px; padding: 4px 6px;
+    border-left: 3px solid var(--accent); background: #1a2233;
+  }
+  .face.melhorada {
+    box-shadow: 0 12px 40px rgba(110,168,255,.35), inset 0 0 30px rgba(255,255,255,.08);
+    border-image: linear-gradient(135deg, #9ec1ff, #c77dff, #6ea8ff) 1;
+    transform: perspective(600px) rotateY(-6deg);
+  }
   .face {
     width: 220px; height: 340px; margin: 0 auto 14px; border-radius: 14px;
     border: 2px solid #445; position: relative; overflow: hidden;
@@ -219,7 +229,11 @@
       <label class="field" style="flex:1"><span>Id (auto, editável)</span>
         <input type="text" id="id" />
       </label>
-      <label class="field" style="flex:1"><span>Dono</span>
+      <div class="row" style="margin-bottom:10px">
+      <button type="button" class="toggle" id="toggleMelhorada">Melhorada (+)</button>
+      <span class="hint" style="color:var(--muted);font-size:0.78rem">Gera nome com +, tier=melhorada, melhorada_de</span>
+    </div>
+    <label class="field" style="flex:1"><span>Dono</span>
         <select id="owner"></select>
       </label>
     </div>
@@ -348,7 +362,7 @@
       <label class="field" style="flex:1"><span>Fileira</span>
         <select id="hRow"><option value="front">front</option><option value="back">back</option></select>
       </label>
-      <label class="field" style="flex:1"><span>Passiva</span>
+      <label class="field" style="flex:1"><span>Aprimoramento</span>
         <select id="hPassive">
           <option value="rastreador">rastreador</option>
           <option value="vanguarda">vanguarda</option>
@@ -356,6 +370,7 @@
           <option value="oportunista">oportunista</option>
           <option value="devocao">devocao</option>
           <option value="baluarte">baluarte</option>
+          <option value="escuridao">escuridao (Escuridão)</option>
         </select>
       </label>
       <label class="field" style="flex:1"><span>Fator de escala</span>
@@ -363,8 +378,14 @@
       </label>
     </div>
     <div class="hint-box"><strong>Fator de escala</strong> (padrão 1.00): multiplica <em>largura e altura</em> do sprite de combate em relação à transformação já usada no Godot (CombatPresentation / exibição da entidade) — não a substitui. Mais alto = personagem maior (ex.: 1.05–1.10); mais baixo = menor (ex.: 0.90).</div>
-    <div class="section-title">Explicação da passiva</div>
+    <div class="section-title">Explicação do Aprimoramento</div>
     <div class="passive-box" id="passiveExplain">—</div>
+    <label class="field"><span>Grupos (vírgula, ≈3)</span>
+      <input type="text" id="hGrupos" placeholder="Ex.: Retaliador, Desperto, Anomalia" />
+    </label>
+    <label class="field"><span>Biografia</span>
+      <textarea id="hBiografia" rows="3" placeholder="Texto da ficha…"></textarea>
+    </label>
     <div class="hint-box">Arquétipo (Armadura→Impacto→Escudo→Poder→Armadura, ±25%) está <strong>implementado mas DESLIGADO</strong> no jogo (`RULES.archetype_matchup = false`).</div>
     <div class="section-title">Arte (portrait / sprite / ícone)</div>
     <div class="art-box">
@@ -449,6 +470,7 @@ const PASSIVES = {
   oportunista: "+2 de dano contra alvos Marcados.",
   devocao: "Curas deste herói (cartas de Content) são reforçadas no clérigo clássico.",
   baluarte: "No início do turno do time, ganha Barreira (1 rodada / 2 HP).",
+  escuridao: "Aprimoramento Escuridão: ao sofrer dano, +1 E. Cartas escalam com E. Tormenta se E≥4.",
 };
 
 const FLAGS = [
@@ -686,6 +708,7 @@ function blankCard(owner) {
     id: "", name: "", owner, class: "ATTACK", target: "ENEMY",
     actions: [["hit","0"]], reach: false, stat: "attack",
     unlock: "starting", exhaust: false, gain: 1, cost: 0, art: "",
+    tier: "inicial", melhorada_de: "", chrome_3d: false,
   };
 }
 
@@ -694,8 +717,10 @@ function blankHero() {
     id: "", name: "", hp: 24, attack: 4, power: 4, armor: 1, escudo: 1,
     type: "TECNICO", row: "back", passive: "rastreador",
     sprite: "", portrait: "", signature_icon: "", sprite_scale: 1.0,
-    pool: [], cards: [], archetype: "Nenhum", species: "Humano",
-    level_reference: 1, power_reference: 10, tags: [],
+    pool: [], cards: [], iniciais: [], evoluidas: [], melhoradas: [], desvantagem: "",
+    archetype: "Nenhum", species: "Humano",
+    level_reference: 1, power_reference: 10, tags: [], grupos: [], biografia: "",
+    aprimoramento: "rastreador",
   };
 }
 
@@ -771,7 +796,7 @@ function updatePassiveExplain() {
   const el = document.getElementById("passiveExplain");
   if (!el) return;
   const id = document.getElementById("hPassive").value;
-  el.textContent = PASSIVES[id] || ("Passiva desconhecida: " + id);
+  el.textContent = PASSIVES[id] || ("Aprimoramento: " + id);
 }
 
 function fillSelects() {
@@ -991,17 +1016,23 @@ function cardHasDamage(actions) {
 function buildCardObject() {
   const actions = draft.actions.map(a => a.map(String));
   const hasDmg = !draft.estado && cardHasDamage(actions);
+  // Desvantagem class override
+  let cls = hasDmg ? "ATTACK" : "ESTADO";
+  if (draft.class === "DESVANTAGEM" || draft.tier === "desvantagem") cls = "DESVANTAGEM";
   const c = {
     id: draft.id,
     name: draft.name,
     owner: draft.owner,
-    class: hasDmg ? "ATTACK" : "ESTADO",
+    class: cls,
     target: draft.target,
     actions,
     reach: !!draft.reach,
     unlock: draft.unlock || "starting",
     exhaust: !!draft.exhaust,
+    tier: draft.tier || cardTier(draft),
   };
+  if (draft.melhorada_de) c.melhorada_de = draft.melhorada_de;
+  if (draft.chrome_3d || draft.tier === "melhorada") c.chrome_3d = true;
   if (hasDmg) c.stat = draft.stat || "attack";
   // Custo XOR Ganho
   let cost = Number(document.getElementById("cost").value || 0);
@@ -1147,25 +1178,56 @@ function syncForm(fromDraft) {
   renderList();
 }
 
+function cardTier(c) {
+  if (!c) return "outra";
+  if (c.tier) return c.tier;
+  if (c.class === "DESVANTAGEM") return "desvantagem";
+  if (c.melhorada_de || String(c.name||"").endsWith("+")) return "melhorada";
+  if (c.unlock === "progression") return "evoluida";
+  if (c.tier === "combo" || (c.ephemeral && c.combo_members)) return "combo";
+  return "inicial";
+}
 function renderList() {
   const fo = document.getElementById("filterOwner").value;
   const q = document.getElementById("filterText").value.trim().toLowerCase();
   const list = document.getElementById("cardList");
   list.innerHTML = "";
   const ids = Object.keys(catalog.cards).sort();
+  const buckets = { inicial: [], evoluida: [], melhorada: [], desvantagem: [], combo: [], outra: [] };
   let n = 0;
   ids.forEach(id => {
     const c = catalog.cards[id];
     if (fo && c.owner !== fo) return;
     if (q && !(String(c.name).toLowerCase().includes(q) || id.includes(q))) return;
     n++;
-    const b = document.createElement("button");
-    b.type = "button";
-    b.className = "card-item" + (selectedId === id ? " sel" : "");
-    const dirty = dirtyIds.has(id) ? " · editada" : "";
-    b.innerHTML = `<div>${c.name || id}</div><div class="meta">${id} · ${cardHasDamage(c.actions)?((c.stat==="power")?"Poder":"Impacto"):"Estado"}${dirty}</div>`;
-    b.onclick = () => loadCard(id);
-    list.appendChild(b);
+    const tier = cardTier(c);
+    (buckets[tier] || buckets.outra).push(id);
+  });
+  const labels = {
+    inicial: "Iniciais", evoluida: "Evoluídas", melhorada: "Melhoradas",
+    desvantagem: "Desvantagem", combo: "Combos", outra: "Outras",
+  };
+  const order = ["inicial", "evoluida", "melhorada", "desvantagem", "combo", "outra"];
+  order.forEach(tier => {
+    const arr = buckets[tier];
+    if (!arr.length) return;
+    if (fo) {
+      const head = document.createElement("div");
+      head.className = "tier-head";
+      head.textContent = labels[tier] + " (" + arr.length + ")";
+      list.appendChild(head);
+    }
+    arr.forEach(id => {
+      const c = catalog.cards[id];
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "card-item" + (selectedId === id ? " sel" : "");
+      const dirty = dirtyIds.has(id) ? " · editada" : "";
+      const kind = c.class === "DESVANTAGEM" ? "Desvantagem" : (cardHasDamage(c.actions)?((c.stat==="power")?"Poder":"Impacto"):"Estado");
+      b.innerHTML = `<div>${c.name || id}</div><div class="meta">${id} · ${kind}${dirty}</div>`;
+      b.onclick = () => loadCard(id);
+      list.appendChild(b);
+    });
   });
   document.getElementById("count").textContent = String(n);
 }
@@ -1185,6 +1247,11 @@ function loadCard(id) {
   draft.stat = c.stat || "attack";
   draft.vs_species = Object.assign({}, c.vs_species || {});
   if (c.chain != null) draft.chain = c.chain;
+  draft.tier = c.tier || cardTier(c);
+  draft.melhorada_de = c.melhorada_de || "";
+  draft.chrome_3d = !!c.chrome_3d || draft.tier === "melhorada";
+  const tm = document.getElementById("toggleMelhorada");
+  if (tm) tm.classList.toggle("on", draft.tier === "melhorada");
   syncForm(true);
 }
 
@@ -1270,6 +1337,11 @@ function buildHeroObject() {
   h.level_reference = Number(document.getElementById("hLevel").value || 1);
   h.row = document.getElementById("hRow").value;
   h.passive = document.getElementById("hPassive").value;
+  h.aprimoramento = h.passive;
+  const gEl = document.getElementById("hGrupos");
+  if (gEl) h.grupos = gEl.value.split(",").map(s => s.trim()).filter(Boolean);
+  const bEl = document.getElementById("hBiografia");
+  if (bEl) h.biografia = bEl.value.trim();
   h.portrait = document.getElementById("hPortrait").value.trim();
   h.sprite = document.getElementById("hSprite").value.trim();
   h.signature_icon = document.getElementById("hIcon").value.trim();
@@ -1363,6 +1435,11 @@ function syncHeroForm() {
   document.getElementById("hLevel").value = heroDraft.level_reference != null ? heroDraft.level_reference : 1;
   document.getElementById("hRow").value = heroDraft.row || "back";
   document.getElementById("hPassive").value = heroDraft.passive || "rastreador";
+  const gEl = document.getElementById("hGrupos");
+  if (gEl) gEl.value = (heroDraft.grupos || []).join(", ");
+  const bEl = document.getElementById("hBiografia");
+  if (bEl) bEl.value = heroDraft.biografia || "";
+  updatePassiveExplain();
   document.getElementById("hPortrait").value = heroDraft.portrait || "";
   document.getElementById("hSprite").value = heroDraft.sprite || "";
   document.getElementById("hIcon").value = heroDraft.signature_icon || "";
@@ -1497,7 +1574,31 @@ function wire() {
   document.getElementById("filterOwner").onchange = renderList;
   document.getElementById("filterText").oninput = renderList;
 
-  document.getElementById("btnNew").onclick = () => {
+    const tm = document.getElementById("toggleMelhorada");
+  if (tm) tm.onclick = () => {
+    const on = !tm.classList.contains("on");
+    tm.classList.toggle("on", on);
+    if (on) {
+      draft.tier = "melhorada";
+      draft.chrome_3d = true;
+      if (!String(draft.name||"").endsWith("+")) draft.name = (draft.name||"") + "+";
+      document.getElementById("name").value = draft.name;
+      if (!draft.melhorada_de && selectedId && !selectedId.endsWith("_plus")) {
+        draft.melhorada_de = selectedId;
+      }
+      draft.unlock = "melhorada";
+    } else {
+      if (draft.tier === "melhorada") draft.tier = "inicial";
+      draft.chrome_3d = false;
+      if (String(draft.name||"").endsWith("+")) {
+        draft.name = draft.name.slice(0, -1);
+        document.getElementById("name").value = draft.name;
+      }
+      draft.melhorada_de = "";
+    }
+    updatePreview();
+  };
+document.getElementById("btnNew").onclick = () => {
     selectedId = null;
     pendingArtBlob = null;
     draft = blankCard(document.getElementById("filterOwner").value || undefined);

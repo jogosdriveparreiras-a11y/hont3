@@ -44,6 +44,7 @@ var hover_hint: Label
 var hovered_card := -1
 var seen_hand: Dictionary = {}
 var inspected_card := -1
+var damage_preview_by_actor: Dictionary = {}  # actor_id -> damage forecast
 var card_confirmed := false
 var hovered_actor := -1
 var target_cursor := 0
@@ -417,6 +418,116 @@ func _select_mission(id: String) -> void:
 	mission_id = id
 	_show_missions()
 
+
+func _refresh_actor_hp_bars() -> void:
+	if battle == null: return
+	for id in actor_nodes.keys():
+		var body: Node3D = actor_nodes[id]
+		if not is_instance_valid(body): continue
+		var actor: Dictionary = battle.actor_by_id(int(id))
+		if actor.is_empty(): continue
+		_update_world_hp_bar(body, actor)
+
+func _show_character_sheet(hero_id: String) -> void:
+	# Ficha: retrato, attrs, tipo, biografia e cartas (clique amplia + glossário).
+	_clear_ui()
+	if not Content.HEROES.has(hero_id):
+		_show_team()
+		return
+	var hero: Dictionary = Content.HEROES[hero_id]
+	var menu := _center_panel("FICHA · %s" % hero.get("name", hero_id))
+	var panel := menu.get_parent() as PanelContainer
+	panel.custom_minimum_size = Vector2(820, 0)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 16)
+	menu.add_child(row)
+	var left := VBoxContainer.new()
+	left.custom_minimum_size = Vector2(260, 0)
+	row.add_child(left)
+	var portrait_path := str(hero.get("portrait", hero.get("sprite", "")))
+	if portrait_path != "" and ResourceLoader.exists(portrait_path):
+		var tex_rect := TextureRect.new()
+		tex_rect.texture = load(portrait_path)
+		tex_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		tex_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		tex_rect.custom_minimum_size = Vector2(220, 280)
+		left.add_child(tex_rect)
+	left.add_child(_label(str(hero.get("name", "")), 24, Color("f0c27a")))
+	left.add_child(_label("Tipo %s · %s · %s" % [hero.get("type", "?"), hero.get("archetype_stat", hero.get("archetype", "?")), hero.get("species", "")], 15, Color("9aa6bf")))
+	left.add_child(_label("Vida %d · Impacto %d · Poder %d · Armadura %d · Escudo %d" % [hero.get("hp", 0), hero.get("attack", 0), hero.get("power", 0), hero.get("armor", 0), hero.get("escudo", 0)], 15))
+	var apr = hero.get("aprimoramento", hero.get("passive", ""))
+	var apr_label: String = str(apr)
+	if typeof(apr) == TYPE_DICTIONARY:
+		apr_label = str(apr.get("name", apr.get("id", "")))
+	left.add_child(_label("Aprimoramento: %s" % apr_label, 16, Color("6dffa3")))
+	var grupos: Array = hero.get("grupos", [])
+	if not grupos.is_empty():
+		var grupo_bits: PackedStringArray = []
+		for g in grupos:
+			grupo_bits.append(str(g))
+		left.add_child(_label("Grupos: %s" % ", ".join(grupo_bits), 15, Color("7eb6ff")))
+	var bio := str(hero.get("biografia", ""))
+	if bio == "" and Content.HERO_LORE.has(hero_id):
+		bio = str(Content.HERO_LORE[hero_id].get("history", ""))
+	var bio_lab := _label(bio if bio != "" else "(Sem biografia)", 14, Color("c9d1dd"))
+	bio_lab.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	bio_lab.custom_minimum_size = Vector2(240, 0)
+	left.add_child(bio_lab)
+	var right := VBoxContainer.new()
+	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(right)
+	right.add_child(_label("Manobras", 18, Color("f0c27a")))
+	var scroll := ScrollContainer.new()
+	scroll.custom_minimum_size = Vector2(480, 420)
+	right.add_child(scroll)
+	var list := VBoxContainer.new()
+	scroll.add_child(list)
+	var sections := [
+		["Iniciais", hero.get("iniciais", hero.get("cards", []))],
+		["Evoluídas", hero.get("evoluidas", [])],
+		["Melhoradas", hero.get("melhoradas", [])],
+		["Desvantagem", [hero.get("desvantagem", "")] if str(hero.get("desvantagem", "")) != "" else []],
+	]
+	for sec in sections:
+		var title: String = sec[0]
+		var ids: Array = sec[1]
+		if ids.is_empty(): continue
+		list.add_child(_label(title, 16, Color("7eb6ff")))
+		for cid in ids:
+			var cdef: Dictionary = Content.CARDS.get(str(cid), {})
+			if cdef.is_empty(): continue
+			var btn := _button("%s · %s" % [cdef.get("name", cid), cdef.get("class", "")], _show_card_enlarge.bind(str(cid), hero_id), _card_description(cdef))
+			list.add_child(btn)
+	menu.add_child(_button("Voltar à equipe", _show_team))
+
+func _show_card_enlarge(card_id: String, hero_id: String) -> void:
+	_clear_ui()
+	var definition: Dictionary = Content.CARDS.get(card_id, {})
+	var menu := _center_panel(str(definition.get("name", card_id)))
+	var panel := menu.get_parent() as PanelContainer
+	panel.custom_minimum_size = Vector2(720, 0)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 18)
+	menu.add_child(row)
+	var face = CardFace.new()
+	face.custom_minimum_size = Vector2(240, 370)
+	var fake_card := {"id": card_id, "owner": -1, "upgrade": 0}
+	var fake_owner: Dictionary = Content.HEROES.get(hero_id, {"name": hero_id}).duplicate(true)
+	if not fake_owner.has("hp"):
+		fake_owner["hp"] = int(fake_owner.get("max_hp", 1))
+	face.setup(_card_spec(fake_card, definition, fake_owner))
+	row.add_child(face)
+	var gloss := VBoxContainer.new()
+	gloss.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(gloss)
+	gloss.add_child(_label("Efeitos", 18, Color("f0c27a")))
+	for line in _effect_glossary_lines(definition):
+		var lab := _label("• " + line, 15, Color("d5deea"))
+		lab.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		lab.custom_minimum_size.x = 360
+		gloss.add_child(lab)
+	menu.add_child(_button("Voltar à ficha", _show_character_sheet.bind(hero_id)))
+
 func _show_team() -> void:
 	var menu := _center_panel("EQUIPE · %d/%d" % [team.size(), Content.RULES["team_size"]])
 	var menu_panel := menu.get_parent() as PanelContainer
@@ -441,12 +552,18 @@ func _show_team() -> void:
 		var hint: String = str(identity.get("history", "")) + "\n" + str(identity.get("trait", ""))
 		if conflict:
 			hint = "Indisponível: já aparece como inimigo em %s." % Content.MISSIONS[mission_id]["name"]
+		var row_h := HBoxContainer.new()
+		row_h.add_theme_constant_override("separation", 6)
 		var button := _button(prefix + "%s · %s · %d Vida" % [hero["name"], identity["role"], hero["hp"]], _toggle_hero.bind(id), hint)
-		button.custom_minimum_size = Vector2(640, 44)
+		button.custom_minimum_size = Vector2(520, 44)
 		button.disabled = conflict
 		if conflict:
 			button.modulate = Color(0.7, 0.55, 0.55, 0.85)
-		list.add_child(button)
+		row_h.add_child(button)
+		var ficha := _button("Ficha", _show_character_sheet.bind(id), "Abre a ficha do personagem")
+		ficha.custom_minimum_size = Vector2(100, 44)
+		row_h.add_child(ficha)
+		list.add_child(row_h)
 	if feedback != "":
 		menu.add_child(_label(feedback, 16, Color("e9c891")))
 		feedback = ""
@@ -1513,15 +1630,39 @@ func _update_world_hp_bar(body: Node3D, actor: Dictionary) -> void:
 	var hp := float(actor.get("hp", 0))
 	var max_hp := maxf(1.0, float(actor.get("max_hp", 1)))
 	var ratio := clampf(hp / max_hp, 0.0, 1.0)
+	var forecast := float(damage_preview_by_actor.get(int(actor.get("id", -1)), 0))
+	var lost_ratio := clampf(forecast / max_hp, 0.0, ratio)
+	var remain_ratio := clampf(ratio - lost_ratio, 0.0, 1.0)
 	var box: BoxMesh = fill.mesh
-	box.size = Vector3(0.88 * ratio, 0.045, 0.025)
-	fill.position.x = -0.44 * (1.0 - ratio)
-	var tint := Color(0.55, 1.0, 0.75) if ratio > 0.45 else (Color(1.0, 0.85, 0.35) if ratio > 0.2 else Color(1.0, 0.4, 0.4))
+	box.size = Vector3(0.88 * remain_ratio, 0.045, 0.025)
+	fill.position.x = -0.44 + 0.44 * remain_ratio
+	var tint := Color(0.55, 1.0, 0.75) if remain_ratio > 0.45 else (Color(1.0, 0.85, 0.35) if remain_ratio > 0.2 else Color(1.0, 0.4, 0.4))
 	var mat: StandardMaterial3D = fill.material_override
 	if mat != null:
 		mat.albedo_color = tint
 		mat.emission = tint
 		mat.emission_energy_multiplier = 5.5
+	# Prévia de dano (porção vermelha)
+	var forecast_mesh: MeshInstance3D = hp_root.get_node_or_null("HpForecast")
+	if lost_ratio > 0.001:
+		if forecast_mesh == null:
+			forecast_mesh = MeshInstance3D.new()
+			forecast_mesh.name = "HpForecast"
+			var fbox := BoxMesh.new()
+			forecast_mesh.mesh = fbox
+			var fmat := _material(Color(1.0, 0.22, 0.28), true)
+			fmat.emission_enabled = true
+			fmat.emission = Color(1.0, 0.25, 0.3)
+			fmat.emission_energy_multiplier = 6.0
+			forecast_mesh.material_override = fmat
+			hp_root.add_child(forecast_mesh)
+		var fbox2: BoxMesh = forecast_mesh.mesh
+		fbox2.size = Vector3(0.88 * lost_ratio, 0.045, 0.026)
+		# Coloca a faixa vermelha imediatamente à direita do HP restante
+		forecast_mesh.position = Vector3(-0.44 + 0.88 * remain_ratio + 0.44 * lost_ratio, fill.position.y, fill.position.z + 0.001)
+		forecast_mesh.visible = true
+	elif forecast_mesh != null:
+		forecast_mesh.visible = false
 	var hp_glow: MeshInstance3D = hp_root.get_node_or_null("HpGlow")
 	if hp_glow != null and hp_glow.mesh != null:
 		var gbox: BoxMesh = hp_glow.mesh
@@ -2297,6 +2438,7 @@ func _confirm_inspected() -> void:
 	_render_battle()
 
 func _cancel_inspect() -> void:
+	damage_preview_by_actor.clear()
 	if suppress_inspect_cancel:
 		return
 	inspected_card = -1
@@ -2304,6 +2446,38 @@ func _cancel_inspect() -> void:
 		selected_card = -1
 	feedback = ""
 	_render_battle()
+
+func _effect_glossary_lines(definition: Dictionary, card: Dictionary = {}) -> PackedStringArray:
+	var lines: PackedStringArray = []
+	var text := str(definition.get("text", ""))
+	if text != "":
+		lines.append(text)
+	for effect in definition.get("effects", []):
+		var kind := str(effect.get("kind", ""))
+		match kind:
+			"DAMAGE": lines.append("Dano %s (%s)" % [effect.get("amount", "?"), effect.get("stat", "attack")])
+			"STATUS": lines.append("Status %s ×%s" % [effect.get("id", "?"), effect.get("stacks", 1)])
+			"HEAL": lines.append("Cura %s" % effect.get("amount", "?"))
+			"PUSH": lines.append("Empurrão %s" % effect.get("force", 1))
+			"PULL": lines.append("Puxão")
+			_:
+				if kind != "": lines.append(kind)
+	for action in definition.get("actions", []):
+		if typeof(action) != TYPE_ARRAY or action.is_empty(): continue
+		var op := str(action[0])
+		match op:
+			"hit": lines.append("Impacto %s" % (action[1] if action.size() > 1 else "0"))
+			"status": lines.append("Aplica %s" % (action[1] if action.size() > 1 else "?"))
+			"protecao": lines.append("Proteção %s" % (action[1] if action.size() > 1 else "1"))
+			"barreira", "barrier": lines.append("Barreira %s" % (action[1] if action.size() > 1 else "1"))
+			"resistente": lines.append("Resistente %s" % (action[1] if action.size() > 1 else "1"))
+			"heal": lines.append("Cura %s" % (action[1] if action.size() > 1 else "?"))
+			"push": lines.append("Empurrão %s" % (action[1] if action.size() > 1 else "1"))
+			"draw", "draw_items": lines.append("Compra cartas")
+			_: lines.append(op)
+	if lines.is_empty():
+		lines.append(_card_description(definition, card))
+	return lines
 
 func _add_inspect_overlay(index: int, viewport_size: Vector2) -> void:
 	var blocker := Control.new()
@@ -2313,20 +2487,58 @@ func _add_inspect_overlay(index: int, viewport_size: Vector2) -> void:
 	blocker.mouse_filter = Control.MOUSE_FILTER_STOP
 	blocker.gui_input.connect(_on_inspect_blocker_gui)
 	hud.add_child(blocker)
-	var height := viewport_size.y * 0.6
+	var height := viewport_size.y * 0.55
 	var width := height * 0.66
 	var card: Dictionary = battle.hand[index]
 	var definition: Dictionary = _card_def(str(card["id"]))
 	var owner: Dictionary = battle.actor_by_id(int(card.get("owner", 0)))
+	var left_x := (viewport_size.x - width) * 0.32
 	var host = CardFace.new()
 	host.size = Vector2(width, height)
-	host.position = Vector2((viewport_size.x - width) * 0.5, (viewport_size.y - height) * 0.5)
+	host.position = Vector2(left_x, (viewport_size.y - height) * 0.42)
 	host.z_index = 9
-	# setup() forces IGNORE for SubViewport faces — restore STOP so 2nd click confirms.
 	host.setup(_card_spec(card, definition, owner))
 	host.mouse_filter = Control.MOUSE_FILTER_STOP
 	host.gui_input.connect(func(event: InputEvent) -> void: _on_card_gui(event, index))
 	hud.add_child(host)
+	# Painel de glossário + botão Inspecionar / Confirmar
+	var panel := PanelContainer.new()
+	panel.z_index = 10
+	panel.position = Vector2(left_x + width + 18, (viewport_size.y - height) * 0.42)
+	panel.custom_minimum_size = Vector2(minf(360.0, viewport_size.x * 0.34), height * 0.85)
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.08, 0.1, 0.16, 0.92)
+	style.set_border_width_all(2)
+	style.border_color = Color(0.42, 0.55, 0.78, 0.9)
+	style.set_corner_radius_all(12)
+	style.set_content_margin_all(14)
+	panel.add_theme_stylebox_override("panel", style)
+	var col := VBoxContainer.new()
+	col.add_theme_constant_override("separation", 8)
+	panel.add_child(col)
+	col.add_child(_label("INSPECIONAR", 20, Color("f0c27a")))
+	col.add_child(_label(str(definition.get("name", card.get("id", "?"))), 22, Color.WHITE))
+	var tier := str(definition.get("tier", card.get("tier", "")))
+	if tier != "":
+		col.add_child(_label("Tier: %s" % tier, 15, Color("9aa6bf")))
+	for line in _effect_glossary_lines(definition, card):
+		var lab := _label("• " + line, 15, Color("d5deea"))
+		lab.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		lab.custom_minimum_size.x = panel.custom_minimum_size.x - 28
+		col.add_child(lab)
+	var btn_row := HBoxContainer.new()
+	btn_row.add_theme_constant_override("separation", 8)
+	col.add_child(btn_row)
+	var confirm := _button("Confirmar", Callable(), "Confirma a carta e segue para o alvo")
+	confirm.pressed.connect(func() -> void:
+		suppress_inspect_cancel = true
+		_confirm_inspected()
+	)
+	btn_row.add_child(confirm)
+	var cancel := _button("Fechar", Callable(), "Fecha a inspeção")
+	cancel.pressed.connect(func() -> void: _cancel_inspect())
+	btn_row.add_child(cancel)
+	hud.add_child(panel)
 
 func _after_card_resolved() -> void:
 	if battle == null:
@@ -2688,8 +2900,31 @@ func _process(delta: float) -> void:
 				_show_actor_portrait(hovered_actor, false)
 				if card_confirmed and selected_card >= 0 and selected_card < battle.hand.size() and is_instance_valid(hover_hint):
 					var estimate: Dictionary = battle.preview(selected_card, hovered_actor, chain_targets)
+					damage_preview_by_actor.clear()
 					if not estimate.is_empty():
-						hover_hint.text = "Alvo %s · dano previsto na prévia" % battle.actor_by_id(hovered_actor).get("name", "")
+						var dmg_total := 0
+						var status_bits: PackedStringArray = []
+						var est_map: Dictionary = estimate.get("targets", {})
+						for vid in est_map.keys():
+							var row: Dictionary = est_map[vid]
+							var dmg := int(row.get("damage", 0))
+							if dmg > 0:
+								damage_preview_by_actor[int(vid)] = dmg
+								dmg_total += dmg
+							for st in row.get("statuses", []):
+								if not status_bits.has(str(st)):
+									status_bits.append(str(st))
+						var extra := ""
+						if not status_bits.is_empty():
+							extra = " · efeitos: " + ", ".join(status_bits)
+						for se in estimate.get("self_effects", []):
+							extra += " · self:" + str(se)
+						hover_hint.text = "Prévia: %s perde ~%d HP%s" % [battle.actor_by_id(hovered_actor).get("name", ""), dmg_total, extra]
+						_refresh_actor_hp_bars()
+				else:
+					if not damage_preview_by_actor.is_empty():
+						damage_preview_by_actor.clear()
+						_refresh_actor_hp_bars()
 		if hover_dirty:
 			_refresh_hero_hud()
 	for id in actor_nodes.keys():

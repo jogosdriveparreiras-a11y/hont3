@@ -71,6 +71,12 @@ func _initialize() -> void:
 	if def.is_empty(): fails.append("bastao_missing")
 	var hero_def: Dictionary = packs.entities.catalog.hero("ent_alyssa_wine")
 	if str(hero_def.get("passive", "")) != "escuridao": fails.append("passive")
+	var apr = hero_def.get("aprimoramento", "")
+	var apr_id := str(apr)
+	if typeof(apr) == TYPE_DICTIONARY:
+		apr_id = str(apr.get("id", ""))
+	if apr_id != "escuridao": fails.append("aprimoramento")
+	if int(hero_def.get("iniciais", []).size()) != 5: fails.append("iniciais5")
 	var tor: Dictionary = packs.definition("ent_alyssa_wine_desvantagem_tormenta")
 	if str(tor.get("class", "")) != "DESVANTAGEM": fails.append("desv_class")
 

@@ -30,13 +30,10 @@
       ],
       "cards": [
         "ent_adam_faca_de_sobrevivencia",
-        "ent_adam_faca_de_sobrevivencia",
-        "ent_adam_cobertura_improvisada",
         "ent_adam_cobertura_improvisada",
         "ent_adam_avaliar_o_risco",
         "ent_adam_puxar_para_tras",
-        "ent_adam_abrigo_rapido",
-        "ent_adam_cuidar_dos_feridos"
+        "ent_adam_abrigo_rapido"
       ],
       "signature": {
         "name": "Olho de sobrevivente",
@@ -72,7 +69,28 @@
       "source_page": "Adam.md",
       "portrait": "res://assets/cast/ent_adam_portrait.png",
       "signature_icon": "res://assets/cast/ent_adam_icon.png",
-      "escudo": 1
+      "escudo": 1,
+      "aprimoramento": "rastreador",
+      "grupos": [
+        "Preparo",
+        "Encantador",
+        "Calculista"
+      ],
+      "biografia": "Adam — Nenhum · Humano. (Biografia pendente.)",
+      "iniciais": [
+        "ent_adam_faca_de_sobrevivencia",
+        "ent_adam_cobertura_improvisada",
+        "ent_adam_avaliar_o_risco",
+        "ent_adam_puxar_para_tras",
+        "ent_adam_abrigo_rapido"
+      ],
+      "evoluidas": [
+        "ent_adam_cuidar_dos_feridos",
+        "ent_adam_armadilha_de_campo",
+        "ent_adam_nao_vou_deixar",
+        "ent_adam_rota_de_fuga",
+        "ent_adam_ultima_linha"
+      ]
     },
     "ent_akuji": {
       "id": "ent_akuji",
@@ -103,13 +121,10 @@
       ],
       "cards": [
         "ent_akuji_brasa_negra",
-        "ent_akuji_brasa_negra",
-        "ent_akuji_escamas_da_fornalha",
         "ent_akuji_escamas_da_fornalha",
         "ent_akuji_sopro_abrasador",
         "ent_akuji_forma_de_cinzas",
-        "ent_akuji_chama_sem_luz",
-        "ent_akuji_leitura_de_pactos"
+        "ent_akuji_chama_sem_luz"
       ],
       "signature": {
         "name": "Cinzas vigilantes",
@@ -153,7 +168,28 @@
       "source_page": "Akuji.md",
       "portrait": "res://assets/cast/ent_akuji_portrait.png",
       "signature_icon": "res://assets/cast/ent_akuji_icon.png",
-      "escudo": 1
+      "escudo": 1,
+      "aprimoramento": "vanguarda",
+      "grupos": [
+        "Canhão",
+        "Furtivo",
+        "Intangível"
+      ],
+      "biografia": "Akuji — Impacto · Inumano. (Biografia pendente.)",
+      "iniciais": [
+        "ent_akuji_brasa_negra",
+        "ent_akuji_escamas_da_fornalha",
+        "ent_akuji_sopro_abrasador",
+        "ent_akuji_forma_de_cinzas",
+        "ent_akuji_chama_sem_luz"
+      ],
+      "evoluidas": [
+        "ent_akuji_leitura_de_pactos",
+        "ent_akuji_asas_de_energia_negra",
+        "ent_akuji_incendio_dirigido",
+        "ent_akuji_cinzas_retornam",
+        "ent_akuji_noite_em_combustao"
+      ]
     },
     "ent_alexis": {
       "id": "ent_alexis",
@@ -184,13 +220,10 @@
       ],
       "cards": [
         "ent_alexis_alerta_aos_gritos",
-        "ent_alexis_alerta_aos_gritos",
-        "ent_alexis_objeto_arremessado",
         "ent_alexis_objeto_arremessado",
         "ent_alexis_tapete_sob_os_pes",
         "ent_alexis_reunir_o_grupo",
-        "ent_alexis_escapar_para_cobertura",
-        "ent_alexis_primeiros_socorros"
+        "ent_alexis_escapar_para_cobertura"
       ],
       "signature": {
         "name": "Alerta insistente",
@@ -222,7 +255,28 @@
       "source_page": "Alexis.md",
       "portrait": "res://assets/cast/ent_alexis_portrait.png",
       "signature_icon": "res://assets/cast/ent_alexis_icon.png",
-      "escudo": 1
+      "escudo": 1,
+      "aprimoramento": "rastreador",
+      "grupos": [
+        "Encantador",
+        "Preparo",
+        "Calculista"
+      ],
+      "biografia": "Alexis — Nenhum · Humano. (Biografia pendente.)",
+      "iniciais": [
+        "ent_alexis_alerta_aos_gritos",
+        "ent_alexis_objeto_arremessado",
+        "ent_alexis_tapete_sob_os_pes",
+        "ent_alexis_reunir_o_grupo",
+        "ent_alexis_escapar_para_cobertura"
+      ],
+      "evoluidas": [
+        "ent_alexis_primeiros_socorros",
+        "ent_alexis_distracao_teatral",
+        "ent_alexis_proteger_um_amigo",
+        "ent_alexis_colecao_improvavel",
+        "ent_alexis_coragem_tardia"
+      ]
     },
     "ent_alistair": {
       "id": "ent_alistair",
@@ -253,13 +307,10 @@
       ],
       "cards": [
         "ent_alistair_punho_de_armadura",
-        "ent_alistair_punho_de_armadura",
-        "ent_alistair_armadura_instantanea",
         "ent_alistair_armadura_instantanea",
         "ent_alistair_arco_de_luz",
         "ent_alistair_desafio_da_vanguarda",
-        "ent_alistair_esconjuro",
-        "ent_alistair_tempo_de_reacao"
+        "ent_alistair_esconjuro"
       ],
       "signature": {
         "name": "Guardar a frente",
@@ -303,7 +354,28 @@
       "source_page": "Alistair.md",
       "portrait": "res://assets/cast/ent_alistair_portrait.png",
       "signature_icon": "res://assets/cast/ent_alistair_icon.png",
-      "escudo": 5
+      "escudo": 5,
+      "aprimoramento": "baluarte",
+      "grupos": [
+        "Vanguarda",
+        "Retaliador",
+        "Duelista"
+      ],
+      "biografia": "Alistair — Escudo · Inumano. (Biografia pendente.)",
+      "iniciais": [
+        "ent_alistair_punho_de_armadura",
+        "ent_alistair_armadura_instantanea",
+        "ent_alistair_arco_de_luz",
+        "ent_alistair_desafio_da_vanguarda",
+        "ent_alistair_esconjuro"
+      ],
+      "evoluidas": [
+        "ent_alistair_tempo_de_reacao",
+        "ent_alistair_corrida_desesperada",
+        "ent_alistair_liga_ouro_aco",
+        "ent_alistair_espada_sagrada",
+        "ent_alistair_muralha_luminosa"
+      ]
     },
     "ent_alyssa_wine": {
       "id": "ent_alyssa_wine",
@@ -329,17 +401,22 @@
         "ent_alyssa_wine_relampago",
         "ent_alyssa_wine_intelecto",
         "ent_alyssa_wine_super_sentidos",
-        "ent_alyssa_wine_desvantagem_tormenta"
+        "ent_alyssa_wine_desvantagem_tormenta",
+        "ent_alyssa_wine_bastao_retratil_plus",
+        "ent_alyssa_wine_garras_e_presas_plus",
+        "ent_alyssa_wine_premonicao_plus",
+        "ent_alyssa_wine_a_filha_dele_plus",
+        "ent_alyssa_wine_regeneracao_plus",
+        "ent_alyssa_wine_relampago_plus",
+        "ent_alyssa_wine_intelecto_plus",
+        "ent_alyssa_wine_super_sentidos_plus"
       ],
       "cards": [
         "ent_alyssa_wine_bastao_retratil",
-        "ent_alyssa_wine_bastao_retratil",
-        "ent_alyssa_wine_garras_e_presas",
         "ent_alyssa_wine_garras_e_presas",
         "ent_alyssa_wine_premonicao",
         "ent_alyssa_wine_a_filha_dele",
-        "ent_alyssa_wine_regeneracao",
-        "ent_alyssa_wine_intelecto"
+        "ent_alyssa_wine_regeneracao"
       ],
       "signature": {
         "name": "Tempestade latente",
@@ -379,7 +456,41 @@
       "source_page": "Alyssa_Wine.md",
       "portrait": "res://assets/cast/ent_alyssa_wine_portrait.png",
       "signature_icon": "res://assets/cast/ent_alyssa_wine_icon.png",
-      "escudo": 3
+      "escudo": 3,
+      "aprimoramento": {
+        "id": "escuridao",
+        "name": "Escuridão",
+        "text": "Sempre ativa. Ao sofrer dano, ganha 1 stack de Escuridão (E). Cartas escalam com E."
+      },
+      "grupos": [
+        "Retaliador",
+        "Desperto",
+        "Anomalia"
+      ],
+      "biografia": "Alyssa Wine é uma Inumana marcada pela Tormenta. Seu aprimoramento Escuridão cresce com o sofrimento e alimenta manobras brutais. Quando E ≥ 4, a Desvantagem Tormenta fere todos ao redor.",
+      "iniciais": [
+        "ent_alyssa_wine_bastao_retratil",
+        "ent_alyssa_wine_garras_e_presas",
+        "ent_alyssa_wine_premonicao",
+        "ent_alyssa_wine_a_filha_dele",
+        "ent_alyssa_wine_regeneracao"
+      ],
+      "evoluidas": [
+        "ent_alyssa_wine_relampago",
+        "ent_alyssa_wine_intelecto",
+        "ent_alyssa_wine_super_sentidos"
+      ],
+      "desvantagem": "ent_alyssa_wine_desvantagem_tormenta",
+      "melhoradas": [
+        "ent_alyssa_wine_bastao_retratil_plus",
+        "ent_alyssa_wine_garras_e_presas_plus",
+        "ent_alyssa_wine_premonicao_plus",
+        "ent_alyssa_wine_a_filha_dele_plus",
+        "ent_alyssa_wine_regeneracao_plus",
+        "ent_alyssa_wine_relampago_plus",
+        "ent_alyssa_wine_intelecto_plus",
+        "ent_alyssa_wine_super_sentidos_plus"
+      ]
     },
     "ent_ashlee": {
       "id": "ent_ashlee",
@@ -410,13 +521,10 @@
       ],
       "cards": [
         "ent_ashlee_disparo_de_contencao",
-        "ent_ashlee_disparo_de_contencao",
-        "ent_ashlee_scanner_de_soma",
         "ent_ashlee_scanner_de_soma",
         "ent_ashlee_protocolo_de_quarentena",
         "ent_ashlee_kit_medico",
-        "ent_ashlee_isolar_alvo",
-        "ent_ashlee_dados_de_campo"
+        "ent_ashlee_isolar_alvo"
       ],
       "signature": {
         "name": "Varredura de Soma",
@@ -457,7 +565,28 @@
       "source_page": "Ashlee.md",
       "portrait": "res://assets/cast/ent_ashlee_portrait.png",
       "signature_icon": "res://assets/cast/ent_ashlee_icon.png",
-      "escudo": 1
+      "escudo": 1,
+      "aprimoramento": "rastreador",
+      "grupos": [
+        "Preparo",
+        "Calculista",
+        "Caçador"
+      ],
+      "biografia": "Ashlee — Preparo · Humano. (Biografia pendente.)",
+      "iniciais": [
+        "ent_ashlee_disparo_de_contencao",
+        "ent_ashlee_scanner_de_soma",
+        "ent_ashlee_protocolo_de_quarentena",
+        "ent_ashlee_kit_medico",
+        "ent_ashlee_isolar_alvo"
+      ],
+      "evoluidas": [
+        "ent_ashlee_dados_de_campo",
+        "ent_ashlee_armadilha_de_isolamento",
+        "ent_ashlee_compartilhar_equipamento",
+        "ent_ashlee_analise_completa",
+        "ent_ashlee_quarentena_total"
+      ]
     },
     "ent_daeva": {
       "id": "ent_daeva",
@@ -488,13 +617,10 @@
       ],
       "cards": [
         "ent_daeva_tiro_de_airsoft",
-        "ent_daeva_tiro_de_airsoft",
-        "ent_daeva_plano_de_assalto",
         "ent_daeva_plano_de_assalto",
         "ent_daeva_moto_de_fuga",
         "ent_daeva_passo_despercebido",
-        "ent_daeva_cobertura_de_corredor",
-        "ent_daeva_aviso_por_radio"
+        "ent_daeva_cobertura_de_corredor"
       ],
       "signature": {
         "name": "Saída preparada",
@@ -531,7 +657,28 @@
       "source_page": "Daeva.md",
       "portrait": "res://assets/cast/ent_daeva_portrait.png",
       "signature_icon": "res://assets/cast/ent_daeva_icon.png",
-      "escudo": 2
+      "escudo": 2,
+      "aprimoramento": "oportunista",
+      "grupos": [
+        "Furtivo",
+        "Encantador",
+        "Preparo"
+      ],
+      "biografia": "Daeva — Versátil · Humano. (Biografia pendente.)",
+      "iniciais": [
+        "ent_daeva_tiro_de_airsoft",
+        "ent_daeva_plano_de_assalto",
+        "ent_daeva_moto_de_fuga",
+        "ent_daeva_passo_despercebido",
+        "ent_daeva_cobertura_de_corredor"
+      ],
+      "evoluidas": [
+        "ent_daeva_aviso_por_radio",
+        "ent_daeva_distracao_arriscada",
+        "ent_daeva_lealdade_teimosa",
+        "ent_daeva_saida_calculada",
+        "ent_daeva_todos_para_fora"
+      ]
     },
     "ent_damian_alrosa": {
       "id": "ent_damian_alrosa",
@@ -562,13 +709,10 @@
       ],
       "cards": [
         "ent_damian_alrosa_oferta_irrecusavel",
-        "ent_damian_alrosa_oferta_irrecusavel",
-        "ent_damian_alrosa_clausula_oculta",
         "ent_damian_alrosa_clausula_oculta",
         "ent_damian_alrosa_rede_de_contatos",
         "ent_damian_alrosa_pocao_negociada",
-        "ent_damian_alrosa_ritual_condicionado",
-        "ent_damian_alrosa_recurso_reservado"
+        "ent_damian_alrosa_ritual_condicionado"
       ],
       "signature": {
         "name": "Recurso de reserva",
@@ -604,7 +748,28 @@
       "source_page": "Damian_Alrosa.md",
       "portrait": "res://assets/cast/ent_damian_alrosa_portrait.png",
       "signature_icon": "res://assets/cast/ent_damian_alrosa_icon.png",
-      "escudo": 2
+      "escudo": 2,
+      "aprimoramento": "oportunista",
+      "grupos": [
+        "Calculista",
+        "Encantador",
+        "Preparo"
+      ],
+      "biografia": "Damian Alrosa — Versátil · Humano. (Biografia pendente.)",
+      "iniciais": [
+        "ent_damian_alrosa_oferta_irrecusavel",
+        "ent_damian_alrosa_clausula_oculta",
+        "ent_damian_alrosa_rede_de_contatos",
+        "ent_damian_alrosa_pocao_negociada",
+        "ent_damian_alrosa_ritual_condicionado"
+      ],
+      "evoluidas": [
+        "ent_damian_alrosa_recurso_reservado",
+        "ent_damian_alrosa_executar_contrato",
+        "ent_damian_alrosa_renegociar_termos",
+        "ent_damian_alrosa_preco_da_promessa",
+        "ent_damian_alrosa_pacto_irrevogavel"
+      ]
     },
     "ent_dominika_seur": {
       "id": "ent_dominika_seur",
@@ -635,13 +800,10 @@
       ],
       "cards": [
         "ent_dominika_seur_massa_em_avanco",
-        "ent_dominika_seur_massa_em_avanco",
-        "ent_dominika_seur_corpo_acolchoado",
         "ent_dominika_seur_corpo_acolchoado",
         "ent_dominika_seur_engolfamento",
         "ent_dominika_seur_regeneracao_volumosa",
-        "ent_dominika_seur_pressao_inabalavel",
-        "ent_dominika_seur_esmagamento_lento"
+        "ent_dominika_seur_pressao_inabalavel"
       ],
       "signature": {
         "name": "Recuperação de massa",
@@ -677,7 +839,28 @@
       "source_page": "Dominika_Seur.md",
       "portrait": "res://assets/cast/ent_dominika_seur_portrait.png",
       "signature_icon": "res://assets/cast/ent_dominika_seur_icon.png",
-      "escudo": 3
+      "escudo": 3,
+      "aprimoramento": "baluarte",
+      "grupos": [
+        "Inabalável",
+        "Colosso",
+        "Regenerador"
+      ],
+      "biografia": "Dominika Seur — Armadura · Inumano. (Biografia pendente.)",
+      "iniciais": [
+        "ent_dominika_seur_massa_em_avanco",
+        "ent_dominika_seur_corpo_acolchoado",
+        "ent_dominika_seur_engolfamento",
+        "ent_dominika_seur_regeneracao_volumosa",
+        "ent_dominika_seur_pressao_inabalavel"
+      ],
+      "evoluidas": [
+        "ent_dominika_seur_esmagamento_lento",
+        "ent_dominika_seur_campo_de_massa",
+        "ent_dominika_seur_avanco_colossal",
+        "ent_dominika_seur_absorver_impacto",
+        "ent_dominika_seur_onda_de_engolfamento"
+      ]
     },
     "ent_dylan": {
       "id": "ent_dylan",
@@ -708,13 +891,10 @@
       ],
       "cards": [
         "ent_dylan_avisar_o_perigo",
-        "ent_dylan_avisar_o_perigo",
-        "ent_dylan_xicara_improvisada",
         "ent_dylan_xicara_improvisada",
         "ent_dylan_nao_entre_em_panico",
         "ent_dylan_versos_de_coragem",
-        "ent_dylan_atrair_atencao",
-        "ent_dylan_saida_da_cafeteria"
+        "ent_dylan_atrair_atencao"
       ],
       "signature": {
         "name": "Primeiro cuidado",
@@ -742,7 +922,28 @@
       "source_page": "Dylan.md",
       "portrait": "res://assets/cast/ent_dylan_portrait.png",
       "signature_icon": "res://assets/cast/ent_dylan_icon.png",
-      "escudo": 1
+      "escudo": 1,
+      "aprimoramento": "rastreador",
+      "grupos": [
+        "Encantador",
+        "Preparo",
+        "Calculista"
+      ],
+      "biografia": "Dylan — Nenhum · Humano. (Biografia pendente.)",
+      "iniciais": [
+        "ent_dylan_avisar_o_perigo",
+        "ent_dylan_xicara_improvisada",
+        "ent_dylan_nao_entre_em_panico",
+        "ent_dylan_versos_de_coragem",
+        "ent_dylan_atrair_atencao"
+      ],
+      "evoluidas": [
+        "ent_dylan_saida_da_cafeteria",
+        "ent_dylan_buscar_ajuda",
+        "ent_dylan_ficar_junto",
+        "ent_dylan_guardar_a_porta",
+        "ent_dylan_nao_abandonar_ninguem"
+      ]
     },
     "ent_evelyn_graves": {
       "id": "ent_evelyn_graves",
@@ -773,13 +974,10 @@
       ],
       "cards": [
         "ent_evelyn_graves_puxao_do_reino_quebrado",
-        "ent_evelyn_graves_puxao_do_reino_quebrado",
-        "ent_evelyn_graves_fio_de_marionete",
         "ent_evelyn_graves_fio_de_marionete",
         "ent_evelyn_graves_sombra_ilusoria",
         "ent_evelyn_graves_eco_invocado",
-        "ent_evelyn_graves_arrastar_consciencia",
-        "ent_evelyn_graves_porta_no_vazio"
+        "ent_evelyn_graves_arrastar_consciencia"
       ],
       "signature": {
         "name": "Eco perturbador",
@@ -816,7 +1014,28 @@
       "source_page": "Evelyn_Graves.md",
       "portrait": "res://assets/cast/ent_evelyn_graves_portrait.png",
       "signature_icon": "res://assets/cast/ent_evelyn_graves_icon.png",
-      "escudo": 3
+      "escudo": 3,
+      "aprimoramento": "canalizar",
+      "grupos": [
+        "Marionetista",
+        "Controlador",
+        "Ilusionista"
+      ],
+      "biografia": "Evelyn Graves (Sombria) — Poder · Meio-Monstro. (Biografia pendente.)",
+      "iniciais": [
+        "ent_evelyn_graves_puxao_do_reino_quebrado",
+        "ent_evelyn_graves_fio_de_marionete",
+        "ent_evelyn_graves_sombra_ilusoria",
+        "ent_evelyn_graves_eco_invocado",
+        "ent_evelyn_graves_arrastar_consciencia"
+      ],
+      "evoluidas": [
+        "ent_evelyn_graves_porta_no_vazio",
+        "ent_evelyn_graves_encanto_predatorio",
+        "ent_evelyn_graves_ruptura_psiquica",
+        "ent_evelyn_graves_teatro_da_mente",
+        "ent_evelyn_graves_reino_escancarado"
+      ]
     },
     "ent_fate": {
       "id": "ent_fate",
@@ -847,13 +1066,10 @@
       ],
       "cards": [
         "ent_fate_espada_da_fronteira",
-        "ent_fate_espada_da_fronteira",
-        "ent_fate_guarda_interdimensional",
         "ent_fate_guarda_interdimensional",
         "ent_fate_lamina_perfurante",
         "ent_fate_passo_de_fronteira",
-        "ent_fate_dever_da_alfandega",
-        "ent_fate_retaliacao_imediata"
+        "ent_fate_dever_da_alfandega"
       ],
       "signature": {
         "name": "A guarda não cede",
@@ -890,7 +1106,28 @@
       "source_page": "Fate.md",
       "portrait": "res://assets/cast/ent_fate_portrait.png",
       "signature_icon": "res://assets/cast/ent_fate_icon.png",
-      "escudo": 1
+      "escudo": 1,
+      "aprimoramento": "vanguarda",
+      "grupos": [
+        "Velocista",
+        "Duelista",
+        "Retaliador"
+      ],
+      "biografia": "Fate — Impacto · Inumano. (Biografia pendente.)",
+      "iniciais": [
+        "ent_fate_espada_da_fronteira",
+        "ent_fate_guarda_interdimensional",
+        "ent_fate_lamina_perfurante",
+        "ent_fate_passo_de_fronteira",
+        "ent_fate_dever_da_alfandega"
+      ],
+      "evoluidas": [
+        "ent_fate_retaliacao_imediata",
+        "ent_fate_sentir_anomalia",
+        "ent_fate_golpe_de_custodia",
+        "ent_fate_fenda_de_aco",
+        "ent_fate_julgamento_da_fronteira"
+      ]
     },
     "ent_hynda_valdtagen": {
       "id": "ent_hynda_valdtagen",
@@ -921,13 +1158,10 @@
       ],
       "cards": [
         "ent_hynda_valdtagen_glifo_ofensivo",
-        "ent_hynda_valdtagen_glifo_ofensivo",
-        "ent_hynda_valdtagen_pocao_restauradora",
         "ent_hynda_valdtagen_pocao_restauradora",
         "ent_hynda_valdtagen_portal_da_bruxa",
         "ent_hynda_valdtagen_chuva_de_glifos",
-        "ent_hynda_valdtagen_pocao_adaptativa",
-        "ent_hynda_valdtagen_reescrever_terreno"
+        "ent_hynda_valdtagen_pocao_adaptativa"
       ],
       "signature": {
         "name": "Glifo de reserva",
@@ -967,7 +1201,28 @@
       "source_page": "Hynda_Valdtagen.md",
       "portrait": "res://assets/cast/ent_hynda_valdtagen_portrait.png",
       "signature_icon": "res://assets/cast/ent_hynda_valdtagen_icon.png",
-      "escudo": 4
+      "escudo": 4,
+      "aprimoramento": "canalizar",
+      "grupos": [
+        "Acrobata",
+        "Controlador",
+        "Ilusionista"
+      ],
+      "biografia": "Hynda Valdtagen — Poder · Meio-Sangue. (Biografia pendente.)",
+      "iniciais": [
+        "ent_hynda_valdtagen_glifo_ofensivo",
+        "ent_hynda_valdtagen_pocao_restauradora",
+        "ent_hynda_valdtagen_portal_da_bruxa",
+        "ent_hynda_valdtagen_chuva_de_glifos",
+        "ent_hynda_valdtagen_pocao_adaptativa"
+      ],
+      "evoluidas": [
+        "ent_hynda_valdtagen_reescrever_terreno",
+        "ent_hynda_valdtagen_meteoro_menor",
+        "ent_hynda_valdtagen_transmutacao_de_emergencia",
+        "ent_hynda_valdtagen_circulo_planar",
+        "ent_hynda_valdtagen_meteoro_continental"
+      ]
     },
     "ent_kabuki": {
       "id": "ent_kabuki",
@@ -998,13 +1253,10 @@
       ],
       "cards": [
         "ent_kabuki_golpe_acrobatico",
-        "ent_kabuki_golpe_acrobatico",
-        "ent_kabuki_armadura_furtiva",
         "ent_kabuki_armadura_furtiva",
         "ent_kabuki_sabotar_interface",
         "ent_kabuki_salto_de_contencao",
-        "ent_kabuki_evasao_calculada",
-        "ent_kabuki_sensor_desligado"
+        "ent_kabuki_evasao_calculada"
       ],
       "signature": {
         "name": "Evasão programada",
@@ -1053,7 +1305,28 @@
       "source_page": "Kabuki.md",
       "portrait": "res://assets/cast/ent_kabuki_portrait.png",
       "signature_icon": "res://assets/cast/ent_kabuki_icon.png",
-      "escudo": 2
+      "escudo": 2,
+      "aprimoramento": "oportunista",
+      "grupos": [
+        "Acrobata",
+        "Furtivo",
+        "Sabotador"
+      ],
+      "biografia": "Kabuki — Versátil · Ciborgue. (Biografia pendente.)",
+      "iniciais": [
+        "ent_kabuki_golpe_acrobatico",
+        "ent_kabuki_armadura_furtiva",
+        "ent_kabuki_sabotar_interface",
+        "ent_kabuki_salto_de_contencao",
+        "ent_kabuki_evasao_calculada"
+      ],
+      "evoluidas": [
+        "ent_kabuki_sensor_desligado",
+        "ent_kabuki_nocaute_rapido",
+        "ent_kabuki_palco_de_sombras",
+        "ent_kabuki_danca_cibernetica",
+        "ent_kabuki_operacao_fantasma"
+      ]
     },
     "ent_konrad": {
       "id": "ent_konrad",
@@ -1084,13 +1357,10 @@
       ],
       "cards": [
         "ent_konrad_incisao_precisa",
-        "ent_konrad_incisao_precisa",
-        "ent_konrad_pele_de_escudo",
         "ent_konrad_pele_de_escudo",
         "ent_konrad_predador_da_penumbra",
         "ent_konrad_ferida_aberta",
-        "ent_konrad_ilusao_de_cobertura",
-        "ent_konrad_desviar_a_atencao"
+        "ent_konrad_ilusao_de_cobertura"
       ],
       "signature": {
         "name": "Cobertura de penumbra",
@@ -1122,7 +1392,28 @@
       "source_page": "Konrad.md",
       "portrait": "res://assets/cast/ent_konrad_portrait.png",
       "signature_icon": "res://assets/cast/ent_konrad_icon.png",
-      "escudo": 5
+      "escudo": 5,
+      "aprimoramento": "baluarte",
+      "grupos": [
+        "Furtivo",
+        "Carniceiro",
+        "Ilusionista"
+      ],
+      "biografia": "Konrad (Armagedom) — Escudo · Meio-Sangue. (Biografia pendente.)",
+      "iniciais": [
+        "ent_konrad_incisao_precisa",
+        "ent_konrad_pele_de_escudo",
+        "ent_konrad_predador_da_penumbra",
+        "ent_konrad_ferida_aberta",
+        "ent_konrad_ilusao_de_cobertura"
+      ],
+      "evoluidas": [
+        "ent_konrad_desviar_a_atencao",
+        "ent_konrad_passo_carniceiro",
+        "ent_konrad_desmontagem",
+        "ent_konrad_isca_cruel",
+        "ent_konrad_corte_de_armagedom"
+      ]
     },
     "ent_leona": {
       "id": "ent_leona",
@@ -1153,13 +1444,10 @@
       ],
       "cards": [
         "ent_leona_mordida_de_marbas",
-        "ent_leona_mordida_de_marbas",
-        "ent_leona_fome_sem_fim",
         "ent_leona_fome_sem_fim",
         "ent_leona_fios_de_cabelo",
         "ent_leona_regenerar_pelo_consumo",
-        "ent_leona_doenca_lembrada",
-        "ent_leona_forma_parcial"
+        "ent_leona_doenca_lembrada"
       ],
       "signature": {
         "name": "Corpo faminto",
@@ -1199,7 +1487,28 @@
       "source_page": "Leona.md",
       "portrait": "res://assets/cast/ent_leona_portrait.png",
       "signature_icon": "res://assets/cast/ent_leona_icon.png",
-      "escudo": 4
+      "escudo": 4,
+      "aprimoramento": "canalizar",
+      "grupos": [
+        "Carniceiro",
+        "Anomalia",
+        "Regenerador"
+      ],
+      "biografia": "Leona (Marbas) — Poder · Inumano. (Biografia pendente.)",
+      "iniciais": [
+        "ent_leona_mordida_de_marbas",
+        "ent_leona_fome_sem_fim",
+        "ent_leona_fios_de_cabelo",
+        "ent_leona_regenerar_pelo_consumo",
+        "ent_leona_doenca_lembrada"
+      ],
+      "evoluidas": [
+        "ent_leona_forma_parcial",
+        "ent_leona_devoracao",
+        "ent_leona_fome_contagiosa",
+        "ent_leona_cabelos_famintos",
+        "ent_leona_banquete_de_marbas"
+      ]
     },
     "ent_lust": {
       "id": "ent_lust",
@@ -1230,13 +1539,10 @@
       ],
       "cards": [
         "ent_lust_runa_de_soma",
-        "ent_lust_runa_de_soma",
-        "ent_lust_projecao_eterea",
         "ent_lust_projecao_eterea",
         "ent_lust_ilusao_do_desejo",
         "ent_lust_fluxo_de_energia",
-        "ent_lust_transferencia_runica",
-        "ent_lust_distracao_sensorial"
+        "ent_lust_transferencia_runica"
       ],
       "signature": {
         "name": "Soma compartilhado",
@@ -1272,7 +1578,28 @@
       "source_page": "Lust.md",
       "portrait": "res://assets/cast/ent_lust_portrait.png",
       "signature_icon": "res://assets/cast/ent_lust_icon.png",
-      "escudo": 3
+      "escudo": 3,
+      "aprimoramento": "canalizar",
+      "grupos": [
+        "Encantador",
+        "Marionetista",
+        "Ilusionista"
+      ],
+      "biografia": "Lust — Poder · Inumano. (Biografia pendente.)",
+      "iniciais": [
+        "ent_lust_runa_de_soma",
+        "ent_lust_projecao_eterea",
+        "ent_lust_ilusao_do_desejo",
+        "ent_lust_fluxo_de_energia",
+        "ent_lust_transferencia_runica"
+      ],
+      "evoluidas": [
+        "ent_lust_distracao_sensorial",
+        "ent_lust_emprestar_soma",
+        "ent_lust_encanto_de_area",
+        "ent_lust_corpo_de_projecao",
+        "ent_lust_runa_compartilhada"
+      ]
     },
     "ent_madelyn": {
       "id": "ent_madelyn",
@@ -1303,13 +1630,10 @@
       ],
       "cards": [
         "ent_madelyn_ataque_teatral",
-        "ent_madelyn_ataque_teatral",
-        "ent_madelyn_risada_confusa",
         "ent_madelyn_risada_confusa",
         "ent_madelyn_disparo_inesperado",
         "ent_madelyn_frenesi_de_palco",
-        "ent_madelyn_sombra_mentirosa",
-        "ent_madelyn_riso_cortante"
+        "ent_madelyn_sombra_mentirosa"
       ],
       "signature": {
         "name": "Improviso frenético",
@@ -1345,7 +1669,28 @@
       "source_page": "Madelyn.md",
       "portrait": "res://assets/cast/ent_madelyn_portrait.png",
       "signature_icon": "res://assets/cast/ent_madelyn_icon.png",
-      "escudo": 1
+      "escudo": 1,
+      "aprimoramento": "vanguarda",
+      "grupos": [
+        "Frenético",
+        "Furtivo",
+        "Regenerador"
+      ],
+      "biografia": "Madelyn — Impacto · Meio-Monstro. (Biografia pendente.)",
+      "iniciais": [
+        "ent_madelyn_ataque_teatral",
+        "ent_madelyn_risada_confusa",
+        "ent_madelyn_disparo_inesperado",
+        "ent_madelyn_frenesi_de_palco",
+        "ent_madelyn_sombra_mentirosa"
+      ],
+      "evoluidas": [
+        "ent_madelyn_riso_cortante",
+        "ent_madelyn_recuperacao_caotica",
+        "ent_madelyn_improviso_perigoso",
+        "ent_madelyn_cortina_de_fumaca",
+        "ent_madelyn_ultimo_ato"
+      ]
     },
     "ent_mingau_o_feiticeiro": {
       "id": "ent_mingau_o_feiticeiro",
@@ -1376,13 +1721,10 @@
       ],
       "cards": [
         "ent_mingau_o_feiticeiro_arranhao_transformador",
-        "ent_mingau_o_feiticeiro_arranhao_transformador",
-        "ent_mingau_o_feiticeiro_varinha_roubada",
         "ent_mingau_o_feiticeiro_varinha_roubada",
         "ent_mingau_o_feiticeiro_gato_intangivel",
         "ent_mingau_o_feiticeiro_encantar_subordinado",
-        "ent_mingau_o_feiticeiro_salto_impossivel",
-        "ent_mingau_o_feiticeiro_tinta_anomala"
+        "ent_mingau_o_feiticeiro_salto_impossivel"
       ],
       "signature": {
         "name": "Corpo intangível",
@@ -1423,7 +1765,28 @@
       "source_page": "Mingau_o_Feiticeiro.md",
       "portrait": "res://assets/cast/ent_mingau_o_feiticeiro_portrait.png",
       "signature_icon": "res://assets/cast/ent_mingau_o_feiticeiro_icon.png",
-      "escudo": 4
+      "escudo": 4,
+      "aprimoramento": "canalizar",
+      "grupos": [
+        "Anomalia",
+        "Encantador",
+        "Marionetista"
+      ],
+      "biografia": "Mingau, o Feiticeiro — Poder · Meio-Sangue. (Biografia pendente.)",
+      "iniciais": [
+        "ent_mingau_o_feiticeiro_arranhao_transformador",
+        "ent_mingau_o_feiticeiro_varinha_roubada",
+        "ent_mingau_o_feiticeiro_gato_intangivel",
+        "ent_mingau_o_feiticeiro_encantar_subordinado",
+        "ent_mingau_o_feiticeiro_salto_impossivel"
+      ],
+      "evoluidas": [
+        "ent_mingau_o_feiticeiro_tinta_anomala",
+        "ent_mingau_o_feiticeiro_fios_de_marionete",
+        "ent_mingau_o_feiticeiro_sabotagem_felina",
+        "ent_mingau_o_feiticeiro_transformacao_em_cadeia",
+        "ent_mingau_o_feiticeiro_reinado_da_varinha"
+      ]
     },
     "ent_mutante_generico": {
       "id": "ent_mutante_generico",
@@ -1454,13 +1817,10 @@
       ],
       "cards": [
         "ent_mutante_generico_rajada_elemental",
-        "ent_mutante_generico_rajada_elemental",
-        "ent_mutante_generico_parede_do_elemento",
         "ent_mutante_generico_parede_do_elemento",
         "ent_mutante_generico_onda_de_impacto",
         "ent_mutante_generico_carga_instavel",
-        "ent_mutante_generico_barreira_condensada",
-        "ent_mutante_generico_canalizar_ordem"
+        "ent_mutante_generico_barreira_condensada"
       ],
       "signature": {
         "name": "Carga elemental",
@@ -1488,7 +1848,28 @@
       "source_page": "Mutante_Generico.md",
       "portrait": "res://assets/cast/ent_mutante_generico_portrait.png",
       "signature_icon": "res://assets/cast/ent_mutante_generico_icon.png",
-      "escudo": 2
+      "escudo": 2,
+      "aprimoramento": "canalizar",
+      "grupos": [
+        "Canhão",
+        "Construtor",
+        "Devastador"
+      ],
+      "biografia": "Mutante (Genérico) — Poder · Mutante. (Biografia pendente.)",
+      "iniciais": [
+        "ent_mutante_generico_rajada_elemental",
+        "ent_mutante_generico_parede_do_elemento",
+        "ent_mutante_generico_onda_de_impacto",
+        "ent_mutante_generico_carga_instavel",
+        "ent_mutante_generico_barreira_condensada"
+      ],
+      "evoluidas": [
+        "ent_mutante_generico_canalizar_ordem",
+        "ent_mutante_generico_feixe_concentrado",
+        "ent_mutante_generico_ruptura_de_terreno",
+        "ent_mutante_generico_massa_elemental",
+        "ent_mutante_generico_descarga_total"
+      ]
     },
     "ent_nero": {
       "id": "ent_nero",
@@ -1519,13 +1900,10 @@
       ],
       "cards": [
         "ent_nero_foice_de_sangue",
-        "ent_nero_foice_de_sangue",
-        "ent_nero_escudo_de_ossos",
         "ent_nero_escudo_de_ossos",
         "ent_nero_inferi_temporario",
         "ent_nero_toque_no_equilibrio",
-        "ent_nero_vinculo_de_sangue",
-        "ent_nero_golpe_ritual"
+        "ent_nero_vinculo_de_sangue"
       ],
       "signature": {
         "name": "Presença funerária",
@@ -1565,7 +1943,28 @@
       "source_page": "Nero.md",
       "portrait": "res://assets/cast/ent_nero_portrait.png",
       "signature_icon": "res://assets/cast/ent_nero_icon.png",
-      "escudo": 2
+      "escudo": 2,
+      "aprimoramento": "canalizar",
+      "grupos": [
+        "Invocador",
+        "Controlador",
+        "Ilusionista"
+      ],
+      "biografia": "Nero — Poder · Humano. (Biografia pendente.)",
+      "iniciais": [
+        "ent_nero_foice_de_sangue",
+        "ent_nero_escudo_de_ossos",
+        "ent_nero_inferi_temporario",
+        "ent_nero_toque_no_equilibrio",
+        "ent_nero_vinculo_de_sangue"
+      ],
+      "evoluidas": [
+        "ent_nero_golpe_ritual",
+        "ent_nero_marcha_dos_inferi",
+        "ent_nero_chamar_o_caido",
+        "ent_nero_circulo_funerario",
+        "ent_nero_portao_do_necroterio"
+      ]
     },
     "ent_niu_valdtagen": {
       "id": "ent_niu_valdtagen",
@@ -1596,13 +1995,10 @@
       ],
       "cards": [
         "ent_niu_valdtagen_esquiva_involuntaria",
-        "ent_niu_valdtagen_esquiva_involuntaria",
-        "ent_niu_valdtagen_pedra_atirada",
         "ent_niu_valdtagen_pedra_atirada",
         "ent_niu_valdtagen_sorte_absurda",
         "ent_niu_valdtagen_sumir_no_corredor",
-        "ent_niu_valdtagen_passo_de_fuga",
-        "ent_niu_valdtagen_alerta_silencioso"
+        "ent_niu_valdtagen_passo_de_fuga"
       ],
       "signature": {
         "name": "Sorte improvável",
@@ -1627,7 +2023,28 @@
       "source_page": "Niu_Valdtagen.md",
       "portrait": "res://assets/cast/ent_niu_valdtagen_portrait.png",
       "signature_icon": "res://assets/cast/ent_niu_valdtagen_icon.png",
-      "escudo": 2
+      "escudo": 2,
+      "aprimoramento": "oportunista",
+      "grupos": [
+        "Furtivo",
+        "Preparo",
+        "Grupo3"
+      ],
+      "biografia": "Niu Valdtagen — Versátil · Humano. (Biografia pendente.)",
+      "iniciais": [
+        "ent_niu_valdtagen_esquiva_involuntaria",
+        "ent_niu_valdtagen_pedra_atirada",
+        "ent_niu_valdtagen_sorte_absurda",
+        "ent_niu_valdtagen_sumir_no_corredor",
+        "ent_niu_valdtagen_passo_de_fuga"
+      ],
+      "evoluidas": [
+        "ent_niu_valdtagen_alerta_silencioso",
+        "ent_niu_valdtagen_residuo_planar",
+        "ent_niu_valdtagen_plano_improvisado",
+        "ent_niu_valdtagen_encontrar_saida",
+        "ent_niu_valdtagen_coincidencia_impossivel"
+      ]
     },
     "ent_pesadelo_vivo": {
       "id": "ent_pesadelo_vivo",
@@ -1658,13 +2075,10 @@
       ],
       "cards": [
         "ent_pesadelo_vivo_sombra_encarnada",
-        "ent_pesadelo_vivo_sombra_encarnada",
-        "ent_pesadelo_vivo_imagem_do_trauma",
         "ent_pesadelo_vivo_imagem_do_trauma",
         "ent_pesadelo_vivo_desaparecer",
         "ent_pesadelo_vivo_frenesi_subito",
-        "ent_pesadelo_vivo_eco_mental",
-        "ent_pesadelo_vivo_reino_quebrado"
+        "ent_pesadelo_vivo_eco_mental"
       ],
       "signature": {
         "name": "Medo persistente",
@@ -1705,7 +2119,28 @@
       "source_page": "Pesadelo_Vivo.md",
       "portrait": "res://assets/cast/ent_pesadelo_vivo_portrait.png",
       "signature_icon": "res://assets/cast/ent_pesadelo_vivo_icon.png",
-      "escudo": 1
+      "escudo": 1,
+      "aprimoramento": "vanguarda",
+      "grupos": [
+        "Frenético",
+        "Furtivo",
+        "Ilusionista"
+      ],
+      "biografia": "Pesadelo Vivo — Impacto · Meio-Monstro. (Biografia pendente.)",
+      "iniciais": [
+        "ent_pesadelo_vivo_sombra_encarnada",
+        "ent_pesadelo_vivo_imagem_do_trauma",
+        "ent_pesadelo_vivo_desaparecer",
+        "ent_pesadelo_vivo_frenesi_subito",
+        "ent_pesadelo_vivo_eco_mental"
+      ],
+      "evoluidas": [
+        "ent_pesadelo_vivo_reino_quebrado",
+        "ent_pesadelo_vivo_medo_personalizado",
+        "ent_pesadelo_vivo_sombra_desperta",
+        "ent_pesadelo_vivo_estilhacar_realidade",
+        "ent_pesadelo_vivo_pesadelo_sem_fim"
+      ]
     },
     "ent_pietro_caos": {
       "id": "ent_pietro_caos",
@@ -1736,13 +2171,10 @@
       ],
       "cards": [
         "ent_pietro_caos_corrente_de_buer",
-        "ent_pietro_caos_corrente_de_buer",
-        "ent_pietro_caos_recompor_carne",
         "ent_pietro_caos_recompor_carne",
         "ent_pietro_caos_riso_do_caos",
         "ent_pietro_caos_garras_de_ceifador",
-        "ent_pietro_caos_sabotar_sistema",
-        "ent_pietro_caos_fome_de_medo"
+        "ent_pietro_caos_sabotar_sistema"
       ],
       "signature": {
         "name": "Regeneração caótica",
@@ -1794,7 +2226,28 @@
       "source_page": "Pietro_Caos.md",
       "portrait": "res://assets/cast/ent_pietro_caos_portrait.png",
       "signature_icon": "res://assets/cast/ent_pietro_caos_icon.png",
-      "escudo": 2
+      "escudo": 2,
+      "aprimoramento": "oportunista",
+      "grupos": [
+        "Desperto",
+        "Sabotador",
+        "Ceifador"
+      ],
+      "biografia": "Pietro — Versátil · Meio-Monstro. (Biografia pendente.)",
+      "iniciais": [
+        "ent_pietro_caos_corrente_de_buer",
+        "ent_pietro_caos_recompor_carne",
+        "ent_pietro_caos_riso_do_caos",
+        "ent_pietro_caos_garras_de_ceifador",
+        "ent_pietro_caos_sabotar_sistema"
+      ],
+      "evoluidas": [
+        "ent_pietro_caos_fome_de_medo",
+        "ent_pietro_caos_aura_apocaliptica",
+        "ent_pietro_caos_regeneracao_selvagem",
+        "ent_pietro_caos_arrebentar_a_linha",
+        "ent_pietro_caos_caos_completo"
+      ]
     },
     "ent_quasar": {
       "id": "ent_quasar",
@@ -1825,13 +2278,10 @@
       ],
       "cards": [
         "ent_quasar_jab_divino",
-        "ent_quasar_jab_divino",
-        "ent_quasar_contra_de_combate",
         "ent_quasar_contra_de_combate",
         "ent_quasar_uppercut",
         "ent_quasar_riso_provocador",
-        "ent_quasar_percepcao_relampago",
-        "ent_quasar_sequencia_desarmada"
+        "ent_quasar_percepcao_relampago"
       ],
       "signature": {
         "name": "Reflexo treinado",
@@ -1872,7 +2322,28 @@
       "source_page": "Quasar.md",
       "portrait": "res://assets/cast/ent_quasar_portrait.png",
       "signature_icon": "res://assets/cast/ent_quasar_icon.png",
-      "escudo": 1
+      "escudo": 1,
+      "aprimoramento": "vanguarda",
+      "grupos": [
+        "Duelista",
+        "Velocista",
+        "Vanguarda"
+      ],
+      "biografia": "Quasar — Impacto · Inumano. (Biografia pendente.)",
+      "iniciais": [
+        "ent_quasar_jab_divino",
+        "ent_quasar_contra_de_combate",
+        "ent_quasar_uppercut",
+        "ent_quasar_riso_provocador",
+        "ent_quasar_percepcao_relampago"
+      ],
+      "evoluidas": [
+        "ent_quasar_sequencia_desarmada",
+        "ent_quasar_recuperacao_acelerada",
+        "ent_quasar_golpe_de_abertura",
+        "ent_quasar_assalto_de_vanguarda",
+        "ent_quasar_impacto_de_quasar"
+      ]
     },
     "ent_taylor": {
       "id": "ent_taylor",
@@ -1903,13 +2374,10 @@
       ],
       "cards": [
         "ent_taylor_lanca_mental",
-        "ent_taylor_lanca_mental",
-        "ent_taylor_fortaleza_de_zaphter",
         "ent_taylor_fortaleza_de_zaphter",
         "ent_taylor_fio_de_marionete",
         "ent_taylor_asas_projetadas",
-        "ent_taylor_lamina_psiquica",
-        "ent_taylor_desvio_de_mente"
+        "ent_taylor_lamina_psiquica"
       ],
       "signature": {
         "name": "Fortaleza psíquica",
@@ -1945,7 +2413,28 @@
       "source_page": "Taylor.md",
       "portrait": "res://assets/cast/ent_taylor_portrait.png",
       "signature_icon": "res://assets/cast/ent_taylor_icon.png",
-      "escudo": 5
+      "escudo": 5,
+      "aprimoramento": "baluarte",
+      "grupos": [
+        "Marionetista",
+        "Calculista",
+        "Ilusionista"
+      ],
+      "biografia": "Taylor (Nave-Mãe) — Escudo · Mutante. (Biografia pendente.)",
+      "iniciais": [
+        "ent_taylor_lanca_mental",
+        "ent_taylor_fortaleza_de_zaphter",
+        "ent_taylor_fio_de_marionete",
+        "ent_taylor_asas_projetadas",
+        "ent_taylor_lamina_psiquica"
+      ],
+      "evoluidas": [
+        "ent_taylor_desvio_de_mente",
+        "ent_taylor_mapa_tatico",
+        "ent_taylor_voo_de_cobertura",
+        "ent_taylor_comando_remoto",
+        "ent_taylor_nave_mae"
+      ]
     },
     "ent_techna": {
       "id": "ent_techna",
@@ -1976,13 +2465,10 @@
       ],
       "cards": [
         "ent_techna_choque_incapacitante",
-        "ent_techna_choque_incapacitante",
-        "ent_techna_placas_modulares",
         "ent_techna_placas_modulares",
         "ent_techna_laco_de_contencao",
         "ent_techna_varredura_de_alvos",
-        "ent_techna_sabotar_arma",
-        "ent_techna_kit_de_captura"
+        "ent_techna_sabotar_arma"
       ],
       "signature": {
         "name": "Mira de contenção",
@@ -2019,7 +2505,28 @@
       "source_page": "Techna.md",
       "portrait": "res://assets/cast/ent_techna_portrait.png",
       "signature_icon": "res://assets/cast/ent_techna_icon.png",
-      "escudo": 3
+      "escudo": 3,
+      "aprimoramento": "baluarte",
+      "grupos": [
+        "Preparo",
+        "Caçador",
+        "Sabotador"
+      ],
+      "biografia": "Techna — Armadura · Ciborgue. (Biografia pendente.)",
+      "iniciais": [
+        "ent_techna_choque_incapacitante",
+        "ent_techna_placas_modulares",
+        "ent_techna_laco_de_contencao",
+        "ent_techna_varredura_de_alvos",
+        "ent_techna_sabotar_arma"
+      ],
+      "evoluidas": [
+        "ent_techna_kit_de_captura",
+        "ent_techna_armadilha_de_campo",
+        "ent_techna_cacada_inteligente",
+        "ent_techna_armadura_de_bloqueio",
+        "ent_techna_protocolo_nocaute"
+      ]
     }
   },
   "cards": {
@@ -2040,7 +2547,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_adam_cobertura_improvisada": {
       "id": "ent_adam_cobertura_improvisada",
@@ -2060,7 +2568,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_adam_avaliar_o_risco": {
       "id": "ent_adam_avaliar_o_risco",
@@ -2079,7 +2588,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_adam_puxar_para_tras": {
       "id": "ent_adam_puxar_para_tras",
@@ -2102,7 +2612,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_adam_abrigo_rapido": {
       "id": "ent_adam_abrigo_rapido",
@@ -2122,7 +2633,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_adam_cuidar_dos_feridos": {
       "id": "ent_adam_cuidar_dos_feridos",
@@ -2144,7 +2656,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_adam_armadilha_de_campo": {
       "id": "ent_adam_armadilha_de_campo",
@@ -2168,7 +2681,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "cost": 2
+      "cost": 2,
+      "tier": "inicial"
     },
     "ent_adam_nao_vou_deixar": {
       "id": "ent_adam_nao_vou_deixar",
@@ -2193,7 +2707,8 @@
       "rarity": "EPIC",
       "unlock": "starting",
       "exhaust": false,
-      "cost": 2
+      "cost": 2,
+      "tier": "inicial"
     },
     "ent_adam_rota_de_fuga": {
       "id": "ent_adam_rota_de_fuga",
@@ -2217,7 +2732,8 @@
       "rarity": "EPIC",
       "unlock": "progression",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "evoluida"
     },
     "ent_adam_ultima_linha": {
       "id": "ent_adam_ultima_linha",
@@ -2241,7 +2757,8 @@
       "rarity": "LEGENDARY",
       "unlock": "progression",
       "exhaust": false,
-      "cost": 3
+      "cost": 3,
+      "tier": "evoluida"
     },
     "ent_akuji_brasa_negra": {
       "id": "ent_akuji_brasa_negra",
@@ -2265,7 +2782,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_akuji_escamas_da_fornalha": {
       "id": "ent_akuji_escamas_da_fornalha",
@@ -2285,7 +2803,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_akuji_sopro_abrasador": {
       "id": "ent_akuji_sopro_abrasador",
@@ -2309,7 +2828,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "cost": 3
+      "cost": 3,
+      "tier": "inicial"
     },
     "ent_akuji_forma_de_cinzas": {
       "id": "ent_akuji_forma_de_cinzas",
@@ -2329,7 +2849,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_akuji_chama_sem_luz": {
       "id": "ent_akuji_chama_sem_luz",
@@ -2353,7 +2874,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_akuji_leitura_de_pactos": {
       "id": "ent_akuji_leitura_de_pactos",
@@ -2377,7 +2899,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_akuji_asas_de_energia_negra": {
       "id": "ent_akuji_asas_de_energia_negra",
@@ -2401,7 +2924,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_akuji_incendio_dirigido": {
       "id": "ent_akuji_incendio_dirigido",
@@ -2425,7 +2949,8 @@
       "rarity": "EPIC",
       "unlock": "starting",
       "exhaust": false,
-      "cost": 4
+      "cost": 4,
+      "tier": "inicial"
     },
     "ent_akuji_cinzas_retornam": {
       "id": "ent_akuji_cinzas_retornam",
@@ -2448,7 +2973,8 @@
       "rarity": "EPIC",
       "unlock": "progression",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "evoluida"
     },
     "ent_akuji_noite_em_combustao": {
       "id": "ent_akuji_noite_em_combustao",
@@ -2475,7 +3001,8 @@
       "rarity": "LEGENDARY",
       "unlock": "progression",
       "exhaust": true,
-      "cost": 5
+      "cost": 5,
+      "tier": "evoluida"
     },
     "ent_alexis_alerta_aos_gritos": {
       "id": "ent_alexis_alerta_aos_gritos",
@@ -2495,7 +3022,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_alexis_objeto_arremessado": {
       "id": "ent_alexis_objeto_arremessado",
@@ -2514,7 +3042,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_alexis_tapete_sob_os_pes": {
       "id": "ent_alexis_tapete_sob_os_pes",
@@ -2538,7 +3067,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_alexis_reunir_o_grupo": {
       "id": "ent_alexis_reunir_o_grupo",
@@ -2557,7 +3087,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_alexis_escapar_para_cobertura": {
       "id": "ent_alexis_escapar_para_cobertura",
@@ -2577,7 +3108,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_alexis_primeiros_socorros": {
       "id": "ent_alexis_primeiros_socorros",
@@ -2596,7 +3128,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_alexis_distracao_teatral": {
       "id": "ent_alexis_distracao_teatral",
@@ -2616,7 +3149,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_alexis_proteger_um_amigo": {
       "id": "ent_alexis_proteger_um_amigo",
@@ -2641,7 +3175,8 @@
       "rarity": "EPIC",
       "unlock": "starting",
       "exhaust": false,
-      "cost": 2
+      "cost": 2,
+      "tier": "inicial"
     },
     "ent_alexis_colecao_improvavel": {
       "id": "ent_alexis_colecao_improvavel",
@@ -2665,7 +3200,8 @@
       "rarity": "EPIC",
       "unlock": "progression",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "evoluida"
     },
     "ent_alexis_coragem_tardia": {
       "id": "ent_alexis_coragem_tardia",
@@ -2689,7 +3225,8 @@
       "rarity": "LEGENDARY",
       "unlock": "progression",
       "exhaust": false,
-      "cost": 3
+      "cost": 3,
+      "tier": "evoluida"
     },
     "ent_alistair_punho_de_armadura": {
       "id": "ent_alistair_punho_de_armadura",
@@ -2711,7 +3248,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_alistair_armadura_instantanea": {
       "id": "ent_alistair_armadura_instantanea",
@@ -2735,7 +3273,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_alistair_arco_de_luz": {
       "id": "ent_alistair_arco_de_luz",
@@ -2759,7 +3298,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_alistair_desafio_da_vanguarda": {
       "id": "ent_alistair_desafio_da_vanguarda",
@@ -2782,7 +3322,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_alistair_esconjuro": {
       "id": "ent_alistair_esconjuro",
@@ -2806,7 +3347,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "cost": 2
+      "cost": 2,
+      "tier": "inicial"
     },
     "ent_alistair_tempo_de_reacao": {
       "id": "ent_alistair_tempo_de_reacao",
@@ -2830,7 +3372,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_alistair_corrida_desesperada": {
       "id": "ent_alistair_corrida_desesperada",
@@ -2853,7 +3396,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_alistair_liga_ouro_aco": {
       "id": "ent_alistair_liga_ouro_aco",
@@ -2873,7 +3417,8 @@
       "rarity": "EPIC",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_alistair_espada_sagrada": {
       "id": "ent_alistair_espada_sagrada",
@@ -2897,7 +3442,8 @@
       "rarity": "EPIC",
       "unlock": "progression",
       "exhaust": false,
-      "cost": 3
+      "cost": 3,
+      "tier": "evoluida"
     },
     "ent_alistair_muralha_luminosa": {
       "id": "ent_alistair_muralha_luminosa",
@@ -2925,7 +3471,8 @@
       "rarity": "LEGENDARY",
       "unlock": "progression",
       "exhaust": true,
-      "cost": 5
+      "cost": 5,
+      "tier": "evoluida"
     },
     "ent_ashlee_disparo_de_contencao": {
       "id": "ent_ashlee_disparo_de_contencao",
@@ -2949,7 +3496,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_ashlee_scanner_de_soma": {
       "id": "ent_ashlee_scanner_de_soma",
@@ -2973,7 +3521,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_ashlee_protocolo_de_quarentena": {
       "id": "ent_ashlee_protocolo_de_quarentena",
@@ -2993,7 +3542,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_ashlee_kit_medico": {
       "id": "ent_ashlee_kit_medico",
@@ -3015,7 +3565,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_ashlee_isolar_alvo": {
       "id": "ent_ashlee_isolar_alvo",
@@ -3038,7 +3589,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_ashlee_dados_de_campo": {
       "id": "ent_ashlee_dados_de_campo",
@@ -3061,7 +3613,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_ashlee_armadilha_de_isolamento": {
       "id": "ent_ashlee_armadilha_de_isolamento",
@@ -3086,7 +3639,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "cost": 2
+      "cost": 2,
+      "tier": "inicial"
     },
     "ent_ashlee_compartilhar_equipamento": {
       "id": "ent_ashlee_compartilhar_equipamento",
@@ -3106,7 +3660,8 @@
       "rarity": "EPIC",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_ashlee_analise_completa": {
       "id": "ent_ashlee_analise_completa",
@@ -3131,7 +3686,8 @@
       "rarity": "EPIC",
       "unlock": "progression",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "evoluida"
     },
     "ent_ashlee_quarentena_total": {
       "id": "ent_ashlee_quarentena_total",
@@ -3158,7 +3714,8 @@
       "rarity": "LEGENDARY",
       "unlock": "progression",
       "exhaust": true,
-      "cost": 4
+      "cost": 4,
+      "tier": "evoluida"
     },
     "ent_daeva_tiro_de_airsoft": {
       "id": "ent_daeva_tiro_de_airsoft",
@@ -3182,7 +3739,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_daeva_plano_de_assalto": {
       "id": "ent_daeva_plano_de_assalto",
@@ -3201,7 +3759,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_daeva_moto_de_fuga": {
       "id": "ent_daeva_moto_de_fuga",
@@ -3221,7 +3780,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_daeva_passo_despercebido": {
       "id": "ent_daeva_passo_despercebido",
@@ -3241,7 +3801,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_daeva_cobertura_de_corredor": {
       "id": "ent_daeva_cobertura_de_corredor",
@@ -3264,7 +3825,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_daeva_aviso_por_radio": {
       "id": "ent_daeva_aviso_por_radio",
@@ -3284,7 +3846,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_daeva_distracao_arriscada": {
       "id": "ent_daeva_distracao_arriscada",
@@ -3309,7 +3872,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_daeva_lealdade_teimosa": {
       "id": "ent_daeva_lealdade_teimosa",
@@ -3333,7 +3897,8 @@
       "rarity": "EPIC",
       "unlock": "starting",
       "exhaust": false,
-      "cost": 2
+      "cost": 2,
+      "tier": "inicial"
     },
     "ent_daeva_saida_calculada": {
       "id": "ent_daeva_saida_calculada",
@@ -3357,7 +3922,8 @@
       "rarity": "EPIC",
       "unlock": "progression",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "evoluida"
     },
     "ent_daeva_todos_para_fora": {
       "id": "ent_daeva_todos_para_fora",
@@ -3382,7 +3948,8 @@
       "rarity": "LEGENDARY",
       "unlock": "progression",
       "exhaust": false,
-      "cost": 3
+      "cost": 3,
+      "tier": "evoluida"
     },
     "ent_damian_alrosa_oferta_irrecusavel": {
       "id": "ent_damian_alrosa_oferta_irrecusavel",
@@ -3402,7 +3969,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_damian_alrosa_clausula_oculta": {
       "id": "ent_damian_alrosa_clausula_oculta",
@@ -3426,7 +3994,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_damian_alrosa_rede_de_contatos": {
       "id": "ent_damian_alrosa_rede_de_contatos",
@@ -3445,7 +4014,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_damian_alrosa_pocao_negociada": {
       "id": "ent_damian_alrosa_pocao_negociada",
@@ -3469,7 +4039,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_damian_alrosa_ritual_condicionado": {
       "id": "ent_damian_alrosa_ritual_condicionado",
@@ -3494,7 +4065,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "cost": 2
+      "cost": 2,
+      "tier": "inicial"
     },
     "ent_damian_alrosa_recurso_reservado": {
       "id": "ent_damian_alrosa_recurso_reservado",
@@ -3514,7 +4086,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_damian_alrosa_executar_contrato": {
       "id": "ent_damian_alrosa_executar_contrato",
@@ -3538,7 +4111,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_damian_alrosa_renegociar_termos": {
       "id": "ent_damian_alrosa_renegociar_termos",
@@ -3562,7 +4136,8 @@
       "rarity": "EPIC",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_damian_alrosa_preco_da_promessa": {
       "id": "ent_damian_alrosa_preco_da_promessa",
@@ -3586,7 +4161,8 @@
       "rarity": "EPIC",
       "unlock": "progression",
       "exhaust": false,
-      "cost": 3
+      "cost": 3,
+      "tier": "evoluida"
     },
     "ent_damian_alrosa_pacto_irrevogavel": {
       "id": "ent_damian_alrosa_pacto_irrevogavel",
@@ -3613,7 +4189,8 @@
       "rarity": "LEGENDARY",
       "unlock": "progression",
       "exhaust": true,
-      "cost": 5
+      "cost": 5,
+      "tier": "evoluida"
     },
     "ent_dominika_seur_massa_em_avanco": {
       "id": "ent_dominika_seur_massa_em_avanco",
@@ -3636,7 +4213,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_dominika_seur_corpo_acolchoado": {
       "id": "ent_dominika_seur_corpo_acolchoado",
@@ -3656,7 +4234,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_dominika_seur_engolfamento": {
       "id": "ent_dominika_seur_engolfamento",
@@ -3680,7 +4259,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "cost": 2
+      "cost": 2,
+      "tier": "inicial"
     },
     "ent_dominika_seur_regeneracao_volumosa": {
       "id": "ent_dominika_seur_regeneracao_volumosa",
@@ -3699,7 +4279,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_dominika_seur_pressao_inabalavel": {
       "id": "ent_dominika_seur_pressao_inabalavel",
@@ -3724,7 +4305,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_dominika_seur_esmagamento_lento": {
       "id": "ent_dominika_seur_esmagamento_lento",
@@ -3748,7 +4330,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_dominika_seur_campo_de_massa": {
       "id": "ent_dominika_seur_campo_de_massa",
@@ -3768,7 +4351,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_dominika_seur_avanco_colossal": {
       "id": "ent_dominika_seur_avanco_colossal",
@@ -3791,7 +4375,8 @@
       "rarity": "EPIC",
       "unlock": "starting",
       "exhaust": false,
-      "cost": 3
+      "cost": 3,
+      "tier": "inicial"
     },
     "ent_dominika_seur_absorver_impacto": {
       "id": "ent_dominika_seur_absorver_impacto",
@@ -3815,7 +4400,8 @@
       "rarity": "EPIC",
       "unlock": "progression",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "evoluida"
     },
     "ent_dominika_seur_onda_de_engolfamento": {
       "id": "ent_dominika_seur_onda_de_engolfamento",
@@ -3842,7 +4428,8 @@
       "rarity": "LEGENDARY",
       "unlock": "progression",
       "exhaust": true,
-      "cost": 5
+      "cost": 5,
+      "tier": "evoluida"
     },
     "ent_dylan_avisar_o_perigo": {
       "id": "ent_dylan_avisar_o_perigo",
@@ -3862,7 +4449,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_dylan_xicara_improvisada": {
       "id": "ent_dylan_xicara_improvisada",
@@ -3881,7 +4469,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_dylan_nao_entre_em_panico": {
       "id": "ent_dylan_nao_entre_em_panico",
@@ -3903,7 +4492,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_dylan_versos_de_coragem": {
       "id": "ent_dylan_versos_de_coragem",
@@ -3923,7 +4513,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_dylan_atrair_atencao": {
       "id": "ent_dylan_atrair_atencao",
@@ -3947,7 +4538,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_dylan_saida_da_cafeteria": {
       "id": "ent_dylan_saida_da_cafeteria",
@@ -3967,7 +4559,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_dylan_buscar_ajuda": {
       "id": "ent_dylan_buscar_ajuda",
@@ -3986,7 +4579,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_dylan_ficar_junto": {
       "id": "ent_dylan_ficar_junto",
@@ -4011,7 +4605,8 @@
       "rarity": "EPIC",
       "unlock": "starting",
       "exhaust": false,
-      "cost": 2
+      "cost": 2,
+      "tier": "inicial"
     },
     "ent_dylan_guardar_a_porta": {
       "id": "ent_dylan_guardar_a_porta",
@@ -4031,7 +4626,8 @@
       "rarity": "EPIC",
       "unlock": "progression",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "evoluida"
     },
     "ent_dylan_nao_abandonar_ninguem": {
       "id": "ent_dylan_nao_abandonar_ninguem",
@@ -4055,7 +4651,8 @@
       "rarity": "LEGENDARY",
       "unlock": "progression",
       "exhaust": false,
-      "cost": 3
+      "cost": 3,
+      "tier": "evoluida"
     },
     "ent_evelyn_graves_puxao_do_reino_quebrado": {
       "id": "ent_evelyn_graves_puxao_do_reino_quebrado",
@@ -4077,7 +4674,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_evelyn_graves_fio_de_marionete": {
       "id": "ent_evelyn_graves_fio_de_marionete",
@@ -4097,7 +4695,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_evelyn_graves_sombra_ilusoria": {
       "id": "ent_evelyn_graves_sombra_ilusoria",
@@ -4117,7 +4716,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_evelyn_graves_eco_invocado": {
       "id": "ent_evelyn_graves_eco_invocado",
@@ -4141,7 +4741,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "cost": 2
+      "cost": 2,
+      "tier": "inicial"
     },
     "ent_evelyn_graves_arrastar_consciencia": {
       "id": "ent_evelyn_graves_arrastar_consciencia",
@@ -4165,7 +4766,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "cost": 2
+      "cost": 2,
+      "tier": "inicial"
     },
     "ent_evelyn_graves_porta_no_vazio": {
       "id": "ent_evelyn_graves_porta_no_vazio",
@@ -4185,7 +4787,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_evelyn_graves_encanto_predatorio": {
       "id": "ent_evelyn_graves_encanto_predatorio",
@@ -4209,7 +4812,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_evelyn_graves_ruptura_psiquica": {
       "id": "ent_evelyn_graves_ruptura_psiquica",
@@ -4233,7 +4837,8 @@
       "rarity": "EPIC",
       "unlock": "starting",
       "exhaust": false,
-      "cost": 3
+      "cost": 3,
+      "tier": "inicial"
     },
     "ent_evelyn_graves_teatro_da_mente": {
       "id": "ent_evelyn_graves_teatro_da_mente",
@@ -4253,7 +4858,8 @@
       "rarity": "EPIC",
       "unlock": "progression",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "evoluida"
     },
     "ent_evelyn_graves_reino_escancarado": {
       "id": "ent_evelyn_graves_reino_escancarado",
@@ -4280,7 +4886,8 @@
       "rarity": "LEGENDARY",
       "unlock": "progression",
       "exhaust": true,
-      "cost": 5
+      "cost": 5,
+      "tier": "evoluida"
     },
     "ent_fate_espada_da_fronteira": {
       "id": "ent_fate_espada_da_fronteira",
@@ -4303,7 +4910,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_fate_guarda_interdimensional": {
       "id": "ent_fate_guarda_interdimensional",
@@ -4328,7 +4936,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_fate_lamina_perfurante": {
       "id": "ent_fate_lamina_perfurante",
@@ -4351,7 +4960,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_fate_passo_de_fronteira": {
       "id": "ent_fate_passo_de_fronteira",
@@ -4374,7 +4984,8 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "quick": true
+      "quick": true,
+      "tier": "inicial"
     },
     "ent_fate_dever_da_alfandega": {
       "id": "ent_fate_dever_da_alfandega",
@@ -4392,7 +5003,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_fate_retaliacao_imediata": {
       "id": "ent_fate_retaliacao_imediata",
@@ -4412,7 +5024,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_fate_sentir_anomalia": {
       "id": "ent_fate_sentir_anomalia",
@@ -4432,7 +5045,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_fate_golpe_de_custodia": {
       "id": "ent_fate_golpe_de_custodia",
@@ -4456,7 +5070,8 @@
       "rarity": "EPIC",
       "unlock": "starting",
       "exhaust": false,
-      "cost": 3
+      "cost": 3,
+      "tier": "inicial"
     },
     "ent_fate_fenda_de_aco": {
       "id": "ent_fate_fenda_de_aco",
@@ -4479,7 +5094,8 @@
       "rarity": "EPIC",
       "unlock": "progression",
       "exhaust": false,
-      "cost": 3
+      "cost": 3,
+      "tier": "evoluida"
     },
     "ent_fate_julgamento_da_fronteira": {
       "id": "ent_fate_julgamento_da_fronteira",
@@ -4506,7 +5122,8 @@
       "rarity": "LEGENDARY",
       "unlock": "progression",
       "exhaust": true,
-      "cost": 5
+      "cost": 5,
+      "tier": "evoluida"
     },
     "ent_hynda_valdtagen_glifo_ofensivo": {
       "id": "ent_hynda_valdtagen_glifo_ofensivo",
@@ -4525,7 +5142,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_hynda_valdtagen_pocao_restauradora": {
       "id": "ent_hynda_valdtagen_pocao_restauradora",
@@ -4547,7 +5165,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_hynda_valdtagen_portal_da_bruxa": {
       "id": "ent_hynda_valdtagen_portal_da_bruxa",
@@ -4571,7 +5190,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_hynda_valdtagen_chuva_de_glifos": {
       "id": "ent_hynda_valdtagen_chuva_de_glifos",
@@ -4590,7 +5210,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "cost": 2
+      "cost": 2,
+      "tier": "inicial"
     },
     "ent_hynda_valdtagen_pocao_adaptativa": {
       "id": "ent_hynda_valdtagen_pocao_adaptativa",
@@ -4615,7 +5236,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_hynda_valdtagen_reescrever_terreno": {
       "id": "ent_hynda_valdtagen_reescrever_terreno",
@@ -4639,7 +5261,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_hynda_valdtagen_meteoro_menor": {
       "id": "ent_hynda_valdtagen_meteoro_menor",
@@ -4662,7 +5285,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "cost": 3
+      "cost": 3,
+      "tier": "inicial"
     },
     "ent_hynda_valdtagen_transmutacao_de_emergencia": {
       "id": "ent_hynda_valdtagen_transmutacao_de_emergencia",
@@ -4683,7 +5307,8 @@
       "rarity": "EPIC",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_hynda_valdtagen_circulo_planar": {
       "id": "ent_hynda_valdtagen_circulo_planar",
@@ -4707,7 +5332,8 @@
       "rarity": "EPIC",
       "unlock": "progression",
       "exhaust": false,
-      "cost": 3
+      "cost": 3,
+      "tier": "evoluida"
     },
     "ent_hynda_valdtagen_meteoro_continental": {
       "id": "ent_hynda_valdtagen_meteoro_continental",
@@ -4733,7 +5359,8 @@
       "unlock": "progression",
       "exhaust": true,
       "cost": 6,
-      "final": true
+      "final": true,
+      "tier": "evoluida"
     },
     "ent_kabuki_golpe_acrobatico": {
       "id": "ent_kabuki_golpe_acrobatico",
@@ -4756,7 +5383,8 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "quick": true
+      "quick": true,
+      "tier": "inicial"
     },
     "ent_kabuki_armadura_furtiva": {
       "id": "ent_kabuki_armadura_furtiva",
@@ -4785,7 +5413,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_kabuki_sabotar_interface": {
       "id": "ent_kabuki_sabotar_interface",
@@ -4809,7 +5438,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_kabuki_salto_de_contencao": {
       "id": "ent_kabuki_salto_de_contencao",
@@ -4833,7 +5463,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "cost": 2
+      "cost": 2,
+      "tier": "inicial"
     },
     "ent_kabuki_evasao_calculada": {
       "id": "ent_kabuki_evasao_calculada",
@@ -4857,7 +5488,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_kabuki_sensor_desligado": {
       "id": "ent_kabuki_sensor_desligado",
@@ -4882,7 +5514,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_kabuki_nocaute_rapido": {
       "id": "ent_kabuki_nocaute_rapido",
@@ -4906,7 +5539,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_kabuki_palco_de_sombras": {
       "id": "ent_kabuki_palco_de_sombras",
@@ -4926,7 +5560,8 @@
       "rarity": "EPIC",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_kabuki_danca_cibernetica": {
       "id": "ent_kabuki_danca_cibernetica",
@@ -4950,7 +5585,8 @@
       "unlock": "progression",
       "exhaust": false,
       "cost": 3,
-      "chain": 3
+      "chain": 3,
+      "tier": "evoluida"
     },
     "ent_kabuki_operacao_fantasma": {
       "id": "ent_kabuki_operacao_fantasma",
@@ -4977,7 +5613,8 @@
       "rarity": "LEGENDARY",
       "unlock": "progression",
       "exhaust": true,
-      "cost": 5
+      "cost": 5,
+      "tier": "evoluida"
     },
     "ent_konrad_incisao_precisa": {
       "id": "ent_konrad_incisao_precisa",
@@ -5001,7 +5638,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_konrad_pele_de_escudo": {
       "id": "ent_konrad_pele_de_escudo",
@@ -5021,7 +5659,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_konrad_predador_da_penumbra": {
       "id": "ent_konrad_predador_da_penumbra",
@@ -5041,7 +5680,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_konrad_ferida_aberta": {
       "id": "ent_konrad_ferida_aberta",
@@ -5065,7 +5705,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_konrad_ilusao_de_cobertura": {
       "id": "ent_konrad_ilusao_de_cobertura",
@@ -5085,7 +5726,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_konrad_desviar_a_atencao": {
       "id": "ent_konrad_desviar_a_atencao",
@@ -5110,7 +5752,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_konrad_passo_carniceiro": {
       "id": "ent_konrad_passo_carniceiro",
@@ -5133,7 +5776,8 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "quick": true
+      "quick": true,
+      "tier": "inicial"
     },
     "ent_konrad_desmontagem": {
       "id": "ent_konrad_desmontagem",
@@ -5155,7 +5799,8 @@
       "rarity": "EPIC",
       "unlock": "starting",
       "exhaust": false,
-      "cost": 3
+      "cost": 3,
+      "tier": "inicial"
     },
     "ent_konrad_isca_cruel": {
       "id": "ent_konrad_isca_cruel",
@@ -5180,7 +5825,8 @@
       "rarity": "EPIC",
       "unlock": "progression",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "evoluida"
     },
     "ent_konrad_corte_de_armagedom": {
       "id": "ent_konrad_corte_de_armagedom",
@@ -5207,7 +5853,8 @@
       "rarity": "LEGENDARY",
       "unlock": "progression",
       "exhaust": true,
-      "cost": 5
+      "cost": 5,
+      "tier": "evoluida"
     },
     "ent_leona_mordida_de_marbas": {
       "id": "ent_leona_mordida_de_marbas",
@@ -5229,7 +5876,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_leona_fome_sem_fim": {
       "id": "ent_leona_fome_sem_fim",
@@ -5249,7 +5897,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_leona_fios_de_cabelo": {
       "id": "ent_leona_fios_de_cabelo",
@@ -5273,7 +5922,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_leona_regenerar_pelo_consumo": {
       "id": "ent_leona_regenerar_pelo_consumo",
@@ -5295,7 +5945,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_leona_doenca_lembrada": {
       "id": "ent_leona_doenca_lembrada",
@@ -5320,7 +5971,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_leona_forma_parcial": {
       "id": "ent_leona_forma_parcial",
@@ -5345,7 +5997,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_leona_devoracao": {
       "id": "ent_leona_devoracao",
@@ -5367,7 +6020,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "cost": 3
+      "cost": 3,
+      "tier": "inicial"
     },
     "ent_leona_fome_contagiosa": {
       "id": "ent_leona_fome_contagiosa",
@@ -5387,7 +6041,8 @@
       "rarity": "EPIC",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_leona_cabelos_famintos": {
       "id": "ent_leona_cabelos_famintos",
@@ -5414,7 +6069,8 @@
       "unlock": "progression",
       "exhaust": false,
       "cost": 3,
-      "chain": 3
+      "chain": 3,
+      "tier": "evoluida"
     },
     "ent_leona_banquete_de_marbas": {
       "id": "ent_leona_banquete_de_marbas",
@@ -5439,7 +6095,8 @@
       "rarity": "LEGENDARY",
       "unlock": "progression",
       "exhaust": true,
-      "cost": 5
+      "cost": 5,
+      "tier": "evoluida"
     },
     "ent_lust_runa_de_soma": {
       "id": "ent_lust_runa_de_soma",
@@ -5463,7 +6120,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_lust_projecao_eterea": {
       "id": "ent_lust_projecao_eterea",
@@ -5483,7 +6141,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_lust_ilusao_do_desejo": {
       "id": "ent_lust_ilusao_do_desejo",
@@ -5503,7 +6162,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_lust_fluxo_de_energia": {
       "id": "ent_lust_fluxo_de_energia",
@@ -5522,7 +6182,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_lust_transferencia_runica": {
       "id": "ent_lust_transferencia_runica",
@@ -5542,7 +6203,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_lust_distracao_sensorial": {
       "id": "ent_lust_distracao_sensorial",
@@ -5566,7 +6228,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_lust_emprestar_soma": {
       "id": "ent_lust_emprestar_soma",
@@ -5591,7 +6254,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_lust_encanto_de_area": {
       "id": "ent_lust_encanto_de_area",
@@ -5615,7 +6279,8 @@
       "rarity": "EPIC",
       "unlock": "starting",
       "exhaust": false,
-      "cost": 2
+      "cost": 2,
+      "tier": "inicial"
     },
     "ent_lust_corpo_de_projecao": {
       "id": "ent_lust_corpo_de_projecao",
@@ -5635,7 +6300,8 @@
       "rarity": "EPIC",
       "unlock": "progression",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "evoluida"
     },
     "ent_lust_runa_compartilhada": {
       "id": "ent_lust_runa_compartilhada",
@@ -5663,7 +6329,8 @@
       "rarity": "LEGENDARY",
       "unlock": "progression",
       "exhaust": true,
-      "cost": 4
+      "cost": 4,
+      "tier": "evoluida"
     },
     "ent_madelyn_ataque_teatral": {
       "id": "ent_madelyn_ataque_teatral",
@@ -5686,7 +6353,8 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "quick": true
+      "quick": true,
+      "tier": "inicial"
     },
     "ent_madelyn_risada_confusa": {
       "id": "ent_madelyn_risada_confusa",
@@ -5706,7 +6374,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_madelyn_disparo_inesperado": {
       "id": "ent_madelyn_disparo_inesperado",
@@ -5730,7 +6399,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_madelyn_frenesi_de_palco": {
       "id": "ent_madelyn_frenesi_de_palco",
@@ -5754,7 +6424,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_madelyn_sombra_mentirosa": {
       "id": "ent_madelyn_sombra_mentirosa",
@@ -5774,7 +6445,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_madelyn_riso_cortante": {
       "id": "ent_madelyn_riso_cortante",
@@ -5798,7 +6470,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_madelyn_recuperacao_caotica": {
       "id": "ent_madelyn_recuperacao_caotica",
@@ -5820,7 +6493,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_madelyn_improviso_perigoso": {
       "id": "ent_madelyn_improviso_perigoso",
@@ -5839,7 +6513,8 @@
       "rarity": "EPIC",
       "unlock": "starting",
       "exhaust": false,
-      "cost": 2
+      "cost": 2,
+      "tier": "inicial"
     },
     "ent_madelyn_cortina_de_fumaca": {
       "id": "ent_madelyn_cortina_de_fumaca",
@@ -5859,7 +6534,8 @@
       "rarity": "EPIC",
       "unlock": "progression",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "evoluida"
     },
     "ent_madelyn_ultimo_ato": {
       "id": "ent_madelyn_ultimo_ato",
@@ -5886,7 +6562,8 @@
       "unlock": "progression",
       "exhaust": true,
       "cost": 5,
-      "chain": 4
+      "chain": 4,
+      "tier": "evoluida"
     },
     "ent_mingau_o_feiticeiro_arranhao_transformador": {
       "id": "ent_mingau_o_feiticeiro_arranhao_transformador",
@@ -5910,7 +6587,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_mingau_o_feiticeiro_varinha_roubada": {
       "id": "ent_mingau_o_feiticeiro_varinha_roubada",
@@ -5930,7 +6608,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_mingau_o_feiticeiro_gato_intangivel": {
       "id": "ent_mingau_o_feiticeiro_gato_intangivel",
@@ -5955,7 +6634,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_mingau_o_feiticeiro_encantar_subordinado": {
       "id": "ent_mingau_o_feiticeiro_encantar_subordinado",
@@ -5975,7 +6655,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_mingau_o_feiticeiro_salto_impossivel": {
       "id": "ent_mingau_o_feiticeiro_salto_impossivel",
@@ -5998,7 +6679,8 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "quick": true
+      "quick": true,
+      "tier": "inicial"
     },
     "ent_mingau_o_feiticeiro_tinta_anomala": {
       "id": "ent_mingau_o_feiticeiro_tinta_anomala",
@@ -6022,7 +6704,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_mingau_o_feiticeiro_fios_de_marionete": {
       "id": "ent_mingau_o_feiticeiro_fios_de_marionete",
@@ -6046,7 +6729,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "cost": 2
+      "cost": 2,
+      "tier": "inicial"
     },
     "ent_mingau_o_feiticeiro_sabotagem_felina": {
       "id": "ent_mingau_o_feiticeiro_sabotagem_felina",
@@ -6066,7 +6750,8 @@
       "rarity": "EPIC",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_mingau_o_feiticeiro_transformacao_em_cadeia": {
       "id": "ent_mingau_o_feiticeiro_transformacao_em_cadeia",
@@ -6095,7 +6780,8 @@
       "unlock": "progression",
       "exhaust": false,
       "cost": 3,
-      "chain": 3
+      "chain": 3,
+      "tier": "evoluida"
     },
     "ent_mingau_o_feiticeiro_reinado_da_varinha": {
       "id": "ent_mingau_o_feiticeiro_reinado_da_varinha",
@@ -6122,7 +6808,8 @@
       "rarity": "LEGENDARY",
       "unlock": "progression",
       "exhaust": true,
-      "cost": 5
+      "cost": 5,
+      "tier": "evoluida"
     },
     "ent_mutante_generico_rajada_elemental": {
       "id": "ent_mutante_generico_rajada_elemental",
@@ -6141,7 +6828,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_mutante_generico_parede_do_elemento": {
       "id": "ent_mutante_generico_parede_do_elemento",
@@ -6161,7 +6849,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_mutante_generico_onda_de_impacto": {
       "id": "ent_mutante_generico_onda_de_impacto",
@@ -6184,7 +6873,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "cost": 2
+      "cost": 2,
+      "tier": "inicial"
     },
     "ent_mutante_generico_carga_instavel": {
       "id": "ent_mutante_generico_carga_instavel",
@@ -6208,7 +6898,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_mutante_generico_barreira_condensada": {
       "id": "ent_mutante_generico_barreira_condensada",
@@ -6228,7 +6919,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_mutante_generico_canalizar_ordem": {
       "id": "ent_mutante_generico_canalizar_ordem",
@@ -6247,7 +6939,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_mutante_generico_feixe_concentrado": {
       "id": "ent_mutante_generico_feixe_concentrado",
@@ -6271,7 +6964,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_mutante_generico_ruptura_de_terreno": {
       "id": "ent_mutante_generico_ruptura_de_terreno",
@@ -6295,7 +6989,8 @@
       "rarity": "EPIC",
       "unlock": "starting",
       "exhaust": false,
-      "cost": 3
+      "cost": 3,
+      "tier": "inicial"
     },
     "ent_mutante_generico_massa_elemental": {
       "id": "ent_mutante_generico_massa_elemental",
@@ -6315,7 +7010,8 @@
       "rarity": "EPIC",
       "unlock": "progression",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "evoluida"
     },
     "ent_mutante_generico_descarga_total": {
       "id": "ent_mutante_generico_descarga_total",
@@ -6337,7 +7033,8 @@
       "rarity": "LEGENDARY",
       "unlock": "progression",
       "exhaust": true,
-      "cost": 5
+      "cost": 5,
+      "tier": "evoluida"
     },
     "ent_nero_foice_de_sangue": {
       "id": "ent_nero_foice_de_sangue",
@@ -6361,7 +7058,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_nero_escudo_de_ossos": {
       "id": "ent_nero_escudo_de_ossos",
@@ -6381,7 +7079,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_nero_inferi_temporario": {
       "id": "ent_nero_inferi_temporario",
@@ -6405,7 +7104,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "cost": 2
+      "cost": 2,
+      "tier": "inicial"
     },
     "ent_nero_toque_no_equilibrio": {
       "id": "ent_nero_toque_no_equilibrio",
@@ -6425,7 +7125,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_nero_vinculo_de_sangue": {
       "id": "ent_nero_vinculo_de_sangue",
@@ -6449,7 +7150,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_nero_golpe_ritual": {
       "id": "ent_nero_golpe_ritual",
@@ -6473,7 +7175,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_nero_marcha_dos_inferi": {
       "id": "ent_nero_marcha_dos_inferi",
@@ -6492,7 +7195,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "cost": 3
+      "cost": 3,
+      "tier": "inicial"
     },
     "ent_nero_chamar_o_caido": {
       "id": "ent_nero_chamar_o_caido",
@@ -6514,7 +7218,8 @@
       "rarity": "EPIC",
       "unlock": "starting",
       "exhaust": true,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_nero_circulo_funerario": {
       "id": "ent_nero_circulo_funerario",
@@ -6539,7 +7244,8 @@
       "rarity": "EPIC",
       "unlock": "progression",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "evoluida"
     },
     "ent_nero_portao_do_necroterio": {
       "id": "ent_nero_portao_do_necroterio",
@@ -6566,7 +7272,8 @@
       "rarity": "LEGENDARY",
       "unlock": "progression",
       "exhaust": true,
-      "cost": 5
+      "cost": 5,
+      "tier": "evoluida"
     },
     "ent_niu_valdtagen_esquiva_involuntaria": {
       "id": "ent_niu_valdtagen_esquiva_involuntaria",
@@ -6586,7 +7293,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_niu_valdtagen_pedra_atirada": {
       "id": "ent_niu_valdtagen_pedra_atirada",
@@ -6605,7 +7313,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_niu_valdtagen_sorte_absurda": {
       "id": "ent_niu_valdtagen_sorte_absurda",
@@ -6624,7 +7333,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_niu_valdtagen_sumir_no_corredor": {
       "id": "ent_niu_valdtagen_sumir_no_corredor",
@@ -6644,7 +7354,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_niu_valdtagen_passo_de_fuga": {
       "id": "ent_niu_valdtagen_passo_de_fuga",
@@ -6667,7 +7378,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_niu_valdtagen_alerta_silencioso": {
       "id": "ent_niu_valdtagen_alerta_silencioso",
@@ -6687,7 +7399,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_niu_valdtagen_residuo_planar": {
       "id": "ent_niu_valdtagen_residuo_planar",
@@ -6711,7 +7424,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_niu_valdtagen_plano_improvisado": {
       "id": "ent_niu_valdtagen_plano_improvisado",
@@ -6735,7 +7449,8 @@
       "rarity": "EPIC",
       "unlock": "starting",
       "exhaust": false,
-      "cost": 2
+      "cost": 2,
+      "tier": "inicial"
     },
     "ent_niu_valdtagen_encontrar_saida": {
       "id": "ent_niu_valdtagen_encontrar_saida",
@@ -6755,7 +7470,8 @@
       "rarity": "EPIC",
       "unlock": "progression",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "evoluida"
     },
     "ent_niu_valdtagen_coincidencia_impossivel": {
       "id": "ent_niu_valdtagen_coincidencia_impossivel",
@@ -6779,7 +7495,8 @@
       "rarity": "LEGENDARY",
       "unlock": "progression",
       "exhaust": false,
-      "cost": 3
+      "cost": 3,
+      "tier": "evoluida"
     },
     "ent_pesadelo_vivo_sombra_encarnada": {
       "id": "ent_pesadelo_vivo_sombra_encarnada",
@@ -6802,7 +7519,8 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "quick": true
+      "quick": true,
+      "tier": "inicial"
     },
     "ent_pesadelo_vivo_imagem_do_trauma": {
       "id": "ent_pesadelo_vivo_imagem_do_trauma",
@@ -6822,7 +7540,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_pesadelo_vivo_desaparecer": {
       "id": "ent_pesadelo_vivo_desaparecer",
@@ -6842,7 +7561,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_pesadelo_vivo_frenesi_subito": {
       "id": "ent_pesadelo_vivo_frenesi_subito",
@@ -6866,7 +7586,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_pesadelo_vivo_eco_mental": {
       "id": "ent_pesadelo_vivo_eco_mental",
@@ -6890,7 +7611,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_pesadelo_vivo_reino_quebrado": {
       "id": "ent_pesadelo_vivo_reino_quebrado",
@@ -6914,7 +7636,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "cost": 2
+      "cost": 2,
+      "tier": "inicial"
     },
     "ent_pesadelo_vivo_medo_personalizado": {
       "id": "ent_pesadelo_vivo_medo_personalizado",
@@ -6934,7 +7657,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_pesadelo_vivo_sombra_desperta": {
       "id": "ent_pesadelo_vivo_sombra_desperta",
@@ -6954,7 +7678,8 @@
       "rarity": "EPIC",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_pesadelo_vivo_estilhacar_realidade": {
       "id": "ent_pesadelo_vivo_estilhacar_realidade",
@@ -6978,7 +7703,8 @@
       "rarity": "EPIC",
       "unlock": "progression",
       "exhaust": false,
-      "cost": 3
+      "cost": 3,
+      "tier": "evoluida"
     },
     "ent_pesadelo_vivo_pesadelo_sem_fim": {
       "id": "ent_pesadelo_vivo_pesadelo_sem_fim",
@@ -7005,7 +7731,8 @@
       "rarity": "LEGENDARY",
       "unlock": "progression",
       "exhaust": true,
-      "cost": 5
+      "cost": 5,
+      "tier": "evoluida"
     },
     "ent_pietro_caos_corrente_de_buer": {
       "id": "ent_pietro_caos_corrente_de_buer",
@@ -7027,7 +7754,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_pietro_caos_recompor_carne": {
       "id": "ent_pietro_caos_recompor_carne",
@@ -7046,7 +7774,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_pietro_caos_riso_do_caos": {
       "id": "ent_pietro_caos_riso_do_caos",
@@ -7066,7 +7795,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_pietro_caos_garras_de_ceifador": {
       "id": "ent_pietro_caos_garras_de_ceifador",
@@ -7090,7 +7820,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_pietro_caos_sabotar_sistema": {
       "id": "ent_pietro_caos_sabotar_sistema",
@@ -7110,7 +7841,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_pietro_caos_fome_de_medo": {
       "id": "ent_pietro_caos_fome_de_medo",
@@ -7137,7 +7869,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_pietro_caos_aura_apocaliptica": {
       "id": "ent_pietro_caos_aura_apocaliptica",
@@ -7157,7 +7890,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_pietro_caos_regeneracao_selvagem": {
       "id": "ent_pietro_caos_regeneracao_selvagem",
@@ -7179,7 +7913,8 @@
       "rarity": "EPIC",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_pietro_caos_arrebentar_a_linha": {
       "id": "ent_pietro_caos_arrebentar_a_linha",
@@ -7202,7 +7937,8 @@
       "rarity": "EPIC",
       "unlock": "progression",
       "exhaust": false,
-      "cost": 3
+      "cost": 3,
+      "tier": "evoluida"
     },
     "ent_pietro_caos_caos_completo": {
       "id": "ent_pietro_caos_caos_completo",
@@ -7229,7 +7965,8 @@
       "rarity": "LEGENDARY",
       "unlock": "progression",
       "exhaust": true,
-      "cost": 5
+      "cost": 5,
+      "tier": "evoluida"
     },
     "ent_quasar_jab_divino": {
       "id": "ent_quasar_jab_divino",
@@ -7252,7 +7989,8 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "quick": true
+      "quick": true,
+      "tier": "inicial"
     },
     "ent_quasar_contra_de_combate": {
       "id": "ent_quasar_contra_de_combate",
@@ -7272,7 +8010,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_quasar_uppercut": {
       "id": "ent_quasar_uppercut",
@@ -7295,7 +8034,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_quasar_riso_provocador": {
       "id": "ent_quasar_riso_provocador",
@@ -7318,7 +8058,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_quasar_percepcao_relampago": {
       "id": "ent_quasar_percepcao_relampago",
@@ -7342,7 +8083,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_quasar_sequencia_desarmada": {
       "id": "ent_quasar_sequencia_desarmada",
@@ -7366,7 +8108,8 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "chain": 3
+      "chain": 3,
+      "tier": "inicial"
     },
     "ent_quasar_recuperacao_acelerada": {
       "id": "ent_quasar_recuperacao_acelerada",
@@ -7388,7 +8131,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_quasar_golpe_de_abertura": {
       "id": "ent_quasar_golpe_de_abertura",
@@ -7412,7 +8156,8 @@
       "rarity": "EPIC",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_quasar_assalto_de_vanguarda": {
       "id": "ent_quasar_assalto_de_vanguarda",
@@ -7434,7 +8179,8 @@
       "rarity": "EPIC",
       "unlock": "progression",
       "exhaust": false,
-      "cost": 3
+      "cost": 3,
+      "tier": "evoluida"
     },
     "ent_quasar_impacto_de_quasar": {
       "id": "ent_quasar_impacto_de_quasar",
@@ -7460,7 +8206,8 @@
       "rarity": "LEGENDARY",
       "unlock": "progression",
       "exhaust": true,
-      "cost": 5
+      "cost": 5,
+      "tier": "evoluida"
     },
     "ent_taylor_lanca_mental": {
       "id": "ent_taylor_lanca_mental",
@@ -7479,7 +8226,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_taylor_fortaleza_de_zaphter": {
       "id": "ent_taylor_fortaleza_de_zaphter",
@@ -7504,7 +8252,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_taylor_fio_de_marionete": {
       "id": "ent_taylor_fio_de_marionete",
@@ -7524,7 +8273,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_taylor_asas_projetadas": {
       "id": "ent_taylor_asas_projetadas",
@@ -7544,7 +8294,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_taylor_lamina_psiquica": {
       "id": "ent_taylor_lamina_psiquica",
@@ -7567,7 +8318,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_taylor_desvio_de_mente": {
       "id": "ent_taylor_desvio_de_mente",
@@ -7587,7 +8339,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_taylor_mapa_tatico": {
       "id": "ent_taylor_mapa_tatico",
@@ -7611,7 +8364,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_taylor_voo_de_cobertura": {
       "id": "ent_taylor_voo_de_cobertura",
@@ -7634,7 +8388,8 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "quick": true
+      "quick": true,
+      "tier": "inicial"
     },
     "ent_taylor_comando_remoto": {
       "id": "ent_taylor_comando_remoto",
@@ -7658,7 +8413,8 @@
       "rarity": "EPIC",
       "unlock": "progression",
       "exhaust": false,
-      "cost": 3
+      "cost": 3,
+      "tier": "evoluida"
     },
     "ent_taylor_nave_mae": {
       "id": "ent_taylor_nave_mae",
@@ -7686,7 +8442,8 @@
       "rarity": "LEGENDARY",
       "unlock": "progression",
       "exhaust": true,
-      "cost": 5
+      "cost": 5,
+      "tier": "evoluida"
     },
     "ent_techna_choque_incapacitante": {
       "id": "ent_techna_choque_incapacitante",
@@ -7710,7 +8467,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_techna_placas_modulares": {
       "id": "ent_techna_placas_modulares",
@@ -7730,7 +8488,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_techna_laco_de_contencao": {
       "id": "ent_techna_laco_de_contencao",
@@ -7750,7 +8509,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_techna_varredura_de_alvos": {
       "id": "ent_techna_varredura_de_alvos",
@@ -7774,7 +8534,8 @@
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_techna_sabotar_arma": {
       "id": "ent_techna_sabotar_arma",
@@ -7798,7 +8559,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_techna_kit_de_captura": {
       "id": "ent_techna_kit_de_captura",
@@ -7823,7 +8585,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "inicial"
     },
     "ent_techna_armadilha_de_campo": {
       "id": "ent_techna_armadilha_de_campo",
@@ -7847,7 +8610,8 @@
       "rarity": "RARE",
       "unlock": "starting",
       "exhaust": false,
-      "cost": 2
+      "cost": 2,
+      "tier": "inicial"
     },
     "ent_techna_cacada_inteligente": {
       "id": "ent_techna_cacada_inteligente",
@@ -7871,7 +8635,8 @@
       "rarity": "EPIC",
       "unlock": "starting",
       "exhaust": false,
-      "gain": 1
+      "gain": 1,
+      "tier": "inicial"
     },
     "ent_techna_armadura_de_bloqueio": {
       "id": "ent_techna_armadura_de_bloqueio",
@@ -7895,7 +8660,8 @@
       "rarity": "EPIC",
       "unlock": "progression",
       "exhaust": false,
-      "gain": 2
+      "gain": 2,
+      "tier": "evoluida"
     },
     "ent_techna_protocolo_nocaute": {
       "id": "ent_techna_protocolo_nocaute",
@@ -7922,7 +8688,8 @@
       "rarity": "LEGENDARY",
       "unlock": "progression",
       "exhaust": true,
-      "cost": 5
+      "cost": 5,
+      "tier": "evoluida"
     },
     "ent_alyssa_wine_bastao_retratil": {
       "id": "ent_alyssa_wine_bastao_retratil",
@@ -7956,7 +8723,8 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "text": "Impacto 1+E. Escuridão 1+: Chain 1 (alvo extra). Escuridão 2+: Empurra."
+      "text": "Impacto 1+E. Escuridão 1+: Chain 1 (alvo extra). Escuridão 2+: Empurra.",
+      "tier": "inicial"
     },
     "ent_alyssa_wine_garras_e_presas": {
       "id": "ent_alyssa_wine_garras_e_presas",
@@ -7991,7 +8759,8 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "text": "Requer Escuridão 1+. Impacto 2×E. Bleed E. Ferido E."
+      "text": "Requer Escuridão 1+. Impacto 2×E. Bleed E. Ferido E.",
+      "tier": "inicial"
     },
     "ent_alyssa_wine_premonicao": {
       "id": "ent_alyssa_wine_premonicao",
@@ -8015,7 +8784,8 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "text": "Proteção 1. Resistente 1."
+      "text": "Proteção 1. Resistente 1.",
+      "tier": "inicial"
     },
     "ent_alyssa_wine_a_filha_dele": {
       "id": "ent_alyssa_wine_a_filha_dele",
@@ -8036,7 +8806,8 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "text": "Lento 1 em toda a equipe inimiga."
+      "text": "Lento 1 em toda a equipe inimiga.",
+      "tier": "inicial"
     },
     "ent_alyssa_wine_regeneracao": {
       "id": "ent_alyssa_wine_regeneracao",
@@ -8065,7 +8836,8 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "text": "Requer Escuridão 2+. Cura 2×E. Resistente 2×E."
+      "text": "Requer Escuridão 2+. Cura 2×E. Resistente 2×E.",
+      "tier": "inicial"
     },
     "ent_alyssa_wine_relampago": {
       "id": "ent_alyssa_wine_relampago",
@@ -8104,10 +8876,11 @@
       "reach": true,
       "stat": "power",
       "rarity": "RARE",
-      "unlock": "starting",
+      "unlock": "progression",
       "exhaust": false,
       "cost": 3,
-      "text": "Requer Escuridão 4+. Poder 2×E. Fileira inimiga + Alcance. E5: todos os inimigos. E6+: todos os outros (exceto ela)."
+      "text": "Requer Escuridão 4+. Poder 2×E. Fileira inimiga + Alcance. E5: todos os inimigos. E6+: todos os outros (exceto ela).",
+      "tier": "evoluida"
     },
     "ent_alyssa_wine_intelecto": {
       "id": "ent_alyssa_wine_intelecto",
@@ -8127,10 +8900,11 @@
       "reach": true,
       "stat": "attack",
       "rarity": "RARE",
-      "unlock": "starting",
+      "unlock": "progression",
       "exhaust": false,
       "gain": 2,
-      "text": "Compra todas as cartas de item do baralho. Ao recomprar esta carta: +1 Ação (funciona mesmo sem itens)."
+      "text": "Compra todas as cartas de item do baralho. Ao recomprar esta carta: +1 Ação (funciona mesmo sem itens).",
+      "tier": "evoluida"
     },
     "ent_alyssa_wine_super_sentidos": {
       "id": "ent_alyssa_wine_super_sentidos",
@@ -8148,10 +8922,11 @@
       "reach": true,
       "stat": "attack",
       "rarity": "EPIC",
-      "unlock": "starting",
+      "unlock": "progression",
       "exhaust": false,
       "gain": 2,
-      "text": "Atento 2: ignora desvantagem de arquétipo/tipo e pode ferir Invulnerável."
+      "text": "Atento 2: ignora desvantagem de arquétipo/tipo e pode ferir Invulnerável.",
+      "tier": "evoluida"
     },
     "ent_alyssa_wine_desvantagem_tormenta": {
       "id": "ent_alyssa_wine_desvantagem_tormenta",
@@ -8167,7 +8942,261 @@
       "exhaust": false,
       "gain": 0,
       "passive_like": true,
-      "text": "Desvantagem — Tormenta: se Escuridão ≥ 4, no fim do turno todos os outros (aliados e inimigos) sofrem 1 de dano (penetrante)."
+      "text": "Desvantagem — Tormenta: se Escuridão ≥ 4, no fim do turno todos os outros (aliados e inimigos) sofrem 1 de dano (penetrante).",
+      "tier": "desvantagem"
+    },
+    "ent_alyssa_wine_bastao_retratil_plus": {
+      "id": "ent_alyssa_wine_bastao_retratil_plus",
+      "name": "Bastão Retrátil+",
+      "owner": "ent_alyssa_wine",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1+E"
+        ],
+        [
+          "when_stacks",
+          "escuridao",
+          "1",
+          "extra_random_hit",
+          "1"
+        ],
+        [
+          "when_stacks",
+          "escuridao",
+          "2",
+          "push",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "melhorada",
+      "exhaust": false,
+      "gain": 1,
+      "text": "Impacto 1+E. Escuridão 1+: Chain 1 (alvo extra). Escuridão 2+: Empurra. · Melhorada (+).",
+      "tier": "melhorada",
+      "melhorada_de": "ent_alyssa_wine_bastao_retratil",
+      "chrome_3d": true
+    },
+    "ent_alyssa_wine_garras_e_presas_plus": {
+      "id": "ent_alyssa_wine_garras_e_presas_plus",
+      "name": "Garras e Presas+",
+      "owner": "ent_alyssa_wine",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "requires_self_status",
+          "escuridao",
+          "1"
+        ],
+        [
+          "hit",
+          "2*E"
+        ],
+        [
+          "status",
+          "bleed",
+          "E"
+        ],
+        [
+          "status",
+          "wounded",
+          "E"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "melhorada",
+      "exhaust": false,
+      "gain": 1,
+      "text": "Requer Escuridão 1+. Impacto 2×E. Bleed E. Ferido E. · Melhorada (+).",
+      "tier": "melhorada",
+      "melhorada_de": "ent_alyssa_wine_garras_e_presas",
+      "chrome_3d": true
+    },
+    "ent_alyssa_wine_premonicao_plus": {
+      "id": "ent_alyssa_wine_premonicao_plus",
+      "name": "Premonição+",
+      "owner": "ent_alyssa_wine",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "protecao",
+          "1"
+        ],
+        [
+          "resistente",
+          "1"
+        ]
+      ],
+      "reach": true,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "melhorada",
+      "exhaust": false,
+      "gain": 2,
+      "text": "Proteção 1. Resistente 1. · Melhorada (+).",
+      "tier": "melhorada",
+      "melhorada_de": "ent_alyssa_wine_premonicao",
+      "chrome_3d": true
+    },
+    "ent_alyssa_wine_a_filha_dele_plus": {
+      "id": "ent_alyssa_wine_a_filha_dele_plus",
+      "name": "A Filha Dele+",
+      "owner": "ent_alyssa_wine",
+      "class": "ESTADO",
+      "target": "ALL_ENEMIES",
+      "actions": [
+        [
+          "status",
+          "slow",
+          "1"
+        ]
+      ],
+      "reach": true,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "melhorada",
+      "exhaust": false,
+      "gain": 2,
+      "text": "Lento 1 em toda a equipe inimiga. · Melhorada (+).",
+      "tier": "melhorada",
+      "melhorada_de": "ent_alyssa_wine_a_filha_dele",
+      "chrome_3d": true
+    },
+    "ent_alyssa_wine_regeneracao_plus": {
+      "id": "ent_alyssa_wine_regeneracao_plus",
+      "name": "Regeneração+",
+      "owner": "ent_alyssa_wine",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "requires_self_status",
+          "escuridao",
+          "2"
+        ],
+        [
+          "heal",
+          "2*E"
+        ],
+        [
+          "resistente",
+          "2*E"
+        ]
+      ],
+      "reach": true,
+      "stat": "attack",
+      "rarity": "RARE",
+      "unlock": "melhorada",
+      "exhaust": false,
+      "gain": 2,
+      "text": "Requer Escuridão 2+. Cura 2×E. Resistente 2×E. · Melhorada (+).",
+      "tier": "melhorada",
+      "melhorada_de": "ent_alyssa_wine_regeneracao",
+      "chrome_3d": true
+    },
+    "ent_alyssa_wine_relampago_plus": {
+      "id": "ent_alyssa_wine_relampago_plus",
+      "name": "Relâmpago+",
+      "owner": "ent_alyssa_wine",
+      "class": "ATTACK",
+      "target": "ENEMY_ROW",
+      "target_by_stacks": {
+        "status": "escuridao",
+        "thresholds": [
+          [
+            6,
+            "ALL_OTHERS"
+          ],
+          [
+            5,
+            "ALL_ENEMIES"
+          ],
+          [
+            4,
+            "ENEMY_ROW"
+          ]
+        ]
+      },
+      "actions": [
+        [
+          "requires_self_status",
+          "escuridao",
+          "4"
+        ],
+        [
+          "hit",
+          "2*E"
+        ]
+      ],
+      "reach": true,
+      "stat": "power",
+      "rarity": "RARE",
+      "unlock": "melhorada",
+      "exhaust": false,
+      "cost": 3,
+      "text": "Requer Escuridão 4+. Poder 2×E. Fileira inimiga + Alcance. E5: todos os inimigos. E6+: todos os outros (exceto ela). · Melhorada (+).",
+      "tier": "melhorada",
+      "melhorada_de": "ent_alyssa_wine_relampago",
+      "chrome_3d": true
+    },
+    "ent_alyssa_wine_intelecto_plus": {
+      "id": "ent_alyssa_wine_intelecto_plus",
+      "name": "Intelecto+",
+      "owner": "ent_alyssa_wine",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "draw_items"
+        ],
+        [
+          "redraw_actions",
+          "1"
+        ]
+      ],
+      "reach": true,
+      "stat": "attack",
+      "rarity": "RARE",
+      "unlock": "melhorada",
+      "exhaust": false,
+      "gain": 2,
+      "text": "Compra todas as cartas de item do baralho. Ao recomprar esta carta: +1 Ação (funciona mesmo sem itens). · Melhorada (+).",
+      "tier": "melhorada",
+      "melhorada_de": "ent_alyssa_wine_intelecto",
+      "chrome_3d": true
+    },
+    "ent_alyssa_wine_super_sentidos_plus": {
+      "id": "ent_alyssa_wine_super_sentidos_plus",
+      "name": "Super Sentidos+",
+      "owner": "ent_alyssa_wine",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "atento",
+          "2"
+        ]
+      ],
+      "reach": true,
+      "stat": "attack",
+      "rarity": "EPIC",
+      "unlock": "melhorada",
+      "exhaust": false,
+      "gain": 2,
+      "text": "Atento 2: ignora desvantagem de arquétipo/tipo e pode ferir Invulnerável. · Melhorada (+).",
+      "tier": "melhorada",
+      "melhorada_de": "ent_alyssa_wine_super_sentidos",
+      "chrome_3d": true
     }
   }
 }

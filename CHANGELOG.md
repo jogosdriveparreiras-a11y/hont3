@@ -1,3 +1,13 @@
+## 2026-09-27 — Nomenclatura oficial (Manobras / Aprimoramento / Melhoradas / Combos)
+
+- Docs: `docs/NOMENCLATURA.md`; adaptação Masmorra 2 atualizada (Aprimoramento, Melhoradas+, Combos, deck 15).
+- Dados: `aprimoramento`, `grupos`, `biografia`, `iniciais`/`evoluidas`/`melhoradas`/`desvantagem`; cards com `tier` + Melhoradas `Nome+` (`melhorada_de`).
+- Alyssa Wine: 5 Iniciais, Evoluídas, Melhoradas stubs, Desvantagem Tormenta, aprimoramento Escuridão.
+- Runtime: deck combate = 5×3 Manobras + Desvantagens + Combos (grupo compartilhado); reshuffle → Lento 1 na equipe; Combo zera INI das Manobras dos membros no round.
+- UI: ficha do personagem (retrato/attrs/bio/cartas); overlay **Inspecionar** + glossário; prévia de dano (HP vermelho).
+- Editor: seções Inicial|Evoluídas|Melhoradas|Desvantagem; toggle Melhorada; campos Aprimoramento/Grupos/Biografia.
+- Smoke: `tools/NomenclatureSmoke.gd`.
+
 ## Não publicado
 
 ## 2026-09-27 — Alyssa Wine / Escuridão

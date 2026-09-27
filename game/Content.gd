@@ -2,7 +2,7 @@ extends RefCounted
 class_name HotNContent
 
 const RULES := {
-	"team_size": 3, "deck_size": 8, "copy_limit": 2, "hand_max": 10,
+	"team_size": 3, "deck_size": 8, "manobras_iniciais": 5, "copy_limit": 2, "hand_max": 10,
 	"opening_hand": 5, "turn_draw": 2, "card_plays": 3,
 	"redraws": 2, "moves": 1, "item_uses": 1,
 	"impulse_max": 10, "items_max": 3,

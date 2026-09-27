@@ -32,6 +32,12 @@ func _load_owner_mapping() -> void:
 			archetype_owners[archetype] = []
 		archetype_owners[archetype].append(str(owner_id))
 
+func _aprimoramento_id(src: Dictionary) -> String:
+	var apr = src.get("aprimoramento", src.get("passive", "oportunista"))
+	if typeof(apr) == TYPE_DICTIONARY:
+		return str(apr.get("id", src.get("passive", "oportunista")))
+	return str(apr)
+
 func merge_into_content() -> void:
 	# Idempotente: heróis ent_ e cartas ms_/ent_ entram no caminho principal uma vez.
 	if packs_merged:
@@ -70,7 +76,14 @@ func _merge_entity_heroes() -> void:
 			"portrait": str(src.get("portrait", "")),
 			"signature_icon": str(src.get("signature_icon", "")),
 			"row": str(src.get("row", "front")),
-			"passive": str(src.get("passive", "oportunista")),
+			"passive": _aprimoramento_id(src),
+			"aprimoramento": src.get("aprimoramento", src.get("passive", "oportunista")),
+			"grupos": src.get("grupos", []),
+			"biografia": str(src.get("biografia", "")),
+			"iniciais": src.get("iniciais", cards),
+			"evoluidas": src.get("evoluidas", []),
+			"melhoradas": src.get("melhoradas", []),
+			"desvantagem": str(src.get("desvantagem", "")),
 			"playable": true,
 			"minion": bool(src.get("minion", false)),
 			"repeatable": bool(src.get("repeatable", src.get("minion", false))),
