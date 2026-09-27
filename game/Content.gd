@@ -6,6 +6,8 @@ const RULES := {
 	"opening_hand": 5, "turn_draw": 2, "card_plays": 3,
 	"redraws": 2, "moves": 1, "item_uses": 1,
 	"impulse_max": 10, "items_max": 3,
+	# Arquétipo intransitivo Armadura>Impacto>Escudo>Poder>Armadura (±25%). OFF por padrão.
+	"archetype_matchup": false,
 }
 
 const TYPES := {
@@ -17,15 +19,24 @@ const TYPES := {
 	"QUIMICO": {"BRUTO": 1.25, "MENTAL": 0.75},
 }
 
+
+# Ciclo intransitivo (só se RULES.archetype_matchup). Versátil/Nenhum = neutro.
+const ARCHETYPE_BEATS := {
+	"Armadura": "Impacto",
+	"Impacto": "Escudo",
+	"Escudo": "Poder",
+	"Poder": "Armadura",
+}
+
 static var HEROES := {
-	"guerreiro": {"name": "Guerreiro", "hp": 40, "attack": 8, "power": 2, "armor": 3, "speed": 5, "type": "BRUTO", "sprite": "res://hero_fighter.png", "row": "front", "passive": "vanguarda", "playable": false, "pool": ["corte", "guarda", "investida", "contra", "furia", "golpe_largo", "preparo", "ruptura", "frenesi_aco", "martelo_pesado", "furia_totem", "corte_adj"], "cards": ["corte", "corte", "guarda", "guarda", "investida", "investida", "contra", "furia"]},
-	"mago": {"name": "Mago", "hp": 26, "attack": 2, "power": 9, "armor": 1, "speed": 4, "type": "PROJETIVO", "sprite": "res://hero_wizard.png", "row": "back", "passive": "canalizar", "playable": false, "pool": ["raio", "barreira", "explosao", "runas", "tempestade", "centelha", "prisma", "eco", "visao", "selo_ruina", "dominio", "portal_impulso", "controlar_mente", "distorcer", "fagulha_incerta"], "cards": ["raio", "raio", "barreira", "barreira", "explosao", "explosao", "runas", "tempestade"]},
-	"ladino": {"name": "Ladino", "hp": 29, "attack": 7, "power": 3, "armor": 1, "speed": 9, "type": "TECNICO", "sprite": "res://hero_rogue.png", "row": "front", "passive": "oportunista", "playable": false, "pool": ["punhal", "esquiva", "marca", "corrente", "sombra", "armadilha", "furto", "golpe_oculto", "corte_dreno", "queda", "jogo_sombras"], "cards": ["punhal", "punhal", "esquiva", "esquiva", "marca", "marca", "corrente", "sombra"]},
-	"clerigo": {"name": "Clérigo", "hp": 32, "attack": 3, "power": 7, "armor": 2, "speed": 3, "type": "MENTAL", "sprite": "res://hero_cleric.png", "row": "back", "passive": "devocao", "playable": false, "pool": ["luz", "cura", "benção", "purificar", "julgamento", "abrigo", "fervor", "resgate", "campo_sagrado", "elo_vital", "benzer", "prisma_sangue", "balanca"], "cards": ["luz", "luz", "cura", "cura", "benção", "benção", "purificar", "julgamento"]},
-	"paladino": {"name": "Paladino", "hp": 44, "attack": 6, "power": 5, "armor": 4, "speed": 2, "type": "PSICOLOGICO", "sprite": "res://hero_paladin.png", "row": "front", "passive": "baluarte", "playable": false, "pool": ["martelo", "egide", "provocar", "escudo_forte", "sentenca", "muralha_viva", "juramento", "brilho", "estandarte", "guarda_absoluta", "pele_rigida", "furia_total", "cerco_frente"], "cards": ["martelo", "martelo", "egide", "egide", "provocar", "provocar", "escudo_forte", "sentenca"]},
-	"patrulheiro": {"name": "Patrulheiro", "hp": 31, "attack": 6, "power": 4, "armor": 1, "speed": 8, "type": "QUIMICO", "sprite": "res://hero_rogue.png", "row": "back", "passive": "rastreador", "playable": false, "pool": ["flecha", "foco", "salva", "rede", "veneno", "flanquear", "falcon", "chuva", "teia", "foco_ambiental", "predador", "armadilha_tempo", "agitar", "tiro_retaguarda"], "cards": ["flecha", "flecha", "foco", "foco", "salva", "rede", "veneno", "chuva"]},
-	"fera": {"name": "Fera noturna", "hp": 13, "attack": 7, "power": 0, "armor": 0, "speed": 8, "type": "QUIMICO", "ai": "ASSASSINO", "sprite": "res://en_dog.png", "row": "front", "passive": "oportunista", "playable": false, "minion": true, "repeatable": true, "pool": ["punhal", "investida", "corte", "veneno", "marca", "furto", "sombra", "queda"], "cards": ["punhal", "punhal", "investida", "corte", "veneno", "marca", "furto", "sombra"]},
-	"guardiao": {"name": "Guardião do Eclipse", "hp": 70, "attack": 8, "power": 8, "armor": 4, "speed": 3, "type": "MENTAL", "ai": "AGRESSIVO", "sprite": "res://en_elite.png", "row": "back", "passive": "canalizar", "playable": false, "minion": false, "boss": true, "pool": ["raio", "explosao", "tempestade", "julgamento", "selo_ruina", "brilho", "controlar_mente", "distorcer"], "cards": ["raio", "raio", "explosao", "tempestade", "julgamento", "brilho", "controlar_mente", "distorcer"]},
+	"guerreiro": {"name": "Guerreiro", "hp": 40, "attack": 8, "power": 2, "armor": 3, "escudo": 3, "type": "BRUTO", "sprite": "res://hero_fighter.png", "row": "front", "passive": "vanguarda", "playable": false, "pool": ["corte", "guarda", "investida", "contra", "furia", "golpe_largo", "preparo", "ruptura", "frenesi_aco", "martelo_pesado", "furia_totem", "corte_adj"], "cards": ["corte", "corte", "guarda", "guarda", "investida", "investida", "contra", "furia"]},
+	"mago": {"name": "Mago", "hp": 26, "attack": 2, "power": 9, "armor": 1, "escudo": 1, "type": "PROJETIVO", "sprite": "res://hero_wizard.png", "row": "back", "passive": "canalizar", "playable": false, "pool": ["raio", "barreira", "explosao", "runas", "tempestade", "centelha", "prisma", "eco", "visao", "selo_ruina", "dominio", "portal_impulso", "controlar_mente", "distorcer", "fagulha_incerta"], "cards": ["raio", "raio", "barreira", "barreira", "explosao", "explosao", "runas", "tempestade"]},
+	"ladino": {"name": "Ladino", "hp": 29, "attack": 7, "power": 3, "armor": 1, "escudo": 1, "type": "TECNICO", "sprite": "res://hero_rogue.png", "row": "front", "passive": "oportunista", "playable": false, "pool": ["punhal", "esquiva", "marca", "corrente", "sombra", "armadilha", "furto", "golpe_oculto", "corte_dreno", "queda", "jogo_sombras"], "cards": ["punhal", "punhal", "esquiva", "esquiva", "marca", "marca", "corrente", "sombra"]},
+	"clerigo": {"name": "Clérigo", "hp": 32, "attack": 3, "power": 7, "armor": 2, "escudo": 2, "type": "MENTAL", "sprite": "res://hero_cleric.png", "row": "back", "passive": "devocao", "playable": false, "pool": ["luz", "cura", "benção", "purificar", "julgamento", "abrigo", "fervor", "resgate", "campo_sagrado", "elo_vital", "benzer", "prisma_sangue", "balanca"], "cards": ["luz", "luz", "cura", "cura", "benção", "benção", "purificar", "julgamento"]},
+	"paladino": {"name": "Paladino", "hp": 44, "attack": 6, "power": 5, "armor": 4, "escudo": 4, "type": "PSICOLOGICO", "sprite": "res://hero_paladin.png", "row": "front", "passive": "baluarte", "playable": false, "pool": ["martelo", "egide", "provocar", "escudo_forte", "sentenca", "muralha_viva", "juramento", "brilho", "estandarte", "guarda_absoluta", "pele_rigida", "furia_total", "cerco_frente"], "cards": ["martelo", "martelo", "egide", "egide", "provocar", "provocar", "escudo_forte", "sentenca"]},
+	"patrulheiro": {"name": "Patrulheiro", "hp": 31, "attack": 6, "power": 4, "armor": 1, "escudo": 1, "type": "QUIMICO", "sprite": "res://hero_rogue.png", "row": "back", "passive": "rastreador", "playable": false, "pool": ["flecha", "foco", "salva", "rede", "veneno", "flanquear", "falcon", "chuva", "teia", "foco_ambiental", "predador", "armadilha_tempo", "agitar", "tiro_retaguarda"], "cards": ["flecha", "flecha", "foco", "foco", "salva", "rede", "veneno", "chuva"]},
+	"fera": {"name": "Fera noturna", "hp": 13, "attack": 7, "power": 0, "armor": 0, "escudo": 0, "type": "QUIMICO", "ai": "ASSASSINO", "sprite": "res://en_dog.png", "row": "front", "passive": "oportunista", "playable": false, "minion": true, "repeatable": true, "pool": ["punhal", "investida", "corte", "veneno", "marca", "furto", "sombra", "queda"], "cards": ["punhal", "punhal", "investida", "corte", "veneno", "marca", "furto", "sombra"]},
+	"guardiao": {"name": "Guardião do Eclipse", "hp": 70, "attack": 8, "power": 8, "armor": 4, "escudo": 4, "type": "MENTAL", "ai": "AGRESSIVO", "sprite": "res://en_elite.png", "row": "back", "passive": "canalizar", "playable": false, "minion": false, "boss": true, "pool": ["raio", "explosao", "tempestade", "julgamento", "selo_ruina", "brilho", "controlar_mente", "distorcer"], "cards": ["raio", "raio", "explosao", "tempestade", "julgamento", "brilho", "controlar_mente", "distorcer"]},
 }
 
 # Effects are applied in order. Each card is an action of its owner, never a summoned unit.
@@ -115,20 +126,20 @@ static var CARDS := {
 }
 
 const ENEMIES := {
-	"soldado": {"name": "Sentinela", "hp": 19, "attack": 5, "power": 1, "armor": 2, "speed": 5, "type": "BRUTO", "ai": "DEFENSIVO", "sprite": "res://en_elite.png", "row": "front", "skills": ["strike", "guard"]},
-	"arqueiro": {"name": "Batedor", "hp": 16, "attack": 5, "power": 2, "armor": 1, "speed": 7, "type": "PROJETIVO", "sprite": "res://en_sniper.png", "row": "back", "skills": ["shot", "poison_shot"]},
-	"fera": {"name": "Fera noturna", "hp": 13, "attack": 7, "power": 0, "armor": 0, "speed": 8, "type": "QUIMICO", "ai": "ASSASSINO", "sprite": "res://en_dog.png", "row": "front", "minion": true, "skills": ["strike"]},
-	"elite": {"name": "Capitão da Vigília", "hp": 35, "attack": 7, "power": 4, "armor": 4, "speed": 4, "type": "TECNICO", "ai": "DEFENSIVO", "sprite": "res://en_elite.png", "row": "front", "elite": true, "skills": ["strike", "guard", "sweep"]},
-	"boss": {"name": "Guardião do Eclipse", "hp": 70, "attack": 8, "power": 8, "armor": 4, "speed": 3, "type": "MENTAL", "faction": "abissal", "sprite": "res://en_elite.png", "row": "back", "boss": true, "skills": ["shot", "sweep", "ritual"]},
-	"batedor": {"name": "Escaramuçador", "hp": 18, "attack": 6, "power": 1, "armor": 0, "speed": 9, "type": "TECNICO", "ai": "ASSASSINO", "sprite": "res://en_sniper.png", "row": "front", "skills": ["strike", "poison_shot"]},
-	"ocultista": {"name": "Ocultista", "hp": 22, "attack": 2, "power": 7, "armor": 1, "speed": 4, "type": "MENTAL", "sprite": "res://en_sniper.png", "row": "back", "skills": ["ritual", "shot", "invocacao"]},
-	"brutamontes": {"name": "Brutamontes", "hp": 28, "attack": 8, "power": 0, "armor": 3, "speed": 2, "type": "BRUTO", "ai": "AGRESSIVO", "sprite": "res://en_elite.png", "row": "front", "skills": ["strike", "sweep"]},
-	"carrasco": {"name": "Carrasco", "hp": 24, "attack": 7, "power": 1, "armor": 1, "speed": 5, "type": "PSICOLOGICO", "sprite": "res://en_elite.png", "row": "front", "skills": ["strike", "ritual", "transe", "fome"]},
-	"alquimista": {"name": "Alquimista", "hp": 19, "attack": 3, "power": 6, "armor": 1, "speed": 6, "type": "QUIMICO", "sprite": "res://en_sniper.png", "row": "back", "skills": ["poison_shot", "guard"]},
-	"vigia": {"name": "Vigia", "hp": 18, "attack": 5, "power": 1, "armor": 2, "speed": 6, "type": "PROJETIVO", "sprite": "res://en_sniper.png", "row": "back", "skills": ["shot", "guard"]},
-	"sombrio": {"name": "Acólito sombrio", "hp": 16, "attack": 4, "power": 4, "armor": 0, "speed": 7, "type": "MENTAL", "faction": "abissal", "sprite": "res://en_dog.png", "row": "front", "skills": ["ritual", "strike"]},
-	"elite_alquimista": {"name": "Mestre dos Venenos", "hp": 40, "attack": 5, "power": 8, "armor": 3, "speed": 6, "type": "QUIMICO", "sprite": "res://en_elite.png", "row": "back", "elite": true, "skills": ["poison_shot", "ritual", "guard"]},
-	"elite_bruto": {"name": "General de Ferro", "hp": 48, "attack": 10, "power": 2, "armor": 5, "speed": 3, "type": "BRUTO", "ai": "DEFENSIVO", "sprite": "res://en_elite.png", "row": "front", "elite": true, "skills": ["strike", "sweep", "guard", "espinhos"]},
+	"soldado": {"name": "Sentinela", "hp": 19, "attack": 5, "power": 1, "armor": 2, "escudo": 2, "type": "BRUTO", "ai": "DEFENSIVO", "sprite": "res://en_elite.png", "row": "front", "skills": ["strike", "guard"]},
+	"arqueiro": {"name": "Batedor", "hp": 16, "attack": 5, "power": 2, "armor": 1, "escudo": 1, "type": "PROJETIVO", "sprite": "res://en_sniper.png", "row": "back", "skills": ["shot", "poison_shot"]},
+	"fera": {"name": "Fera noturna", "hp": 13, "attack": 7, "power": 0, "armor": 0, "escudo": 0, "type": "QUIMICO", "ai": "ASSASSINO", "sprite": "res://en_dog.png", "row": "front", "minion": true, "skills": ["strike"]},
+	"elite": {"name": "Capitão da Vigília", "hp": 35, "attack": 7, "power": 4, "armor": 4, "escudo": 4, "type": "TECNICO", "ai": "DEFENSIVO", "sprite": "res://en_elite.png", "row": "front", "elite": true, "skills": ["strike", "guard", "sweep"]},
+	"boss": {"name": "Guardião do Eclipse", "hp": 70, "attack": 8, "power": 8, "armor": 4, "escudo": 4, "type": "MENTAL", "faction": "abissal", "sprite": "res://en_elite.png", "row": "back", "boss": true, "skills": ["shot", "sweep", "ritual"]},
+	"batedor": {"name": "Escaramuçador", "hp": 18, "attack": 6, "power": 1, "armor": 0, "escudo": 0, "type": "TECNICO", "ai": "ASSASSINO", "sprite": "res://en_sniper.png", "row": "front", "skills": ["strike", "poison_shot"]},
+	"ocultista": {"name": "Ocultista", "hp": 22, "attack": 2, "power": 7, "armor": 1, "escudo": 1, "type": "MENTAL", "sprite": "res://en_sniper.png", "row": "back", "skills": ["ritual", "shot", "invocacao"]},
+	"brutamontes": {"name": "Brutamontes", "hp": 28, "attack": 8, "power": 0, "armor": 3, "escudo": 3, "type": "BRUTO", "ai": "AGRESSIVO", "sprite": "res://en_elite.png", "row": "front", "skills": ["strike", "sweep"]},
+	"carrasco": {"name": "Carrasco", "hp": 24, "attack": 7, "power": 1, "armor": 1, "escudo": 1, "type": "PSICOLOGICO", "sprite": "res://en_elite.png", "row": "front", "skills": ["strike", "ritual", "transe", "fome"]},
+	"alquimista": {"name": "Alquimista", "hp": 19, "attack": 3, "power": 6, "armor": 1, "escudo": 1, "type": "QUIMICO", "sprite": "res://en_sniper.png", "row": "back", "skills": ["poison_shot", "guard"]},
+	"vigia": {"name": "Vigia", "hp": 18, "attack": 5, "power": 1, "armor": 2, "escudo": 2, "type": "PROJETIVO", "sprite": "res://en_sniper.png", "row": "back", "skills": ["shot", "guard"]},
+	"sombrio": {"name": "Acólito sombrio", "hp": 16, "attack": 4, "power": 4, "armor": 0, "escudo": 0, "type": "MENTAL", "faction": "abissal", "sprite": "res://en_dog.png", "row": "front", "skills": ["ritual", "strike"]},
+	"elite_alquimista": {"name": "Mestre dos Venenos", "hp": 40, "attack": 5, "power": 8, "armor": 3, "escudo": 3, "type": "QUIMICO", "sprite": "res://en_elite.png", "row": "back", "elite": true, "skills": ["poison_shot", "ritual", "guard"]},
+	"elite_bruto": {"name": "General de Ferro", "hp": 48, "attack": 10, "power": 2, "armor": 5, "escudo": 5, "type": "BRUTO", "ai": "DEFENSIVO", "sprite": "res://en_elite.png", "row": "front", "elite": true, "skills": ["strike", "sweep", "guard", "espinhos"]},
 }
 
 const ENEMY_CARDS := {

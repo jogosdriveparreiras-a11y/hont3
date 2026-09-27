@@ -416,7 +416,7 @@ func _show_team() -> void:
 		var hint: String = str(identity.get("history", "")) + "\n" + str(identity.get("trait", ""))
 		if conflict:
 			hint = "Indisponível: já aparece como inimigo em %s." % Content.MISSIONS[mission_id]["name"]
-		var button := _button(prefix + "%s · %s · %d PV" % [hero["name"], identity["role"], hero["hp"]], _toggle_hero.bind(id), hint)
+		var button := _button(prefix + "%s · %s · %d Vida" % [hero["name"], identity["role"], hero["hp"]], _toggle_hero.bind(id), hint)
 		button.custom_minimum_size = Vector2(640, 44)
 		button.disabled = conflict
 		if conflict:
@@ -738,7 +738,7 @@ func _on_finished(won: bool) -> void:
 	menu.add_child(_label("%s · %d rodadas" % [battle.mission["name"], battle.turn], 22))
 	if won: menu.add_child(_label("%s · +%d Essência · saldo %d" % ["★".repeat(stars), reward, essence], 20))
 	for actor in battle.living("ALLY"):
-		menu.add_child(_label("%s: %d/%d PV" % [actor["name"], actor["hp"], actor["max_hp"]], 18))
+		menu.add_child(_label("%s: %d/%d Vida" % [actor["name"], actor["hp"], actor["max_hp"]], 18))
 	menu.add_child(_button("Tentar novamente", _start_mission))
 	menu.add_child(_button("Selecionar missão", _show_missions))
 	menu.add_child(_button("Menu", _show_menu))
@@ -783,7 +783,7 @@ func _render_battle() -> void:
 	_chrome(Vector2(12, 8), Vector2(viewport_size.x - 24, 72), "res://assets/ui/header.png")
 	var extra := ""
 	if battle.mission["objective"] == "PROTECT":
-		extra += "SENTINELA %d PV" % battle.protect_hp
+		extra += "SENTINELA %d Vida" % battle.protect_hp
 	var next_turn: Array = battle.mission.get("reinforcements", {}).get(battle.turn + 1, [])
 	if not next_turn.is_empty():
 		extra += ("  ·  " if extra != "" else "") + "REFORÇOS EM 1 TURNO"
@@ -1090,7 +1090,7 @@ func _build_economy_hud(viewport_size: Vector2) -> void:
 	economy_hud.add_child(end_btn)
 	
 func _add_actor_button(parent: VBoxContainer, actor: Dictionary) -> void:
-	var text_value := "%s [%s] %d/%d PV +%d" % [actor["name"], "F" if actor["row"] == "front" else "T", actor["hp"], actor["max_hp"], actor["block"] + actor["shield"]]
+	var text_value := "%s [%s] %d/%d Vida +%d" % [actor["name"], "F" if actor["row"] == "front" else "T", actor["hp"], actor["max_hp"], actor["block"] + actor["shield"]]
 	var line := _label(text_value, 16)
 	line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	parent.add_child(line)

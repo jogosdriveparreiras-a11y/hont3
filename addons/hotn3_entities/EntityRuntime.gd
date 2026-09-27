@@ -41,6 +41,10 @@ func deploy(battle: Variant, mission_id: String, entity_ids: Array[String], chos
 		target["max_hp"] = int(target["hp"])
 		target["block"] = 0
 		target["shield"] = 0
+		if not target.has("escudo"):
+			target["escudo"] = int(replacement.get("escudo", replacement.get("armor", 0)))
+		target["archetype_stat"] = str(replacement.get("archetype", "Nenhum"))
+		target["species"] = str(replacement.get("species", "Humano"))
 		target["statuses"] = {}
 		target["pending"] = []
 		target["phase"] = 1
@@ -119,6 +123,14 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 	var target: Dictionary = battle.actor_by_id(target_id)
 	if battle.phase != "PLAYER" or source.is_empty() or target.is_empty(): return false
 	if int(source.get("hp", 0)) <= 0 and not _has_action(def, "revive_self"): return false
+	# Itens com dono explícito: dono precisa estar vivo / no time.
+	if bool(def.get("item", false)) and def.has("owner_hero"):
+		var need := str(def["owner_hero"])
+		var ok := false
+		for ally in battle.living("ALLY"):
+			if str(ally.get("archetype", "")) == need:
+				ok = true; break
+		if not ok: return false
 	if int(target.get("hp", 0)) <= 0 and not _has_action(def, "revive_self") and not _has_action(def, "revive_ally"): return false
 	if not bool(def.get("play_while_disabled", false)):
 		for locked in ["stun", "bind", "bound", "dazed", "banished", "finalized"]:
@@ -168,7 +180,7 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 		acted.append(op)
 		match op:
 			"hit", "hit_per_impulse", "hit_per_hand", "hit_from_block", "roulette_hit":
-				# Dano aditivo: Carta + Impacto/Poder + bônus − armadura (mods % de status ainda aplicam).
+				# Dano aditivo: Carta + Impacto − Armadura  OU  Carta + Poder − Escudo (+ mods).
 				var card_amt := float(a[1]) if a.size() > 1 else 0.0
 				if op == "hit_per_impulse": card_amt *= float(spent_impulse)
 				if op == "hit_per_hand": card_amt *= float(battle.hand.size())
@@ -184,8 +196,18 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 					if battle._has_status(victim, "vulnerable"): multiplier *= 1.5
 					if card.get("critical", false): multiplier *= 1.5
 					multiplier *= 1.0 + 0.2 * float(_counter(source, "ravenous"))
-					var armor: int = int(victim.get("armor", 0)) + (2 * int(victim.get("statuses", {}).get("armor", {}).get("stacks", 0)))
-					last_hit = maxi(1, roundi(base * multiplier) - armor)
+					# Impacto − Armadura; Poder − Escudo (atributo). Mods % já em multiplier.
+					var damage_stat := str(def.get("stat", "attack"))
+					var defense: int = int(victim.get("escudo", 0)) if damage_stat == "power" else (int(victim.get("armor", 0)) + (2 * int(victim.get("statuses", {}).get("armor", {}).get("stacks", 0))))
+					# Espécie (±25% tipicamente via vs_species na carta).
+					var vs: Dictionary = def.get("vs_species", {})
+					var sp := str(victim.get("species", ""))
+					if sp != "" and vs.has(sp):
+						multiplier *= 1.0 + float(vs[sp])
+					# Arquétipo (DESLIGADO por padrão).
+					if bool(Content.RULES.get("archetype_matchup", false)):
+						multiplier *= _archetype_mult(source, victim)
+					last_hit = maxi(1, roundi(base * multiplier) - defense)
 					if battle._take_damage(source, victim, last_hit, false, true, false, targets.size() > 1, not bool(def.get("reach", false)), _is_damage_card(def), true):
 						if not kos.has(victim["id"]): kos.append(victim["id"])
 					if _has_action(def, "block_from_hit"): source["block"] += last_hit
@@ -208,7 +230,8 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 			"heal", "full_heal", "heal_all":
 				var healed: Array = battle.living("ALLY") if op == "heal_all" else targets
 				for victim in healed:
-					victim["hp"] = int(victim["max_hp"]) if op == "full_heal" else mini(int(victim["max_hp"]), int(victim["hp"]) + roundi(float(source["attack"]) * float(a[1])))
+					# Cura = Vida absoluta (não × ATK/Impacto).
+					victim["hp"] = int(victim["max_hp"]) if op == "full_heal" else mini(int(victim["max_hp"]), int(victim["hp"]) + int(round(float(a[1]) if a.size() > 1 else 0.0)))
 			"cure":
 				for victim in targets: battle._cleanse(victim)
 			"push", "pull", "move_target":
@@ -530,6 +553,18 @@ func _card_costs_initiative(item: Dictionary) -> bool:
 		return int(Content.CARDS[cid].get("cost", 0)) > 0
 	var def: Dictionary = catalog.definition(cid)
 	return int(def.get("cost", 0)) > 0
+
+
+func _archetype_mult(source: Dictionary, victim: Dictionary) -> float:
+	var atk := str(source.get("archetype_stat", ""))
+	var dfn := str(victim.get("archetype_stat", ""))
+	if atk in ["", "Nenhum", "Versátil", "Preparo"] or dfn in ["", "Nenhum", "Versátil", "Preparo"]:
+		return 1.0
+	if Content.ARCHETYPE_BEATS.get(atk, "") == dfn:
+		return 1.25
+	if Content.ARCHETYPE_BEATS.get(dfn, "") == atk:
+		return 0.75
+	return 1.0
 
 func _offense(actor: Dictionary, def: Dictionary) -> int:
 	return int(actor.get(str(def.get("stat", "attack")), actor.get("attack", 1)))

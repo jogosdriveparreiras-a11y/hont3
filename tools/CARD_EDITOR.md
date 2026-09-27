@@ -1,54 +1,55 @@
 # Editor de Cartas e Personagens HotN3
 
-Abra `card_editor.html` no navegador (duplo clique ou arraste o arquivo).
+Abra `tools/card_editor.html` no navegador (servidor local ou `file://`).
+
+## Carregamento automático
+
+1. Tenta **fetch** de `../addons/hotn3_entities/entities.json` (relativo a `tools/`).
+2. Se falhar (ex.: `file://`), usa a **cópia embutida** gerada no commit.
+3. Botão **Recarregar dados do jogo** força novo fetch; **Importar** aceita JSON manual.
+
+Liste/edite espécies, arquétipos e passivas a partir dos dados carregados.
 
 ## Recursos do turno
 
-- **Único recurso compartilhado: Iniciativa** (`impulse` no código).
-- **Não existe** “Ponto de Poder” / pool de Poder gastável paralelo à Iniciativa.
-- **Impacto** (`attack`) e **Poder** (`power`) são **atributos de escala** do herói: entram na soma do dano. Ícones na face da carta — **nunca** custo.
-- Recursos de personagem (ex.: Raiva) podem existir depois via passivas; não no editor genérico.
+- **Único recurso compartilhado: Iniciativa** (`impulse`).
+- **Não existe** pool de Poder gastável.
+- **Impacto** (`attack`) e **Poder** (`power`) são atributos de escala.
+- **Sem Velocidade** — só fases de **grupo** (jogador vs inimigo).
 
-## Por que JSON acoplável (não editar Content.gd)
-
-- Cartas e heróis `ent_*` vivem em `addons/hotn3_entities/entities.json`.
-- O `PackBridge` injeta no `Content` em runtime.
-
-## Abas
-
-| Aba | Conteúdo |
-|-----|----------|
-| **Cartas** | Nome, escala Impacto/Poder, Iniciativa (custo/ganho), flags, efeitos, arte |
-| **Personagens** | HP, ataque/poder/armadura/velocidade, portrait/sprite/ícone, pool |
-
-## Tipagem na face (sem ATTACK/SKILL/POWER)
-
-- Carta com dano → mostra **IMPACTO** ou **PODER** (pelo campo `stat`).
-- Carta sem dano → **nenhum** nome de classe na face (interno: `class: "ESTADO"`).
-- O editor **não** oferece seletor ATTACK/SKILL/POWER.
-
-## Dano (aditivo no jogo)
+## Dano (aditivo)
 
 ```
-Dano ≈ Carta + Impacto/Poder − Armadura + Mods
+Impacto: Carta + Impacto − Armadura + Mods
+Poder:   Carta + Poder − Escudo + Mods
 ```
 
-Runtime do pack (`EntityRuntime` / `CardRuntime`): soma o valor de `hit` ao atributo do herói, aplica mods de status, subtrai armadura. Alinhado ao `BattleState._damage_value` do Content.
+Escudo permanente do personagem ≠ escudo temporário de carta (`SHIELD` / camada `shield`).
 
-## Imagem
+## Exclusões no editor
 
-1. **Carregar pasta de assets** → indexa PNGs para prévia do portrait/sprite do dono.
-2. **Escolher imagem do PC** → define `art = res://assets/cards/<id>.png` + download do PNG.
-3. `python tools/merge_card_patch.py patch.json --write --art-dir ./pngs`
+- Escala: **Impacto | Poder | Estado** (radio).
+- **Custo XOR Ganho** de Iniciativa.
+- **Chain** fica em **Efeitos** (com nº de alvos), não na seção de custo.
+- **Cura** = Vida absoluta (não × Impacto).
+
+## Personagens
+
+Campos: **Vida**, Impacto, Poder, Armadura, **Escudo**, Tipo, **Arquétipo**, **Raça/Espécie**, **Nível**, fileira, passiva (com caixa de explicação), pool (com contagem).
+
+Arquétipo intransitivo (Armadura→Impacto→Escudo→Poder→Armadura, ±25%; Versátil neutro) está no código com `RULES.archetype_matchup = false` (**DESLIGADO**).
+
+## Prévia
+
+Arte em **full-bleed**; textos em caixas pretas com opacidade ~125/255 (~0,49).
 
 ## Fluxo
 
-1. Importar `entities.json`
+1. Abrir o editor (já carrega dados)
 2. Editar / salvar na sessão
 3. Exportar patch
-4. `python tools/merge_card_patch.py hotn3_cards_patch.json --write`
+4. `python tools/merge_card_patch.py hotn3_cards_patch.json --write [--art-dir ./pngs]`
 
-## Flags / raridade
+## Por que JSON acoplável
 
-- Flags com texto branco.
-- Raridade removida da UI; cartas novas omitem `rarity`.
+Cartas/heróis `ent_*` em `addons/hotn3_entities/entities.json`; `PackBridge` injeta no `Content` em runtime.

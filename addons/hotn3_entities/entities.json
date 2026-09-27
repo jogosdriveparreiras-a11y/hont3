@@ -12,7 +12,6 @@
       "attack": 4,
       "power": 4,
       "armor": 1,
-      "speed": 6,
       "type": "TECNICO",
       "row": "back",
       "sprite": "res://assets/cast/ent_adam_sprite.png",
@@ -72,7 +71,8 @@
       "source_sheet": "Adam_ficha.json",
       "source_page": "Adam.md",
       "portrait": "res://assets/cast/ent_adam_portrait.png",
-      "signature_icon": "res://assets/cast/ent_adam_icon.png"
+      "signature_icon": "res://assets/cast/ent_adam_icon.png",
+      "escudo": 1
     },
     "ent_akuji": {
       "id": "ent_akuji",
@@ -85,7 +85,6 @@
       "attack": 10,
       "power": 10,
       "armor": 2,
-      "speed": 9,
       "type": "BRUTO",
       "row": "front",
       "sprite": "res://assets/cast/ent_akuji_sprite.png",
@@ -153,7 +152,8 @@
       "source_sheet": "Akuji_ficha.json",
       "source_page": "Akuji.md",
       "portrait": "res://assets/cast/ent_akuji_portrait.png",
-      "signature_icon": "res://assets/cast/ent_akuji_icon.png"
+      "signature_icon": "res://assets/cast/ent_akuji_icon.png",
+      "escudo": 1
     },
     "ent_alexis": {
       "id": "ent_alexis",
@@ -166,7 +166,6 @@
       "attack": 3,
       "power": 3,
       "armor": 1,
-      "speed": 5,
       "type": "TECNICO",
       "row": "back",
       "sprite": "res://assets/cast/ent_alexis_sprite.png",
@@ -222,7 +221,8 @@
       "source_sheet": "Alexis_ficha.json",
       "source_page": "Alexis.md",
       "portrait": "res://assets/cast/ent_alexis_portrait.png",
-      "signature_icon": "res://assets/cast/ent_alexis_icon.png"
+      "signature_icon": "res://assets/cast/ent_alexis_icon.png",
+      "escudo": 1
     },
     "ent_alistair": {
       "id": "ent_alistair",
@@ -235,7 +235,6 @@
       "attack": 10,
       "power": 10,
       "armor": 4,
-      "speed": 9,
       "type": "MENTAL",
       "row": "front",
       "sprite": "res://assets/cast/ent_alistair_sprite.png",
@@ -303,7 +302,8 @@
       "source_sheet": "Alistair_ficha.json",
       "source_page": "Alistair.md",
       "portrait": "res://assets/cast/ent_alistair_portrait.png",
-      "signature_icon": "res://assets/cast/ent_alistair_icon.png"
+      "signature_icon": "res://assets/cast/ent_alistair_icon.png",
+      "escudo": 5
     },
     "ent_alyssa_wine": {
       "id": "ent_alyssa_wine",
@@ -316,7 +316,6 @@
       "attack": 8,
       "power": 8,
       "armor": 4,
-      "speed": 6,
       "type": "BRUTO",
       "row": "front",
       "sprite": "res://assets/cast/ent_alyssa_wine_sprite.png",
@@ -381,7 +380,8 @@
       "source_sheet": "Alyssa_Wine_ficha.json",
       "source_page": "Alyssa_Wine.md",
       "portrait": "res://assets/cast/ent_alyssa_wine_portrait.png",
-      "signature_icon": "res://assets/cast/ent_alyssa_wine_icon.png"
+      "signature_icon": "res://assets/cast/ent_alyssa_wine_icon.png",
+      "escudo": 3
     },
     "ent_ashlee": {
       "id": "ent_ashlee",
@@ -394,7 +394,6 @@
       "attack": 7,
       "power": 7,
       "armor": 1,
-      "speed": 5,
       "type": "TECNICO",
       "row": "back",
       "sprite": "res://assets/cast/ent_ashlee_sprite.png",
@@ -459,7 +458,8 @@
       "source_sheet": "Ashlee_ficha.json",
       "source_page": "Ashlee.md",
       "portrait": "res://assets/cast/ent_ashlee_portrait.png",
-      "signature_icon": "res://assets/cast/ent_ashlee_icon.png"
+      "signature_icon": "res://assets/cast/ent_ashlee_icon.png",
+      "escudo": 1
     },
     "ent_daeva": {
       "id": "ent_daeva",
@@ -472,7 +472,6 @@
       "attack": 5,
       "power": 5,
       "armor": 2,
-      "speed": 6,
       "type": "PSICOLOGICO",
       "row": "back",
       "sprite": "res://assets/cast/ent_daeva_sprite.png",
@@ -533,7 +532,8 @@
       "source_sheet": "Daeva_ficha.json",
       "source_page": "Daeva.md",
       "portrait": "res://assets/cast/ent_daeva_portrait.png",
-      "signature_icon": "res://assets/cast/ent_daeva_icon.png"
+      "signature_icon": "res://assets/cast/ent_daeva_icon.png",
+      "escudo": 2
     },
     "ent_damian_alrosa": {
       "id": "ent_damian_alrosa",
@@ -546,7 +546,6 @@
       "attack": 6,
       "power": 6,
       "armor": 2,
-      "speed": 5,
       "type": "PSICOLOGICO",
       "row": "back",
       "sprite": "res://assets/cast/ent_damian_alrosa_sprite.png",
@@ -606,7 +605,8 @@
       "source_sheet": "Damian_Alrosa_ficha.json",
       "source_page": "Damian_Alrosa.md",
       "portrait": "res://assets/cast/ent_damian_alrosa_portrait.png",
-      "signature_icon": "res://assets/cast/ent_damian_alrosa_icon.png"
+      "signature_icon": "res://assets/cast/ent_damian_alrosa_icon.png",
+      "escudo": 2
     },
     "ent_dominika_seur": {
       "id": "ent_dominika_seur",
@@ -619,7 +619,6 @@
       "attack": 7,
       "power": 7,
       "armor": 4,
-      "speed": 5,
       "type": "BRUTO",
       "row": "front",
       "sprite": "res://assets/cast/ent_dominika_seur_sprite.png",
@@ -679,7 +678,8 @@
       "source_sheet": "Dominika_Seur_ficha.json",
       "source_page": "Dominika_Seur.md",
       "portrait": "res://assets/cast/ent_dominika_seur_portrait.png",
-      "signature_icon": "res://assets/cast/ent_dominika_seur_icon.png"
+      "signature_icon": "res://assets/cast/ent_dominika_seur_icon.png",
+      "escudo": 3
     },
     "ent_dylan": {
       "id": "ent_dylan",
@@ -692,7 +692,6 @@
       "attack": 3,
       "power": 3,
       "armor": 1,
-      "speed": 3,
       "type": "TECNICO",
       "row": "back",
       "sprite": "res://assets/cast/ent_dylan_sprite.png",
@@ -744,7 +743,8 @@
       "source_sheet": "Dylan_ficha.json",
       "source_page": "Dylan.md",
       "portrait": "res://assets/cast/ent_dylan_portrait.png",
-      "signature_icon": "res://assets/cast/ent_dylan_icon.png"
+      "signature_icon": "res://assets/cast/ent_dylan_icon.png",
+      "escudo": 1
     },
     "ent_evelyn_graves": {
       "id": "ent_evelyn_graves",
@@ -757,7 +757,6 @@
       "attack": 7,
       "power": 8,
       "armor": 1,
-      "speed": 5,
       "type": "PROJETIVO",
       "row": "back",
       "sprite": "res://assets/cast/ent_evelyn_graves_sprite.png",
@@ -818,7 +817,8 @@
       "source_sheet": "Evelyn_Graves_ficha.json",
       "source_page": "Evelyn_Graves.md",
       "portrait": "res://assets/cast/ent_evelyn_graves_portrait.png",
-      "signature_icon": "res://assets/cast/ent_evelyn_graves_icon.png"
+      "signature_icon": "res://assets/cast/ent_evelyn_graves_icon.png",
+      "escudo": 3
     },
     "ent_fate": {
       "id": "ent_fate",
@@ -831,7 +831,6 @@
       "attack": 10,
       "power": 10,
       "armor": 2,
-      "speed": 9,
       "type": "BRUTO",
       "row": "front",
       "sprite": "res://assets/cast/ent_fate_sprite.png",
@@ -892,7 +891,8 @@
       "source_sheet": "Fate_ficha.json",
       "source_page": "Fate.md",
       "portrait": "res://assets/cast/ent_fate_portrait.png",
-      "signature_icon": "res://assets/cast/ent_fate_icon.png"
+      "signature_icon": "res://assets/cast/ent_fate_icon.png",
+      "escudo": 1
     },
     "ent_hynda_valdtagen": {
       "id": "ent_hynda_valdtagen",
@@ -905,7 +905,6 @@
       "attack": 10,
       "power": 10,
       "armor": 1,
-      "speed": 9,
       "type": "PROJETIVO",
       "row": "back",
       "sprite": "res://assets/cast/ent_hynda_valdtagen_sprite.png",
@@ -969,7 +968,8 @@
       "source_sheet": "Hynda_Valdtagen_ficha.json",
       "source_page": "Hynda_Valdtagen.md",
       "portrait": "res://assets/cast/ent_hynda_valdtagen_portrait.png",
-      "signature_icon": "res://assets/cast/ent_hynda_valdtagen_icon.png"
+      "signature_icon": "res://assets/cast/ent_hynda_valdtagen_icon.png",
+      "escudo": 4
     },
     "ent_kabuki": {
       "id": "ent_kabuki",
@@ -982,7 +982,6 @@
       "attack": 10,
       "power": 10,
       "armor": 2,
-      "speed": 9,
       "type": "PSICOLOGICO",
       "row": "back",
       "sprite": "res://assets/cast/ent_kabuki_sprite.png",
@@ -1055,7 +1054,8 @@
       "source_sheet": "Kabuki_ficha.json",
       "source_page": "Kabuki.md",
       "portrait": "res://assets/cast/ent_kabuki_portrait.png",
-      "signature_icon": "res://assets/cast/ent_kabuki_icon.png"
+      "signature_icon": "res://assets/cast/ent_kabuki_icon.png",
+      "escudo": 2
     },
     "ent_konrad": {
       "id": "ent_konrad",
@@ -1068,7 +1068,6 @@
       "attack": 6,
       "power": 6,
       "armor": 4,
-      "speed": 7,
       "type": "MENTAL",
       "row": "front",
       "sprite": "res://assets/cast/ent_konrad_sprite.png",
@@ -1124,7 +1123,8 @@
       "source_sheet": "Konrad_ficha.json",
       "source_page": "Konrad.md",
       "portrait": "res://assets/cast/ent_konrad_portrait.png",
-      "signature_icon": "res://assets/cast/ent_konrad_icon.png"
+      "signature_icon": "res://assets/cast/ent_konrad_icon.png",
+      "escudo": 5
     },
     "ent_leona": {
       "id": "ent_leona",
@@ -1137,7 +1137,6 @@
       "attack": 10,
       "power": 10,
       "armor": 1,
-      "speed": 7,
       "type": "PROJETIVO",
       "row": "back",
       "sprite": "res://assets/cast/ent_leona_sprite.png",
@@ -1201,7 +1200,8 @@
       "source_sheet": "Leona_ficha.json",
       "source_page": "Leona.md",
       "portrait": "res://assets/cast/ent_leona_portrait.png",
-      "signature_icon": "res://assets/cast/ent_leona_icon.png"
+      "signature_icon": "res://assets/cast/ent_leona_icon.png",
+      "escudo": 4
     },
     "ent_lust": {
       "id": "ent_lust",
@@ -1214,7 +1214,6 @@
       "attack": 8,
       "power": 9,
       "armor": 1,
-      "speed": 6,
       "type": "PROJETIVO",
       "row": "back",
       "sprite": "res://assets/cast/ent_lust_sprite.png",
@@ -1274,7 +1273,8 @@
       "source_sheet": "Lust_ficha.json",
       "source_page": "Lust.md",
       "portrait": "res://assets/cast/ent_lust_portrait.png",
-      "signature_icon": "res://assets/cast/ent_lust_icon.png"
+      "signature_icon": "res://assets/cast/ent_lust_icon.png",
+      "escudo": 3
     },
     "ent_madelyn": {
       "id": "ent_madelyn",
@@ -1287,7 +1287,6 @@
       "attack": 8,
       "power": 7,
       "armor": 2,
-      "speed": 7,
       "type": "BRUTO",
       "row": "front",
       "sprite": "res://assets/cast/ent_madelyn_sprite.png",
@@ -1347,7 +1346,8 @@
       "source_sheet": "Madelyn_ficha.json",
       "source_page": "Madelyn.md",
       "portrait": "res://assets/cast/ent_madelyn_portrait.png",
-      "signature_icon": "res://assets/cast/ent_madelyn_icon.png"
+      "signature_icon": "res://assets/cast/ent_madelyn_icon.png",
+      "escudo": 1
     },
     "ent_mingau_o_feiticeiro": {
       "id": "ent_mingau_o_feiticeiro",
@@ -1360,7 +1360,6 @@
       "attack": 10,
       "power": 10,
       "armor": 1,
-      "speed": 7,
       "type": "PROJETIVO",
       "row": "back",
       "sprite": "res://assets/cast/ent_mingau_o_feiticeiro_sprite.png",
@@ -1425,7 +1424,8 @@
       "source_sheet": "Mingau_o_Feiticeiro_ficha.json",
       "source_page": "Mingau_o_Feiticeiro.md",
       "portrait": "res://assets/cast/ent_mingau_o_feiticeiro_portrait.png",
-      "signature_icon": "res://assets/cast/ent_mingau_o_feiticeiro_icon.png"
+      "signature_icon": "res://assets/cast/ent_mingau_o_feiticeiro_icon.png",
+      "escudo": 4
     },
     "ent_mutante_generico": {
       "id": "ent_mutante_generico",
@@ -1438,7 +1438,6 @@
       "attack": 5,
       "power": 6,
       "armor": 1,
-      "speed": 4,
       "type": "PROJETIVO",
       "row": "back",
       "sprite": "res://assets/cast/ent_mutante_generico_sprite.png",
@@ -1490,7 +1489,8 @@
       "source_sheet": "Mutante_Generico_ficha.json",
       "source_page": "Mutante_Generico.md",
       "portrait": "res://assets/cast/ent_mutante_generico_portrait.png",
-      "signature_icon": "res://assets/cast/ent_mutante_generico_icon.png"
+      "signature_icon": "res://assets/cast/ent_mutante_generico_icon.png",
+      "escudo": 2
     },
     "ent_nero": {
       "id": "ent_nero",
@@ -1503,7 +1503,6 @@
       "attack": 6,
       "power": 7,
       "armor": 1,
-      "speed": 5,
       "type": "PROJETIVO",
       "row": "back",
       "sprite": "res://assets/cast/ent_nero_sprite.png",
@@ -1567,7 +1566,8 @@
       "source_sheet": "Nero_ficha.json",
       "source_page": "Nero.md",
       "portrait": "res://assets/cast/ent_nero_portrait.png",
-      "signature_icon": "res://assets/cast/ent_nero_icon.png"
+      "signature_icon": "res://assets/cast/ent_nero_icon.png",
+      "escudo": 2
     },
     "ent_niu_valdtagen": {
       "id": "ent_niu_valdtagen",
@@ -1580,7 +1580,6 @@
       "attack": 3,
       "power": 3,
       "armor": 2,
-      "speed": 5,
       "type": "PSICOLOGICO",
       "row": "back",
       "sprite": "res://assets/cast/ent_niu_valdtagen_sprite.png",
@@ -1629,7 +1628,8 @@
       "source_sheet": "Niu_Valdtagen_ficha.json",
       "source_page": "Niu_Valdtagen.md",
       "portrait": "res://assets/cast/ent_niu_valdtagen_portrait.png",
-      "signature_icon": "res://assets/cast/ent_niu_valdtagen_icon.png"
+      "signature_icon": "res://assets/cast/ent_niu_valdtagen_icon.png",
+      "escudo": 2
     },
     "ent_pesadelo_vivo": {
       "id": "ent_pesadelo_vivo",
@@ -1642,7 +1642,6 @@
       "attack": 10,
       "power": 10,
       "armor": 2,
-      "speed": 9,
       "type": "BRUTO",
       "row": "front",
       "sprite": "res://assets/cast/ent_pesadelo_vivo_sprite.png",
@@ -1707,7 +1706,8 @@
       "source_sheet": "Pesadelo_Vivo_ficha.json",
       "source_page": "Pesadelo_Vivo.md",
       "portrait": "res://assets/cast/ent_pesadelo_vivo_portrait.png",
-      "signature_icon": "res://assets/cast/ent_pesadelo_vivo_icon.png"
+      "signature_icon": "res://assets/cast/ent_pesadelo_vivo_icon.png",
+      "escudo": 1
     },
     "ent_pietro_caos": {
       "id": "ent_pietro_caos",
@@ -1720,7 +1720,6 @@
       "attack": 10,
       "power": 10,
       "armor": 2,
-      "speed": 7,
       "type": "PSICOLOGICO",
       "row": "back",
       "sprite": "res://assets/cast/ent_pietro_caos_sprite.png",
@@ -1796,7 +1795,8 @@
       "source_sheet": "Pietro_Caos_ficha.json",
       "source_page": "Pietro_Caos.md",
       "portrait": "res://assets/cast/ent_pietro_caos_portrait.png",
-      "signature_icon": "res://assets/cast/ent_pietro_caos_icon.png"
+      "signature_icon": "res://assets/cast/ent_pietro_caos_icon.png",
+      "escudo": 2
     },
     "ent_quasar": {
       "id": "ent_quasar",
@@ -1809,7 +1809,6 @@
       "attack": 10,
       "power": 10,
       "armor": 2,
-      "speed": 9,
       "type": "BRUTO",
       "row": "front",
       "sprite": "res://assets/cast/ent_quasar_sprite.png",
@@ -1874,7 +1873,8 @@
       "source_sheet": "Quasar_ficha.json",
       "source_page": "Quasar.md",
       "portrait": "res://assets/cast/ent_quasar_portrait.png",
-      "signature_icon": "res://assets/cast/ent_quasar_icon.png"
+      "signature_icon": "res://assets/cast/ent_quasar_icon.png",
+      "escudo": 1
     },
     "ent_taylor": {
       "id": "ent_taylor",
@@ -1887,7 +1887,6 @@
       "attack": 7,
       "power": 7,
       "armor": 4,
-      "speed": 5,
       "type": "MENTAL",
       "row": "front",
       "sprite": "res://assets/cast/ent_taylor_sprite.png",
@@ -1947,7 +1946,8 @@
       "source_sheet": "Taylor_ficha.json",
       "source_page": "Taylor.md",
       "portrait": "res://assets/cast/ent_taylor_portrait.png",
-      "signature_icon": "res://assets/cast/ent_taylor_icon.png"
+      "signature_icon": "res://assets/cast/ent_taylor_icon.png",
+      "escudo": 5
     },
     "ent_techna": {
       "id": "ent_techna",
@@ -1960,7 +1960,6 @@
       "attack": 7,
       "power": 7,
       "armor": 4,
-      "speed": 5,
       "type": "BRUTO",
       "row": "front",
       "sprite": "res://assets/cast/ent_techna_sprite.png",
@@ -2021,7 +2020,8 @@
       "source_sheet": "Techna_ficha.json",
       "source_page": "Techna.md",
       "portrait": "res://assets/cast/ent_techna_portrait.png",
-      "signature_icon": "res://assets/cast/ent_techna_icon.png"
+      "signature_icon": "res://assets/cast/ent_techna_icon.png",
+      "escudo": 3
     }
   },
   "cards": {

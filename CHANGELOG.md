@@ -1,4 +1,14 @@
 ## Não publicado
+
+## 2026-09-27 — Vida/Escudo, fases de grupo, editor auto-load
+
+- Removida Velocidade; combate só em fases de grupo (jogador vs inimigo).
+- Atributo **Escudo** nos personagens; dano Impacto − Armadura, Poder − Escudo.
+- UI: HP → Vida. Cura de pack = Vida absoluta.
+- Arquétipo intransitivo implementado, **desligado** (`RULES.archetype_matchup = false`).
+- Editor carrega `entities.json` (fetch + cópia embutida), passivas com explicação, pool com contagem, exclusões Impacto|Poder|Estado e Custo⊕Ganho, prévia full-bleed.
+- IA inimiga: até 3 melhores cartas por economia/dona vivos (sem Speed).
+
 - Pacote de polimento HotN3 Godot 4.6: arte da carta sem squash (cover por altura), nome da carta ao lado do ícone de assinatura no topo, caixas pretas em opacidade média (~125/255), espada+IMPACTO/PODER+número ocupando ~90% do vão entre chip e efeitos.
 - Turno inimigo apresenta cada carta centrada (~2s) como inspeção do jogador, depois aplica no alvo e espera ~2s antes da próxima (inclui sequência de PA/Quick/Free).
 - Barra de recompra por segurar virou anel circular (`CircularMeter`).

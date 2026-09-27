@@ -121,8 +121,21 @@ func begin(mission_id: String, team: Array[String], equipped: Dictionary, seed_v
 		var copies := int(items.get(item_key, 0))
 		for _copy in copies:
 			var item_card := "item_" + str(item_key)
-			if Content.CARDS.has(item_card):
-				deck.append(_create_card(item_card, item_owner))
+			if not Content.CARDS.has(item_card):
+				continue
+			var idef: Dictionary = Content.CARDS[item_card]
+			# Não traz item se owner_hero definido e ausente da equipe.
+			if idef.has("owner_hero"):
+				var need := str(idef["owner_hero"])
+				var in_team := false
+				for tid in team:
+					if str(tid) == need:
+						in_team = true
+						break
+				if not in_team:
+					_log("Item %s omitido: dono %s fora da equipe." % [item_card, need])
+					continue
+			deck.append(_create_card(item_card, item_owner))
 	for id in mission.get("enemies", []):
 		spawn_enemy(str(id))
 	_shuffle(deck)
@@ -140,10 +153,16 @@ func _create_actor(template: Dictionary, side: String, archetype: String) -> Dic
 	actor["side"] = side
 	actor["max_hp"] = actor["hp"]
 	actor["block"] = 0
-	actor["shield"] = 0
+	actor["shield"] = 0  # escudo temporário de carta (camada); atributo permanente é escudo/escudo
+	if not actor.has("escudo"):
+		actor["escudo"] = int(actor.get("armor", 0))
+	if not actor.has("archetype_stat"):
+		actor["archetype_stat"] = str(actor.get("combat_archetype", "Nenhum"))
+	if not actor.has("species"):
+		actor["species"] = "Humano"
 	actor["statuses"] = {}
 	actor["pending"] = []
-	actor["phase"] = 1
+	actor["phase"] = 1  # só para chefes (fase 2), NÃO turno individual
 	actors.append(actor)
 	return actor
 
@@ -392,8 +411,40 @@ func _damage_value(source: Dictionary, target: Dictionary, effect: Dictionary, c
 		multiplier *= 1.5
 	if _has_status(source, "blessed") and target.get("faction", "") == "abissal":
 		multiplier *= 2.0
-	var armor: int = int(target.get("armor", 0)) + (2 * int(target["statuses"].get("armor", {}).get("stacks", 0)))
-	return max(1, roundi(base * multiplier) - armor)
+	# Espécie: cartas podem ter vs_species { "Mutante": 0.25, ... } (±25% típico).
+	var vs_species: Dictionary = {}
+	if card.has("vs_species"):
+		vs_species = card.get("vs_species", {})
+	elif Content.CARDS.has(str(card.get("id", ""))):
+		vs_species = Content.CARDS[str(card["id"])].get("vs_species", {})
+	var target_species := str(target.get("species", ""))
+	if target_species != "" and vs_species.has(target_species):
+		multiplier *= 1.0 + float(vs_species[target_species])
+	# Arquétipo intransitivo (DESLIGADO por padrão via RULES.archetype_matchup).
+	if bool(Content.RULES.get("archetype_matchup", false)):
+		multiplier *= _archetype_multiplier(source, target)
+	var damage_stat := str(effect.get("stat", card.get("stat", "attack")))
+	var defense: int = _defense_for_stat(target, damage_stat)
+	return max(1, roundi(base * multiplier) - defense)
+
+
+func _defense_for_stat(target: Dictionary, damage_stat: String) -> int:
+	# Impacto → Armadura; Poder → Escudo (atributo permanente, distinto do escudo temporário de carta).
+	if damage_stat == "power":
+		return int(target.get("escudo", 0))
+	return int(target.get("armor", 0)) + (2 * int(target.get("statuses", {}).get("armor", {}).get("stacks", 0)))
+
+func _archetype_multiplier(source: Dictionary, target: Dictionary) -> float:
+	# Armadura > Impacto > Escudo > Poder > Armadura. Versátil/Nenhum = neutro.
+	var atk := str(source.get("archetype_stat", source.get("combat_archetype", "")))
+	var dfn := str(target.get("archetype_stat", target.get("combat_archetype", "")))
+	if atk in ["", "Nenhum", "Versátil", "Preparo"] or dfn in ["", "Nenhum", "Versátil", "Preparo"]:
+		return 1.0
+	if Content.ARCHETYPE_BEATS.get(atk, "") == dfn:
+		return 1.25
+	if Content.ARCHETYPE_BEATS.get(dfn, "") == atk:
+		return 0.75
+	return 1.0
 
 func _take_damage(source: Dictionary, target: Dictionary, amount: int, pierce: bool = false, counter_allowed: bool = true, environmental: bool = false, area: bool = false, melee: bool = false, attack_card: bool = false, from_card: bool = false) -> bool:
 	if target["hp"] <= 0:
@@ -444,7 +495,7 @@ func _take_damage(source: Dictionary, target: Dictionary, amount: int, pierce: b
 		for id in ["binary", "bloodlust", "protecting"]: target["statuses"].erase(id)
 	if hp_lost > 0: visual.emit("hit", int(source["id"]), int(target["id"]), hp_lost)
 	elif amount > 0: visual.emit("block", int(source["id"]), int(target["id"]), amount)
-	_log("%s sofreu %d de dano (%d PV)." % [target["name"], amount, target["hp"]])
+	_log("%s sofreu %d de dano (%d Vida)." % [target["name"], amount, target["hp"]])
 	var died: bool = target["hp"] <= 0
 	if died:
 		_log("%s caiu." % target["name"])
@@ -717,6 +768,17 @@ func redraw(hand_index: int) -> bool:
 func _redraw_side(side: String, hand_index: int) -> bool:
 	if side == "ENEMY" and phase != "ENEMY": return false
 	if side != "ENEMY" and phase != "PLAYER": return false
+	# Item com dono explícito: dono precisa estar vivo no time atuante.
+	if definition.get("item", false) and definition.has("owner_hero"):
+		var need := str(definition["owner_hero"])
+		var owner_alive := false
+		for ally in living(side):
+			if str(ally.get("archetype", "")) == need:
+				owner_alive = true
+				break
+		if not owner_alive:
+			_log("Item bloqueado: dono %s indisponível." % need)
+			return false
 	var acting_hand := _hand_of(side)
 	var redraw_left: int = enemy_redraws if side == "ENEMY" else redraws
 	if redraw_left <= 0 or hand_index < 0 or hand_index >= acting_hand.size():
@@ -987,7 +1049,7 @@ func finish_enemy_phase() -> void:
 	_tick_statuses()
 	if mission.get("objective", "") == "PROTECT" and not living("ENEMY").is_empty():
 		protect_hp = max(0, protect_hp - max(1, living("ENEMY").size() * 2))
-		_log("A sentinela sofreu pressão: %d PV." % protect_hp)
+		_log("A sentinela sofreu pressão: %d Vida." % protect_hp)
 	_check_end()
 	if phase != "FINISHED": start_turn()
 	changed.emit()
@@ -1035,6 +1097,8 @@ func _best_enemy_play() -> Dictionary:
 	return best
 
 func _score_enemy_preview(source: Dictionary, definition: Dictionary, estimate: Dictionary) -> float:
+	# Fase inimiga em grupo: escolhe até card_plays (3) melhores cartas legais por valor/economia.
+	# Sem ordenação por Velocidade — só fase de grupo ENEMY.
 	var score := 0.0
 	for id in estimate["targets"]:
 		var line: Dictionary = estimate["targets"][id]
@@ -1043,8 +1107,15 @@ func _score_enemy_preview(source: Dictionary, definition: Dictionary, estimate: 
 		score += float(line["statuses"].size()) * 3.0
 		if line["row_after"] != actor_by_id(int(id)).get("row", ""): score += 2.0
 	score += float(estimate["self_effects"].size()) * 2.0
+	# Economia de Iniciativa: favorece ganho e custo baixo relativo ao impacto.
+	var cost := float(_cost(source, definition))
+	var gain := float(definition.get("gain", 0))
+	score += gain * 2.5 - cost * 1.5
+	if cost <= _get_impulse("ENEMY") and cost > 0:
+		score += 1.0
 	if definition.get("class", "") == "SKILL" and str(source.get("ai", "")) == "DEFENSIVO": score += 4.0
 	if definition.get("class", "") == "ATTACK" and str(source.get("ai", "")) == "ASSASSINO": score += 3.0
+	if definition.get("stat", "") == "power" and str(source.get("ai", "")) == "AGRESSIVO": score += 2.0
 	return score
 
 func _tick_statuses() -> void:

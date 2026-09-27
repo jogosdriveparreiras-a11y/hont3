@@ -60,8 +60,11 @@ func _merge_entity_heroes() -> void:
 			"attack": int(src.get("attack", 4)),
 			"power": int(src.get("power", 4)),
 			"armor": int(src.get("armor", 0)),
-			"speed": int(src.get("speed", 5)),
+			"escudo": int(src.get("escudo", src.get("armor", 0))),
 			"type": str(src.get("type", "TECNICO")),
+			"archetype_stat": str(src.get("archetype", "Nenhum")),
+			"species": str(src.get("species", "Humano")),
+			"level_reference": int(src.get("level_reference", 1)),
 			"sprite": str(src.get("sprite", "res://hero_rogue.png")),
 			"portrait": str(src.get("portrait", "")),
 			"signature_icon": str(src.get("signature_icon", "")),
@@ -192,9 +195,9 @@ func describe_actions(definition: Dictionary) -> Array[String]:
 		var op := str(action[0])
 		match op:
 			"hit", "hit_per_impulse", "hit_per_hand", "hit_from_block", "roulette_hit":
-				parts.append("Dano base %s (+Impacto/Poder)" % str(action[1] if action.size() > 1 else "0"))
+				parts.append("Dano base %s (+Impacto−Armadura / +Poder−Escudo)" % str(action[1] if action.size() > 1 else "0"))
 			"heal", "heal_all", "full_heal":
-				parts.append("Cura")
+				parts.append("Cura %s Vida" % str(action[1] if action.size() > 1 else ""))
 			"block", "block_hp":
 				parts.append("Bloqueio")
 			"status", "self_status", "chance_status", "roulette_status":

@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Mescla um patch do card_editor no entities.json (cartas e/ou heróis).
 
+Normaliza: remove speed, garante escudo, Tipo/Arquétipo/Espécie/Nível.
+
 Uso:
   python tools/merge_card_patch.py hotn3_cards_patch.json
   python tools/merge_card_patch.py hotn3_cards_patch.json --write
@@ -86,6 +88,25 @@ def main() -> int:
                     h["pool"] = pool
     if heroes:
         data.setdefault("heroes", {}).update(heroes)
+    # Normaliza heróis: sem speed; garante escudo / campos de identidade
+    for _hid, h in data.get("heroes", {}).items():
+        if not isinstance(h, dict):
+            continue
+        h.pop("speed", None)
+        if "escudo" not in h:
+            h["escudo"] = int(h.get("armor", 0) or 0)
+        h.setdefault("archetype", "Nenhum")
+        h.setdefault("species", "Humano")
+        h.setdefault("level_reference", 1)
+        h.setdefault("type", "TECNICO")
+    # Cartas: custo XOR ganho se ambos vierem > 0
+    for _cid, c in data.get("cards", {}).items():
+        if not isinstance(c, dict):
+            continue
+        cost = int(c.get("cost", 0) or 0)
+        gain = int(c.get("gain", 0) or 0)
+        if cost > 0 and gain > 0:
+            c.pop("gain", None)
     text = __import__("json").dumps(data, ensure_ascii=False, indent=2) + "\n"
     print(f"Cartas no patch: {len(cards)}")
     print(f"Heróis no patch: {len(heroes)}")
