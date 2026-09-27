@@ -831,7 +831,7 @@ func _render_battle() -> void:
 	recompra_ring.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	recompra_ring.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	hud.add_child(recompra_ring)
-	hover_hint = _label("Passe o mouse na carta (HUD atualiza). Clique para selecionar; clique de novo para confirmar. Se precisar de alvo, clique no sprite; auto (si/equipe/aleatório) resolve na hora. Segure ~2s para Recompra.", 15, Color("c9d1dd"))
+	hover_hint = _label("Passe o mouse na carta (HUD atualiza). Clique para selecionar; clique de novo para confirmar. Se precisar de alvo, clique no sprite; auto (si/equipe/aleatório) resolve na hora. Segure ~2s para Recompra. Botão MOVER (ou tecla M) + clique no aliado troca Frente/Retaguarda.", 15, Color("c9d1dd"))
 	hover_hint.position = Vector2(20, viewport_size.y - 210)
 	hover_hint.custom_minimum_size.x = viewport_size.x * 0.42
 	hover_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -1049,11 +1049,11 @@ func _focus_hero_id() -> int:
 func _build_economy_hud(viewport_size: Vector2) -> void:
 	economy_hud = Control.new()
 	economy_hud.name = "EconomyHud"
-	economy_hud.position = Vector2(viewport_size.x - 310, viewport_size.y - 220)
-	economy_hud.size = Vector2(290, 220)
+	economy_hud.position = Vector2(viewport_size.x - 310, viewport_size.y - 268)
+	economy_hud.size = Vector2(290, 260)
 	economy_hud.mouse_filter = Control.MOUSE_FILTER_STOP
 	hud.add_child(economy_hud)
-	_chrome(economy_hud.position, Vector2(290, 220), "res://assets/ui/panel.png")
+	_chrome(economy_hud.position, Vector2(290, 260), "res://assets/ui/panel.png")
 	var plays: int = battle.card_plays
 	var redraws_left: int = battle.redraws
 	var moves_left: int = battle.moves
@@ -1083,9 +1083,16 @@ func _build_economy_hud(viewport_size: Vector2) -> void:
 		fill.size = Vector2(200.0 * clampf(float(entry[1]) / float(max_v), 0.0, 1.0), 6)
 		economy_hud.add_child(fill)
 		y += 32.0
+	var move_btn := _button("MOVER (%d)" % moves_left, func(): _start_move_action())
+	move_btn.disabled = battle.phase != "PLAYER" or enemy_presenting or (moves_left <= 0 and not _any_ally_has_momentum())
+	move_btn.position = Vector2(16, 148)
+	move_btn.custom_minimum_size = Vector2(258, 40)
+	if selected_action == "move":
+		move_btn.modulate = Color("6eb6ff")
+	economy_hud.add_child(move_btn)
 	var end_btn := _button("ENCERRAR TURNO", func(): _present_enemy_turn())
 	end_btn.disabled = battle.phase != "PLAYER" or enemy_presenting
-	end_btn.position = Vector2(16, 148)
+	end_btn.position = Vector2(16, 196)
 	end_btn.custom_minimum_size = Vector2(258, 40)
 	economy_hud.add_child(end_btn)
 	
@@ -2238,11 +2245,7 @@ func _input(event: InputEvent) -> void:
 			feedback = "Segure ~2s numa carta (ou selecione e pressione de novo) para Recompra."
 			_render_battle()
 	elif event.is_action_pressed("hotn_move"):
-		selected_action = "move"
-		card_confirmed = false
-		inspected_card = -1
-		feedback = "Aponte o aliado e clique no sprite."
-		_render_battle()
+		_start_move_action()
 	elif event.is_action_pressed("hotn_end"):
 		_present_enemy_turn()
 	elif event.is_action_pressed("hotn_cancel"):
