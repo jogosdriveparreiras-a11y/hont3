@@ -1810,12 +1810,16 @@ func _status_label(status_id: String) -> String:
 		"poison": "Veneno",
 		"block": "Bloqueio",
 		"shield": "Escudo",
+		"escuridao": "Escuridão",
+		"atento": "Atento",
+		"wounded": "Ferido",
+		"wound": "Ferido",
 	}
 	return labels.get(key, key.replace("_", " "))
 
 func _rules_bbcode(definition: Dictionary, card: Dictionary) -> String:
 	var lines: Array[String] = []
-	var target_names := {"SELF": "si mesmo", "ALLY": "aliado", "ALL_ALLIES": "todos os aliados", "ENEMY": "inimigo", "SINGLE": "inimigo", "ENEMY_ROW": "linha inimiga", "ROW": "linha inimiga", "FRONT_ROW": "frente inimiga", "BACK_ROW": "retaguarda inimiga", "ALL_ENEMIES": "todos os inimigos", "ADJACENT": "alvo e adjacentes", "RANDOM": "inimigo aleatório", "CHAIN": "sequência", "ANY_UNIT": "qualquer unidade"}
+	var target_names := {"SELF": "si mesmo", "ALLY": "aliado", "ALL_ALLIES": "todos os aliados", "ENEMY": "inimigo", "SINGLE": "inimigo", "ENEMY_ROW": "linha inimiga", "ROW": "linha inimiga", "FRONT_ROW": "frente inimiga", "BACK_ROW": "retaguarda inimiga", "ALL_ENEMIES": "todos os inimigos", "ALL_OTHERS": "todos os outros (exceto você)", "ADJACENT": "alvo e adjacentes", "RANDOM": "inimigo aleatório", "CHAIN": "sequência", "ANY_UNIT": "qualquer unidade"}
 	lines.append("[b]Alvo:[/b] %s" % target_names.get(str(definition.get("target", "ENEMY")), "inimigo"))
 	var keywords: Array[String] = []
 	if definition.get("quick", false): keywords.append("[b]Rápida[/b]")
@@ -1912,7 +1916,11 @@ func _rules_bbcode(definition: Dictionary, card: Dictionary) -> String:
 			effect_lines.append("Puxa")
 	if card.get("infected", false):
 		effect_lines.append("[color=#e15b5b]Infectada[/color]")
-	if not effect_lines.is_empty():
+	var custom := str(definition.get("text", "")).strip_edges()
+	if custom != "":
+		lines.append("")
+		lines.append(custom)
+	elif not effect_lines.is_empty():
 		lines.append("")
 		for piece in effect_lines:
 			lines.append("• %s" % piece)
@@ -1935,10 +1943,11 @@ func _card_spec(card: Dictionary, definition: Dictionary, owner: Dictionary) -> 
 		"title": str(definition.get("name", "")),
 		"chip": "Item" if item else str(owner.get("name", "")),
 		"item": item,
+		"desvantagem": str(definition.get("class", "")) == "DESVANTAGEM",
 		"art": art,
 		"icon": icon,
 		"border": border,
-		"show_damage": show_damage,
+		"show_damage": show_damage and str(definition.get("class", "")) != "DESVANTAGEM",
 		"stat_label": str(readout["label"]),
 		"stat_value": int(readout["value"]),
 		"stat_color": readout["color"],
@@ -2203,7 +2212,7 @@ func _update_recompra_meter(progress: float, label_text: String) -> void:
 func _target_needs_player_choice(kind: String) -> bool:
 	# Auto after confirm: no unit pick required (self / whole side / fixed row / random).
 	match kind:
-		"SELF", "ALL_ALLIES", "ALL_ENEMIES", "RANDOM", "FRONT_ROW", "BACK_ROW":
+		"SELF", "ALL_ALLIES", "ALL_ENEMIES", "ALL_OTHERS", "RANDOM", "FRONT_ROW", "BACK_ROW":
 			return false
 		_:
 			return true
@@ -2216,9 +2225,9 @@ func _auto_primary_target_id(definition: Dictionary, owner_id: int) -> int:
 		"ALL_ALLIES":
 			var allies: Array = battle.living("ALLY")
 			return int(allies[0]["id"]) if not allies.is_empty() else -1
-		"ALL_ENEMIES", "RANDOM":
+		"ALL_ENEMIES", "ALL_OTHERS", "RANDOM":
 			var enemies: Array = battle.living("ENEMY")
-			return int(enemies[0]["id"]) if not enemies.is_empty() else -1
+			return int(enemies[0]["id"]) if not enemies.is_empty() else owner_id
 		"FRONT_ROW", "BACK_ROW":
 			var row := "front" if kind == "FRONT_ROW" else "back"
 			for actor in battle.living("ENEMY"):
@@ -2563,7 +2572,7 @@ func _unhandled_input(input: InputEvent) -> void:
 
 func _card_description(definition: Dictionary, card: Dictionary = {}) -> String:
 	var parts: Array[String] = []
-	var target_names := {"SELF": "em si", "ALLY": "aliado", "ALL_ALLIES": "todos os aliados", "ENEMY": "inimigo", "SINGLE": "inimigo", "ENEMY_ROW": "linha inimiga", "ROW": "linha inimiga", "FRONT_ROW": "frente inimiga", "BACK_ROW": "retaguarda inimiga", "ALL_ENEMIES": "todos os inimigos", "ADJACENT": "alvo e adjacentes", "RANDOM": "inimigo aleatório", "CHAIN": "sequência", "ANY_UNIT": "qualquer unidade"}
+	var target_names := {"SELF": "em si", "ALLY": "aliado", "ALL_ALLIES": "todos os aliados", "ENEMY": "inimigo", "SINGLE": "inimigo", "ENEMY_ROW": "linha inimiga", "ROW": "linha inimiga", "FRONT_ROW": "frente inimiga", "BACK_ROW": "retaguarda inimiga", "ALL_ENEMIES": "todos os inimigos", "ALL_OTHERS": "todos os outros", "ADJACENT": "alvo e adjacentes", "RANDOM": "inimigo aleatório", "CHAIN": "sequência", "ANY_UNIT": "qualquer unidade"}
 	parts.append("ALVO: " + target_names.get(definition.get("target", "ENEMY"), "inimigo"))
 	if definition.get("quick", false): parts.append("RÁPIDA: devolve ação no KO")
 	if definition.get("free", false): parts.append("LIVRE")

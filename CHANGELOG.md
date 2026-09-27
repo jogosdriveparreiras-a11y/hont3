@@ -1,5 +1,13 @@
 ## Não publicado
 
+## 2026-09-27 — Alyssa Wine / Escuridão
+
+- Alyssa redesenhada: passiva **Escuridão** (+1 ao perder Vida), Desvantagem **Tormenta** (E≥4 → 1 dmg em todos os outros no tick).
+- Cartas novas: Bastão Retrátil, Garras e Presas, Premonição, A Filha Dele, Regeneração, Relâmpago, Intelecto, Super Sentidos, Tormenta (DESVANTAGEM).
+- Fórmulas em efeitos (`1+E`, `2*E`, tokens de status); alvo `ALL_OTHERS`; status **Atento** e **wounded** no play path das runtimes.
+- Bleed: causa X e stacks −1 por tick. Editor: dicionário/STATUSES/TARGETS atualizados.
+
+
 ## 2026-09-27 — Migração block/shield → Proteção/Barreira + Instantâneo UX + Dicionário
 
 - Migração completa do inventário legado (`LEGACY_BLOCK_MIGRATION.md`): Cap America usa **Proteção** como Escudo (`spend_protecao` / `hit_from_protecao`); Marvel Knee/Rain em **Barreira**; resto do catálogo → Barreira / Resistente / Proteção conforme regra.

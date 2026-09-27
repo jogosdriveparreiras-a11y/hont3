@@ -89,12 +89,28 @@ func setup(data: Dictionary) -> void:
 	rules_bg.size = Vector2(width * 0.90, height * 0.26)
 	rules_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(rules_bg)
+	var is_desv := bool(spec.get("desvantagem", false))
+	var rules_y := height * 0.615
+	var rules_h := height * 0.23
+	if is_desv:
+		var desv := Label.new()
+		desv.text = "Desvantagem"
+		desv.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		desv.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		desv.position = Vector2(width * 0.07, height * 0.605)
+		desv.size = Vector2(width * 0.86, height * 0.035)
+		desv.add_theme_font_size_override("font_size", int(clampf(height * 0.028, 11, 20)))
+		desv.add_theme_color_override("font_color", Color("f0c27a"))
+		desv.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(desv)
+		rules_y = height * 0.640
+		rules_h = height * 0.205
 	var rules := RichTextLabel.new()
 	rules.bbcode_enabled = true
 	rules.fit_content = false
 	rules.scroll_active = false
-	rules.position = Vector2(width * 0.07, height * 0.615)
-	rules.size = Vector2(width * 0.86, height * 0.23)
+	rules.position = Vector2(width * 0.07, rules_y)
+	rules.size = Vector2(width * 0.86, rules_h)
 	rules.add_theme_font_size_override("normal_font_size", int(clampf(height * 0.030, 12, 22)))
 	rules.add_theme_color_override("default_color", Color("e7f6f8"))
 	rules.text = str(spec.get("rules", ""))

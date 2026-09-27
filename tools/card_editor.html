@@ -431,8 +431,8 @@ const EMBEDDED_ENTITIES = {"format":1,"heroes":{"ent_adam":{"id":"ent_adam","nam
 
 const HEROES_FALLBACK = [{"id":"ent_adam","name":"Adam"},{"id":"ent_akuji","name":"Akuji"},{"id":"ent_alexis","name":"Alexis"},{"id":"ent_alistair","name":"Alistair"},{"id":"ent_alyssa_wine","name":"Alyssa Wine (Titânio)"},{"id":"ent_ashlee","name":"Ashlee"},{"id":"ent_daeva","name":"Daeva"},{"id":"ent_damian_alrosa","name":"Damian Alrosa"},{"id":"ent_dominika_seur","name":"Dominika Seur"},{"id":"ent_dylan","name":"Dylan"},{"id":"ent_evelyn_graves","name":"Evelyn Graves (Sombria)"},{"id":"ent_fate","name":"Fate"},{"id":"ent_hynda_valdtagen","name":"Hynda Valdtagen"},{"id":"ent_kabuki","name":"Kabuki"},{"id":"ent_konrad","name":"Konrad (Armagedom)"},{"id":"ent_leona","name":"Leona (Marbas)"},{"id":"ent_lust","name":"Lust"},{"id":"ent_madelyn","name":"Madelyn"},{"id":"ent_mingau_o_feiticeiro","name":"Mingau, o Feiticeiro"},{"id":"ent_mutante_generico","name":"Mutante (Genérico)"},{"id":"ent_nero","name":"Nero"},{"id":"ent_niu_valdtagen","name":"Niu Valdtagen"},{"id":"ent_pesadelo_vivo","name":"Pesadelo Vivo"},{"id":"ent_pietro_caos","name":"Pietro"},{"id":"ent_quasar","name":"Quasar"},{"id":"ent_taylor","name":"Taylor (Nave-Mãe)"},{"id":"ent_techna","name":"Techna"}];
 
-const STATUSES = ["bleed","burn","weak","vulnerable","stun","bind","marked","conceal","counter","protecao","barrier","resistente","fragil","invulnerable","strengthened","slow","confused","banished","portal","unleashed","drop","taunted","berserk_enemy","block_on_hit","corrupted"];
-const TARGETS = ["ENEMY","ENEMY_ROW","ALL_ENEMIES","ALLY","ALL_ALLIES","SELF","CHAIN","RANDOM","ANY_UNIT"];
+const STATUSES = ["bleed","burn","weak","vulnerable","stun","bind","marked","conceal","counter","protecao","barrier","resistente","fragil","invulnerable","strengthened","slow","confused","banished","portal","unleashed","drop","taunted","berserk_enemy","block_on_hit","corrupted","wounded","escuridao","atento"];
+const TARGETS = ["ENEMY","ENEMY_ROW","ALL_ENEMIES","ALL_OTHERS","ALLY","ALL_ALLIES","SELF","CHAIN","RANDOM","ANY_UNIT"];
 const UNLOCKS = ["starting","progression"];
 const STATS = [
   {id:"attack", label:"Impacto"},
@@ -466,7 +466,7 @@ const FLAGS = [
 ];
 
 const ACTIONS = [
-  {op:"hit", label:"Dano base (carta)", tip:"Impacto: Carta+Impacto−Armadura · Poder: Carta+Poder−Escudo. Custo = Iniciativa.", args:[{k:"n", t:"number", label:"Dano base (carta)", def:"0"}]},
+  {op:"hit", label:"Dano base (carta)", tip:"Impacto: Carta+Impacto−Armadura · Poder: Carta+Poder−Escudo. Aceita fórmula (1+E, 2*E).", args:[{k:"n", t:"text", label:"Dano base (núm ou fórmula)", def:"0"}]},
   {op:"block", label:"Bloqueio (legado→Barreira)", tip:"Legado: runtime converte em Barreira. Prefira o chip Barreira. Cap America usa Proteção.", args:[{k:"n", t:"number", label:"Valor", def:"8"}]},
   {op:"block_hp", label:"Bloqueio % (legado→Barreira)", tip:"Legado: runtime converte em Barreira % Vida. Prefira barreira_hp.", args:[{k:"n", t:"number", label:"Fração", def:"0.1"}]},
   {op:"barreira_hp", label:"Barreira (% Vida)", tip:"Rodadas + fração da Vida máx. como HP da Barreira.", args:[{k:"x", t:"number", label:"Rodadas", def:"1"},{k:"y", t:"number", label:"Fração", def:"0.3"}]},
@@ -475,17 +475,17 @@ const ACTIONS = [
   {op:"hit_from_protecao", label:"Dano = Proteção", tip:"Cap: dano base = stacks de Proteção atuais.", args:[{k:"n", t:"number", label:"Bônus", def:"0"}]},
   {op:"spend_all_barrier", label:"Gastar toda Barreira", tip:"Zera a Barreira do usuário (Marvel Rain of Blows).", args:[]},
   {op:"barrier_from_hit", label:"Barreira = dano", tip:"Após o golpe, ganha Barreira com HP = dano causado (Marvel Knee Strike).", args:[]},
-  {op:"heal", label:"Cura (Vida absoluta)", tip:"Valor absoluto de Vida curada (não × Impacto).", args:[{k:"n", t:"number", label:"Vida", def:"8"}]},
+  {op:"heal", label:"Cura (Vida absoluta)", tip:"Valor absoluto de Vida curada. Aceita fórmula (2*E).", args:[{k:"n", t:"text", label:"Vida (núm ou fórmula)", def:"8"}]},
   {op:"heal_all", label:"Cura todos aliados", tip:"Vida absoluta por aliado.", args:[{k:"n", t:"number", label:"Vida", def:"6"}]},
   {op:"full_heal", label:"Cura total", args:[]},
   {op:"cure", label:"Limpar status", args:[]},
   {op:"status", label:"Status no alvo", args:[
     {k:"id", t:"status", label:"Status", def:"bleed"},
-    {k:"n", t:"number", label:"Stacks", def:"1"},
+    {k:"n", t:"text", label:"Stacks (núm ou fórmula)", def:"1"},
   ]},
   {op:"self_status", label:"Status em si", args:[
     {k:"id", t:"status", label:"Status", def:"strengthened"},
-    {k:"n", t:"number", label:"Stacks", def:"1"},
+    {k:"n", t:"text", label:"Stacks (núm ou fórmula)", def:"1"},
   ]},
   {op:"push", label:"Empurrar", args:[{k:"n", t:"number", label:"Força", def:"2"}]},
   {op:"pull", label:"Puxar", args:[]},
@@ -528,11 +528,15 @@ const ACTIONS = [
   {op:"instant", label:"Instantâneo", tip:"Deve ser jogada nesta rodada; bloqueia Encerrar enquanto estiver na mão. Não encerra a fase ao jogar. Sem recompra.", args:[]},
   {op:"protecao", label:"Proteção", tip:"Ignora os próximos X ataques; −1 por ataque e por rodada.", args:[{k:"x", t:"number", label:"X", def:"1"}]},
   {op:"barreira", label:"Barreira", tip:"Dura X rodadas; pool de HP Y. Overflow atinge o personagem.", args:[{k:"x", t:"number", label:"Rodadas", def:"2"},{k:"y", t:"number", label:"HP", def:"8"}]},
-  {op:"resistente", label:"Resistente", tip:"+2 Armadura e +2 Escudo por stack (máx 5). −1/rodada. Cancela com Frágil.", args:[{k:"x", t:"number", label:"X", def:"1"}]},
+  {op:"resistente", label:"Resistente", tip:"+2 Armadura e +2 Escudo por stack (máx 5). −1/rodada. Cancela com Frágil. Aceita fórmula.", args:[{k:"x", t:"text", label:"X (núm ou fórmula)", def:"1"}]},
   {op:"fragil", label:"Frágil", tip:"−2 Armadura e −2 Escudo por stack (máx 5). Cancela com Resistente.", args:[{k:"x", t:"number", label:"X", def:"1"}]},
   {op:"invulneravel", label:"Invulnerável", tip:"Imune a dano por X rodadas; some ao jogar qualquer carta.", args:[{k:"x", t:"number", label:"Rodadas", def:"1"}]},
   {op:"ephemeral", label:"Efêmero", tip:"Se permanecer na mão no fim da rodada, é descartada.", args:[]},
   {op:"warmup", label:"Aquecimento X", tip:"Indisponível por X rodadas após comprar (drawn_turn+X).", args:[{k:"n", t:"number", label:"Rodadas", def:"1"}]},
+  {op:"requires_self_status", label:"Requer status próprio", tip:"Só jogável se o usuário tiver ≥ N stacks do status.", args:[{k:"id", t:"status", label:"Status", def:"escuridao"},{k:"n", t:"text", label:"Mín (núm ou fórmula)", def:"1"}]},
+  {op:"when_stacks", label:"Se stacks ≥ N…", tip:"Executa sub-op se stacks do usuário ≥ N. Sub: push | extra_random_hit | status…", args:[{k:"id", t:"status", label:"Status", def:"escuridao"},{k:"n", t:"text", label:"Mín", def:"1"},{k:"sub", t:"text", label:"Sub-op", def:"push"},{k:"a", t:"text", label:"Arg", def:"1"}]},
+  {op:"draw_items", label:"Comprar todos os itens", tip:"Move cartas item_* / item:true do baralho para a mão.", args:[]},
+  {op:"redraw_actions", label:"Ao recomprar: +ações", tip:"Quando esta carta é recomprada, concede +N ações no próximo turno.", args:[{k:"n", t:"text", label:"+ Jogadas", def:"1"}]},
 ];
 
 
@@ -543,16 +547,26 @@ const DICTIONARY = [
   {cat:"Status", id:"fragil", name:"Frágil", rule:"−2 Armadura e −2 Escudo por stack (máx 5). Cancela com Resistente (diferença líquida)."},
   {cat:"Status", id:"invulnerable", name:"Invulnerável", rule:"Imune a dano por X rodadas; some ao jogar qualquer carta; duração ainda tiqueia se não jogar."},
   {cat:"Status", id:"stun", name:"Atordoamento (Stun)", rule:"Impede ações; removido ao perder Vida (salvo Letárgico na carta que causou o dano)."},
-  {cat:"Status", id:"bleed", name:"Sangramento (Bleed)", rule:"Dano no início do turno conforme stacks."},
-  {cat:"Status", id:"wounded", name:"Ferido (Wounded)", rule:"Penalidade; cartas infectadas / feridas podem causar dano ao jogar."},
+  {cat:"Status", id:"bleed", name:"Sangramento (Bleed)", rule:"Bleed X: dura X rodadas; causa X de dano no fim do turno; stacks −1 a cada tick (dano diminui)."},
+  {cat:"Status", id:"wounded", name:"Ferido (Wounded)", rule:"Ao jogar qualquer carta, sofre 3×stacks de dano penetrante (igual BattleState.play / CardRuntime / EntityRuntime)."},
   {cat:"Status", id:"counter", name:"Contra-ataque (Counter)", rule:"Revida ao ser atacado."},
-  {cat:"Status", id:"slow", name:"Lento (Slow)", rule:"Atrasos / menos ações (ver Content)."},
+  {cat:"Status", id:"slow", name:"Lento (Slow)", rule:"+1 custo de Iniciativa nas cartas enquanto ativo (−1 stack/duração por rodada)."},
   {cat:"Status", id:"strengthened", name:"Fortalecido", rule:"+50% dano causado enquanto ativo."},
   {cat:"Status", id:"weak", name:"Enfraquecido", rule:"−50% dano causado."},
   {cat:"Status", id:"vulnerable", name:"Vulnerável", rule:"+50% dano recebido."},
   {cat:"Status", id:"block_on_hit", name:"Proteção ao ferir", rule:"Ao perder Vida, ganha Proteção 1 (migrado do antigo block_on_hit). Cap: The Best Defense."},
   {cat:"Status", id:"binary", name:"Binary", rule:"×2 dano; persiste enquanto houver Barreira (ou block legado)."},
   {cat:"Status", id:"bloodlust", name:"Sede de sangue", rule:"Aplica Bleed em hits; persiste com Barreira/block."},
+  {cat:"Status", id:"escuridao", name:"Escuridão", rule:"Passiva Alyssa: +1 stack cada vez que perde Vida. Persistente (não tiqueia). Variável de fórmula E / escuridao."},
+  {cat:"Status", id:"atento", name:"Atento", rule:"Por X rodadas: ignora desvantagem de arquétipo/espécie e pode causar dano a alvos Invulneráveis."},
+  {cat:"Desvantagem", id:"desvantagem", name:"Desvantagem", rule:"Carta de classe DESVANTAGEM: o rótulo "Desvantagem" aparece centralizado no topo da caixa de efeitos. Cada herói pode ter uma."},
+  {cat:"Desvantagem", id:"tormenta", name:"Tormenta", rule:"Desvantagem da Alyssa: se Escuridão ≥ 4, no fim do turno todos os outros (aliados e inimigos) sofrem 1 de dano penetrante."},
+  {cat:"Fórmula", id:"formula_vars", name:"Variáveis de fórmula", rule:"Campos de quantidade aceitam número estático ou expressão com tokens do mapa de status do ator (ex.: E, escuridao, 1+E, 2*E, 2×E). Editor e runtime usam o mesmo dicionário."},
+  {cat:"Alvo", id:"ALL_OTHERS", name:"ALL_OTHERS", rule:"Todos os personagens vivos exceto o conjurador (aliados e inimigos). Relâmpago E6+."},
+  {cat:"Op", id:"requires_self_status", name:"Requer status próprio", rule:"[requires_self_status, id, N] — só jogável se o usuário tiver ≥ N stacks."},
+  {cat:"Op", id:"when_stacks", name:"Se stacks ≥ N", rule:"[when_stacks, id, N, sub_op, ...] — executa sub-efeito se o usuário tiver stacks suficientes (ex.: chain extra, push)."},
+  {cat:"Op", id:"draw_items", name:"Comprar itens", rule:"[draw_items] — move todas as cartas de item do baralho para a mão."},
+  {cat:"Op", id:"redraw_actions", name:"Recompra → ações", rule:"[redraw_actions, N] — ao recomprar esta carta, +N ações no próximo turno."},
   {cat:"Flag", id:"instant", name:"Instantâneo", rule:"Obrigatória nesta rodada: bloqueia Encerrar enquanto na mão. Não encerra a fase ao jogar. Sem recompra. Toast + tooltip no Encerrar."},
   {cat:"Flag", id:"ephemeral", name:"Efêmero", rule:"Se permanecer na mão no fim da rodada, é descartada."},
   {cat:"Flag", id:"penetrating", name:"Penetrante", rule:"Ignora Proteção e Barreira por completo; ignora block/shield legado; ½ Armadura/Escudo."},

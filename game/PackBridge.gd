@@ -246,6 +246,14 @@ func describe_actions(definition: Dictionary) -> Array[String]:
 				parts.append("Recuperar própria" if op == "recover_own" else "Recuperar")
 			"actions":
 				parts.append("+%s ações no próximo turno" % str(action[1] if action.size() > 1 else 1))
+			"requires_self_status":
+				parts.append("Requer %s ≥ %s" % [str(action[1] if action.size() > 1 else "?"), str(action[2] if action.size() > 2 else 1)])
+			"when_stacks":
+				parts.append("Se %s ≥ %s: %s" % [str(action[1]), str(action[2]), str(action[3] if action.size() > 3 else "")])
+			"draw_items":
+				parts.append("Compra todos os itens do baralho")
+			"redraw_actions":
+				parts.append("Ao recomprar: +%s ações" % str(action[1] if action.size() > 1 else 1))
 			"discard":
 				parts.append("Descarta %s" % str(action[1] if action.size() > 1 else 1))
 			"penetrating":

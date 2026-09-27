@@ -155,11 +155,32 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 	var plays: int = 0 if bool(def.get("free", false)) or _has_action(def, "free") or owner_free else 1
 	if battle.impulse < cost or battle.card_plays < plays: return false
 	var resolved_def: Dictionary = def.duplicate(true)
-	if def.get("target") == "CHAIN":
+	# Escala de alvo por stacks (ex.: Relâmpago E4/E5/E6+).
+	if def.has("target_by_stacks"):
+		var tbs: Dictionary = def["target_by_stacks"]
+		var st_id := str(tbs.get("status", "escuridao"))
+		var st_n: int = battle._status_stacks(source, st_id)
+		var chosen := str(resolved_def.get("target", "ENEMY"))
+		for row in tbs.get("thresholds", []):
+			if typeof(row) != TYPE_ARRAY or row.size() < 2: continue
+			if st_n >= int(row[0]):
+				chosen = str(row[1])
+				break
+		resolved_def["target"] = chosen
+	if def.get("target") == "CHAIN" or resolved_def.get("target") == "CHAIN":
 		resolved_def["chain"] = int(def.get("chain", 1)) + int(card.get("next_chain", 0))
 		if _has_action(def, "grow_chain"): resolved_def["chain"] += int(_counter(source, str(_action(def, "grow_chain")[1])))
 		if _has_action(def, "chain_hand_owner"):
 			resolved_def["chain"] = maxi(1, battle.hand.filter(func(c): return c.get("owner") == source["id"]).size())
+	for a in def["actions"]:
+		if a[0] == "requires_status":
+			var need_st := str(a[1])
+			var need_n: int = int(round(battle.resolve_amount(a[2] if a.size() > 2 else 1, source)))
+			if battle._status_stacks(target, need_st) < need_n: return false
+		if a[0] == "requires_self_status":
+			var need_st2 := str(a[1])
+			var need_n2: int = int(round(battle.resolve_amount(a[2] if a.size() > 2 else 1, source)))
+			if battle._status_stacks(source, need_st2) < need_n2: return false
 	var targets: Array[Dictionary] = []
 	if _has_action(def, "revive_self"):
 		targets.append(source)
@@ -167,8 +188,6 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 		targets.append(target)
 	else:
 		targets = battle._targets(source, target, resolved_def, chain_ids)
-	for a in def["actions"]:
-		if a[0] == "requires_status" and not battle._has_status(target, str(a[1])): return false
 	if def.get("target") == "CHAIN":
 		var chain_count := int(resolved_def["chain"])
 		if _has_action(def, "chain_hand_owner"):
@@ -180,9 +199,19 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 	battle.card_plays -= plays
 	if owner_free: _consume(source, "free_owner")
 	battle.impulse = clampi(battle.impulse - cost + int(def.get("gain", 0)) * (2 if battle._has_status(source, "double_gain") else 1), 0, int(battle.rules["impulse_max"]))
+	# Ferido: dano ao jogar carta (igual BattleState.play).
+	if battle._has_status(source, "wounded"):
+		battle._take_damage(source, source, 3 * battle._status_stacks(source, "wounded"), true, false)
 	var kos: Array[int] = []
 	var last_hit := 0
 	var acted: Array[String] = []
+	if int(source.get("hp", 0)) <= 0:
+		battle.discard.append(card)
+		battle.played_cards += 1
+		battle._after_card_play()
+		battle._check_end()
+		battle.changed.emit()
+		return true
 	for a in def["actions"]:
 		var op: String = a[0]
 		if acted.has(op) and op in ["quick", "free", "exhaust", "final"]: continue
@@ -190,7 +219,7 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 		match op:
 			"hit", "hit_per_impulse", "hit_per_hand", "hit_from_block", "hit_from_protecao", "hit_from_barrier", "roulette_hit":
 				# Dano aditivo: Carta + Impacto − Armadura  OU  Carta + Poder − Escudo (+ mods).
-				var card_amt := float(a[1]) if a.size() > 1 else 0.0
+				var card_amt: float = battle.resolve_amount(a[1] if a.size() > 1 else 0, source)
 				if op == "hit_per_impulse": card_amt *= float(spent_impulse)
 				if op == "hit_per_hand": card_amt *= float(battle.hand.size())
 				if op == "hit_from_block": card_amt = float(source.get("block", 0))  # legado
@@ -203,7 +232,7 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 				for victim in targets:
 					var before_hp := int(victim["hp"])
 					var bonus := _bonus(battle, source, victim, def, card)
-					var base := card_amt + float(_offense(source, def)) + bonus
+					var base: float = card_amt + float(_offense(source, def)) + bonus
 					var multiplier: float = 0.5 if battle._has_status(source, "weak") else 1.0
 					if battle._has_status(source, "strengthened"): multiplier *= 1.5
 					if battle._has_status(source, "binary") or battle._has_status(source, "overpowered"): multiplier *= 2.0
@@ -223,7 +252,10 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 					var vs: Dictionary = def.get("vs_species", {})
 					var sp := str(victim.get("species", ""))
 					if sp != "" and vs.has(sp):
-						multiplier *= 1.0 + float(vs[sp])
+						var vs_mod: float = float(vs[sp])
+						if vs_mod < 0.0 and battle._has_status(source, "atento"):
+							vs_mod = 0.0
+						multiplier *= 1.0 + vs_mod
 					# Arquétipo (DESLIGADO por padrão).
 					if bool(Content.RULES.get("archetype_matchup", false)):
 						multiplier *= _archetype_mult(source, victim)
@@ -251,7 +283,8 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 						if battle._take_damage(source, victim, maxi(1, roundi(float(source["attack"]) + float(a[2]))), false, true, false, false, false, true, true): kos.append(int(victim["id"]))
 			"status", "self_status":
 				for victim in ([source] if op == "self_status" else targets):
-					var stacks := int(a[2]) if a.size() > 2 else 1
+					var stacks := int(round(battle.resolve_amount(a[2] if a.size() > 2 else 1, source)))
+					stacks = maxi(1, stacks)
 					battle._add_status(victim, str(a[1]), maxi(1, stacks), stacks, int(source["id"]))
 					if a[1] == "all_together_now": battle.team_ko_charges = stacks
 			"block", "block_hp":
@@ -270,8 +303,9 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 			"heal", "full_heal", "heal_all":
 				var healed: Array = battle.living("ALLY") if op == "heal_all" else targets
 				for victim in healed:
-					# Cura = Vida absoluta (não × ATK/Impacto).
-					victim["hp"] = int(victim["max_hp"]) if op == "full_heal" else mini(int(victim["max_hp"]), int(victim["hp"]) + int(round(float(a[1]) if a.size() > 1 else 0.0)))
+					# Cura = Vida absoluta (não × ATK/Impacto). Aceita fórmula (2*E).
+					var heal_amt: int = int(round(battle.resolve_amount(a[1] if a.size() > 1 else 0, source)))
+					victim["hp"] = int(victim["max_hp"]) if op == "full_heal" else mini(int(victim["max_hp"]), int(victim["hp"]) + heal_amt)
 			"cure":
 				for victim in targets: battle._cleanse(victim)
 			"push", "pull", "move_target":
@@ -468,7 +502,7 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 						if foe["id"] != target["id"]:
 							battle._take_damage(source, foe, int(source["attack"])); break
 			"protecao", "protection":
-				var px: int = int(a[1]) if a.size() > 1 else 1
+				var px: int = maxi(1, int(round(battle.resolve_amount(a[1] if a.size() > 1 else 1, source))))
 				for victim in targets:
 					battle._add_status(victim, "protecao", maxi(1, px), px, int(source["id"]))
 			"barreira", "barrier":
@@ -481,18 +515,75 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 				for victim in targets:
 					battle._add_status(victim, "barrier", maxi(1, rounds), maxi(1, bhp), int(source["id"]))
 			"resistente":
-				var rx: int = int(a[1]) if a.size() > 1 else 1
+				var rx: int = maxi(1, int(round(battle.resolve_amount(a[1] if a.size() > 1 else 1, source))))
 				for victim in targets:
 					battle._add_status(victim, "resistente", maxi(1, rx), rx, int(source["id"]))
 			"fragil":
-				var fx: int = int(a[1]) if a.size() > 1 else 1
+				var fx: int = maxi(1, int(round(battle.resolve_amount(a[1] if a.size() > 1 else 1, source))))
 				for victim in targets:
 					battle._add_status(victim, "fragil", maxi(1, fx), fx, int(source["id"]))
 			"invulneravel", "invulnerable":
-				var ix: int = int(a[1]) if a.size() > 1 else 1
+				var ix: int = maxi(1, int(round(battle.resolve_amount(a[1] if a.size() > 1 else 1, source))))
 				for victim in targets:
 					battle._add_status(victim, "invulnerable", maxi(1, ix), 1, int(source["id"]))
-			"quick", "free", "exhaust", "final", "chain", "chain_hand_owner", "random_chain", "full_combo", "bonus_status", "bonus_damaged", "bonus_block", "bonus_targeting_self", "bonus_full_hp", "bonus_en_fuego", "force_if_damaged", "hand_block", "hand_cost_down", "hand_damage_growth", "hand_resist", "overheal_max", "cost_down_en_fuego", "area_en_fuego", "requires_status", "enhanced", "redraw_force", "redraw_bonus", "redraw_strengthened", "play_while_disabled", "penetrating", "lethargic", "recoil", "drain", "instant", "ephemeral", "warmup", "barrier_from_hit": pass # Evaluated in preplay, hooks, or _bonus.
+			"when_stacks":
+				# ["when_stacks", status, min, sub_op, ...args]
+				if a.size() < 4: pass
+				else:
+					var w_id := str(a[1])
+					var w_need: int = int(round(battle.resolve_amount(a[2], source)))
+					if battle._status_stacks(source, w_id) >= w_need:
+						var sub := str(a[3])
+						match sub:
+							"push", "pull":
+								for victim in targets:
+									if battle._has_status(victim, "bound"): continue
+									victim["row"] = "back" if sub == "push" else "front"
+							"extra_random_hit":
+								var extra_n: int = int(round(battle.resolve_amount(a[4] if a.size() > 4 else 1, source)))
+								var opposite := "ENEMY" if source["side"] == "ALLY" else "ALLY"
+								var pool: Array[Dictionary] = []
+								for foe in battle.living(opposite):
+									if targets.has(foe): continue
+									if battle.can_reach(source, foe, resolved_def): pool.append(foe)
+								for _i in range(extra_n):
+									if pool.is_empty(): break
+									var pick: Dictionary = pool[battle.rng.randi_range(0, pool.size() - 1)]
+									pool.erase(pick)
+									var dmg: int = last_hit if last_hit > 0 else maxi(1, int(round(battle.resolve_amount("1+E", source) + float(_offense(source, def)))))
+									if battle._take_damage(source, pick, dmg, bool(def.get("penetrating", false)) or _has_action(def, "penetrating"), true, false, true, not bool(def.get("reach", false)), true, true):
+										if not kos.has(pick["id"]): kos.append(int(pick["id"]))
+							"status", "self_status":
+								var st := str(a[4]) if a.size() > 4 else "bleed"
+								var sn: int = maxi(1, int(round(battle.resolve_amount(a[5] if a.size() > 5 else 1, source))))
+								for victim in ([source] if sub == "self_status" else targets):
+									battle._add_status(victim, st, sn, sn, int(source["id"]))
+							_:
+								pass
+			"draw_items":
+				# Compra todas as cartas de item do baralho do lado ativo.
+				var moved: Array[Dictionary] = []
+				for index in range(battle.deck.size() - 1, -1, -1):
+					var item: Dictionary = battle.deck[index]
+					var iid := str(item.get("id", ""))
+					var idef: Dictionary = catalog.definition(iid)
+					if idef.is_empty() and Content.CARDS.has(iid):
+						idef = Content.CARDS[iid]
+					var is_item: bool = bool(idef.get("item", false)) or iid.begins_with("item_")
+					if not is_item: continue
+					battle.deck.remove_at(index)
+					moved.append(item)
+				for item2 in moved:
+					if battle.hand.size() >= int(battle.rules["hand_max"]):
+						battle.discard.append(item2)
+					else:
+						battle.hand.append(item2)
+						on_draw(battle, item2)
+			"redraw_actions":
+				pass  # Avaliado em on_redraw.
+			"requires_self_status", "requires_status":
+				pass  # Pré-checagem em play().
+			"quick", "free", "exhaust", "final", "chain", "chain_hand_owner", "random_chain", "full_combo", "bonus_status", "bonus_damaged", "bonus_block", "bonus_targeting_self", "bonus_full_hp", "bonus_en_fuego", "force_if_damaged", "hand_block", "hand_cost_down", "hand_damage_growth", "hand_resist", "overheal_max", "cost_down_en_fuego", "area_en_fuego", "enhanced", "redraw_force", "redraw_bonus", "redraw_strengthened", "play_while_disabled", "penetrating", "lethargic", "recoil", "drain", "instant", "ephemeral", "warmup", "barrier_from_hit": pass # Evaluated in preplay, hooks, or _bonus.
 			_:
 				push_error("Unsupported external card action: " + op)
 	if (def.get("quick", false) or card.get("next_quick_active", false) or battle._has_status(source, "assimilation")) and kos.has(target_id) or kos.any(func(id): return battle._has_status(battle.actor_by_id(id), "marked")):
@@ -599,6 +690,9 @@ func on_redraw(battle: Variant, card: Dictionary) -> void:
 	if _has_action(def, "redraw_force"): card["forceful"] = true
 	if _has_action(def, "redraw_bonus"): card["bonus_attack"] = float(card.get("bonus_attack", 0.0)) + 0.5
 	if _has_action(def, "redraw_strengthened"): battle._add_status(actor, "strengthened", 1, 1, int(actor["id"]))
+	if _has_action(def, "redraw_actions"):
+		var n: int = maxi(1, int(round(battle.resolve_amount(_action(def, "redraw_actions")[1] if _action(def, "redraw_actions").size() > 1 else 1, actor))))
+		battle.grant_next_turn_plays(actor, n)
 
 func _activate_next(battle: Variant, card: Dictionary) -> void:
 	if card.get("next_active", false): return
@@ -681,6 +775,8 @@ func _archetype_mult(source: Dictionary, victim: Dictionary) -> float:
 	if Content.ARCHETYPE_BEATS.get(atk, "") == dfn:
 		return 1.25
 	if Content.ARCHETYPE_BEATS.get(dfn, "") == atk:
+		if source.get("statuses", {}).has("atento"):
+			return 1.0
 		return 0.75
 	return 1.0
 

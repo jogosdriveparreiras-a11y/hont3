@@ -307,7 +307,7 @@
     },
     "ent_alyssa_wine": {
       "id": "ent_alyssa_wine",
-      "name": "Alyssa Wine (Titânio)",
+      "name": "Alyssa Wine",
       "archetype": "Armadura",
       "species": "Inumano",
       "level_reference": 6,
@@ -319,36 +319,34 @@
       "type": "BRUTO",
       "row": "front",
       "sprite": "res://assets/cast/ent_alyssa_wine_sprite.png",
-      "passive": "baluarte",
+      "passive": "escuridao",
       "pool": [
-        "ent_alyssa_wine_punho_de_titanio",
-        "ent_alyssa_wine_liga_viva",
-        "ent_alyssa_wine_responder_ao_golpe",
-        "ent_alyssa_wine_ssslash_avanca",
-        "ent_alyssa_wine_trovao_de_retorno",
-        "ent_alyssa_wine_recompor_metal",
-        "ent_alyssa_wine_despertar_anomalo",
-        "ent_alyssa_wine_serpente_em_guarda",
-        "ent_alyssa_wine_choque_acumulado",
-        "ent_alyssa_wine_tempestade_de_titanio"
+        "ent_alyssa_wine_bastao_retratil",
+        "ent_alyssa_wine_garras_e_presas",
+        "ent_alyssa_wine_premonicao",
+        "ent_alyssa_wine_a_filha_dele",
+        "ent_alyssa_wine_regeneracao",
+        "ent_alyssa_wine_relampago",
+        "ent_alyssa_wine_intelecto",
+        "ent_alyssa_wine_super_sentidos",
+        "ent_alyssa_wine_desvantagem_tormenta"
       ],
       "cards": [
-        "ent_alyssa_wine_punho_de_titanio",
-        "ent_alyssa_wine_punho_de_titanio",
-        "ent_alyssa_wine_liga_viva",
-        "ent_alyssa_wine_liga_viva",
-        "ent_alyssa_wine_responder_ao_golpe",
-        "ent_alyssa_wine_ssslash_avanca",
-        "ent_alyssa_wine_trovao_de_retorno",
-        "ent_alyssa_wine_recompor_metal"
+        "ent_alyssa_wine_bastao_retratil",
+        "ent_alyssa_wine_bastao_retratil",
+        "ent_alyssa_wine_garras_e_presas",
+        "ent_alyssa_wine_garras_e_presas",
+        "ent_alyssa_wine_premonicao",
+        "ent_alyssa_wine_a_filha_dele",
+        "ent_alyssa_wine_regeneracao",
+        "ent_alyssa_wine_intelecto"
       ],
       "signature": {
-        "name": "Liga que responde",
+        "name": "Tempestade latente",
         "target": "SELF",
         "action": [
-          "STATUS",
-          "counter",
-          "1"
+          "BLOCK",
+          "2"
         ]
       },
       "tags": [
@@ -2916,243 +2914,6 @@
         [
           "status",
           "protecao",
-          "1"
-        ],
-        [
-          "exhaust"
-        ]
-      ],
-      "reach": true,
-      "stat": "attack",
-      "rarity": "LEGENDARY",
-      "unlock": "progression",
-      "exhaust": true,
-      "cost": 5
-    },
-    "ent_alyssa_wine_punho_de_titanio": {
-      "id": "ent_alyssa_wine_punho_de_titanio",
-      "name": "Punho de titânio",
-      "owner": "ent_alyssa_wine",
-      "class": "ATTACK",
-      "target": "ENEMY",
-      "actions": [
-        [
-          "hit",
-          "0"
-        ],
-        [
-          "taunt"
-        ]
-      ],
-      "reach": false,
-      "stat": "attack",
-      "rarity": "COMMON",
-      "unlock": "starting",
-      "exhaust": false,
-      "gain": 1
-    },
-    "ent_alyssa_wine_liga_viva": {
-      "id": "ent_alyssa_wine_liga_viva",
-      "name": "Liga viva",
-      "owner": "ent_alyssa_wine",
-      "class": "ESTADO",
-      "target": "SELF",
-      "actions": [
-        [
-          "barreira_hp",
-          "1",
-          "0.3"
-        ]
-      ],
-      "reach": true,
-      "stat": "attack",
-      "rarity": "COMMON",
-      "unlock": "starting",
-      "exhaust": false,
-      "gain": 2
-    },
-    "ent_alyssa_wine_responder_ao_golpe": {
-      "id": "ent_alyssa_wine_responder_ao_golpe",
-      "name": "Responder ao golpe",
-      "owner": "ent_alyssa_wine",
-      "class": "ESTADO",
-      "target": "SELF",
-      "actions": [
-        [
-          "self_status",
-          "counter",
-          "2"
-        ],
-        [
-          "self_status",
-          "block_on_hit",
-          "2"
-        ]
-      ],
-      "reach": true,
-      "stat": "attack",
-      "rarity": "COMMON",
-      "unlock": "starting",
-      "exhaust": false,
-      "gain": 2
-    },
-    "ent_alyssa_wine_ssslash_avanca": {
-      "id": "ent_alyssa_wine_ssslash_avanca",
-      "name": "Ssslash avança",
-      "owner": "ent_alyssa_wine",
-      "class": "ATTACK",
-      "target": "ENEMY",
-      "actions": [
-        [
-          "hit",
-          "-2"
-        ],
-        [
-          "status",
-          "bleed",
-          "1"
-        ]
-      ],
-      "reach": false,
-      "stat": "attack",
-      "rarity": "COMMON",
-      "unlock": "starting",
-      "exhaust": false,
-      "gain": 1
-    },
-    "ent_alyssa_wine_trovao_de_retorno": {
-      "id": "ent_alyssa_wine_trovao_de_retorno",
-      "name": "Trovão de retorno",
-      "owner": "ent_alyssa_wine",
-      "class": "ATTACK",
-      "target": "ENEMY_ROW",
-      "actions": [
-        [
-          "hit",
-          "4"
-        ],
-        [
-          "status",
-          "stun",
-          "1"
-        ]
-      ],
-      "reach": true,
-      "stat": "attack",
-      "rarity": "RARE",
-      "unlock": "starting",
-      "exhaust": false,
-      "cost": 3
-    },
-    "ent_alyssa_wine_recompor_metal": {
-      "id": "ent_alyssa_wine_recompor_metal",
-      "name": "Recompor metal",
-      "owner": "ent_alyssa_wine",
-      "class": "ESTADO",
-      "target": "SELF",
-      "actions": [
-        [
-          "heal",
-          "1.5"
-        ],
-        [
-          "cure"
-        ]
-      ],
-      "reach": true,
-      "stat": "attack",
-      "rarity": "RARE",
-      "unlock": "starting",
-      "exhaust": false,
-      "gain": 2
-    },
-    "ent_alyssa_wine_despertar_anomalo": {
-      "id": "ent_alyssa_wine_despertar_anomalo",
-      "name": "Despertar anômalo",
-      "owner": "ent_alyssa_wine",
-      "class": "ESTADO",
-      "target": "SELF",
-      "actions": [
-        [
-          "self_status",
-          "strengthened",
-          "2"
-        ],
-        [
-          "barreira",
-          "1",
-          "6"
-        ]
-      ],
-      "reach": true,
-      "stat": "attack",
-      "rarity": "RARE",
-      "unlock": "starting",
-      "exhaust": false,
-      "gain": 2
-    },
-    "ent_alyssa_wine_serpente_em_guarda": {
-      "id": "ent_alyssa_wine_serpente_em_guarda",
-      "name": "Serpente em guarda",
-      "owner": "ent_alyssa_wine",
-      "class": "ESTADO",
-      "target": "ALLY",
-      "actions": [
-        [
-          "barreira",
-          "1",
-          "7"
-        ],
-        [
-          "status",
-          "counter",
-          "1"
-        ]
-      ],
-      "reach": true,
-      "stat": "attack",
-      "rarity": "EPIC",
-      "unlock": "starting",
-      "exhaust": false,
-      "gain": 2
-    },
-    "ent_alyssa_wine_choque_acumulado": {
-      "id": "ent_alyssa_wine_choque_acumulado",
-      "name": "Choque acumulado",
-      "owner": "ent_alyssa_wine",
-      "class": "ATTACK",
-      "target": "ENEMY",
-      "actions": [
-        [
-          "hit",
-          "8"
-        ],
-        [
-          "bonus_damaged",
-          "1"
-        ]
-      ],
-      "reach": true,
-      "stat": "attack",
-      "rarity": "EPIC",
-      "unlock": "progression",
-      "exhaust": false,
-      "cost": 3
-    },
-    "ent_alyssa_wine_tempestade_de_titanio": {
-      "id": "ent_alyssa_wine_tempestade_de_titanio",
-      "name": "Tempestade de titânio",
-      "owner": "ent_alyssa_wine",
-      "class": "ATTACK",
-      "target": "ALL_ENEMIES",
-      "actions": [
-        [
-          "hit",
-          "8"
-        ],
-        [
-          "status",
-          "weak",
           "1"
         ],
         [
@@ -8162,6 +7923,251 @@
       "unlock": "progression",
       "exhaust": true,
       "cost": 5
+    },
+    "ent_alyssa_wine_bastao_retratil": {
+      "id": "ent_alyssa_wine_bastao_retratil",
+      "name": "Bastão Retrátil",
+      "owner": "ent_alyssa_wine",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1+E"
+        ],
+        [
+          "when_stacks",
+          "escuridao",
+          "1",
+          "extra_random_hit",
+          "1"
+        ],
+        [
+          "when_stacks",
+          "escuridao",
+          "2",
+          "push",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "text": "Impacto 1+E. Escuridão 1+: Chain 1 (alvo extra). Escuridão 2+: Empurra."
+    },
+    "ent_alyssa_wine_garras_e_presas": {
+      "id": "ent_alyssa_wine_garras_e_presas",
+      "name": "Garras e Presas",
+      "owner": "ent_alyssa_wine",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "requires_self_status",
+          "escuridao",
+          "1"
+        ],
+        [
+          "hit",
+          "2*E"
+        ],
+        [
+          "status",
+          "bleed",
+          "E"
+        ],
+        [
+          "status",
+          "wounded",
+          "E"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "text": "Requer Escuridão 1+. Impacto 2×E. Bleed E. Ferido E."
+    },
+    "ent_alyssa_wine_premonicao": {
+      "id": "ent_alyssa_wine_premonicao",
+      "name": "Premonição",
+      "owner": "ent_alyssa_wine",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "protecao",
+          "1"
+        ],
+        [
+          "resistente",
+          "1"
+        ]
+      ],
+      "reach": true,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 2,
+      "text": "Proteção 1. Resistente 1."
+    },
+    "ent_alyssa_wine_a_filha_dele": {
+      "id": "ent_alyssa_wine_a_filha_dele",
+      "name": "A Filha Dele",
+      "owner": "ent_alyssa_wine",
+      "class": "ESTADO",
+      "target": "ALL_ENEMIES",
+      "actions": [
+        [
+          "status",
+          "slow",
+          "1"
+        ]
+      ],
+      "reach": true,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 2,
+      "text": "Lento 1 em toda a equipe inimiga."
+    },
+    "ent_alyssa_wine_regeneracao": {
+      "id": "ent_alyssa_wine_regeneracao",
+      "name": "Regeneração",
+      "owner": "ent_alyssa_wine",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "requires_self_status",
+          "escuridao",
+          "2"
+        ],
+        [
+          "heal",
+          "2*E"
+        ],
+        [
+          "resistente",
+          "2*E"
+        ]
+      ],
+      "reach": true,
+      "stat": "attack",
+      "rarity": "RARE",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 2,
+      "text": "Requer Escuridão 2+. Cura 2×E. Resistente 2×E."
+    },
+    "ent_alyssa_wine_relampago": {
+      "id": "ent_alyssa_wine_relampago",
+      "name": "Relâmpago",
+      "owner": "ent_alyssa_wine",
+      "class": "ATTACK",
+      "target": "ENEMY_ROW",
+      "target_by_stacks": {
+        "status": "escuridao",
+        "thresholds": [
+          [
+            6,
+            "ALL_OTHERS"
+          ],
+          [
+            5,
+            "ALL_ENEMIES"
+          ],
+          [
+            4,
+            "ENEMY_ROW"
+          ]
+        ]
+      },
+      "actions": [
+        [
+          "requires_self_status",
+          "escuridao",
+          "4"
+        ],
+        [
+          "hit",
+          "2*E"
+        ]
+      ],
+      "reach": true,
+      "stat": "power",
+      "rarity": "RARE",
+      "unlock": "starting",
+      "exhaust": false,
+      "cost": 3,
+      "text": "Requer Escuridão 4+. Poder 2×E. Fileira inimiga + Alcance. E5: todos os inimigos. E6+: todos os outros (exceto ela)."
+    },
+    "ent_alyssa_wine_intelecto": {
+      "id": "ent_alyssa_wine_intelecto",
+      "name": "Intelecto",
+      "owner": "ent_alyssa_wine",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "draw_items"
+        ],
+        [
+          "redraw_actions",
+          "1"
+        ]
+      ],
+      "reach": true,
+      "stat": "attack",
+      "rarity": "RARE",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 2,
+      "text": "Compra todas as cartas de item do baralho. Ao recomprar esta carta: +1 Ação (funciona mesmo sem itens)."
+    },
+    "ent_alyssa_wine_super_sentidos": {
+      "id": "ent_alyssa_wine_super_sentidos",
+      "name": "Super Sentidos",
+      "owner": "ent_alyssa_wine",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "atento",
+          "2"
+        ]
+      ],
+      "reach": true,
+      "stat": "attack",
+      "rarity": "EPIC",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 2,
+      "text": "Atento 2: ignora desvantagem de arquétipo/tipo e pode ferir Invulnerável."
+    },
+    "ent_alyssa_wine_desvantagem_tormenta": {
+      "id": "ent_alyssa_wine_desvantagem_tormenta",
+      "name": "Tormenta",
+      "owner": "ent_alyssa_wine",
+      "class": "DESVANTAGEM",
+      "target": "SELF",
+      "actions": [],
+      "reach": true,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 0,
+      "passive_like": true,
+      "text": "Desvantagem — Tormenta: se Escuridão ≥ 4, no fim do turno todos os outros (aliados e inimigos) sofrem 1 de dano (penetrante)."
     }
   }
 }

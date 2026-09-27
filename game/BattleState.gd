@@ -361,6 +361,14 @@ func _normalize_status_id(id: String) -> String:
 			return "resistente"
 		"fragil", "fragile", "frailty":
 			return "fragil"
+		"atento", "attentive":
+			return "atento"
+		"escuridao", "escuro", "darkness":
+			return "escuridao"
+		"wounded", "wound", "ferido":
+			return "wounded"
+		"slow", "lento":
+			return "slow"
 		_:
 			return key
 
@@ -368,6 +376,56 @@ func _status_stacks(actor: Dictionary, id: String) -> int:
 	if not _has_status(actor, id):
 		return 0
 	return int(actor["statuses"][id].get("stacks", 0))
+
+## Shared formula map: status stacks + aliases (E / escuridao). Static ints still work via resolve_amount.
+func formula_vars(actor: Dictionary) -> Dictionary:
+	var out: Dictionary = {}
+	for id in actor.get("statuses", {}).keys():
+		var n: int = int(actor["statuses"][id].get("stacks", 0))
+		out[str(id)] = n
+		out[str(id).to_upper()] = n
+	var e: int = int(out.get("escuridao", 0))
+	out["E"] = e
+	out["e"] = e
+	return out
+
+## Resolve card amount: number, status token, or simple expr (1+E, 2*E, 2×E).
+func resolve_amount(raw: Variant, actor: Dictionary) -> float:
+	if typeof(raw) == TYPE_INT or typeof(raw) == TYPE_FLOAT:
+		return float(raw)
+	var s := str(raw).strip_edges()
+	if s == "":
+		return 0.0
+	if s.is_valid_float():
+		return float(s)
+	var expr := s.replace(" ", "").replace("×", "*").replace("x", "*").replace("X", "*")
+	var vars := formula_vars(actor)
+	# Replace longer keys first to avoid partial overlaps.
+	var keys: Array = vars.keys()
+	keys.sort_custom(func(a, b): return str(a).length() > str(b).length())
+	for k in keys:
+		var token := str(k)
+		if token.is_empty():
+			continue
+		expr = expr.replace(token, str(int(vars[k])))
+	# Only digits and + - * / . left
+	var cleaned := ""
+	for ch in expr:
+		if ch in "0123456789+-*/.()":
+			cleaned += ch
+	if cleaned.is_empty():
+		return 0.0
+	if cleaned.is_valid_float():
+		return float(cleaned)
+	var engine := Expression.new()
+	var err := engine.parse(cleaned)
+	if err != OK:
+		push_warning("resolve_amount parse fail: %s -> %s" % [str(raw), cleaned])
+		return 0.0
+	var result: Variant = engine.execute()
+	if engine.has_execute_failed():
+		return 0.0
+	return float(result)
 
 func _barrier_hp(actor: Dictionary) -> int:
 	if not _has_status(actor, "barrier"):
@@ -558,6 +616,19 @@ func _add_status(actor: Dictionary, id: String, duration: int, stacks: int, sour
 	elif id in ["resistente", "fragil"]:
 		state["duration"] = max(int(state.get("duration", 0)), maxi(1, duration))
 		state["stacks"] = mini(5, int(state.get("stacks", 0)) + maxi(1, stacks))
+	elif id == "escuridao":
+		# Persistente: acumula ao sofrer dano; não tiqueia stacks.
+		state["duration"] = 99
+		state["stacks"] = mini(20, int(state.get("stacks", 0)) + maxi(1, stacks))
+	elif id == "bleed":
+		# Bleed X: dura X rodadas, causa X no tick; stacks = dano restante.
+		var add: int = maxi(1, stacks)
+		state["stacks"] = int(state.get("stacks", 0)) + add
+		state["duration"] = maxi(int(state.get("duration", 0)), int(state["stacks"]))
+	elif id in ["atento", "wounded", "slow"]:
+		var add2: int = maxi(1, stacks)
+		state["stacks"] = int(state.get("stacks", 0)) + add2
+		state["duration"] = max(int(state.get("duration", 0)), maxi(duration, add2))
 	else:
 		state["duration"] = max(int(state["duration"]), duration)
 		state["stacks"] = min(9, int(state["stacks"]) + stacks)
@@ -601,6 +672,11 @@ func _targets(source: Dictionary, primary: Dictionary, card: Dictionary, chain_i
 	elif target_kind == "ALL_ENEMIES":
 		if primary["side"] == opposite and can_reach(source, primary, card):
 			for actor in living(opposite):
+				result.append(actor)
+	elif target_kind == "ALL_OTHERS":
+		# Todos vivos exceto o conjurador (aliados e inimigos).
+		for actor in actors:
+			if actor["hp"] > 0 and int(actor["id"]) != int(source["id"]) and not _has_status(actor, "banished"):
 				result.append(actor)
 	elif target_kind in ["ENEMY_ROW", "ROW", "FRONT_ROW", "BACK_ROW"]:
 		var chosen_row: String = "front" if target_kind == "FRONT_ROW" else "back" if target_kind == "BACK_ROW" else primary["row"]
@@ -684,7 +760,11 @@ func _damage_value(source: Dictionary, target: Dictionary, effect: Dictionary, c
 		vs_species = Content.CARDS[str(card["id"])].get("vs_species", {})
 	var target_species := str(target.get("species", ""))
 	if target_species != "" and vs_species.has(target_species):
-		multiplier *= 1.0 + float(vs_species[target_species])
+		var vs_mod: float = float(vs_species[target_species])
+		# Atento: ignora desvantagem de espécie/tipo (mods negativos).
+		if vs_mod < 0.0 and _has_status(source, "atento"):
+			vs_mod = 0.0
+		multiplier *= 1.0 + vs_mod
 	# Arquétipo intransitivo (DESLIGADO por padrão via RULES.archetype_matchup).
 	if bool(Content.RULES.get("archetype_matchup", false)):
 		multiplier *= _archetype_multiplier(source, target)
@@ -720,6 +800,9 @@ func _archetype_multiplier(source: Dictionary, target: Dictionary) -> float:
 	if Content.ARCHETYPE_BEATS.get(atk, "") == dfn:
 		return 1.25
 	if Content.ARCHETYPE_BEATS.get(dfn, "") == atk:
+		# Atento: ignora desvantagem de arquétipo.
+		if _has_status(source, "atento"):
+			return 1.0
 		return 0.75
 	return 1.0
 
@@ -732,7 +815,7 @@ func _take_damage(source: Dictionary, target: Dictionary, amount: int, pierce: b
 			_add_status(source, "bound", 1, 1, int(target["id"]))
 			target["statuses"].erase("symbiote_skin")
 	# Pipeline: Invulnerável → Proteção → Barreira (salvo pierce) → escudo/block legado → Vida.
-	if _has_status(target, "invulnerable"):
+	if _has_status(target, "invulnerable") and not _has_status(source, "atento"):
 		_log("%s está invulnerável." % target["name"])
 		visual.emit("immune", int(source["id"]), int(target["id"]), 0)
 		return false
@@ -791,6 +874,9 @@ func _take_damage(source: Dictionary, target: Dictionary, amount: int, pierce: b
 		if remove_stun:
 			target["statuses"].erase("stun")
 		if area or environmental: target["statuses"].erase("conceal")
+		# Alyssa passive Escuridão: +1 stack cada vez que perde Vida.
+		if str(target.get("passive", "")) == "escuridao":
+			_add_status(target, "escuridao", 99, 1, int(target["id"]))
 		if source["id"] != target["id"] and from_card and (_has_status(source, "lifesteal") or _has_status(source, "blood_magic") and attack_card or _has_status(source, "berserk_lifesteal") or _has_status(source, "vampiric_essence")):
 			source["hp"] = min(int(source["max_hp"]), int(source["hp"]) + hp_lost)
 		if source["id"] != target["id"] and not environmental and (from_card or not counter_allowed) and _has_status(source, "bloodlust"):
@@ -1500,12 +1586,24 @@ func _tick_statuses() -> void:
 			if not actor["statuses"].has(id): continue
 			var state: Dictionary = actor["statuses"][id]
 			match id:
-				"poison", "bleed", "burn", "corrupted":
+				"poison", "burn", "corrupted":
 					_take_damage(actor, actor, max(1, int(state["stacks"]) * 2), true, false)
 					if id == "corrupted":
 						for other in actors:
 							if other["id"] != actor["id"] and other["hp"] > 0 and other["row"] == actor["row"]:
 								_add_status(other, "corrupted", 2, 1, int(actor["id"]))
+				"bleed":
+					# Bleed X: causa X, depois stacks −1 (dano diminui a cada tick).
+					var bleed_dmg: int = maxi(1, int(state.get("stacks", 1)))
+					_take_damage(actor, actor, bleed_dmg, true, false)
+					if actor["statuses"].has("bleed"):
+						state = actor["statuses"]["bleed"]
+						state["stacks"] = int(state.get("stacks", 1)) - 1
+						if state["stacks"] <= 0:
+							actor["statuses"].erase("bleed")
+						else:
+							state["duration"] = maxi(1, int(state.get("stacks", 1)))
+							actor["statuses"]["bleed"] = state
 				"regen": actor["hp"] = min(int(actor["max_hp"]), int(actor["hp"]) + int(state["stacks"]) * 3)
 				"ravenous": state["stacks"] = min(5, int(state["stacks"]) + 1)
 				"summoning":
@@ -1515,6 +1613,11 @@ func _tick_statuses() -> void:
 					else: state["armed"] = true
 			if not actor["statuses"].has(id): continue
 			if id in ["binary", "bloodlust"] and (int(actor.get("block", 0)) > 0 or _barrier_hp(actor) > 0): continue
+			# Escuridão não tiqueia (acumula só por dano). Bleed já tratou stacks acima.
+			if id == "escuridao":
+				continue
+			if id == "bleed":
+				continue
 			# Proteção / Resistente / Frágil: stacks −1 por rodada; some em 0.
 			if id in ["protecao", "resistente", "fragil"]:
 				state["stacks"] = int(state.get("stacks", 1)) - 1
@@ -1535,6 +1638,19 @@ func _tick_statuses() -> void:
 			state["duration"] -= 1
 			if state["duration"] <= 0: actor["statuses"].erase(id)
 			else: actor["statuses"][id] = state
+	# Tormenta (Desvantagem Alyssa): Escuridão ≥ 4 → 1 dano penetrante em todos os outros.
+	for actor in turn_actors:
+		if actor["hp"] <= 0: continue
+		if str(actor.get("passive", "")) != "escuridao" and not _has_status(actor, "escuridao"):
+			continue
+		if _status_stacks(actor, "escuridao") < 4:
+			continue
+		_log("%s: Tormenta (Escuridão %d)." % [actor["name"], _status_stacks(actor, "escuridao")])
+		for victim in actors:
+			if victim["hp"] <= 0: continue
+			if int(victim["id"]) == int(actor["id"]): continue
+			if _has_status(victim, "banished"): continue
+			_take_damage(actor, victim, 1, true, false, true, true)
 	for actor in field_emitters:
 		if actor["hp"] <= 0: continue
 		for ally in actors:
