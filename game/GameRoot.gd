@@ -1096,6 +1096,29 @@ func _build_economy_hud(viewport_size: Vector2) -> void:
 	end_btn.custom_minimum_size = Vector2(258, 40)
 	economy_hud.add_child(end_btn)
 	
+func _any_ally_has_momentum() -> bool:
+	if battle == null:
+		return false
+	for ally in battle.living("ALLY"):
+		if battle._has_status(ally, "momentum"):
+			return true
+	return false
+
+func _start_move_action() -> void:
+	if battle == null or battle.phase != "PLAYER" or enemy_presenting:
+		return
+	if battle.moves <= 0 and not _any_ally_has_momentum():
+		feedback = "Sem movimentos restantes neste turno."
+		_render_battle()
+		return
+	selected_action = "move"
+	card_confirmed = false
+	inspected_card = -1
+	selected_card = -1
+	chain_targets.clear()
+	feedback = "MOVER: clique no aliado para trocar Frente/Retaguarda (tecla M também)."
+	_render_battle()
+
 func _add_actor_button(parent: VBoxContainer, actor: Dictionary) -> void:
 	var text_value := "%s [%s] %d/%d Vida +%d" % [actor["name"], "F" if actor["row"] == "front" else "T", actor["hp"], actor["max_hp"], actor["block"] + actor["shield"]]
 	var line := _label(text_value, 16)
