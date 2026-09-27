@@ -373,7 +373,7 @@ func _damage_value(source: Dictionary, target: Dictionary, effect: Dictionary, c
 	if _has_status(source, "ravenous"): attack_bonus += 0.15 * int(source["statuses"]["ravenous"]["stacks"])
 	if _has_status(source, "en_fuego"): attack_bonus += 0.15 * int(source["statuses"]["en_fuego"]["stacks"])
 	if _has_status(source, "fatal_fury"): attack_bonus += 1.0
-	if (card.get("enhanced_triggered", false) or _has_status(source, "enhanced") and _get_impulse(str(source.get("side", "ALLY"))) >= 4) and card.get("class", "") == "POWER": attack_bonus += 0.25
+	if (card.get("enhanced_triggered", false) or _has_status(source, "enhanced") and _get_impulse(str(source.get("side", "ALLY"))) >= 4) and (int(card.get("cost", 0)) > 0 or str(card.get("stat", "")) == "power" or str(effect.get("stat", "")) == "power"): attack_bonus += 0.25
 	base = roundi(base * maxf(0.0, 1.0 + attack_bonus))
 	if _has_status(source, "blind"):
 		base = roundi(base * 0.75)
@@ -583,8 +583,9 @@ func _resolve(source: Dictionary, targets: Array[Dictionary], card: Dictionary, 
 	return fallen
 
 func _cost(source: Dictionary, definition: Dictionary) -> int:
+	# Único recurso de turno compartilhado: Iniciativa (impulse). Sem pool de "Poder".
 	var cost: int = int(definition.get("cost", 0))
-	if definition.get("class", "") in ["POWER", "COMBO"]:
+	if cost > 0:
 		if _has_status(source, "fast"): cost -= 1
 		if _has_status(source, "slow"): cost += 1
 		if _has_status(source, "enhanced") and _get_impulse(str(source.get("side", "ALLY"))) >= 4:
@@ -637,7 +638,7 @@ func play(hand_index: int, target_id: int, chain_ids: Array = []) -> bool:
 	var plays: int = 0 if bool(definition.get("free", false)) else int(definition.get("plays", 1))
 	if _get_impulse(side) < cost or _get_plays(side) < plays or _has_status(source, "stun") or _has_status(source, "bind") or _has_status(source, "bound") or _has_status(source, "dazed") or _has_status(source, "banished") or _has_status(source, "finalized"):
 		return false
-	if _has_status(source, "silence") and definition.get("class", "") in ["SKILL", "POWER"]:
+	if _has_status(source, "silence") and definition.get("class", "") in ["SKILL", "ESTADO", "POWER"]:
 		return false
 	var targets := _targets(source, target, definition, chain_ids)
 	if definition.get("target", "") == "CHAIN" and chain_ids.size() != int(definition.get("chain", 1)):
@@ -681,7 +682,7 @@ func play(hand_index: int, target_id: int, chain_ids: Array = []) -> bool:
 	if _has_status(source, "conceal") and definition.get("target", "") not in ["SELF", "ALL_ALLIES"]:
 		source["statuses"].erase("conceal")
 	if had_momentum and definition.get("class", "") != "MOVE": source["statuses"].erase("momentum")
-	if _has_status(source, "ravenous") and definition.get("class", "") in ["ATTACK", "POWER"]:
+	if _has_status(source, "ravenous") and (definition.get("class", "") in ["ATTACK", "POWER"] or definition.get("effects", []).any(func(e): return e.get("kind", "") == "DAMAGE")):
 		source["statuses"]["ravenous"]["stacks"] = max(0, int(source["statuses"]["ravenous"]["stacks"]) - 1)
 	if card.get("temporary", false) or definition.get("exhaust", false):
 		card.erase("enhanced_triggered")

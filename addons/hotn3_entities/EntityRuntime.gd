@@ -1,6 +1,7 @@
 extends RefCounted
 class_name HotN3EntityRuntime
 
+const Content = preload("res://game/Content.gd")
 const Catalog = preload("res://addons/hotn3_entities/EntityCatalog.gd")
 var catalog = Catalog.new()
 var memory: Dictionary = {} # Scoped to the current battle instance; reset with install().
@@ -123,7 +124,8 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 		for locked in ["stun", "bind", "bound", "dazed", "banished", "finalized"]:
 			if battle._has_status(source, locked): return false
 	var cost: int = int(card.get("cost_override", def.get("cost", 0)))
-	if def.get("class") == "POWER":
+	# Custo gasta Iniciativa (recurso compartilhado do turno) — não existe pool de "Poder".
+	if cost > 0:
 		if battle._has_status(source, "fast"): cost -= 1
 		if battle._has_status(source, "slow"): cost += 1
 		if _has_action(def, "cost_down_en_fuego"): cost -= int(_counter(source, "en_fuego"))
@@ -166,22 +168,25 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 		acted.append(op)
 		match op:
 			"hit", "hit_per_impulse", "hit_per_hand", "hit_from_block", "roulette_hit":
-				var factor := float(a[1]) if a.size() > 1 else 1.0
-				if op == "hit_per_impulse": factor *= spent_impulse
-				if op == "hit_per_hand": factor *= battle.hand.size()
-				if op == "hit_from_block": factor = float(source.get("block", 0)) / maxi(1, int(source.get("attack", 1)))
-				if op == "roulette_hit": factor = float(card.get("roulette_factor", a[battle.rng.randi_range(1, a.size() - 1)]))
+				# Dano aditivo: Carta + Impacto/Poder + bônus − armadura (mods % de status ainda aplicam).
+				var card_amt := float(a[1]) if a.size() > 1 else 0.0
+				if op == "hit_per_impulse": card_amt *= float(spent_impulse)
+				if op == "hit_per_hand": card_amt *= float(battle.hand.size())
+				if op == "hit_from_block": card_amt = float(source.get("block", 0))
+				if op == "roulette_hit": card_amt = float(card.get("roulette_factor", a[battle.rng.randi_range(1, a.size() - 1)]))
 				for victim in targets:
 					var before_hp := int(victim["hp"])
 					var bonus := _bonus(battle, source, victim, def, card)
+					var base := card_amt + float(_offense(source, def)) + bonus
 					var multiplier: float = 0.5 if battle._has_status(source, "weak") else 1.0
 					if battle._has_status(source, "strengthened"): multiplier *= 1.5
 					if battle._has_status(source, "binary") or battle._has_status(source, "overpowered"): multiplier *= 2.0
 					if battle._has_status(victim, "vulnerable"): multiplier *= 1.5
 					if card.get("critical", false): multiplier *= 1.5
 					multiplier *= 1.0 + 0.2 * float(_counter(source, "ravenous"))
-					last_hit = maxi(1, roundi(float(_offense(source, def)) * (factor + bonus) * multiplier))
-					if battle._take_damage(source, victim, last_hit, false, true, false, targets.size() > 1, not bool(def.get("reach", false)), def["class"] == "ATTACK", true):
+					var armor: int = int(victim.get("armor", 0)) + (2 * int(victim.get("statuses", {}).get("armor", {}).get("stacks", 0)))
+					last_hit = maxi(1, roundi(base * multiplier) - armor)
+					if battle._take_damage(source, victim, last_hit, false, true, false, targets.size() > 1, not bool(def.get("reach", false)), _is_damage_card(def), true):
 						if not kos.has(victim["id"]): kos.append(victim["id"])
 					if _has_action(def, "block_from_hit"): source["block"] += last_hit
 					if _has_action(def, "lifesteal"):
@@ -192,7 +197,7 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 						if a[3] == "cure": battle._cleanse(victim)
 						else: victim["hp"] = mini(int(victim["max_hp"]), int(victim["hp"]) + roundi(float(source["attack"]) * float(a[4])))
 					else:
-						if battle._take_damage(source, victim, roundi(float(source["attack"]) * float(a[2])), false, true, false, false, false, true, true): kos.append(int(victim["id"]))
+						if battle._take_damage(source, victim, maxi(1, roundi(float(source["attack"]) + float(a[2]))), false, true, false, false, false, true, true): kos.append(int(victim["id"]))
 			"status", "self_status":
 				for victim in ([source] if op == "self_status" else targets):
 					var stacks := int(a[2]) if a.size() > 2 else 1
@@ -259,7 +264,7 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 			"redraws": battle.redraws += int(a[1])
 			"moves": battle.moves += int(a[1])
 			"zero_random_heroic", "zero_heroics":
-				var candidates: Array = battle.hand.filter(func(c): return c.get("class") == "POWER")
+				var candidates: Array = battle.hand.filter(func(c): return _card_costs_initiative(c))
 				if op == "zero_random_heroic" and not candidates.is_empty(): candidates = [candidates[battle.rng.randi_range(0, candidates.size() - 1)]]
 				for held in candidates:
 					held["cost_override"] = 0
@@ -367,10 +372,10 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 	if (def.get("quick", false) or card.get("next_quick_active", false) or battle._has_status(source, "assimilation")) and kos.has(target_id) or kos.any(func(id): return battle._has_status(battle.actor_by_id(id), "marked")):
 		battle.card_plays += 1
 	if battle._has_status(source, "assimilation") and not kos.is_empty(): _draw_filtered(battle, source, "draw_attack_heroic", 1)
-	if battle._has_status(source, "ravenous") and def["class"] in ["ATTACK", "POWER"]:
+	if battle._has_status(source, "ravenous") and _is_damage_card(def):
 		if _counter(source, "preserve_ravenous") > 0: _consume(source, "preserve_ravenous")
 		else: _consume(source, "ravenous")
-	if battle._has_status(source, "make_em_bleed") and def["class"] in ["ATTACK", "POWER"]: _consume(source, "make_em_bleed")
+	if battle._has_status(source, "make_em_bleed") and _is_damage_card(def): _consume(source, "make_em_bleed")
 	if _has_action(def, "full_combo") and not chain_ids.is_empty() and chain_ids.all(func(id): return id == chain_ids[0]):
 		battle._add_status(source, "strengthened", 1, 1, int(source["id"]))
 	if def.get("final", false): battle._add_status(source, "finalized", 1, 1, int(source["id"]))
@@ -500,6 +505,32 @@ func _action(def: Dictionary, name: String) -> Array:
 		if a[0] == name: return a
 	return []
 
+
+func _is_damage_card(def: Dictionary) -> bool:
+	for a in def.get("actions", []):
+		if typeof(a) == TYPE_ARRAY and not a.is_empty() and str(a[0]) in ["hit", "hit_per_impulse", "hit_per_hand", "hit_from_block", "roulette_hit"]:
+			return true
+	for e in def.get("effects", []):
+		if str(e.get("kind", "")) == "DAMAGE":
+			return true
+	return false
+
+func _is_damage_card_id(card_id: String) -> bool:
+	if card_id == "":
+		return false
+	if Content.CARDS.has(card_id):
+		return _is_damage_card(Content.CARDS[card_id])
+	return _is_damage_card(catalog.definition(card_id))
+
+func _card_costs_initiative(item: Dictionary) -> bool:
+	if int(item.get("cost_override", 0)) > 0 or int(item.get("cost", 0)) > 0:
+		return true
+	var cid := str(item.get("id", ""))
+	if cid != "" and Content.CARDS.has(cid):
+		return int(Content.CARDS[cid].get("cost", 0)) > 0
+	var def: Dictionary = catalog.definition(cid)
+	return int(def.get("cost", 0)) > 0
+
 func _offense(actor: Dictionary, def: Dictionary) -> int:
 	return int(actor.get(str(def.get("stat", "attack")), actor.get("attack", 1)))
 
@@ -523,7 +554,7 @@ func _draw_filtered(battle: Variant, source: Dictionary, mode: String, amount: i
 		var found := -1
 		for index in range(battle.deck.size() - 1, -1, -1):
 			var item: Dictionary = battle.deck[index]
-			if mode in ["draw_owner", "draw_owner_to"] and item.get("owner") == source["id"] or mode == "draw_heroic" and item.get("class") == "POWER" or mode == "draw_attack_heroic" and item.get("class") in ["ATTACK", "POWER"]:
+			if mode in ["draw_owner", "draw_owner_to"] and item.get("owner") == source["id"] or mode == "draw_heroic" and _card_costs_initiative(item) or mode == "draw_attack_heroic" and (_is_damage_card_id(str(item.get("id", ""))) or _card_costs_initiative(item)):
 				found = index; break
 		if found < 0 or battle.hand.size() >= int(battle.rules["hand_max"]): break
 		battle.hand.append(battle.deck.pop_at(found))

@@ -192,7 +192,7 @@ func describe_actions(definition: Dictionary) -> Array[String]:
 		var op := str(action[0])
 		match op:
 			"hit", "hit_per_impulse", "hit_per_hand", "hit_from_block", "roulette_hit":
-				parts.append("Dano ×%s" % str(action[1] if action.size() > 1 else "1"))
+				parts.append("Dano base %s (+Impacto/Poder)" % str(action[1] if action.size() > 1 else "0"))
 			"heal", "heal_all", "full_heal":
 				parts.append("Cura")
 			"block", "block_hp":

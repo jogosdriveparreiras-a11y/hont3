@@ -504,7 +504,7 @@ func _show_decks() -> void:
 		hero_bar.add_child(_button(("✓ " if id == deck_hero else "") + Content.HEROES[id]["name"], _select_deck_hero.bind(id)))
 	var filter_bar := HBoxContainer.new()
 	menu.add_child(filter_bar)
-	for filter_name in ["TODAS", "ATAQUE", "TÉCNICA", "PODER", "ALCANCE", "MELHORADAS"]:
+	for filter_name in ["TODAS", "IMPACTO", "PODER", "ESTADO", "ALCANCE", "MELHORADAS"]:
 		filter_bar.add_child(_button(("● " if deck_filter == filter_name else "") + filter_name.capitalize(), _set_deck_filter.bind(filter_name)))
 	var type_bar := HBoxContainer.new()
 	menu.add_child(type_bar)
@@ -537,7 +537,7 @@ func _show_decks() -> void:
 		var key: String = str(deck_hero) + ":" + str(card_id)
 		var level := int(improvements.get(key, {}).get("upgrade", 0))
 		var cost := int(definition.get("cost", 0))
-		var subtitle := "%s · %s" % [definition["class"], "%d Iniciativa" % cost if cost > 0 else "+%d Iniciativa" % int(definition.get("gain", 0))]
+		var subtitle := "%s · %s" % [_card_scale_label(definition), "%d Iniciativa" % cost if cost > 0 else "+%d Iniciativa" % int(definition.get("gain", 0))]
 		var button := _button(("▶ " if deck_selected == card_id else "") + definition["name"] + " +%d\n" % level + subtitle, _choose_deck_card.bind(card_id), _card_description(definition))
 		button.custom_minimum_size = Vector2(330, 62)
 		available.add_child(button)
@@ -547,7 +547,7 @@ func _show_decks() -> void:
 	details.add_child(_label("DETALHES", 19, Color("d9bd85")))
 	var shown: Dictionary = Content.CARDS[deck_selected]
 	details.add_child(_label(shown["name"], 24, Color("f2dcad")))
-	details.add_child(_label("%s · %s · %s" % [shown["class"], _card_type(shown), shown.get("rarity", "Comum")], 18))
+	details.add_child(_label("%s · %s" % [_card_scale_label(shown), _card_type(shown)], 18))
 	details.add_child(_label("Tipo do herói: %s" % hero["type"], 17))
 	details.add_child(_label("Custo %d · Gera %d · Alcance %s" % [shown.get("cost", 0), shown.get("gain", 0), "longo" if shown.get("reach", false) else "curto"], 18))
 	var detail_text := _label(_card_description(shown), 18)
@@ -587,13 +587,13 @@ func _choose_deck_slot(slot: int, card_id: String) -> void:
 func _matches_deck_filter(card_id: String, hero_id: String) -> bool:
 	var card: Dictionary = Content.CARDS[card_id]
 	match deck_filter:
-		"ATAQUE": return card.get("class", "") == "ATTACK"
-		"TÉCNICA": return card.get("class", "") == "SKILL"
-		"PODER": return card.get("class", "") == "POWER"
+		"IMPACTO": return _card_has_damage(card) and str(card.get("stat", "attack")) != "power"
+		"PODER": return _card_has_damage(card) and str(card.get("stat", "")) == "power"
+		"ESTADO": return not _card_has_damage(card)
 		"ALCANCE": return card.get("reach", false)
 		"MELHORADAS": return int(improvements.get(hero_id + ":" + card_id, {}).get("upgrade", 0)) > 0
 		"FÍSICO", "MÁGICO", "SUPORTE": return _card_type(card) == deck_filter
-		"RARAS": return card.get("rarity", "Comum") == "Rara"
+		"RARAS": return false
 	return true
 
 func _card_type(definition: Dictionary) -> String:
@@ -1560,12 +1560,19 @@ func _stat_readout(owner: Dictionary, definition: Dictionary) -> Dictionary:
 			stat_name = "power"
 		elif named == "attack":
 			stat_name = "attack"
+	# Pack ent_/ms_: hit amount is dano base da carta (aditivo com Impacto/Poder).
+	for action in definition.get("actions", []):
+		if typeof(action) != TYPE_ARRAY or action.is_empty():
+			continue
+		if str(action[0]) in ["hit", "hit_per_impulse", "hit_per_hand", "hit_from_block", "roulette_hit"]:
+			flat = int(round(float(action[1]))) if action.size() > 1 else flat
+			break
 	var archetype := str(owner.get("archetype", ""))
 	var base_attr := int(owner.get(stat_name, 0))
 	if Content.HEROES.has(archetype):
 		base_attr = int(Content.HEROES[archetype].get(stat_name, base_attr))
 	var current_attr := int(owner.get(stat_name, base_attr))
-	var baseline := maxi(0, flat + base_attr)
+	var baseline := flat + base_attr
 	var current := flat + current_attr
 	if battle != null and battle._has_status(owner, "weak"):
 		current = int(round(float(current) * 0.5))
@@ -1573,14 +1580,22 @@ func _stat_readout(owner: Dictionary, definition: Dictionary) -> Dictionary:
 		current = int(round(float(current) * 1.5))
 	if battle != null and (battle._has_status(owner, "binary") or battle._has_status(owner, "overpowered")):
 		current = current * 2
+	# Armadura do alvo não entra na prévia da carta (é do combatente).
 	current = maxi(0, current)
 	var tint := Color("f4f7fb")
 	if current > baseline:
 		tint = Color("7dE28a")
 	elif current < baseline:
 		tint = Color("e15b5b")
-	var label := "PODER" if stat_name == "power" else "ATAQUE"
+	var label := "PODER" if stat_name == "power" else "IMPACTO"
 	return {"label": label, "value": current, "color": tint}
+
+func _card_scale_label(definition: Dictionary) -> String:
+	if not _card_has_damage(definition):
+		return "Suporte"
+	if str(definition.get("stat", "")) == "power":
+		return "Poder"
+	return "Impacto"
 
 func _card_has_damage(definition: Dictionary) -> bool:
 	for effect in definition.get("effects", []):

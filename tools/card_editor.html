@@ -216,14 +216,18 @@
       <div class="muted" id="artHint">Sem arte custom: usa portrait (ou sprite) do dono se a pasta de assets estiver carregada.</div>
       <div class="asset-status empty" id="assetStatus">Pasta de assets: não carregada</div>
     </div>
-    <div class="section-title">Classe</div>
-    <div class="chip-row" id="classChips"></div>
+    <div class="section-title">Escala de dano (atributo — não é moeda)</div>
+    <div class="chip-row" id="statChips"></div>
+    <div class="hint-box">Impacto / Poder = stats do herói somados ao dano base. O custo da carta gasta <strong>Iniciativa</strong> do time. Não há pool de Poder.</div>
+    <div class="row" style="margin:8px 0">
+      <label class="toggle" id="estadoToggle">Carta de estado (sem dano na face)</label>
+    </div>
     <div class="section-title">Alvo</div>
     <div class="chip-row" id="targetChips"></div>
     <div class="section-title">Custo / ganho / estatística</div>
     <div class="row">
       <div>
-        <div class="muted">Custo (Iniciativa)</div>
+        <div class="muted">Custo em Iniciativa</div>
         <div class="num-step">
           <button class="btn" data-num="cost" data-d="-1">−</button>
           <input type="number" id="cost" min="0" max="10" value="0" />
@@ -231,7 +235,7 @@
         </div>
       </div>
       <div>
-        <div class="muted">Ganho</div>
+        <div class="muted">Ganho de Iniciativa</div>
         <div class="num-step">
           <button class="btn" data-num="gain" data-d="-1">−</button>
           <input type="number" id="gain" min="0" max="5" value="1" />
@@ -247,9 +251,7 @@
         </div>
       </div>
     </div>
-    <div class="section-title" style="margin-top:12px">Stat de dano</div>
-    <div class="chip-row" id="statChips"></div>
-    <div class="hint-box">Dano final ≈ <strong>Carta + Impacto/Poder − Escudo + Mods</strong>. O valor de «hit» é o dano base da carta (somado ao ataque/poder do herói no Content; no pack atual o runtime ainda multiplica — ver CARD_EDITOR.md).</div>
+    <div class="hint-box">Dano final ≈ <strong>Carta + Impacto/Poder − Armadura + Mods</strong> (aditivo no jogo).</div>
     <div class="section-title">Flags</div>
     <div class="row" id="flags"></div>
     <div class="section-title">Unlock</div>
@@ -386,10 +388,13 @@
 const HEROES_FALLBACK = [{"id":"ent_adam","name":"Adam"},{"id":"ent_akuji","name":"Akuji"},{"id":"ent_alexis","name":"Alexis"},{"id":"ent_alistair","name":"Alistair"},{"id":"ent_alyssa_wine","name":"Alyssa Wine (Titânio)"},{"id":"ent_ashlee","name":"Ashlee"},{"id":"ent_daeva","name":"Daeva"},{"id":"ent_damian_alrosa","name":"Damian Alrosa"},{"id":"ent_dominika_seur","name":"Dominika Seur"},{"id":"ent_dylan","name":"Dylan"},{"id":"ent_evelyn_graves","name":"Evelyn Graves (Sombria)"},{"id":"ent_fate","name":"Fate"},{"id":"ent_hynda_valdtagen","name":"Hynda Valdtagen"},{"id":"ent_kabuki","name":"Kabuki"},{"id":"ent_konrad","name":"Konrad (Armagedom)"},{"id":"ent_leona","name":"Leona (Marbas)"},{"id":"ent_lust","name":"Lust"},{"id":"ent_madelyn","name":"Madelyn"},{"id":"ent_mingau_o_feiticeiro","name":"Mingau, o Feiticeiro"},{"id":"ent_mutante_generico","name":"Mutante (Genérico)"},{"id":"ent_nero","name":"Nero"},{"id":"ent_niu_valdtagen","name":"Niu Valdtagen"},{"id":"ent_pesadelo_vivo","name":"Pesadelo Vivo"},{"id":"ent_pietro_caos","name":"Pietro"},{"id":"ent_quasar","name":"Quasar"},{"id":"ent_taylor","name":"Taylor (Nave-Mãe)"},{"id":"ent_techna","name":"Techna"}];
 
 const STATUSES = ["bleed","burn","weak","vulnerable","stun","bind","marked","conceal","counter","resist","strengthened","slow","dazed","confused","banished","portal","unleashed","drop","taunted","berserk_enemy","block_on_hit","corrupted"];
-const CLASSES = ["ATTACK","SKILL","POWER"];
 const TARGETS = ["ENEMY","ENEMY_ROW","ALL_ENEMIES","ALLY","ALL_ALLIES","SELF","CHAIN","RANDOM","ANY_UNIT"];
 const UNLOCKS = ["starting","progression"];
-const STATS = ["attack","power"];
+const STATS = [
+  {id:"attack", label:"Impacto (ataque)"},
+  {id:"power", label:"Poder (escala)"},
+];
+
 const FLAGS = [
   {key:"reach", label:"Alcance (reach)"},
   {key:"quick", label:"Rápida (quick)"},
@@ -399,7 +404,7 @@ const FLAGS = [
 ];
 
 const ACTIONS = [
-  {op:"hit", label:"Dano base (carta)", tip:"Somado ao ATK/POW do herói (meta). No pack atual o runtime multiplica.", args:[{k:"n", t:"number", label:"Dano base", def:"1"}]},
+  {op:"hit", label:"Dano base (carta)", tip:"Aditivo: Carta + Impacto/Poder − Armadura + Mods. Custo da carta gasta Iniciativa, nunca Poder.", args:[{k:"n", t:"number", label:"Dano base (carta)", def:"0"}]},
   {op:"block", label:"Bloqueio", tip:"Valor fixo", args:[{k:"n", t:"number", label:"Valor", def:"8"}]},
   {op:"block_hp", label:"Bloqueio (% HP)", tip:"Fração do max HP", args:[{k:"n", t:"number", label:"Fração", def:"0.1"}]},
   {op:"heal", label:"Cura (×ATK)", args:[{k:"n", t:"number", label:"Fator", def:"1"}]},
@@ -448,25 +453,17 @@ const ACTIONS = [
 const HELP = `COMO USAR
 
 1) Importe addons/hotn3_entities/entities.json
-2) (Opcional) "Carregar pasta de assets" → escolha assets/ ou assets/cast/
-   para prévia automática de portrait/sprite do dono.
-3) Aba Cartas: edite / crie cartas. Escolha imagem do PC se quiser arte própria.
-4) Aba Personagens: edite heróis (stats, arte, pool).
-5) Exportar patch JSON (cartas e/ou heróis alterados).
-6) python tools/merge_card_patch.py hotn3_cards_patch.json --write
-   Com --art-dir pasta/ com PNGs, copia arte para assets/cards/.
+2) (Opcional) Carregar pasta de assets para prévia de portrait/sprite.
+3) Cartas: digite o nome; escolha Impacto ou Poder (atributo de escala, NÃO moeda).
+4) Custo/Ganho = INICIATIVA (único recurso compartilhado do turno).
+   Não existe "Ponto de Poder" gastável. Poder do herói só escala dano.
+5) Personagens: stats, arte, pool.
+6) Exportar patch → python tools/merge_card_patch.py … --write [--art-dir]
 
-Imagem da carta:
-- Sem arte custom: prévia usa portrait do dono, senão sprite (se assets indexados).
-- Com arte: export define art = res://assets/cards/<id>.png e oferece download do PNG.
-- Coloque o PNG em assets/cards/ (ou use merge --art-dir).
-
-Dano:
-- Meta desejada: Carta + Impacto/Poder − Escudo + Mods (aditivo, como Content.gd).
-- Pack ent_* (EntityRuntime): ainda multiplica ofensa × fator hit.
-- Este editor rotula hit como dano base aditivo; não altera o GDScript nesta versão.
-
-Raridade: removida da UI. Cartas novas omitem o campo.`;
+Dano: Carta + Impacto/Poder − Armadura + Mods (aditivo no runtime).
+Tipagem na face: ícone IMPACTO ou PODER se causa dano; cartas sem dano
+não mostram classe (interno: ESTADO). Sem raridade na UI.
+`;
 
 const HELP_HERO = `PERSONAGENS
 - Edite nome, HP, ataque, poder, armadura, velocidade, tipo, fileira, passiva.
@@ -501,8 +498,8 @@ function blankCard(owner) {
   owner = owner || (heroList()[0] && heroList()[0].id) || "ent_adam";
   return {
     id: "", name: "", owner, class: "ATTACK", target: "ENEMY",
-    actions: [["hit","1"]], reach: false, stat: "attack",
-    unlock: "starting", exhaust: false, gain: 1, art: "",
+    actions: [["hit","0"]], reach: false, stat: "attack",
+    unlock: "starting", exhaust: false, gain: 1, cost: 0, art: "",
   };
 }
 
@@ -575,9 +572,29 @@ function makeChips(el, items, get, set, clsMap) {
 }
 
 function syncChips() {
-  makeChips(document.getElementById("classChips"), CLASSES, () => draft.class, v => draft.class = v, {ATTACK:"attack",SKILL:"skill",POWER:"power"});
   makeChips(document.getElementById("targetChips"), TARGETS, () => draft.target, v => draft.target = v);
-  makeChips(document.getElementById("statChips"), STATS, () => draft.stat, v => draft.stat = v);
+  // Impacto / Poder as scale attributes
+  const statEl = document.getElementById("statChips");
+  statEl.innerHTML = "";
+  STATS.forEach(s => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "chip" + (draft.stat === s.id ? " on" : "") + (s.id === "attack" ? " attack" : " power");
+    b.textContent = s.label;
+    b.onclick = () => { draft.stat = s.id; draft.estado = false; syncForm(); };
+    statEl.appendChild(b);
+  });
+  const et = document.getElementById("estadoToggle");
+  if (et) {
+    et.className = "toggle" + (draft.estado ? " on" : "");
+    et.onclick = () => {
+      draft.estado = !draft.estado;
+      if (draft.estado) {
+        // remove hit actions for pure estado cards optionally keep
+      }
+      syncForm();
+    };
+  }
   makeChips(document.getElementById("unlockChips"), UNLOCKS, () => draft.unlock, v => draft.unlock = v);
 
   const flags = document.getElementById("flags");
@@ -743,23 +760,29 @@ function cardArtPath(id) {
   return `res://assets/cards/${id}.png`;
 }
 
+function cardHasDamage(actions) {
+  return (actions || []).some(a => a && ["hit","hit_per_impulse","hit_per_hand","hit_from_block","roulette_hit"].includes(a[0]));
+}
+
 function buildCardObject() {
+  const actions = draft.actions.map(a => a.map(String));
+  const hasDmg = !draft.estado && cardHasDamage(actions);
   const c = {
     id: draft.id,
     name: draft.name,
     owner: draft.owner,
-    class: draft.class,
+    class: hasDmg ? "ATTACK" : "ESTADO",
     target: draft.target,
-    actions: draft.actions.map(a => a.map(String)),
+    actions,
     reach: !!draft.reach,
-    stat: draft.stat || "attack",
     unlock: draft.unlock || "starting",
     exhaust: !!draft.exhaust,
   };
-  // omit rarity on purpose
+  if (hasDmg) c.stat = draft.stat || "attack";
+  // omit rarity; never class POWER (Poder é só atributo de escala)
   const cost = Number(document.getElementById("cost").value || 0);
   const gain = Number(document.getElementById("gain").value || 0);
-  if (draft.class === "POWER" || cost > 0) c.cost = cost;
+  if (cost > 0) c.cost = cost;
   else if (gain > 0) c.gain = gain;
   else c.gain = 0;
   if (draft.quick) c.quick = true;
@@ -842,9 +865,10 @@ function updateArtPreviewUI() {
 function updatePreview() {
   const c = buildCardObject();
   const face = document.getElementById("face");
-  face.className = "face " + c.class;
-  document.getElementById("faceClass").textContent = c.class;
-  document.getElementById("faceCost").textContent = c.cost != null ? "Custo " + c.cost : "Ganho +" + (c.gain||0);
+  const scale = cardHasDamage(c.actions) ? ((c.stat === "power") ? "PODER" : "IMPACTO") : "";
+  face.className = "face " + (c.stat === "power" ? "POWER" : (scale ? "ATTACK" : "SKILL"));
+  document.getElementById("faceClass").textContent = scale; // vazio se sem dano — não mostra ESTADO
+  document.getElementById("faceCost").textContent = c.cost != null ? "Ini −" + c.cost : "Ini +" + (c.gain||0);
   document.getElementById("faceName").textContent = c.name || "(sem nome)";
   document.getElementById("faceTarget").textContent = "Alvo: " + c.target;
   document.getElementById("faceBody").innerHTML = c.actions.map(describeAction).filter(Boolean).map(t => `<div>• ${t}</div>`).join("") || "<div class='muted'>Sem efeitos</div>";
@@ -874,7 +898,7 @@ function syncForm(fromDraft) {
   document.getElementById("name").value = draft.name || "";
   document.getElementById("id").value = draft.id || "";
   document.getElementById("owner").value = draft.owner || "";
-  document.getElementById("cost").value = draft.cost != null ? draft.cost : (draft.class === "POWER" ? 2 : 0);
+  document.getElementById("cost").value = draft.cost != null ? draft.cost : 0;
   document.getElementById("gain").value = draft.gain != null ? draft.gain : 1;
   document.getElementById("chain").value = draft.chain != null ? draft.chain : 2;
   syncChips();
@@ -899,7 +923,7 @@ function renderList() {
     b.type = "button";
     b.className = "card-item" + (selectedId === id ? " sel" : "");
     const dirty = dirtyIds.has(id) ? " · editada" : "";
-    b.innerHTML = `<div>${c.name || id}</div><div class="meta">${id} · ${c.class}${dirty}</div>`;
+    b.innerHTML = `<div>${c.name || id}</div><div class="meta">${id} · ${cardHasDamage(c.actions)?((c.stat==="power")?"Poder":"Impacto"):"Estado"}${dirty}</div>`;
     b.onclick = () => loadCard(id);
     list.appendChild(b);
   });
@@ -917,7 +941,8 @@ function loadCard(id) {
   draft.final = !!c.final || (c.actions||[]).some(a => a[0]==="final");
   draft.exhaust = !!c.exhaust;
   draft.reach = !!c.reach;
-  // keep rarity in data if present but never show UI
+  draft.estado = (c.class === "ESTADO" || c.class === "SKILL") && !cardHasDamage(c.actions || []);
+  draft.stat = c.stat || "attack";
   syncForm(true);
 }
 
