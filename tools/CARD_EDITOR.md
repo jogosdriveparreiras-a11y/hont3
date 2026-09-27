@@ -53,3 +53,23 @@ Arte em **full-bleed**; textos em caixas pretas com opacidade ~125/255 (~0,49).
 ## Por que JSON acoplável
 
 Cartas/heróis `ent_*` em `addons/hotn3_entities/entities.json`; `PackBridge` injeta no `Content` em runtime.
+
+
+## Novos flags / ações (pt-BR)
+
+| Chave | Nome | Comportamento |
+|---|---|---|
+| `penetrating` | Penetrante | Ignora bloqueio + escudo temporário; só ½ Armadura (Impacto) ou Escudo permanente (Poder). |
+| `lethargic` | Letárgico | Dano desta carta **não** remove Atordoamento (por padrão dano em Vida remove stun). |
+| `recoil` | Recuo | Usuário sofre 1/3 do dano efetivo (arredondado). |
+| `drain` | Dreno | Cura 1/4 do dano efetivo. |
+| `actions` N | Ações | +N jogadas de carta no **próximo** turno (além do padrão 3). |
+| `draw_own` N | Comprar próprio | Compra do baralho do herói; se não houver, embaralha descarte e tenta. |
+| `recover_own` N | Recuperar própria | Carta mais recente do descarte daquele dono → mão. |
+| `recover` N | Recuperar | UI escolhe no descarte; auto (mais recente) se encerrar turno sem escolher. |
+| `discard` N | Descarte | Descarta N cartas aleatórias da mão. |
+| `instant` | Instantâneo | Após resolver, encerra a fase do jogador; não pode ser recomprada; grátis se `free` omitido. |
+| `ephemeral` | Efêmero | Se ainda na mão no fim da rodada, descarta. |
+| `warmup` X | Aquecimento | Indisponível por X rodadas após comprar (`drawn_turn + X`). |
+
+**Não implementar no editor (ainda):** Voar; aba dicionário de status/flags/ops.

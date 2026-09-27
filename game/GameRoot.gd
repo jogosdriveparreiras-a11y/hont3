@@ -26,6 +26,7 @@ var mission_id := "road"
 var selected_card := -1
 var selected_action := ""
 var chain_targets: Array[int] = []
+var recover_pick_active := false
 var feedback := ""
 var event_history: Array[String] = []
 var deck_hero := ""
@@ -841,6 +842,8 @@ func _render_battle() -> void:
 	status.custom_minimum_size.x = viewport_size.x * 0.42
 	status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	hud.add_child(status)
+	if recover_pick_active and not battle.pending_recover.is_empty():
+		_build_recover_pick_panel(viewport_size)
 	_render_actors()
 	if inspected_card >= 0 and inspected_card < battle.hand.size() and battle.phase == "PLAYER":
 		_add_inspect_overlay(inspected_card, viewport_size)
@@ -1046,6 +1049,47 @@ func _focus_hero_id() -> int:
 		return int(allies[0]["id"])
 	return -1
 
+func _build_recover_pick_panel(viewport_size: Vector2) -> void:
+	var panel := Control.new()
+	panel.name = "RecoverPick"
+	panel.position = Vector2(viewport_size.x * 0.22, 48)
+	panel.size = Vector2(viewport_size.x * 0.56, 220)
+	panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	hud.add_child(panel)
+	_chrome(panel.position, panel.size, "res://assets/ui/panel.png")
+	var title := _label("Recuperar do descarte (clique na carta)", 18, Color("f7d499"))
+	title.position = Vector2(16, 10)
+	panel.add_child(title)
+	var indices: Array[int] = _recover_pick_indices()
+	if indices.is_empty():
+		var empty := _label("Nenhuma carta elegível no descarte.", 15, Color("c9d1dd"))
+		empty.position = Vector2(16, 48)
+		panel.add_child(empty)
+		var auto_btn := _button("Auto (mais recente)", func():
+			var left: int = int(battle.pending_recover.get("count", 1))
+			var owner_filter: int = int(battle.pending_recover.get("owner_id", -1))
+			battle.pending_recover = {}
+			recover_pick_active = false
+			battle.recover_from_discard(owner_filter, left, true)
+			_after_card_resolved()
+		)
+		auto_btn.position = Vector2(16, 90)
+		panel.add_child(auto_btn)
+		return
+	var x := 16.0
+	for discard_index in indices:
+		var card: Dictionary = battle.discard[discard_index]
+		var definition: Dictionary = _card_def(str(card.get("id", "")))
+		var label_txt := str(definition.get("name", card.get("id", "?")))
+		var idx := int(discard_index)
+		var btn := _button(label_txt, func(): _pick_recover_card(idx))
+		btn.position = Vector2(x, 56)
+		btn.custom_minimum_size = Vector2(140, 48)
+		panel.add_child(btn)
+		x += 150.0
+		if x > panel.size.x - 150:
+			break
+
 func _build_economy_hud(viewport_size: Vector2) -> void:
 	economy_hud = Control.new()
 	economy_hud.name = "EconomyHud"
@@ -1091,7 +1135,7 @@ func _build_economy_hud(viewport_size: Vector2) -> void:
 		move_btn.modulate = Color("6eb6ff")
 	economy_hud.add_child(move_btn)
 	var end_btn := _button("ENCERRAR TURNO", func(): _present_enemy_turn())
-	end_btn.disabled = battle.phase != "PLAYER" or enemy_presenting
+	end_btn.disabled = battle.phase != "PLAYER" or enemy_presenting or recover_pick_active
 	end_btn.position = Vector2(16, 196)
 	end_btn.custom_minimum_size = Vector2(258, 40)
 	economy_hud.add_child(end_btn)
@@ -1190,9 +1234,10 @@ func _choose_target(actor_id: int) -> void:
 		card_confirmed = false
 		inspected_card = -1
 		selected_action = ""
+		_after_card_resolved()
 	else:
 		feedback = "Sem ação, Iniciativa, alcance ou alvo válido."
-	_render_battle()
+		_render_battle()
 
 func _render_actors() -> void:
 	unit_sprites.clear()
@@ -1650,6 +1695,13 @@ func _rules_bbcode(definition: Dictionary, card: Dictionary) -> String:
 	if definition.get("free", false): keywords.append("[b]Livre[/b]")
 	if definition.get("final", false): keywords.append("[b]Final[/b]")
 	if definition.get("reach", false): keywords.append("[b]Alcance[/b]")
+	if definition.get("penetrating", false): keywords.append("[b]Penetrante[/b]")
+	if definition.get("lethargic", false): keywords.append("[b]Letárgico[/b]")
+	if definition.get("recoil", false): keywords.append("[b]Recuo[/b]")
+	if definition.get("drain", false): keywords.append("[b]Dreno[/b]")
+	if definition.get("instant", false): keywords.append("[b]Instantâneo[/b]")
+	if definition.get("ephemeral", false): keywords.append("[b]Efêmero[/b]")
+	if int(definition.get("warmup", 0)) > 0: keywords.append("[b]Aquecimento[/b] %d" % int(definition["warmup"]))
 	if int(definition.get("chain", 0)) > 0: keywords.append("[b]Chain[/b] %d" % int(definition["chain"]))
 	if definition.get("exhaust", false) or definition.get("item", false):
 		keywords.append("[color=#e15b5b][b]Exaustão[/b][/color]")
@@ -2128,8 +2180,58 @@ func _add_inspect_overlay(index: int, viewport_size: Vector2) -> void:
 	host.gui_input.connect(func(event: InputEvent) -> void: _on_card_gui(event, index))
 	hud.add_child(host)
 
+func _after_card_resolved() -> void:
+	if battle == null:
+		return
+	if not battle.pending_recover.is_empty():
+		recover_pick_active = true
+		feedback = "Recuperar: escolha uma carta do descarte."
+		_render_battle()
+		return
+	if bool(battle.request_end_turn):
+		battle.request_end_turn = false
+		_render_battle()
+		call_deferred("_present_enemy_turn")
+		return
+	_render_battle()
+
+func _recover_pick_indices() -> Array[int]:
+	var result: Array[int] = []
+	if battle == null or battle.pending_recover.is_empty():
+		return result
+	var owner_filter: int = int(battle.pending_recover.get("owner_id", -1))
+	for index in range(battle.discard.size()):
+		var card: Dictionary = battle.discard[index]
+		if owner_filter < 0 or int(card.get("owner", -1)) == owner_filter:
+			result.append(index)
+	return result
+
+func _pick_recover_card(discard_index: int) -> void:
+	if battle == null or not battle.finish_recover_pick(discard_index):
+		feedback = "Carta inválida no descarte."
+		_render_battle()
+		return
+	if battle.pending_recover.is_empty():
+		recover_pick_active = false
+		feedback = "Carta recuperada."
+		if bool(battle.request_end_turn):
+			battle.request_end_turn = false
+			_render_battle()
+			call_deferred("_present_enemy_turn")
+			return
+	else:
+		feedback = "Recuperar: escolha mais uma carta do descarte."
+	_render_battle()
+
 func _present_enemy_turn() -> void:
 	if enemy_presenting or battle == null or battle.phase != "PLAYER": return
+	# Auto-resolve pending recover before ending turn.
+	if not battle.pending_recover.is_empty():
+		var left: int = int(battle.pending_recover.get("count", 1))
+		var owner_filter: int = int(battle.pending_recover.get("owner_id", -1))
+		battle.pending_recover = {}
+		recover_pick_active = false
+		battle.recover_from_discard(owner_filter, left, true)
 	enemy_presenting = true
 	enemy_steps = 0
 	selected_card = -1
@@ -2326,6 +2428,13 @@ func _card_description(definition: Dictionary, card: Dictionary = {}) -> String:
 	if definition.has("roulette"): parts.append("ROULETTE: sorteia efeito ao comprar")
 	if definition.has("full_combo"): parts.append("COMBO COMPLETO: todos os acertos no mesmo alvo")
 	if definition.get("reach", false): parts.append("ALCANCE")
+	if definition.get("penetrating", false): parts.append("PENETRANTE")
+	if definition.get("lethargic", false): parts.append("LETÁRGICO")
+	if definition.get("recoil", false): parts.append("RECUO")
+	if definition.get("drain", false): parts.append("DRENO")
+	if definition.get("instant", false): parts.append("INSTANTÂNEO")
+	if definition.get("ephemeral", false): parts.append("EFÊMERO")
+	if int(definition.get("warmup", 0)) > 0: parts.append("AQUECIMENTO %d" % int(definition["warmup"]))
 	if definition.get("chain", 0) > 0: parts.append("CHAIN %d" % definition["chain"])
 	if definition.get("cost", 0) > 0: parts.append("−%d Iniciativa" % definition["cost"])
 	if definition.get("gain", 0) > 0: parts.append("+%d Iniciativa" % definition["gain"])

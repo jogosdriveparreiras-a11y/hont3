@@ -1,5 +1,12 @@
 ## Não publicado
 
+### 2026-09-27 — Novos efeitos de carta (Penetrante, Letárgico, Ações, etc.)
+
+- Penetrante, Letárgico, Recuo, Dreno, Instantâneo, Efêmero, Aquecimento.
+- Comprar próprio, Recuperar / Recuperar própria, Descarte N, Ações (+jogadas no próximo turno).
+- `next_turn_plays` agora soma stacks (permite >4 jogadas).
+- Editor HTML: flags/ações em pt-BR; PackBridge descreve os novos ops.
+
 ## 2026-09-27 — Vida/Escudo, fases de grupo, editor auto-load
 
 - Removida Velocidade; combate só em fases de grupo (jogador vs inimigo).

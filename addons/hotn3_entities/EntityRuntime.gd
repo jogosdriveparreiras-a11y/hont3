@@ -86,6 +86,8 @@ func redraw_card(battle: Variant, hand_index: int) -> bool:
 	for card in battle.hand: before[int(card["uid"])] = true
 	var old: Dictionary = battle.hand[hand_index]
 	if battle.phase != "PLAYER" or battle.redraws <= 0: return false
+	var old_def: Dictionary = catalog.definition(str(old.get("id", "")))
+	if battle.is_instant_card(old, old_def): return false
 	on_redraw(battle, old)
 	if not battle.redraw(hand_index): return false
 	for card in battle.hand:
@@ -135,6 +137,11 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 	if not bool(def.get("play_while_disabled", false)):
 		for locked in ["stun", "bind", "bound", "dazed", "banished", "finalized"]:
 			if battle._has_status(source, locked): return false
+	var warmup: int = int(def.get("warmup", 0))
+	if _has_action(def, "warmup"): warmup = int(_action(def, "warmup")[1])
+	if warmup > 0:
+		card["warmup"] = warmup
+		if not battle.card_warmup_ready(card, def): return false
 	var cost: int = int(card.get("cost_override", def.get("cost", 0)))
 	# Custo gasta Iniciativa (recurso compartilhado do turno) — não existe pool de "Poder".
 	if cost > 0:
@@ -143,7 +150,9 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 		if _has_action(def, "cost_down_en_fuego"): cost -= int(_counter(source, "en_fuego"))
 	cost = maxi(0, cost)
 	var owner_free: bool = def.get("owner") == "spider_man" and _counter(source, "free_owner") > 0
-	var plays: int = 0 if bool(def.get("free", false)) or owner_free else 1
+	var is_instant: bool = bool(def.get("instant", false)) or _has_action(def, "instant")
+	if is_instant: card["instant"] = true
+	var plays: int = 0 if bool(def.get("free", is_instant)) or owner_free else 1
 	if battle.impulse < cost or battle.card_plays < plays: return false
 	var resolved_def: Dictionary = def.duplicate(true)
 	if def.get("target") == "CHAIN":
@@ -198,7 +207,9 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 					multiplier *= 1.0 + 0.2 * float(_counter(source, "ravenous"))
 					# Impacto − Armadura; Poder − Escudo (atributo). Mods % já em multiplier.
 					var damage_stat := str(def.get("stat", "attack"))
+					var penetrating: bool = bool(def.get("penetrating", false)) or _has_action(def, "penetrating")
 					var defense: int = int(victim.get("escudo", 0)) if damage_stat == "power" else (int(victim.get("armor", 0)) + (2 * int(victim.get("statuses", {}).get("armor", {}).get("stacks", 0))))
+					if penetrating: defense = int(round(float(defense) * 0.5))
 					# Espécie (±25% tipicamente via vs_species na carta).
 					var vs: Dictionary = def.get("vs_species", {})
 					var sp := str(victim.get("species", ""))
@@ -208,11 +219,18 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 					if bool(Content.RULES.get("archetype_matchup", false)):
 						multiplier *= _archetype_mult(source, victim)
 					last_hit = maxi(1, roundi(base * multiplier) - defense)
-					if battle._take_damage(source, victim, last_hit, false, true, false, targets.size() > 1, not bool(def.get("reach", false)), _is_damage_card(def), true):
+					var keep_stun: bool = bool(def.get("lethargic", false)) or _has_action(def, "lethargic")
+					if battle._take_damage(source, victim, last_hit, penetrating, true, false, targets.size() > 1, not bool(def.get("reach", false)), _is_damage_card(def), true, not keep_stun):
 						if not kos.has(victim["id"]): kos.append(victim["id"])
 					if _has_action(def, "block_from_hit"): source["block"] += last_hit
 					if _has_action(def, "lifesteal"):
 						source["hp"] = mini(int(source["max_hp"]), int(source["hp"]) + maxi(0, before_hp - int(victim["hp"])))
+					if _has_action(def, "drain") or bool(def.get("drain", false)):
+						var drain_amt: int = maxi(0, roundi(float(last_hit) / 4.0))
+						if drain_amt > 0: source["hp"] = mini(int(source["max_hp"]), int(source["hp"]) + drain_amt)
+					if _has_action(def, "recoil") or bool(def.get("recoil", false)):
+						var recoil_amt: int = maxi(0, roundi(float(last_hit) / 3.0))
+						if recoil_amt > 0: battle._take_damage(source, source, recoil_amt, true, false)
 			"choice":
 				for victim in targets:
 					if victim.get("side") == "ALLY":
@@ -249,11 +267,25 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 							if battle._take_damage(source, victim, 4 * force, false, false, true, false, false, false, true): kos.append(int(victim["id"]))
 			"draw", "draw_owner", "draw_owner_to", "draw_heroic", "draw_attack_heroic":
 				_draw_filtered(battle, source, op, int(a[1]))
+			"draw_own":
+				battle.draw_own(int(source["id"]), int(a[1]))
+				for held in battle.hand:
+					if not prior_hand.has(int(held["uid"])): on_draw(battle, held)
+			"recover_own":
+				battle.recover_from_discard(int(source["id"]), int(a[1]) if a.size() > 1 else 1, true)
+				for held in battle.hand:
+					if not prior_hand.has(int(held["uid"])): on_draw(battle, held)
+			"recover":
+				# UI: GameRoot escolhe no descarte; fallback automático se pending não for consumido.
+				battle.recover_from_discard(-1, int(a[1]) if a.size() > 1 else 1, false)
+			"discard", "discard_random":
+				var drop_n: int = int(a[1]) if a.size() > 1 else 1
+				battle.discard_from_hand(drop_n, true)
 			"discard_hand":
 				for held in battle.hand: battle.discard.append(held)
 				battle.hand.clear()
-			"discard_random":
-				if not battle.hand.is_empty(): battle.discard.append(battle.hand.pop_at(battle.rng.randi_range(0, battle.hand.size() - 1)))
+			"actions":
+				battle.grant_next_turn_plays(source, int(a[1]) if a.size() > 1 else 1)
 			"self_damage", "self_damage_hp":
 				var amount := roundi(float(source["attack"]) * float(a[1])) if op == "self_damage" else roundi(float(source["max_hp"]) * float(a[1]))
 				battle._take_damage(source, source, amount, true, false)
@@ -389,7 +421,7 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 					for foe in battle.living("ENEMY"):
 						if foe["id"] != target["id"]:
 							battle._take_damage(source, foe, int(source["attack"])); break
-			"quick", "free", "exhaust", "final", "chain", "chain_hand_owner", "random_chain", "full_combo", "bonus_status", "bonus_damaged", "bonus_block", "bonus_targeting_self", "bonus_full_hp", "bonus_en_fuego", "force_if_damaged", "hand_block", "hand_cost_down", "hand_damage_growth", "hand_resist", "overheal_max", "cost_down_en_fuego", "area_en_fuego", "requires_status", "enhanced", "redraw_force", "redraw_bonus", "redraw_strengthened", "play_while_disabled": pass # Evaluated in preplay, hooks, or _bonus.
+			"quick", "free", "exhaust", "final", "chain", "chain_hand_owner", "random_chain", "full_combo", "bonus_status", "bonus_damaged", "bonus_block", "bonus_targeting_self", "bonus_full_hp", "bonus_en_fuego", "force_if_damaged", "hand_block", "hand_cost_down", "hand_damage_growth", "hand_resist", "overheal_max", "cost_down_en_fuego", "area_en_fuego", "requires_status", "enhanced", "redraw_force", "redraw_bonus", "redraw_strengthened", "play_while_disabled", "penetrating", "lethargic", "recoil", "drain", "instant", "ephemeral", "warmup": pass # Evaluated in preplay, hooks, or _bonus.
 			_:
 				push_error("Unsupported external card action: " + op)
 	if (def.get("quick", false) or card.get("next_quick_active", false) or battle._has_status(source, "assimilation")) and kos.has(target_id) or kos.any(func(id): return battle._has_status(battle.actor_by_id(id), "marked")):
@@ -406,6 +438,8 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 	elif _counter(source, "retain_next") > 0: _consume(source, "retain_next"); battle.hand.append(card)
 	else: battle.discard.append(card)
 	battle.played_cards += 1
+	if is_instant:
+		battle.request_end_turn = true
 	battle._after_card_play()
 	battle._check_end()
 	for held in battle.hand:
@@ -460,6 +494,12 @@ func on_draw(battle: Variant, card: Dictionary) -> void:
 	if def.is_empty(): return
 	card.erase("next_active")
 	card["draw_turn"] = int(battle.turn)
+	card["drawn_turn"] = int(battle.turn)
+	if bool(def.get("ephemeral", false)) or _has_action(def, "ephemeral"): card["ephemeral"] = true
+	if bool(def.get("instant", false)) or _has_action(def, "instant"): card["instant"] = true
+	var wu: int = int(def.get("warmup", 0))
+	if _has_action(def, "warmup"): wu = int(_action(def, "warmup")[1])
+	if wu > 0: card["warmup"] = wu
 	for a in def["actions"]:
 		if a[0] == "roulette_status": card["roulette_status"] = str(a[battle.rng.randi_range(1, a.size() - 1)])
 		if a[0] == "roulette_hit": card["roulette_factor"] = float(a[battle.rng.randi_range(1, a.size() - 1)])

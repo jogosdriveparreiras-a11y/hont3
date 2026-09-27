@@ -153,8 +153,15 @@ func redraw_card(battle: Variant, mode: String, hand_index: int) -> bool:
 		return entities.redraw_card(battle, hand_index)
 	if mode == "external" or card_id.begins_with("ms_"):
 		var old: Dictionary = battle.hand[hand_index]
+		var old_def: Dictionary = external.catalog.definition(card_id)
+		if battle.is_instant_card(old, old_def):
+			return false
 		external.on_redraw(battle, old)
 		return battle.redraw(hand_index)
+	var peek: Dictionary = battle.hand[hand_index]
+	var peek_def: Dictionary = definition(card_id)
+	if battle.is_instant_card(peek, peek_def):
+		return false
 	return battle.redraw(hand_index)
 
 func on_player_turn_resumed(battle: Variant, mode: String) -> void:
@@ -202,8 +209,28 @@ func describe_actions(definition: Dictionary) -> Array[String]:
 				parts.append("Bloqueio")
 			"status", "self_status", "chance_status", "roulette_status":
 				parts.append("Estado %s" % str(action[1] if action.size() > 1 else ""))
-			"draw", "draw_owner", "draw_heroic":
-				parts.append("Compra")
+			"draw", "draw_owner", "draw_heroic", "draw_own":
+				parts.append("Compra" if op != "draw_own" else "Comprar próprio")
+			"recover", "recover_own":
+				parts.append("Recuperar própria" if op == "recover_own" else "Recuperar")
+			"actions":
+				parts.append("+%s ações no próximo turno" % str(action[1] if action.size() > 1 else 1))
+			"discard":
+				parts.append("Descarta %s" % str(action[1] if action.size() > 1 else 1))
+			"penetrating":
+				parts.append("Penetrante")
+			"lethargic":
+				parts.append("Letárgico")
+			"recoil":
+				parts.append("Recuo (1/3)")
+			"drain":
+				parts.append("Dreno (1/4)")
+			"instant":
+				parts.append("Instantâneo")
+			"ephemeral":
+				parts.append("Efêmero")
+			"warmup":
+				parts.append("Aquecimento %s" % str(action[1] if action.size() > 1 else ""))
 			"push", "pull":
 				parts.append("Empurra" if op == "push" else "Puxa")
 			"quick":

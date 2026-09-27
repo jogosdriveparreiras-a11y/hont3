@@ -442,6 +442,12 @@ const FLAGS = [
   {key:"free", label:"Grátis (free)"},
   {key:"exhaust", label:"Esgota (exhaust)"},
   {key:"final", label:"Final"},
+  {key:"penetrating", label:"Penetrante (ignora bloqueio/escudo temp.; ½ Armadura/Escudo)"},
+  {key:"lethargic", label:"Letárgico (dano NÃO remove Atordoamento)"},
+  {key:"recoil", label:"Recuo (sofre 1/3 do dano efetivo)"},
+  {key:"drain", label:"Dreno (cura 1/4 do dano efetivo)"},
+  {key:"instant", label:"Instantâneo (encerra fase; sem recompra; grátis se free omitido)"},
+  {key:"ephemeral", label:"Efêmero (descarta no fim da rodada se na mão)"},
 ];
 
 const ACTIONS = [
@@ -489,6 +495,18 @@ const ACTIONS = [
     {k:"hit", t:"number", label:"Hit base", def:"1"},
     {k:"heal", t:"number", label:"Heal fator", def:"2"},
   ]},
+  {op:"penetrating", label:"Penetrante", tip:"Ignora bloqueio/escudo de carta; só ½ Armadura (Impacto) ou Escudo (Poder).", args:[]},
+  {op:"lethargic", label:"Letárgico", tip:"Dano desta carta não remove Atordoamento.", args:[]},
+  {op:"recoil", label:"Recuo", tip:"Usuário sofre 1/3 do dano efetivo (arredondado).", args:[]},
+  {op:"drain", label:"Dreno", tip:"Cura 1/4 do dano efetivo.", args:[]},
+  {op:"actions", label:"Ações (+jogadas próximo turno)", tip:"Concede +N jogadas de carta no próximo turno (além do padrão 3).", args:[{k:"n", t:"number", label:"+ Jogadas", def:"1"}]},
+  {op:"draw_own", label:"Comprar próprio", tip:"Compra do baralho deste herói; se vazio, embaralha descarte e tenta.", args:[{k:"n", t:"number", label:"Qtd", def:"1"}]},
+  {op:"recover_own", label:"Recuperar própria", tip:"Pega a carta mais recente do descarte deste herói.", args:[{k:"n", t:"number", label:"Qtd", def:"1"}]},
+  {op:"recover", label:"Recuperar (escolher)", tip:"Jogador escolhe no descarte (UI); auto no fim do turno se não escolher.", args:[{k:"n", t:"number", label:"Qtd", def:"1"}]},
+  {op:"discard", label:"Descarte da mão", tip:"Descarta N cartas aleatórias da mão.", args:[{k:"n", t:"number", label:"Qtd", def:"1"}]},
+  {op:"instant", label:"Instantâneo", tip:"Encerra a fase do jogador após resolver; não pode ser recomprada.", args:[]},
+  {op:"ephemeral", label:"Efêmero", tip:"Se permanecer na mão no fim da rodada, é descartada.", args:[]},
+  {op:"warmup", label:"Aquecimento X", tip:"Indisponível por X rodadas após comprar (drawn_turn+X).", args:[{k:"n", t:"number", label:"Rodadas", def:"1"}]},
 ];
 
 const HELP = `COMO USAR
