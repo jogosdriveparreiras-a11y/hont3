@@ -768,6 +768,12 @@ func redraw(hand_index: int) -> bool:
 func _redraw_side(side: String, hand_index: int) -> bool:
 	if side == "ENEMY" and phase != "ENEMY": return false
 	if side != "ENEMY" and phase != "PLAYER": return false
+	var acting_hand := _hand_of(side)
+	var redraw_left: int = enemy_redraws if side == "ENEMY" else redraws
+	if redraw_left <= 0 or hand_index < 0 or hand_index >= acting_hand.size():
+		return false
+	var peek: Dictionary = acting_hand[hand_index]
+	var definition: Dictionary = Content.CARDS.get(peek["id"], {})
 	# Item com dono explícito: dono precisa estar vivo no time atuante.
 	if definition.get("item", false) and definition.has("owner_hero"):
 		var need := str(definition["owner_hero"])
@@ -779,14 +785,9 @@ func _redraw_side(side: String, hand_index: int) -> bool:
 		if not owner_alive:
 			_log("Item bloqueado: dono %s indisponível." % need)
 			return false
-	var acting_hand := _hand_of(side)
-	var redraw_left: int = enemy_redraws if side == "ENEMY" else redraws
-	if redraw_left <= 0 or hand_index < 0 or hand_index >= acting_hand.size():
-		return false
 	var card: Dictionary = acting_hand.pop_at(hand_index)
 	if side == "ENEMY": enemy_redraws -= 1
 	else: redraws -= 1
-	var definition: Dictionary = Content.CARDS.get(card["id"], {})
 	var source := actor_by_id(card["owner"])
 	var targets: Array[Dictionary] = [source]
 	_resolve(source, targets, card, {"effects": definition.get("on_redraw", [])})
