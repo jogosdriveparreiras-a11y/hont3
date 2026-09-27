@@ -1,3 +1,13 @@
+## 2026-09-27 — Battle UX, deck automático, conteúdo sensível, editor
+
+- Log de combate só na janela esquerda; prompt de fase centralizado no topo.
+- Seleção de carta: 2º clique confirma; botão **Inspecionar** abre overlay (sem Confirmar).
+- Popup pt-BR quando a Manobra não pode ser usada (Alcance / Escuridão / etc.).
+- Sem editor de deck: coleção = todas as possuídas; Melhoradas substituem a base; deck só cresce.
+- Vista lateral: linhas amarelas de fileira permanecem horizontais; sprites inimigos espelhados.
+- Config: toggle **Conteúdo sensível** + placeholders em `assets/cast_sensitive/`.
+- `tools/card_editor.html`: corrigido SyntaxError (aspas em Desvantagem) que deixava "Carregando…" eterno.
+
 ## 2026-09-27 — Nomenclatura oficial (Manobras / Aprimoramento / Melhoradas / Combos)
 
 - Docs: `docs/NOMENCLATURA.md`; adaptação Masmorra 2 atualizada (Aprimoramento, Melhoradas+, Combos, deck 15).

@@ -581,7 +581,7 @@ const DICTIONARY = [
   {cat:"Status", id:"bloodlust", name:"Sede de sangue", rule:"Aplica Bleed em hits; persiste com Barreira/block."},
   {cat:"Status", id:"escuridao", name:"Escuridão", rule:"Passiva Alyssa: +1 stack cada vez que perde Vida. Persistente (não tiqueia). Variável de fórmula E / escuridao."},
   {cat:"Status", id:"atento", name:"Atento", rule:"Por X rodadas: ignora desvantagem de arquétipo/espécie e pode causar dano a alvos Invulneráveis."},
-  {cat:"Desvantagem", id:"desvantagem", name:"Desvantagem", rule:"Carta de classe DESVANTAGEM: o rótulo "Desvantagem" aparece centralizado no topo da caixa de efeitos. Cada herói pode ter uma."},
+  {cat:"Desvantagem", id:"desvantagem", name:"Desvantagem", rule:"Carta de classe DESVANTAGEM: o rótulo «Desvantagem» aparece centralizado no topo da caixa de efeitos. Cada herói pode ter uma."},
   {cat:"Desvantagem", id:"tormenta", name:"Tormenta", rule:"Desvantagem da Alyssa: se Escuridão ≥ 4, no fim do turno todos os outros (aliados e inimigos) sofrem 1 de dano penetrante."},
   {cat:"Fórmula", id:"formula_vars", name:"Variáveis de fórmula", rule:"Campos de quantidade aceitam número estático ou expressão com tokens do mapa de status do ator (ex.: E, escuridao, 1+E, 2*E, 2×E). Editor e runtime usam o mesmo dicionário."},
   {cat:"Alvo", id:"ALL_OTHERS", name:"ALL_OTHERS", rule:"Todos os personagens vivos exceto o conjurador (aliados e inimigos). Relâmpago E6+."},
@@ -1853,8 +1853,17 @@ async function loadGameData(forceReload) {
   }
 }
 
-wire();
-loadGameData(false);
+try {
+  wire();
+  loadGameData(false).catch(function(err) {
+    var st = document.getElementById("loadStatus");
+    if (st) { st.textContent = "Falha ao carregar: " + (err && err.message ? err.message : err); st.classList.add("warn"); }
+  });
+} catch (err) {
+  var st = document.getElementById("loadStatus");
+  if (st) { st.textContent = "Erro no editor: " + (err && err.message ? err.message : err); st.classList.add("warn"); }
+  console.error(err);
+}
 
 </script>
 </body>

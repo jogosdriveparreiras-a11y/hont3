@@ -62,6 +62,12 @@ var reduce_motion := false
 var animation_speed := 1.0
 ## Vista de combate: "normal" (padrão) | "lateral" (aliados à esquerda).
 var battle_view_mode := "normal"
+## Conteúdo sensível: troca sprites/retratos para assets/cast_sensitive/.
+var sensitive_content := false
+## Cartas possuídas por herói (deck = todas; Melhoradas substituem a base).
+var owned_cards: Dictionary = {}
+## Overlay Inspecionar só abre pelo botão (não no clique da carta).
+var inspect_open := false
 var redraw_hold_index := -1
 var redraw_hold_time := 0.0
 const REDRAW_HOLD_SECONDS := 2.0
@@ -186,16 +192,28 @@ func _build_arena(theme: String = "default") -> void:
 
 func _build_default_arena() -> void:
 	_add_box(Vector3(0, -0.30, 0), Vector3(19, 0.5, 12), Color("353c47"))
-	for z in [-3.3, -1.7, 1.7, 3.3]:
-		_add_box(Vector3(0, -0.02, z), Vector3(17, 0.04, 0.035), Color("bea674"))
+	_add_row_guide_lines()
 	for x in [-9.1, 9.1]:
 		for z in [-5.5, 5.5]:
 			_add_box(Vector3(x, 1.75, z), Vector3(0.75, 3.5, 0.75), Color("555169"))
 			_add_box(Vector3(x, 3.5, z), Vector3(1.1, 0.3, 1.1), Color("c8ac76"))
 
+func _add_row_guide_lines() -> void:
+	# Linhas amarelas de fileira: em vista Normal correm em X (separando Z);
+	# em Lateral correm em Z (separando X) para permanecerem horizontais no mapa rotacionado.
+	var tint := Color("bea674")
+	if battle_view_mode == "lateral":
+		# Longas em Z (= horizontais com câmera lateral em -X).
+		for x in [-4.35, -1.65, 1.65, 4.35]:
+			_add_box(Vector3(x, -0.02, 0), Vector3(0.06, 0.045, 12.0), tint)
+	else:
+		for z in [-3.3, -1.7, 1.7, 3.3]:
+			_add_box(Vector3(0, -0.02, z), Vector3(17, 0.04, 0.035), tint)
+
 func _build_street_night_arena() -> void:
 	# Asphalt street + sidewalks matching the procedural box style of the default arena
 	_add_box(Vector3(0, -0.32, 0), Vector3(22, 0.45, 14), Color("1a1d28"))
+	_add_row_guide_lines()
 	_add_box(Vector3(0, -0.06, 0), Vector3(7.2, 0.08, 13.5), Color("2a2e38"))  # road
 	for z in [-5.0, -2.5, 0.0, 2.5, 5.0]:
 		_add_box(Vector3(0, -0.01, z), Vector3(0.35, 0.02, 0.9), Color("c9b56a"))  # dashed center
@@ -265,13 +283,14 @@ func _label(text_value: String, size: int = 23, color: Color = Color.WHITE) -> L
 	label.add_theme_color_override("font_color", color)
 	return label
 
-func _button(text_value: String, on_click: Callable, hint: String = "") -> Button:
+func _button(text_value: String, on_click: Callable = Callable(), hint: String = "") -> Button:
 	var button := Button.new()
 	button.text = text_value
 	button.custom_minimum_size = Vector2(150, 45)
 	button.add_theme_font_size_override("font_size", 18)
 	button.tooltip_text = hint
-	button.pressed.connect(on_click)
+	if on_click.is_valid():
+		button.pressed.connect(on_click)
 	if ResourceLoader.exists("res://assets/ui/button.png"):
 		var style := StyleBoxTexture.new()
 		style.texture = load("res://assets/ui/button.png")
@@ -309,7 +328,7 @@ func _show_menu() -> void:
 	menu.add_child(_label("Missões concluídas: %d/%d · Essência: %d" % [best_stars.size(), Content.MISSIONS.size(), essence], 19))
 	menu.add_child(_button("Selecionar missão", _show_missions))
 	menu.add_child(_button("Escolher equipe", _show_team))
-	menu.add_child(_button("Montar decks", _show_decks))
+	menu.add_child(_button("Coleção de cartas", _show_collection))
 	menu.add_child(_button("Preparar itens", _show_items))
 	menu.add_child(_button("Configurações", _show_settings))
 	menu.add_child(_button("Iniciar missão: %s" % Content.MISSIONS[mission_id]["name"], _start_mission))
@@ -324,6 +343,7 @@ func _show_settings() -> void:
 	menu.add_child(_button("Reduzir flashes: %s" % ("sim" if reduce_flashes else "não"), _toggle_flashes))
 	menu.add_child(_button("Reduzir movimento da câmera: %s" % ("sim" if reduce_motion else "não"), _toggle_motion))
 	menu.add_child(_button("Vista de batalha: %s" % ("Lateral" if battle_view_mode == "lateral" else "Normal"), _toggle_battle_view))
+	menu.add_child(_button("Conteúdo sensível: %s" % ("sim" if sensitive_content else "não"), _toggle_sensitive_content))
 	menu.add_child(_button("Voltar", _show_menu))
 
 func _setting_slider(title: String, level: float, callback: Callable) -> HBoxContainer:
@@ -370,9 +390,15 @@ func _toggle_battle_view() -> void:
 	_apply_battle_view()
 	_save_config()
 	if battle != null and battle.phase in ["PLAYER", "ENEMY"]:
+		_build_arena(_arena_theme_for_mission(mission_id))
 		_render_battle()
 	else:
 		_show_settings()
+
+func _toggle_sensitive_content() -> void:
+	sensitive_content = not sensitive_content
+	_save_config()
+	_show_settings()
 
 func _apply_battle_view() -> void:
 	if presentation == null:
@@ -630,14 +656,106 @@ func _show_team_conflict_popup(conflicts: Array[String]) -> void:
 	menu.add_child(_button("Editar equipe", _show_team))
 	menu.add_child(_button("Voltar ao menu", _show_menu))
 
+func _show_collection() -> void:
+	_show_decks()
+
+func _ensure_owned_cards() -> void:
+	for hero_id in Content.HEROES:
+		if not Content.HEROES[hero_id].get("playable", true):
+			continue
+		if owned_cards.has(hero_id) and owned_cards[hero_id] is Array and not owned_cards[hero_id].is_empty():
+			continue
+		owned_cards[hero_id] = _default_owned_for(str(hero_id))
+
+func _default_owned_for(hero_id: String) -> Array:
+	var hero: Dictionary = Content.HEROES.get(hero_id, {})
+	var out: Array = []
+	var seen: Dictionary = {}
+	for cid in hero.get("iniciais", hero.get("cards", [])):
+		var id := str(cid)
+		if seen.has(id): continue
+		seen[id] = true
+		out.append(id)
+	var desv := str(hero.get("desvantagem", ""))
+	if desv != "" and not seen.has(desv):
+		out.append(desv)
+	return out
+
+func _grant_owned_card(hero_id: String, card_id: String) -> void:
+	_ensure_owned_cards()
+	var list: Array = owned_cards.get(hero_id, []).duplicate()
+	var cid := str(card_id)
+	var def: Dictionary = _card_def(cid)
+	# Melhorada: remove a base e adiciona a versão +
+	var base := str(def.get("melhorada_de", ""))
+	if base != "":
+		while list.has(base):
+			list.erase(base)
+	if list.has(cid):
+		owned_cards[hero_id] = list
+		return
+	# Se já tem Melhorada desta carta, não adiciona a base
+	for owned_id in list:
+		var odef: Dictionary = _card_def(str(owned_id))
+		if str(odef.get("melhorada_de", "")) == cid:
+			owned_cards[hero_id] = list
+			return
+	list.append(cid)
+	owned_cards[hero_id] = _apply_melhorada_replace(list)
+
+func _apply_melhorada_replace(card_ids: Array) -> Array:
+	var owned_set: Dictionary = {}
+	for cid in card_ids:
+		owned_set[str(cid)] = true
+	var out: Array = []
+	var seen: Dictionary = {}
+	for cid in card_ids:
+		var id := str(cid)
+		var def: Dictionary = _card_def(id)
+		var base := str(def.get("melhorada_de", ""))
+		if base != "":
+			# Melhorada: keep only the plus version
+			if seen.has(id): continue
+			seen[id] = true
+			out.append(id)
+			continue
+		# Base: skip if a Melhorada of it is owned
+		var replaced := false
+		for other in card_ids:
+			var odef: Dictionary = _card_def(str(other))
+			if str(odef.get("melhorada_de", "")) == id:
+				replaced = true
+				break
+		if replaced:
+			continue
+		if seen.has(id): continue
+		seen[id] = true
+		out.append(id)
+	return out
+
+func _combat_deck_for_hero(hero_id: String) -> Array:
+	_ensure_owned_cards()
+	var list: Array = owned_cards.get(hero_id, _default_owned_for(hero_id)).duplicate()
+	return _apply_melhorada_replace(list)
+
+func _build_equipped_from_owned() -> Dictionary:
+	var result: Dictionary = {}
+	for hero_id in team:
+		result[hero_id] = _combat_deck_for_hero(str(hero_id))
+	return result
+
 func _show_decks() -> void:
+	_ensure_owned_cards()
 	if not team.has(deck_hero): deck_hero = team[0]
 	var hero: Dictionary = Content.HEROES[deck_hero]
-	var selected_cards: Array = equipped.get(deck_hero, hero["cards"])
+	var selected_cards: Array = _combat_deck_for_hero(deck_hero)
 	var pool: Array = hero.get("pool", hero["cards"])
-	if not pool.has(deck_selected): deck_selected = pool[0]
-	var menu := _center_panel("DECK · %s · %d/%d CARTAS" % [hero["name"], selected_cards.size(), Content.RULES["deck_size"]])
-	menu.add_child(_label("Essência: %d · Melhorias: nível 1 custa 3; nível 2 custa 6; modificação custa 4." % essence, 16))
+	if not pool.has(deck_selected) and not selected_cards.is_empty():
+		deck_selected = selected_cards[0]
+	elif not pool.has(deck_selected):
+		deck_selected = pool[0] if not pool.is_empty() else ""
+	var menu := _center_panel("COLEÇÃO · %s · %d CARTAS NO DECK" % [hero["name"], selected_cards.size()])
+	menu.add_child(_label("Sem editor de deck: todas as cartas possuídas entram no baralho. Melhoradas substituem a base. Baralho maior = menos reshuffles.", 15))
 	var menu_panel := menu.get_parent() as PanelContainer
 	menu_panel.custom_minimum_size.x = 1150
 	var hero_bar := HBoxContainer.new()
@@ -658,20 +776,21 @@ func _show_decks() -> void:
 	var slots := VBoxContainer.new()
 	slots.custom_minimum_size.x = 275
 	columns.add_child(slots)
-	slots.add_child(_label("EQUIPADAS · SELECIONE UM SLOT", 19, Color("d9bd85")))
+	slots.add_child(_label("NO DECK DE COMBATE (somente leitura)", 19, Color("d9bd85")))
 	for position in range(selected_cards.size()):
 		var card_id: String = selected_cards[position]
 		var definition: Dictionary = Content.CARDS[card_id]
 		var selected_prefix := "▶ " if deck_slot == position else ""
 		var button := _button("%s%d · %s" % [selected_prefix, position + 1, definition["name"]], _choose_deck_slot.bind(position, card_id), _card_description(definition))
 		button.custom_minimum_size = Vector2(260, 48)
+		button.disabled = true
 		slots.add_child(button)
 	var catalogue := ScrollContainer.new()
 	catalogue.custom_minimum_size = Vector2(360, maxf(210.0, get_viewport().get_visible_rect().size.y - 450.0))
 	columns.add_child(catalogue)
 	var available := VBoxContainer.new()
 	catalogue.add_child(available)
-	available.add_child(_label("CARTAS DISPONÍVEIS", 19, Color("d9bd85")))
+	available.add_child(_label("POOL DO PERSONAGEM (posse cresce após missões)", 19, Color("d9bd85")))
 	for entry in pool:
 		var card_id: String = entry
 		if not _matches_deck_filter(card_id, deck_hero): continue
@@ -705,7 +824,7 @@ func _show_decks() -> void:
 	var mod_button := _button("Modificação: %s · custo 4" % (changes.get("mod", "") if changes.get("mod", "") != "" else "nenhuma"), _cycle_mod.bind(selected_key))
 	mod_button.disabled = essence < 4
 	details.add_child(mod_button)
-	details.add_child(_label("Selecione um slot e depois uma carta da lista.", 16))
+	details.add_child(_label("Não há montagem manual de deck. Melhoradas substituem a versão mais fraca automaticamente.", 16))
 	if feedback != "": details.add_child(_label(feedback, 16, Color("e7a777")))
 	menu.add_child(_button("Voltar", _show_menu))
 
@@ -746,8 +865,7 @@ func _card_type(definition: Dictionary) -> String:
 
 func _choose_deck_card(card_id: String) -> void:
 	deck_selected = card_id
-	if deck_slot >= 0:
-		_equip_card(deck_hero, deck_slot, card_id)
+	feedback = "Deck automático — cartas possuídas entram todas no baralho."
 	_show_decks()
 
 func _equip_card(hero_id: String, slot: int, card_id: String) -> bool:
@@ -833,9 +951,20 @@ func _start_mission() -> void:
 		_show_team_conflict_popup(conflicts)
 		return
 	pack_mode = "default"
+	_ensure_owned_cards()
+	equipped = _build_equipped_from_owned()
 	_begin_battle_session()
 	_build_arena(_arena_theme_for_mission(mission_id))
-	battle.begin(mission_id, team, equipped, 0, improvements, loadout)
+	# Equipes ent_: usa deploy de entidades (Iniciais+Desvantagem+Combos + cartas possuídas).
+	var all_entities := team.all(func(id): return str(id).begins_with("ent_"))
+	if all_entities:
+		pack_mode = "entities"
+		var ids: Array[String] = []
+		for id in team: ids.append(str(id))
+		if not packs.entities.deploy(battle, mission_id, ids, equipped, 0):
+			battle.begin(mission_id, team, equipped, 0, improvements, loadout)
+	else:
+		battle.begin(mission_id, team, equipped, 0, improvements, loadout)
 	_apply_accessibility()
 	_render_battle()
 
@@ -845,6 +974,9 @@ func _begin_battle_session() -> void:
 	chain_targets.clear()
 	event_history.clear()
 	feedback = ""
+	inspect_open = false
+	inspected_card = -1
+	card_confirmed = false
 	battle = Battle.new()
 	battle.event.connect(_on_event)
 	battle.visual.connect(_on_visual)
@@ -857,9 +989,10 @@ func _card_def(card_id: String) -> Dictionary:
 	return packs.definition(str(card_id))
 
 func _on_event(message: String) -> void:
+	# Log de combate vai só para a janela de log (esquerda) — nada flutuando sobre as cartas.
 	event_history.append(message)
-	if event_history.size() > 8: event_history.pop_front()
-	feedback = message
+	if event_history.size() > 24:
+		event_history.pop_front()
 
 func _on_visual(kind: String, source_id: int, target_id: int, amount: int) -> void:
 	if presentation != null: presentation.show_action(kind, source_id, target_id, amount)
@@ -914,29 +1047,44 @@ func _render_battle() -> void:
 	economy_hud = null
 	recompra_ring = null
 	var viewport_size := get_viewport().get_visible_rect().size
-	# Slim top chrome (MS-like: battlefield stays clear)
+	# Top mission chrome + centered phase prompt (small text box)
 	var header := VBoxContainer.new()
 	hud.add_child(header)
 	header.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
-	header.add_child(_label("%s  ·  RODADA %d" % [battle.mission["name"], battle.turn], 22, Color("e9c891")))
-	var phase_tint := Color.WHITE if battle.phase == "PLAYER" else Color(1, 1, 1, 0.45)
-	var phase_line := _label("FASE DO JOGADOR" if battle.phase == "PLAYER" else "FASE INIMIGA", 16, Color("c9d1dd"))
-	phase_line.modulate = phase_tint
-	header.add_child(phase_line)
-	_chrome(Vector2(12, 8), Vector2(viewport_size.x - 24, 72), "res://assets/ui/header.png")
+	header.add_child(_label("%s  ·  RODADA %d" % [battle.mission["name"], battle.turn], 18, Color("e9c891")))
+	_chrome(Vector2(12, 8), Vector2(viewport_size.x - 24, 48), "res://assets/ui/header.png")
+	# Caixa de fase central (também no fim do render para ficar acima do chrome).
 	var extra := ""
 	if battle.mission["objective"] == "PROTECT":
 		extra += "SENTINELA %d Vida" % battle.protect_hp
 	var next_turn: Array = battle.mission.get("reinforcements", {}).get(battle.turn + 1, [])
 	if not next_turn.is_empty():
 		extra += ("  ·  " if extra != "" else "") + "REFORÇOS EM 1 TURNO"
+	# Left log window — only place for game log text
+	var left_scroll := ScrollContainer.new()
+	left_scroll.name = "LeftLogPanel"
+	left_scroll.position = Vector2(12, 100)
+	left_scroll.size = Vector2(260, maxf(120.0, viewport_size.y * 0.42))
+	left_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	hud.add_child(left_scroll)
+	var left := VBoxContainer.new()
+	left.custom_minimum_size.x = 240
+	left_scroll.add_child(left)
+	left.add_child(_label("LOG", 18, Color("e9c891")))
+	var log_slice: Array = event_history.slice(max(0, event_history.size() - 12))
+	for entry in log_slice:
+		var line := _label(str(entry), 13, Color("d5deea"))
+		line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		line.custom_minimum_size.x = 230
+		left.add_child(line)
 	if extra != "":
-		header.add_child(_label(extra, 15, Color("e9c891")))
-	# Compact right tools (cenário / itens / log) — no exploding left lists
+		left.add_child(_label(extra, 13, Color("e9c891")))
+	_chrome(Vector2(12, 100), Vector2(260, maxf(120.0, viewport_size.y * 0.42)), "res://assets/ui/panel.png")
+	# Right tools: objective + environment only
 	var right_scroll := ScrollContainer.new()
 	right_scroll.name = "RightPanel"
-	right_scroll.position = Vector2(viewport_size.x - 280, 90)
-	right_scroll.size = Vector2(260, maxf(100.0, viewport_size.y * 0.38))
+	right_scroll.position = Vector2(viewport_size.x - 280, 100)
+	right_scroll.size = Vector2(260, maxf(100.0, viewport_size.y * 0.30))
 	right_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	hud.add_child(right_scroll)
 	var right := VBoxContainer.new()
@@ -952,13 +1100,7 @@ func _render_battle() -> void:
 		var env_btn := _button("%s · %d Ini" % [object["name"], object["cost"]], func(): battle.use_environment(index))
 		env_btn.custom_minimum_size = Vector2(230, 36)
 		right.add_child(env_btn)
-	right.add_child(_label("LOG", 18))
-	for entry in event_history.slice(max(0, event_history.size() - 4)):
-		var line := _label(entry, 13)
-		line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		line.custom_minimum_size.x = 230
-		right.add_child(line)
-	_chrome(Vector2(viewport_size.x - 280, 90), Vector2(260, maxf(100.0, viewport_size.y * 0.38)), "res://assets/ui/panel.png")
+	_chrome(Vector2(viewport_size.x - 280, 100), Vector2(260, maxf(100.0, viewport_size.y * 0.30)), "res://assets/ui/panel.png")
 	# 3D hand arc (kept)
 	for index in range(battle.hand.size()):
 		var card: Dictionary = battle.hand[index]
@@ -974,21 +1116,17 @@ func _render_battle() -> void:
 	recompra_ring.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	recompra_ring.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	hud.add_child(recompra_ring)
-	hover_hint = _label("Passe o mouse na carta (HUD atualiza). Clique para selecionar; clique de novo para confirmar. Se precisar de alvo, clique no sprite; auto (si/equipe/aleatório) resolve na hora. Segure ~2s para Recompra. Botão MOVER (ou tecla M) + clique no aliado troca Frente/Retaguarda.", 15, Color("c9d1dd"))
-	hover_hint.position = Vector2(20, viewport_size.y - 210)
-	hover_hint.custom_minimum_size.x = viewport_size.x * 0.42
-	hover_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	hover_hint = _label("", 14, Color("c9d1dd"))
+	hover_hint.visible = false
 	hud.add_child(hover_hint)
-	var status := _label("%s%s" % [feedback, "  ·  ALVOS %d/%d" % [chain_targets.size(), _card_def(str(battle.hand[selected_card]["id"])).get("chain", 1)] if selected_card >= 0 and selected_card < battle.hand.size() and not chain_targets.is_empty() else ""], 17, Color("f7d499"))
-	status.position = Vector2(20, viewport_size.y - 186)
-	status.custom_minimum_size.x = viewport_size.x * 0.42
-	status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	hud.add_child(status)
+	if selected_card >= 0 and selected_card < battle.hand.size() and battle.phase == "PLAYER" and not card_confirmed and not inspect_open:
+		_add_selected_card_actions(selected_card, viewport_size)
 	if recover_pick_active and not battle.pending_recover.is_empty():
 		_build_recover_pick_panel(viewport_size)
 	_render_actors()
-	if inspected_card >= 0 and inspected_card < battle.hand.size() and battle.phase == "PLAYER":
+	if inspect_open and inspected_card >= 0 and inspected_card < battle.hand.size() and battle.phase == "PLAYER":
 		_add_inspect_overlay(inspected_card, viewport_size)
+	_add_phase_prompt(viewport_size)
 	visible_uids.clear()
 	for visible_card in battle.hand:
 		visible_uids[visible_card["uid"]] = true
@@ -1336,9 +1474,9 @@ func _start_move_action() -> void:
 	selected_action = "move"
 	card_confirmed = false
 	inspected_card = -1
+	inspect_open = false
 	selected_card = -1
 	chain_targets.clear()
-	feedback = "MOVER: clique no aliado para trocar Frente/Retaguarda (tecla M também)."
 	_render_battle()
 
 func _add_actor_button(parent: VBoxContainer, actor: Dictionary) -> void:
@@ -1355,20 +1493,23 @@ func _select_card(index: int) -> void:
 		packs.redraw_card(battle, pack_mode, index)
 		return
 	selected_action = ""
-	# First click selects/inspects; second click on same card enters targeting (never deselects here)
+	if inspect_open:
+		if inspected_card == index or selected_card == index:
+			_confirm_selected_card(index)
+			return
+		_close_inspect_keep_selection()
 	if selected_card == index and card_confirmed:
-		feedback = "Alvo: clique no sprite do personagem."
 		_render_battle()
 		return
-	if selected_card == index or inspected_card == index:
-		inspected_card = index
-		_confirm_inspected()
+	if selected_card == index and not card_confirmed:
+		_confirm_selected_card(index)
 		return
-	inspected_card = index
-	selected_card = -1
+	selected_card = index
+	inspected_card = -1
+	inspect_open = false
 	card_confirmed = false
 	chain_targets.clear()
-	feedback = "Carta selecionada. Clique de novo para confirmar a jogada."
+	damage_preview_by_actor.clear()
 	_render_battle()
 
 func _choose_target(actor_id: int) -> void:
@@ -1411,10 +1552,14 @@ func _choose_target(actor_id: int) -> void:
 		selected_card = -1
 		card_confirmed = false
 		inspected_card = -1
+		inspect_open = false
 		selected_action = ""
 		_after_card_resolved()
 	else:
-		feedback = "Sem ação, Iniciativa, alcance ou alvo válido."
+		var why := _card_unusable_reason(selected_card, actor_id)
+		if why == "":
+			why = "Sem ação, Iniciativa, alcance ou alvo válido."
+		_show_block_popup(why)
 		_render_battle()
 
 func _render_actors() -> void:
@@ -1534,12 +1679,13 @@ func _create_actor_visual(actor: Dictionary) -> Node3D:
 	halo.material_override = halo_mat
 	halo.position.y = 0.01
 	body.add_child(halo)
-	if ResourceLoader.exists(actor["sprite"]):
-		var sheet: Texture2D = load(actor["sprite"])
+	var sprite_res := _sensitive_path(str(actor.get("sprite", "")), "sprite")
+	if ResourceLoader.exists(sprite_res):
+		var sheet: Texture2D = load(sprite_res)
 		var columns := 1
 		var rows := 1
 		var region := Rect2(Vector2.ZERO, sheet.get_size())
-		var sheet_path := str(actor["sprite"])
+		var sheet_path := sprite_res
 		if sheet_path.ends_with("hero_wizard.png"):
 			region = Rect2(0, 0, 420, 768)
 		elif not sheet_path.contains("assets/cast") and not sheet_path.ends_with("hero_rogue.png"):
@@ -1564,6 +1710,8 @@ func _create_actor_visual(actor: Dictionary) -> Node3D:
 		sprite.set_meta("sprite_scale", spr_scale)
 		# Multiplica a transformação base existente (pixel_size / animações), nos dois eixos.
 		sprite.scale = Vector3(spr_scale, spr_scale, 1.0)
+		# Inimigos olham para o jogador (espelhados horizontalmente).
+		sprite.flip_h = str(actor.get("side", "")) == "ENEMY"
 		body.add_child(sprite)
 	var plate := Label3D.new()
 	plate.name = "Nameplate"
@@ -2135,11 +2283,30 @@ func _sprite_region(path: String, sheet: Texture2D) -> Rect2:
 		return Rect2(0, 0, minf(420.0, sheet.get_width()), minf(768.0, sheet.get_height()))
 	return Rect2(0, 0, sheet.get_width() / 9.0, sheet.get_height() / 6.0)
 
+func _sensitive_path(path: String, kind: String = "sprite") -> String:
+	if not sensitive_content or path == "":
+		return path
+	var fname := path.get_file()
+	var sens := "res://assets/cast_sensitive/" + fname
+	if ResourceLoader.exists(sens):
+		return sens
+	match kind:
+		"portrait":
+			if ResourceLoader.exists("res://assets/cast_sensitive/generic_portrait.png"):
+				return "res://assets/cast_sensitive/generic_portrait.png"
+		"icon":
+			if ResourceLoader.exists("res://assets/cast_sensitive/generic_icon.png"):
+				return "res://assets/cast_sensitive/generic_icon.png"
+		_:
+			if ResourceLoader.exists("res://assets/cast_sensitive/generic_sprite.png"):
+				return "res://assets/cast_sensitive/generic_sprite.png"
+	return path
+
 func _unit_portrait(actor: Dictionary) -> Texture2D:
-	var portrait_path := str(actor.get("portrait", ""))
+	var portrait_path := _sensitive_path(str(actor.get("portrait", "")), "portrait")
 	if portrait_path != "" and ResourceLoader.exists(portrait_path):
 		return load(portrait_path)
-	var sprite_path := str(actor.get("sprite", ""))
+	var sprite_path := _sensitive_path(str(actor.get("sprite", "")), "sprite")
 	var full := sprite_path.replace(".png", "_full.png")
 	if full != sprite_path and ResourceLoader.exists(full):
 		return load(full)
@@ -2279,19 +2446,18 @@ func _on_card_gui(event: InputEvent, index: int) -> void:
 		get_viewport().set_input_as_handled()
 		return
 	if selected_card == index and card_confirmed:
-		# Already in targeting — keep targeting; do not deselect
-		feedback = "Alvo: clique no sprite do personagem."
 		call_deferred("_render_battle")
-	elif inspected_card == index or (selected_card == index and not card_confirmed):
-		suppress_inspect_cancel = true
-		call_deferred("_confirm_inspected")
+	elif selected_card == index and not card_confirmed:
+		call_deferred("_confirm_selected_card", index)
+	elif inspect_open and inspected_card == index:
+		call_deferred("_confirm_selected_card", index)
 	else:
-		# First click: select / inspect
-		inspected_card = index
-		selected_card = -1
+		selected_card = index
+		inspected_card = -1
+		inspect_open = false
 		card_confirmed = false
 		chain_targets.clear()
-		feedback = "Carta selecionada. Clique de novo para confirmar a jogada."
+		damage_preview_by_actor.clear()
 		_show_actor_portrait(int(battle.hand[index]["owner"]), false)
 		call_deferred("_render_battle")
 	get_viewport().set_input_as_handled()
@@ -2408,19 +2574,28 @@ func _on_inspect_blocker_gui(event: InputEvent) -> void:
 		_cancel_inspect()
 	get_viewport().set_input_as_handled()
 
-func _confirm_inspected() -> void:
+func _confirm_selected_card(index: int = -1) -> void:
 	suppress_inspect_cancel = false
-	var index := inspected_card
+	if index < 0:
+		index = selected_card if selected_card >= 0 else inspected_card
 	if battle == null or index < 0 or index >= battle.hand.size():
+		return
+	inspect_open = false
+	inspected_card = -1
+	var reason := _card_unusable_reason(index)
+	if reason != "":
+		_show_block_popup(reason)
+		selected_card = index
+		card_confirmed = false
+		_render_battle()
 		return
 	var owner: Dictionary = battle.actor_by_id(int(battle.hand[index].get("owner", 0)))
 	if int(owner.get("hp", 0)) <= 0:
-		feedback = "Herói fora de combate — carta indisponível."
+		_show_block_popup("Herói fora de combate — carta indisponível.")
 		_render_battle()
 		return
 	var definition: Dictionary = _card_def(str(battle.hand[index]["id"]))
 	var kind := str(definition.get("target", "ENEMY"))
-	inspected_card = -1
 	selected_card = index
 	card_confirmed = true
 	selected_action = ""
@@ -2430,21 +2605,35 @@ func _confirm_inspected() -> void:
 		if auto_id >= 0:
 			_choose_target(auto_id)
 		else:
-			feedback = "Sem alvo automático disponível."
+			_show_block_popup("Sem alvo automático disponível.")
 			card_confirmed = false
 			_render_battle()
 		return
-	feedback = "Alvo: clique no sprite do personagem."
+	_render_battle()
+
+func _confirm_inspected() -> void:
+	_confirm_selected_card(inspected_card if inspected_card >= 0 else selected_card)
+
+func _open_inspect(index: int) -> void:
+	if battle == null or index < 0 or index >= battle.hand.size():
+		return
+	selected_card = index
+	inspected_card = index
+	inspect_open = true
+	card_confirmed = false
+	_render_battle()
+
+func _close_inspect_keep_selection() -> void:
+	inspect_open = false
+	inspected_card = -1
 	_render_battle()
 
 func _cancel_inspect() -> void:
 	damage_preview_by_actor.clear()
 	if suppress_inspect_cancel:
 		return
+	inspect_open = false
 	inspected_card = -1
-	if not card_confirmed:
-		selected_card = -1
-	feedback = ""
 	_render_battle()
 
 func _effect_glossary_lines(definition: Dictionary, card: Dictionary = {}) -> PackedStringArray:
@@ -2529,13 +2718,7 @@ func _add_inspect_overlay(index: int, viewport_size: Vector2) -> void:
 	var btn_row := HBoxContainer.new()
 	btn_row.add_theme_constant_override("separation", 8)
 	col.add_child(btn_row)
-	var confirm := _button("Confirmar", Callable(), "Confirma a carta e segue para o alvo")
-	confirm.pressed.connect(func() -> void:
-		suppress_inspect_cancel = true
-		_confirm_inspected()
-	)
-	btn_row.add_child(confirm)
-	var cancel := _button("Fechar", Callable(), "Fecha a inspeção")
+	var cancel := _button("Voltar", Callable(), "Fecha a inspeção e volta à carta selecionada")
 	cancel.pressed.connect(func() -> void: _cancel_inspect())
 	btn_row.add_child(cancel)
 	hud.add_child(panel)
@@ -2600,6 +2783,7 @@ func _present_enemy_turn() -> void:
 	enemy_steps = 0
 	selected_card = -1
 	inspected_card = -1
+	inspect_open = false
 	card_confirmed = false
 	selected_action = ""
 	chain_targets.clear()
@@ -2719,7 +2903,9 @@ func _input(event: InputEvent) -> void:
 		_show_actor_portrait(hovered_actor, false)
 		_render_battle()
 	elif event.is_action_pressed("hotn_confirm"):
-		if inspected_card >= 0 and not card_confirmed:
+		if selected_card >= 0 and not card_confirmed:
+			_confirm_selected_card(selected_card)
+		elif inspected_card >= 0 and not card_confirmed:
 			_confirm_inspected()
 		elif card_confirmed or selected_action != "":
 			var ids := _target_ids()
@@ -2980,10 +3166,165 @@ func _process(delta: float) -> void:
 		portrait_sticky_until = 0
 		_hide_idle_portraits()
 
+
+func _phase_prompt_text() -> String:
+	if battle == null:
+		return ""
+	if battle.phase == "ENEMY" or enemy_presenting:
+		return "Fase dos adversários"
+	if inspect_open:
+		return "Volte quando terminar de Inspecionar"
+	if card_confirmed and selected_card >= 0:
+		return "Selecione um alvo"
+	if selected_card >= 0 and not card_confirmed:
+		return "Confirme"
+	return "Selecione uma Manobra ou encerre o turno"
+
+func _add_phase_prompt(viewport_size: Vector2) -> void:
+	var w := minf(560.0, viewport_size.x * 0.6)
+	var h := 42.0
+	var box := Control.new()
+	box.name = "PhasePrompt"
+	box.z_index = 30
+	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# Âncoras no topo-centro — independente do tamanho do viewport/screenshot.
+	box.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	box.offset_left = -w * 0.5
+	box.offset_right = w * 0.5
+	box.offset_top = 52.0
+	box.offset_bottom = 52.0 + h
+	var bg := ColorRect.new()
+	bg.color = Color(0.07, 0.09, 0.14, 0.94)
+	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	box.add_child(bg)
+	var border := ColorRect.new()
+	border.color = Color(0.72, 0.58, 0.32, 0.95)
+	border.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
+	border.offset_top = -2.0
+	border.offset_bottom = 0.0
+	border.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	box.add_child(border)
+	var lab := _label(_phase_prompt_text(), 17, Color("f0e6d0"))
+	lab.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lab.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	lab.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	lab.offset_left = 8
+	lab.offset_right = -8
+	lab.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	box.add_child(lab)
+	hud.add_child(box)
+
+func _add_selected_card_actions(index: int, viewport_size: Vector2) -> void:
+	# Botão Inspecionar ao lado da carta selecionada (centro inferior).
+	var row := HBoxContainer.new()
+	row.name = "SelectedCardActions"
+	row.add_theme_constant_override("separation", 10)
+	row.position = Vector2(viewport_size.x * 0.5 - 140.0, viewport_size.y - 220.0)
+	row.z_index = 6
+	var inspect_btn := _button("Inspecionar", Callable(), "Abre o glossário da Manobra selecionada")
+	inspect_btn.custom_minimum_size = Vector2(160, 40)
+	inspect_btn.pressed.connect(func() -> void: _open_inspect(index))
+	row.add_child(inspect_btn)
+	var hint := _label("Clique de novo na carta para confirmar", 13, Color("aab2c0"))
+	row.add_child(hint)
+	hud.add_child(row)
+
+func _show_block_popup(message: String) -> void:
+	# Popup modal curto explicando por que a Manobra não pode ser usada.
+	var blocker := Control.new()
+	blocker.name = "BlockPopup"
+	blocker.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	blocker.z_index = 40
+	blocker.mouse_filter = Control.MOUSE_FILTER_STOP
+	hud.add_child(blocker)
+	var dim := ColorRect.new()
+	dim.color = Color(0, 0, 0, 0.45)
+	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	dim.mouse_filter = Control.MOUSE_FILTER_STOP
+	blocker.add_child(dim)
+	var panel := PanelContainer.new()
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.1, 0.12, 0.18, 0.96)
+	style.set_border_width_all(2)
+	style.border_color = Color(0.85, 0.55, 0.35, 0.95)
+	style.set_corner_radius_all(12)
+	style.set_content_margin_all(18)
+	panel.add_theme_stylebox_override("panel", style)
+	panel.custom_minimum_size = Vector2(420, 140)
+	var col := VBoxContainer.new()
+	col.add_theme_constant_override("separation", 12)
+	panel.add_child(col)
+	col.add_child(_label("Não é possível", 20, Color("f0c27a")))
+	var body := _label(message, 17, Color("f4f1ea"))
+	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	body.custom_minimum_size.x = 380
+	col.add_child(body)
+	var ok := _button("Entendi", Callable())
+	ok.pressed.connect(func() -> void:
+		if is_instance_valid(blocker):
+			blocker.queue_free()
+	)
+	col.add_child(ok)
+	blocker.add_child(panel)
+	panel.position = Vector2((get_viewport().get_visible_rect().size.x - 420) * 0.5, (get_viewport().get_visible_rect().size.y - 160) * 0.4)
+	dim.gui_input.connect(func(ev: InputEvent) -> void:
+		if ev is InputEventMouseButton and ev.pressed:
+			if is_instance_valid(blocker):
+				blocker.queue_free()
+	)
+
+func _card_unusable_reason(hand_index: int, target_id: int = -1) -> String:
+	if battle == null or hand_index < 0 or hand_index >= battle.hand.size():
+		return "Carta inválida."
+	var card: Dictionary = battle.hand[hand_index]
+	var card_id := str(card.get("id", ""))
+	if packs.is_pack_card(card_id) or pack_mode == "entities":
+		var reason: String = packs.entities.play_block_reason(battle, hand_index, target_id, chain_targets)
+		if reason != "":
+			return reason
+	var source: Dictionary = battle.actor_by_id(int(card.get("owner", 0)))
+	var definition: Dictionary = _card_def(card_id)
+	if source.is_empty() or int(source.get("hp", 0)) <= 0:
+		return "O herói desta carta está fora de combate."
+	if battle.phase != "PLAYER":
+		return "Não é a fase do jogador."
+	for locked in ["stun", "bind", "bound", "banished", "finalized"]:
+		if battle._has_status(source, locked):
+			return "Você não pode usar Manobras enquanto estiver incapacitado."
+	var cost := int(definition.get("cost", 0))
+	if battle._has_status(source, "fast"): cost -= 1
+	if battle._has_status(source, "slow"): cost += 1
+	cost = maxi(0, cost)
+	if int(battle.impulse) < cost:
+		return "Você precisa de %d Iniciativa para usar esta Manobra." % cost
+	var plays := 0 if bool(definition.get("free", false)) else int(definition.get("plays", 1))
+	if int(battle.card_plays) < plays:
+		return "Você não tem jogadas de carta restantes neste turno."
+	if not bool(definition.get("reach", false)) and str(source.get("row", "")) == "back":
+		# Só bloqueia se ainda houver aliado na frente (mesma regra de can_reach)
+		if battle.living("ALLY").any(func(a): return a["row"] == "front"):
+			# Se o alvo for inimigo sem alcance — mensagem exemplar pedida
+			if target_id >= 0:
+				var tgt: Dictionary = battle.actor_by_id(target_id)
+				if not tgt.is_empty() and tgt.get("side", "") == "ENEMY" and not battle.can_reach(source, tgt, definition):
+					return "Você não pode atacar sem Alcance da linha de trás."
+	if target_id >= 0:
+		var target: Dictionary = battle.actor_by_id(target_id)
+		if not target.is_empty() and target.get("side", "") != source.get("side", ""):
+			if not battle.can_reach(source, target, definition):
+				if not bool(definition.get("reach", false)) and str(source.get("row", "")) == "back":
+					return "Você não pode atacar sem Alcance da linha de trás."
+				if not bool(definition.get("reach", false)) and str(target.get("row", "")) == "back":
+					return "Você não pode atingir a retaguarda sem Alcance."
+				return "Alvo fora de alcance."
+	return ""
+
 func _save_config() -> void:
 	var config := ConfigFile.new()
 	config.set_value("game", "team", team)
 	config.set_value("game", "equipped", equipped)
+	config.set_value("game", "owned_cards", owned_cards)
 	config.set_value("game", "improvements", improvements)
 	config.set_value("game", "best_stars", best_stars)
 	config.set_value("game", "essence", essence)
@@ -2994,6 +3335,7 @@ func _save_config() -> void:
 	config.set_value("settings", "reduce_motion", reduce_motion)
 	config.set_value("settings", "animation_speed", animation_speed)
 	config.set_value("settings", "battle_view_mode", battle_view_mode)
+	config.set_value("settings", "sensitive_content", sensitive_content)
 	config.save("user://hotn3.cfg")
 
 func _load_config() -> void:
@@ -3006,7 +3348,9 @@ func _load_config() -> void:
 			team.clear()
 			for id in saved_team: team.append(id)
 		equipped = config.get_value("game", "equipped", {})
+		owned_cards = config.get_value("game", "owned_cards", {})
 		_sanitize_decks()
+		_ensure_owned_cards()
 		improvements = config.get_value("game", "improvements", {})
 		var stored_stars: Dictionary = config.get_value("game", "best_stars", {})
 		best_stars.clear()
@@ -3025,4 +3369,5 @@ func _load_config() -> void:
 		battle_view_mode = str(config.get_value("settings", "battle_view_mode", battle_view_mode))
 		if battle_view_mode not in ["normal", "lateral"]:
 			battle_view_mode = "normal"
+		sensitive_content = bool(config.get_value("settings", "sensitive_content", sensitive_content))
 		animation_speed = clampf(float(config.get_value("settings", "animation_speed", animation_speed)), 0.5, 2.0)

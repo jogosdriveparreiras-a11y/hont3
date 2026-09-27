@@ -74,16 +74,17 @@ func _run() -> void:
 		_finish()
 		return
 
-	# 1st click path: select/inspect
-	game.set("inspected_card", dmg_idx)
+	# 1st click path: select only (Inspecionar is a separate button)
+	game.set("inspected_card", -1)
+	game.set("inspect_open", false)
 	game.set("hovered_card", dmg_idx)
-	game.set("selected_card", -1)
+	game.set("selected_card", dmg_idx)
 	game.set("card_confirmed", false)
 	game.call("_render_battle")
 	for i in range(18):
 		await process_frame
 	_save(dirs, "playtest_hotn3_playflow_select.png")
-	_assert(int(game.get("inspected_card")) == dmg_idx, "inspect not sticky after select")
+	_assert(int(game.get("selected_card")) == dmg_idx, "selection not sticky after select")
 
 	var enemies_before: Array = battle.living("ENEMY")
 	_assert(not enemies_before.is_empty(), "no enemies")
@@ -92,7 +93,7 @@ func _run() -> void:
 	var hand_before: int = battle.hand.size()
 
 	# 2nd click path: confirm (must enter targeting, not auto-play)
-	game.call("_confirm_inspected")
+	game.call("_confirm_selected_card", dmg_idx)
 	for i in range(16):
 		await process_frame
 	_save(dirs, "playtest_hotn3_playflow_confirm_targeting.png")
@@ -123,15 +124,16 @@ func _run() -> void:
 		var owner_before: Dictionary = battle.actor_by_id(owner_id)
 		var block_before: int = int(owner_before.get("block", 0)) + int(owner_before.get("shield", 0))
 		var hand_self_before: int = battle.hand.size()
-		game.set("inspected_card", self_idx)
+		game.set("inspected_card", -1)
+		game.set("inspect_open", false)
 		game.set("hovered_card", self_idx)
-		game.set("selected_card", -1)
+		game.set("selected_card", self_idx)
 		game.set("card_confirmed", false)
 		game.call("_render_battle")
 		for i in range(10):
 			await process_frame
 		_save(dirs, "playtest_hotn3_playflow_self_select.png")
-		game.call("_confirm_inspected")
+		game.call("_confirm_selected_card", self_idx)
 		for i in range(20):
 			await process_frame
 		_save(dirs, "playtest_hotn3_playflow_self_auto.png")
@@ -152,14 +154,15 @@ func _run() -> void:
 			var kind: String = str(game.call("_card_def", str(battle.hand[team_idx]["id"])).get("target", ""))
 			var hand_auto_before: int = battle.hand.size()
 			var enemy_hp_sum_before: int = _enemy_hp_sum(battle)
-			game.set("inspected_card", team_idx)
+			game.set("inspected_card", -1)
+			game.set("inspect_open", false)
 			game.set("hovered_card", team_idx)
-			game.set("selected_card", -1)
+			game.set("selected_card", team_idx)
 			game.set("card_confirmed", false)
 			game.call("_render_battle")
 			for i in range(8):
 				await process_frame
-			game.call("_confirm_inspected")
+			game.call("_confirm_selected_card")
 			for i in range(20):
 				await process_frame
 			_save(dirs, "playtest_hotn3_playflow_auto_team_or_random.png")

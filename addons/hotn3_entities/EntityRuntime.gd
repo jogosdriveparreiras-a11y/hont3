@@ -54,7 +54,7 @@ func deploy(battle: Variant, mission_id: String, entity_ids: Array[String], chos
 			kit = kit_manobras(id)
 			var desv := kit_desvantagem(id)
 			if desv != "": kit.append(desv)
-		selection[id] = kit
+		selection[id] = apply_melhorada_replace(kit)
 		# Alias aprimoramento → passive para hooks existentes
 		var apr = replacement.get("aprimoramento", replacement.get("passive", ""))
 		if typeof(apr) == TYPE_DICTIONARY:
@@ -86,24 +86,49 @@ func deploy(battle: Variant, mission_id: String, entity_ids: Array[String], chos
 func deck_valid(entity_id: String, deck: Array) -> bool:
 	var hero: Dictionary = catalog.hero(entity_id)
 	if hero.is_empty(): return false
-	# Novo kit: exatamente 5 Iniciais únicas (sem Desvantagem no array cards).
-	# Legado Content: 8 cartas com até 2 cópias ainda aceito.
-	var size := deck.size()
-	if size == 5:
-		var seen: Dictionary = {}
-		for card_id in deck:
-			var cid := str(card_id)
-			if seen.has(cid): return false
-			seen[cid] = true
-			if not hero.get("pool", []).has(cid) and not hero.get("iniciais", []).has(cid):
-				return false
-			var def: Dictionary = catalog.definition(cid)
-			if str(def.get("class", "")) == "DESVANTAGEM": return false
-		return true
-	if size != 8: return false
+	# Kit flexível: todas as cartas possuídas (Iniciais + Evoluídas + Melhoradas + Desvantagem).
+	# Melhoradas substituem a base (sem duplicar). Aceita legado size 5 (só Iniciais) ou 8.
+	if deck.is_empty(): return false
+	var pool: Array = hero.get("pool", [])
+	var iniciais: Array = hero.get("iniciais", hero.get("cards", []))
+	var allowed: Dictionary = {}
+	for cid in pool: allowed[str(cid)] = true
+	for cid in iniciais: allowed[str(cid)] = true
+	for cid in hero.get("evoluidas", []): allowed[str(cid)] = true
+	for cid in hero.get("melhoradas", []): allowed[str(cid)] = true
+	var desv := str(hero.get("desvantagem", ""))
+	if desv != "": allowed[desv] = true
+	var seen: Dictionary = {}
 	for card_id in deck:
-		if not hero["pool"].has(card_id) or deck.count(card_id) > 2: return false
+		var cid := str(card_id)
+		if seen.has(cid): return false
+		seen[cid] = true
+		if not allowed.has(cid): return false
 	return true
+
+func apply_melhorada_replace(card_ids: Array) -> Array:
+	var out: Array = []
+	var seen: Dictionary = {}
+	for cid in card_ids:
+		var id := str(cid)
+		var def: Dictionary = catalog.definition(id)
+		var base := str(def.get("melhorada_de", ""))
+		if base != "":
+			if seen.has(id): continue
+			seen[id] = true
+			out.append(id)
+			continue
+		var replaced := false
+		for other in card_ids:
+			var odef: Dictionary = catalog.definition(str(other))
+			if str(odef.get("melhorada_de", "")) == id:
+				replaced = true
+				break
+		if replaced: continue
+		if seen.has(id): continue
+		seen[id] = true
+		out.append(id)
+	return out
 
 func kit_manobras(entity_id: String) -> Array:
 	# 5 Iniciais do personagem (sem duplicatas).
@@ -144,14 +169,19 @@ func shared_group(entity_ids: Array[String]) -> String:
 			return str(name)
 	return ""
 
-func build_combat_deck_ids(entity_ids: Array[String]) -> Dictionary:
-	# Retorna {entity_id: [card_ids...]} = 5 iniciais + desvantagem.
+func build_combat_deck_ids(entity_ids: Array[String], owned: Dictionary = {}) -> Dictionary:
+	# Retorna {entity_id: [card_ids...]} = cartas possuídas (padrão: Iniciais + Desvantagem).
+	# Melhoradas substituem a versão base.
 	var per: Dictionary = {}
 	for id in entity_ids:
-		var entries: Array = kit_manobras(id)
-		var desv := kit_desvantagem(id)
-		if desv != "": entries.append(desv)
-		per[id] = entries
+		var entries: Array = []
+		if owned.has(id) and owned[id] is Array and not owned[id].is_empty():
+			entries = owned[id].duplicate()
+		else:
+			entries = kit_manobras(id)
+			var desv := kit_desvantagem(id)
+			if desv != "": entries.append(desv)
+		per[id] = apply_melhorada_replace(entries)
 	return per
 
 func append_combo_cards(battle: Variant, entity_ids: Array[String], owner_map: Dictionary) -> int:
@@ -252,6 +282,75 @@ func install(battle: Variant, owner_map: Dictionary, selected: Dictionary = {}) 
 			installed += 1
 	battle._shuffle(battle.deck)
 	return installed
+
+func play_block_reason(battle: Variant, hand_index: int, target_id: int = -1, chain_ids: Array = []) -> String:
+	# Motivo em pt-BR quando a Manobra não pode ser usada.
+	if battle == null or hand_index < 0 or hand_index >= battle.hand.size():
+		return "Carta inválida."
+	var card: Dictionary = battle.hand[hand_index]
+	var def: Dictionary = catalog.definition(str(card.get("id", "")))
+	if def.is_empty():
+		return "Carta desconhecida."
+	var source: Dictionary = battle.actor_by_id(int(card["owner"]))
+	if source.is_empty() or int(source.get("hp", 0)) <= 0:
+		return "O herói desta carta está fora de combate."
+	if battle.phase != "PLAYER":
+		return "Não é a fase do jogador."
+	for locked in ["stun", "bind", "bound", "banished", "finalized"]:
+		if battle._has_status(source, locked) and not bool(def.get("play_while_disabled", false)):
+			return "Você não pode usar Manobras enquanto estiver incapacitado (%s)." % locked
+	var warmup: int = int(def.get("warmup", 0))
+	if _has_action(def, "warmup"):
+		warmup = int(_action(def, "warmup")[1])
+	if warmup > 0:
+		card["warmup"] = warmup
+		if not battle.card_warmup_ready(card, def):
+			return "Esta Manobra ainda está em aquecimento."
+	var cost: int = int(card.get("cost_override", def.get("cost", 0)))
+	if str(def.get("tier", card.get("tier", ""))) != "combo":
+		if battle.get("combo_zero_owners") and battle.combo_zero_owners.get(int(source.get("id", -1)), false):
+			cost = 0
+	if cost > 0:
+		if battle._has_status(source, "fast"): cost -= 1
+		if battle._has_status(source, "slow"): cost += 1
+	cost = maxi(0, cost)
+	var plays: int = 0 if bool(def.get("free", false)) or _has_action(def, "free") else 1
+	if battle.impulse < cost:
+		return "Você precisa de %d Iniciativa para usar esta Manobra." % cost
+	if battle.card_plays < plays:
+		return "Você não tem jogadas de carta restantes neste turno."
+	# Requisitos de status próprio (ex.: Escuridão)
+	for a in def.get("actions", []):
+		if typeof(a) != TYPE_ARRAY or a.is_empty(): continue
+		if str(a[0]) == "requires_self_status":
+			var need_st := str(a[1] if a.size() > 1 else "?")
+			var need_n: int = int(round(battle.resolve_amount(a[2] if a.size() > 2 else 1, source)))
+			var have: int = battle._status_stacks(source, need_st)
+			if have < need_n:
+				var pretty := need_st.capitalize()
+				if need_st == "escuridao": pretty = "Escuridão"
+				return "Você precisa de %s %d para usar esta Manobra." % [pretty, need_n]
+	# Alcance / fileira
+	if target_id >= 0:
+		var target: Dictionary = battle.actor_by_id(target_id)
+		if not target.is_empty() and target.get("side", "") != source.get("side", ""):
+			if not battle.can_reach(source, target, def):
+				if not bool(def.get("reach", false)) and str(source.get("row", "")) == "back":
+					return "Você não pode atacar sem Alcance da linha de trás."
+				if not bool(def.get("reach", false)) and str(target.get("row", "")) == "back":
+					return "Você não pode atingir a retaguarda sem Alcance."
+				return "Alvo fora de alcance."
+	var combo_members: Array = def.get("combo_members", card.get("combo_members", []))
+	if str(def.get("tier", card.get("tier", ""))) == "combo" or not combo_members.is_empty():
+		for mid in combo_members:
+			var alive := false
+			for ally in battle.living("ALLY"):
+				if str(ally.get("archetype", "")) == str(mid):
+					alive = true
+					break
+			if not alive:
+				return "Combo exige que todos os membros estejam vivos."
+	return ""
 
 func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = []) -> bool:
 	if hand_index < 0 or hand_index >= battle.hand.size(): return false

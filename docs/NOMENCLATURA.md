@@ -18,12 +18,15 @@ Não há editor de deck in-game. Após missões, o jogo sorteia **3** cartas ent
 
 ## Deck de combate
 
-- **Deck inicial = 15 Manobras** (3 heróis × 5 Iniciais).
+- **Não há editor de deck.** Todas as cartas **possuídas** entram sempre no baralho de combate.
+- **Deck só cresce** (Iniciais → + Evoluídas conquistadas → + Combos de grupo). Baralho maior = menos reshuffles.
+- **Melhoradas substituem** a versão mais fraca: ao possuir `Nome+` (`melhorada_de` = base), a carta base **sai** do deck.
+- **Deck inicial típico = 15 Manobras** (3 heróis × 5 Iniciais).
 - Além disso, cada herói inclui **1 Desvantagem** no kit de combate → **+3** cartas.
 - Se os 3 membros compartilham **um mesmo grupo**, entram **4 Combo Manobras** (um por par + um do trio).
-- **Total típico:** 15 manobras + 3 desvantagens (+ até 4 combos).
+- **Total típico inicial:** 15 manobras + 3 desvantagens (+ até 4 combos); cresce com Evoluídas/Melhoradas.
 
-Quando o descarte é embaralhado de volta no baralho (reshuffle), **toda a equipe aliada recebe Lento 1** (fadiga). Baralho maior = reshuffles menos frequentes.
+Quando o descarte é embaralhado de volta no baralho (reshuffle), **toda a equipe aliada recebe Lento 1** (fadiga).
 
 ## Desvantagens
 
@@ -56,8 +59,11 @@ Clicar numa carta a amplia; cada efeito é explicado ao lado (glossário).
 
 ## Fluxo de batalha
 
-1. Ao selecionar uma carta: botão **Inspecionar** explica os efeitos.
-2. Após confirmar + escolher alvo: **prévia de dano** no alvo — barra de HP com a porção a perder em vermelho, mais outros efeitos que serão aplicados.
+1. Clique numa Manobra para **selecionar**. Clique de novo na mesma carta para **confirmar** (não há botão Confirmar).
+2. O botão **Inspecionar** aparece ao lado da carta selecionada e só então abre o overlay/glossário.
+3. Se a Manobra não puder ser usada, um popup explica o motivo (ex.: "Você não pode atacar sem Alcance da linha de trás", "Você precisa de Escuridão 3 para usar esta Manobra").
+4. Após confirmar + escolher alvo: **prévia de dano** no alvo — barra de HP com a porção a perder em vermelho, mais outros efeitos que serão aplicados.
+5. O texto de **fase** fica numa caixa central no topo da janela de batalha; o **log** fica só na janela esquerda.
 
 ## Editor de cartas
 
