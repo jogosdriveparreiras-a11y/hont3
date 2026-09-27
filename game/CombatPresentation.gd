@@ -19,6 +19,12 @@ var shake_scale := 0.5
 var flash_enabled := true
 var animation_speed := 1.0
 var motion_scale := 1.0
+## "normal" (vista atual) | "lateral" (aliados à esquerda).
+var view_mode := "normal"
+## Zoom da câmera (>1 = mais perto); usado na vista lateral.
+var zoom := 1.0
+## Ponto de interesse (hover / foco inimigo).
+var focus_target := Vector3.ZERO
 
 func configure(view: Camera3D, labels: Control, audio) -> void:
 	camera = view
@@ -45,6 +51,8 @@ func clear_actors() -> void:
 	punch = Vector3.ZERO
 	orbit = 0.0
 	ally_focus = Vector3.ZERO
+	focus_target = Vector3.ZERO
+	zoom = 1.0
 	shake_time = 0.0
 
 func show_action(kind: String, source_id: int, target_id: int, amount: int) -> void:
@@ -90,8 +98,10 @@ func _animate_sprite(id: int, kind: String) -> void:
 	var tween := create_tween()
 	tween.tween_property(sprite, "modulate", Color.WHITE, 0.22 / animation_speed)
 	if kind == "cast":
-		sprite.scale = Vector3(1.12, 1.12, 1.12)
-		tween.parallel().tween_property(sprite, "scale", Vector3.ONE, 0.22 / animation_speed)
+		var base_s := float(sprite.get_meta("sprite_scale", 1.0))
+		var base := Vector3(base_s, base_s, 1.0)
+		sprite.scale = base * 1.12
+		tween.parallel().tween_property(sprite, "scale", base, 0.22 / animation_speed)
 
 func _float_text(id: int, value: String, tint: Color) -> void:
 	if not positions.has(id) or overlay == null or camera == null: return
@@ -146,10 +156,22 @@ func _process(delta: float) -> void:
 		var offset := Vector3.ZERO
 		if shake_enabled and shake_time > 0.0:
 			offset = Vector3(randf_range(-shake_strength, shake_strength), randf_range(-shake_strength, shake_strength), 0)
-		var radius := 16.8
-		var base := Vector3(sin(orbit) * radius, 11.15, cos(orbit) * radius)
-		camera.position = base + ally_focus + punch + offset
-		camera.look_at(Vector3(ally_focus.x * 2.1, 0.75, 0.0), Vector3.UP)
+		if view_mode == "lateral":
+			# Vista lateral: sem órbita 180°; zoom/foco no alvo (hover ou inimigo jogando).
+			var z := clampf(zoom, 1.0, 2.4)
+			var dist := 15.2 / z
+			var height := 8.4 / sqrt(z)
+			var look := Vector3(focus_target.x, 1.05, focus_target.z * 0.35)
+			var base := Vector3(focus_target.x * 0.22, height, dist)
+			camera.position = base + punch + offset
+			camera.look_at(look, Vector3.UP)
+			camera.fov = lerpf(camera.fov, 42.0 / (0.55 + 0.45 * z), 1.0 - exp(-delta * 6.0))
+		else:
+			var radius := 16.8
+			var base := Vector3(sin(orbit) * radius, 11.15, cos(orbit) * radius)
+			camera.position = base + ally_focus + punch + offset
+			camera.look_at(Vector3(ally_focus.x * 2.1, 0.75, 0.0), Vector3.UP)
+			camera.fov = lerpf(camera.fov, 51.0, 1.0 - exp(-delta * 6.0))
 	for id in sprites:
 		var sprite: Sprite3D = sprites[id]
 		if not is_instance_valid(sprite): continue

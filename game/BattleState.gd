@@ -164,6 +164,8 @@ func _create_actor(template: Dictionary, side: String, archetype: String) -> Dic
 		actor["archetype_stat"] = str(actor.get("combat_archetype", "Nenhum"))
 	if not actor.has("species"):
 		actor["species"] = "Humano"
+	if not actor.has("sprite_scale"):
+		actor["sprite_scale"] = float(actor.get("scale_factor", 1.0))
 	actor["statuses"] = {}
 	actor["pending"] = []
 	actor["phase"] = 1  # só para chefes (fase 2), NÃO turno individual
@@ -729,7 +731,7 @@ func _take_damage(source: Dictionary, target: Dictionary, amount: int, pierce: b
 		if melee and _has_status(target, "symbiote_skin"):
 			_add_status(source, "bound", 1, 1, int(target["id"]))
 			target["statuses"].erase("symbiote_skin")
-	# Pipeline: Invulnerável → Proteção → Barreira → escudo/block legado → Vida.
+	# Pipeline: Invulnerável → Proteção → Barreira (salvo pierce) → escudo/block legado → Vida.
 	if _has_status(target, "invulnerable"):
 		_log("%s está invulnerável." % target["name"])
 		visual.emit("immune", int(source["id"]), int(target["id"]), 0)
@@ -762,8 +764,8 @@ func _take_damage(source: Dictionary, target: Dictionary, amount: int, pierce: b
 		amount = max(amount, int(target["hp"]))
 	var hp_before := int(target["hp"])
 	var remaining := amount
-	# Barreira (pool de HP próprio).
-	if remaining > 0 and _has_status(target, "barrier"):
+	# Barreira (pool de HP próprio). Penetrante ignora por completo (não gasta HP da barreira).
+	if remaining > 0 and not pierce and _has_status(target, "barrier"):
 		var bar: Dictionary = target["statuses"]["barrier"]
 		var bhp: int = int(bar.get("barrier_hp", bar.get("stacks", 0)))
 		var soaked: int = mini(remaining, bhp)
@@ -1228,7 +1230,8 @@ func _estimate_hit(victim: Dictionary, state: Dictionary, estimate: Dictionary, 
 		estimate["resist_used"] += 1
 		return
 	var remaining: int = maxi(raw, int(state["hp"])) if bool(victim.get("minion", false)) else raw
-	if remaining > 0 and int(state.get("barrier_hp", 0)) > 0:
+	# Penetrante ignora Barreira por completo na prévia também.
+	if remaining > 0 and not pierce and int(state.get("barrier_hp", 0)) > 0:
 		var soak: int = mini(remaining, int(state["barrier_hp"]))
 		state["barrier_hp"] -= soak
 		remaining -= soak

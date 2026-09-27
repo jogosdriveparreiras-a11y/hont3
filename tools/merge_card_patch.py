@@ -99,6 +99,13 @@ def main() -> int:
         h.setdefault("species", "Humano")
         h.setdefault("level_reference", 1)
         h.setdefault("type", "TECNICO")
+        if "sprite_scale" not in h and "scale_factor" in h:
+            h["sprite_scale"] = float(h.get("scale_factor", 1.0) or 1.0)
+        h.setdefault("sprite_scale", 1.0)
+        try:
+            h["sprite_scale"] = float(h.get("sprite_scale", 1.0) or 1.0)
+        except (TypeError, ValueError):
+            h["sprite_scale"] = 1.0
     # Cartas: custo XOR ganho se ambos vierem > 0
     for _cid, c in data.get("cards", {}).items():
         if not isinstance(c, dict):

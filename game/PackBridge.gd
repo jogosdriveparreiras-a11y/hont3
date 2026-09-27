@@ -66,6 +66,7 @@ func _merge_entity_heroes() -> void:
 			"species": str(src.get("species", "Humano")),
 			"level_reference": int(src.get("level_reference", 1)),
 			"sprite": str(src.get("sprite", "res://hero_rogue.png")),
+			"sprite_scale": float(src.get("sprite_scale", src.get("scale_factor", 1.0))),
 			"portrait": str(src.get("portrait", "")),
 			"signature_icon": str(src.get("signature_icon", "")),
 			"row": str(src.get("row", "front")),

@@ -1,5 +1,13 @@
 ## Não publicado
 
+## 2026-09-27
+
+- Penetrante ignora **Barreira** por completo (não gasta HP da barreira; dano segue ao personagem).
+- Editor: campo **Fator de escala** (`sprite_scale`) por personagem; multiplica sprite W/H sobre a transform Godot existente.
+- Vista de batalha **Lateral** (opt-in, HUD «Vista: Normal | Lateral») sem remover a vista Normal.
+- Inventário `LEGACY_BLOCK_MIGRATION.md` (sugestões Proteção/Barreira/Resistente). Notas em `SIDE_VIEW_NOTES.md`.
+
+
 ## 2026-09-27 — Instantâneo corrigido + defesa redesenhada
 
 - Instantâneo: bloqueia Encerrar com carta na mão; **não** encerra fase ao jogar.

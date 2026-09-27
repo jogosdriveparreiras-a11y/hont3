@@ -162,6 +162,15 @@ func _initialize() -> void:
 	defb._take_damage(tank, foe, 10)
 	assert(not defb._has_status(foe, "barrier") and int(foe["hp"]) < hp1, "Overflow da Barreira atinge Vida")
 
+	# Penetrante ignora Barreira por completo (não gasta HP da barreira).
+	foe["statuses"].erase("barrier")
+	foe["block"] = 0
+	foe["shield"] = 0
+	defb._add_status(foe, "barrier", 2, 8, int(foe["id"]))
+	var hp_pierce: int = int(foe["hp"])
+	defb._take_damage(tank, foe, 5, true)
+	assert(defb._barrier_hp(foe) == 8 and int(foe["hp"]) == hp_pierce - 5, "Penetrante ignora Barreira e acerta Vida")
+
 	defb._add_status(foe, "resistente", 3, 2, int(foe["id"]))
 	defb._add_status(foe, "fragil", 3, 3, int(foe["id"]))
 	assert(not defb._has_status(foe, "resistente") and defb._has_status(foe, "fragil") and int(foe["statuses"]["fragil"]["stacks"]) == 1, "Frágil cancela Resistente")

@@ -59,6 +59,8 @@ var shake_level := 0.5
 var reduce_flashes := false
 var reduce_motion := false
 var animation_speed := 1.0
+## Vista de combate: "normal" (padrão) | "lateral" (aliados à esquerda).
+var battle_view_mode := "normal"
 var redraw_hold_index := -1
 var redraw_hold_time := 0.0
 const REDRAW_HOLD_SECONDS := 2.0
@@ -320,6 +322,7 @@ func _show_settings() -> void:
 	menu.add_child(_setting_slider("Velocidade das animações", (animation_speed - 0.5) / 1.5, _set_animation_speed))
 	menu.add_child(_button("Reduzir flashes: %s" % ("sim" if reduce_flashes else "não"), _toggle_flashes))
 	menu.add_child(_button("Reduzir movimento da câmera: %s" % ("sim" if reduce_motion else "não"), _toggle_motion))
+	menu.add_child(_button("Vista de batalha: %s" % ("Lateral" if battle_view_mode == "lateral" else "Normal"), _toggle_battle_view))
 	menu.add_child(_button("Voltar", _show_menu))
 
 func _setting_slider(title: String, level: float, callback: Callable) -> HBoxContainer:
@@ -361,6 +364,26 @@ func _toggle_motion() -> void:
 	_save_config()
 	_show_settings()
 
+func _toggle_battle_view() -> void:
+	battle_view_mode = "lateral" if battle_view_mode == "normal" else "normal"
+	_apply_battle_view()
+	_save_config()
+	if battle != null and battle.phase in ["PLAYER", "ENEMY"]:
+		_render_battle()
+	else:
+		_show_settings()
+
+func _apply_battle_view() -> void:
+	if presentation == null:
+		return
+	presentation.view_mode = battle_view_mode
+	if battle_view_mode != "lateral":
+		presentation.zoom = 1.0
+		presentation.focus_target = Vector3.ZERO
+		presentation.orbit = 0.0
+		if camera != null:
+			camera.fov = 51.0
+
 func _apply_accessibility() -> void:
 	if presentation == null: return
 	presentation.shake_enabled = shake_level > 0.0 and not reduce_motion
@@ -368,6 +391,7 @@ func _apply_accessibility() -> void:
 	presentation.flash_enabled = not reduce_flashes
 	presentation.animation_speed = animation_speed
 	presentation.motion_scale = 0.15 if reduce_motion else 1.0
+	_apply_battle_view()
 
 func _show_missions() -> void:
 	var menu := _center_panel("MISSÕES")
@@ -695,6 +719,7 @@ func _start_mission() -> void:
 	_begin_battle_session()
 	_build_arena(_arena_theme_for_mission(mission_id))
 	battle.begin(mission_id, team, equipped, 0, improvements, loadout)
+	_apply_accessibility()
 	_render_battle()
 
 func _begin_battle_session() -> void:
@@ -1111,11 +1136,11 @@ func _build_recover_pick_panel(viewport_size: Vector2) -> void:
 func _build_economy_hud(viewport_size: Vector2) -> void:
 	economy_hud = Control.new()
 	economy_hud.name = "EconomyHud"
-	economy_hud.position = Vector2(viewport_size.x - 310, viewport_size.y - 268)
-	economy_hud.size = Vector2(290, 260)
+	economy_hud.position = Vector2(viewport_size.x - 310, viewport_size.y - 316)
+	economy_hud.size = Vector2(290, 308)
 	economy_hud.mouse_filter = Control.MOUSE_FILTER_STOP
 	hud.add_child(economy_hud)
-	_chrome(economy_hud.position, Vector2(290, 260), "res://assets/ui/panel.png")
+	_chrome(economy_hud.position, Vector2(290, 308), "res://assets/ui/panel.png")
 	var plays: int = battle.card_plays
 	var redraws_left: int = battle.redraws
 	var moves_left: int = battle.moves
@@ -1152,12 +1177,18 @@ func _build_economy_hud(viewport_size: Vector2) -> void:
 	if selected_action == "move":
 		move_btn.modulate = Color("6eb6ff")
 	economy_hud.add_child(move_btn)
+	var vista_label := "Lateral" if battle_view_mode == "lateral" else "Normal"
+	var view_btn := _button("Vista: %s" % vista_label, _toggle_battle_view)
+	view_btn.position = Vector2(16, 196)
+	view_btn.custom_minimum_size = Vector2(258, 36)
+	view_btn.tooltip_text = "Alterna vista Normal (atual) e Lateral (aliados à esquerda)."
+	economy_hud.add_child(view_btn)
 	var end_btn := _button("ENCERRAR TURNO", func(): _present_enemy_turn())
 	var instant_blocks: bool = battle != null and battle.has_method("hand_has_instantaneo") and battle.hand_has_instantaneo("ALLY")
 	end_btn.disabled = battle.phase != "PLAYER" or enemy_presenting or recover_pick_active or instant_blocks or (battle.has_method("can_end_turn") and not battle.can_end_turn())
 	if instant_blocks:
 		end_btn.tooltip_text = "Jogue as cartas Instantâneo da mão antes de encerrar."
-	end_btn.position = Vector2(16, 196)
+	end_btn.position = Vector2(16, 240)
 	end_btn.custom_minimum_size = Vector2(258, 40)
 	economy_hud.add_child(end_btn)
 	
@@ -1277,9 +1308,7 @@ func _render_actors() -> void:
 				if other["row"] == row:
 					if other["id"] == actor["id"]: row_index = row_count
 					row_count += 1
-			var x := (row_index - (row_count - 1) / 2.0) * 2.2
-			var z := (3.15 if row == "back" else 1.55) * (1 if side == "ALLY" else -1)
-			var location := Vector3(x, 0, z)
+			var location := _actor_world_pos(side, row, row_index, row_count)
 			if not actor_nodes.has(id):
 				actor_nodes[id] = _create_actor_visual(actor)
 				actor_nodes[id].position = location
@@ -1303,6 +1332,21 @@ func _render_actors() -> void:
 				var fade := create_tween()
 				fade.tween_property(departing, "scale", Vector3.ZERO, 0.24 / animation_speed)
 				fade.tween_callback(departing.queue_free)
+
+func _actor_world_pos(side: String, row: String, row_index: int, row_count: int) -> Vector3:
+	# Espaçamento dentro da fileira (mesmo índice relativo).
+	var lane := (row_index - (row_count - 1) / 2.0) * 2.2
+	if battle_view_mode == "lateral":
+		# Esquerda → direita: retaguarda aliada → frente aliada → frente inimiga → retaguarda inimiga.
+		var depth_x: float
+		if side == "ALLY":
+			depth_x = -4.35 if row == "back" else -1.65
+		else:
+			depth_x = 1.65 if row == "front" else 4.35
+		return Vector3(depth_x, 0.0, lane)
+	var x := lane
+	var z := (3.15 if row == "back" else 1.55) * (1 if side == "ALLY" else -1)
+	return Vector3(x, 0.0, z)
 
 func _create_actor_visual(actor: Dictionary) -> Node3D:
 	var body := Node3D.new()
@@ -1388,6 +1432,12 @@ func _create_actor_visual(actor: Dictionary) -> Node3D:
 		sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 		sprite.alpha_cut = SpriteBase3D.ALPHA_CUT_DISCARD
 		sprite.position.y = 1.1
+		var spr_scale := float(actor.get("sprite_scale", actor.get("scale_factor", 1.0)))
+		if spr_scale <= 0.0:
+			spr_scale = 1.0
+		sprite.set_meta("sprite_scale", spr_scale)
+		# Multiplica a transformação base existente (pixel_size / animações), nos dois eixos.
+		sprite.scale = Vector3(spr_scale, spr_scale, 1.0)
 		body.add_child(sprite)
 	var plate := Label3D.new()
 	plate.name = "Nameplate"
@@ -1599,8 +1649,25 @@ func _chrome(at: Vector2, box: Vector2, path: String) -> void:
 	plate.size = box
 	hud.add_child(plate)
 
+func _lateral_focus_actor(actor_id: int, zoom_amount: float = 1.65) -> void:
+	if presentation == null or battle_view_mode != "lateral":
+		return
+	presentation.orbit = 0.0
+	if actor_id >= 0 and actor_nodes.has(actor_id):
+		var body: Node3D = actor_nodes[actor_id]
+		if is_instance_valid(body):
+			presentation.focus_target = body.position
+			presentation.zoom = zoom_amount
+			return
+	presentation.focus_target = Vector3.ZERO
+	presentation.zoom = 1.0
+
 func _set_orbit(target: float) -> void:
 	if presentation == null: return
+	# Vista lateral: não gira a câmera 180° na fase inimiga.
+	if battle_view_mode == "lateral":
+		presentation.orbit = 0.0
+		return
 	var tw := create_tween()
 	tw.tween_property(presentation, "orbit", target, 0.7 / maxf(animation_speed, 0.25))
 	await tw.finished
@@ -2330,6 +2397,7 @@ func _step_enemy() -> void:
 		var owner: Dictionary = battle.actor_by_id(int(card.get("owner", 0)))
 		feedback = "Adversário joga: %s" % str(definition.get("name", ""))
 		_show_actor_portrait(int(card.get("owner", 0)), true)
+		_lateral_focus_actor(int(card.get("owner", 0)), 1.7)
 		_show_enemy_card_overlay(card, definition, owner)
 		await get_tree().create_timer(pace).timeout
 		if battle == null or battle.phase != "ENEMY":
@@ -2555,14 +2623,15 @@ func _process(delta: float) -> void:
 		if not is_instance_valid(unit_sprites[i]):
 			continue
 		unit_sprites[i].position.y = 1.1
+		var spr_s := float(unit_sprites[i].get_meta("sprite_scale", 1.0))
 		if reduce_motion:
-			unit_sprites[i].scale = Vector3.ONE
+			unit_sprites[i].scale = Vector3(spr_s, spr_s, 1.0)
 		else:
 			# Classic idle breath: vertical stretch + slight horizontal squash
 			var wave := sin(Time.get_ticks_msec() * 0.0024 + float(i) * 1.7)
 			var sy := 1.0 + wave * 0.028
 			var sx := 1.0 - wave * 0.016
-			unit_sprites[i].scale = Vector3(sx, sy, 1.0)
+			unit_sprites[i].scale = Vector3(sx * spr_s, sy * spr_s, 1.0)
 	if battle != null and battle.phase == "PLAYER":
 		_tick_recompra_hold(delta)
 	if battle != null and battle.phase == "PLAYER" and camera != null:
@@ -2622,13 +2691,26 @@ func _process(delta: float) -> void:
 			gmat.albedo_color.a = lerpf(gmat.albedo_color.a, target_a, 0.35)
 			gmat.emission_energy_multiplier = lerpf(gmat.emission_energy_multiplier, target_e, 0.35)
 	if presentation != null and battle != null and battle.phase == "PLAYER":
-		var focus := Vector3.ZERO
-		if hovered_actor >= 0 and actor_nodes.has(hovered_actor):
-			var actor: Dictionary = battle.actor_by_id(hovered_actor)
-			if str(actor.get("side", "")) == "ALLY":
+		if battle_view_mode == "lateral":
+			# Lateral: sem rotação de órbita; hover centra + zoom no sprite (aliado ou inimigo).
+			var want_focus := Vector3.ZERO
+			var want_zoom := 1.0
+			if hovered_actor >= 0 and actor_nodes.has(hovered_actor):
 				var body: Node3D = actor_nodes[hovered_actor]
-				focus = Vector3(body.position.x * 0.34, 0.18, 0.0)
-		presentation.ally_focus = presentation.ally_focus.lerp(focus, 1.0 - exp(-delta * 5.0))
+				if is_instance_valid(body):
+					want_focus = body.position
+					want_zoom = 1.55
+			presentation.focus_target = presentation.focus_target.lerp(want_focus, 1.0 - exp(-delta * 5.0))
+			presentation.zoom = lerpf(presentation.zoom, want_zoom, 1.0 - exp(-delta * 5.0))
+			presentation.orbit = 0.0
+		else:
+			var focus := Vector3.ZERO
+			if hovered_actor >= 0 and actor_nodes.has(hovered_actor):
+				var actor: Dictionary = battle.actor_by_id(hovered_actor)
+				if str(actor.get("side", "")) == "ALLY":
+					var body: Node3D = actor_nodes[hovered_actor]
+					focus = Vector3(body.position.x * 0.34, 0.18, 0.0)
+			presentation.ally_focus = presentation.ally_focus.lerp(focus, 1.0 - exp(-delta * 5.0))
 	if portrait_sticky_until > 0 and Time.get_ticks_msec() >= portrait_sticky_until:
 		portrait_sticky_until = 0
 		_hide_idle_portraits()
@@ -2646,6 +2728,7 @@ func _save_config() -> void:
 	config.set_value("settings", "reduce_flashes", reduce_flashes)
 	config.set_value("settings", "reduce_motion", reduce_motion)
 	config.set_value("settings", "animation_speed", animation_speed)
+	config.set_value("settings", "battle_view_mode", battle_view_mode)
 	config.save("user://hotn3.cfg")
 
 func _load_config() -> void:
@@ -2674,4 +2757,7 @@ func _load_config() -> void:
 		shake_level = clampf(float(config.get_value("settings", "shake_level", 0.5 if config.get_value("settings", "shake_enabled", true) else 0.0)), 0.0, 1.0)
 		reduce_flashes = bool(config.get_value("settings", "reduce_flashes", reduce_flashes))
 		reduce_motion = bool(config.get_value("settings", "reduce_motion", reduce_motion))
+		battle_view_mode = str(config.get_value("settings", "battle_view_mode", battle_view_mode))
+		if battle_view_mode not in ["normal", "lateral"]:
+			battle_view_mode = "normal"
 		animation_speed = clampf(float(config.get_value("settings", "animation_speed", animation_speed)), 0.5, 2.0)

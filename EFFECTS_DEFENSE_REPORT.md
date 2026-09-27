@@ -40,7 +40,7 @@
 
 1. **Invulnerável** → 0 dano  
 2. **Proteção** → consome 1, 0 dano (**Penetrante ignora Proteção**)  
-3. **Barreira** (HP) → absorve; overflow segue  
+3. **Barreira** (HP) → absorve; overflow segue (**Penetrante ignora Barreira por completo** — não reduz HP da barreira; dano segue ao personagem)  
 4. Escudo/Bloqueio legado (se não pierce/penetrante)  
 5. Vida; stun some com perda de Vida (salvo Letárgico)
 
@@ -49,8 +49,10 @@ Fórmula Armadura/Escudo (+ Resistente/Frágil) continua aplicada no cálculo do
 ## Penetrante (escolha documentada)
 
 - **Ignora Proteção** (não consome, dano segue)
+- **Ignora Barreira por completo** (não subtrai HP da barreira; dano vai ao personagem)
 - Continua reduzindo Armadura/Escudo em **50%**
 - Continua ignorando absorb legado block/shield (`pierce`)
+- Ainda sujeito a Invulnerável e à fórmula Armadura/Escudo (já com ½) / Proteção (ignorada)
 
 ## Editor / PackBridge
 

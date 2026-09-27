@@ -35,7 +35,9 @@ Escudo permanente do personagem ≠ escudo temporário de carta (`SHIELD` / cama
 
 ## Personagens
 
-Campos: **Vida**, Impacto, Poder, Armadura, **Escudo**, Tipo, **Arquétipo**, **Raça/Espécie**, **Nível**, fileira, passiva (com caixa de explicação), pool (com contagem).
+Campos: **Vida**, Impacto, Poder, Armadura, **Escudo**, Tipo, **Arquétipo**, **Raça/Espécie**, **Nível**, fileira, passiva (com caixa de explicação), **Fator de escala** (`sprite_scale`, padrão 1.00), pool (com contagem).
+
+**Fator de escala:** multiplica **largura e altura** do sprite de combate em relação à transformação Godot já usada (CombatPresentation / exibição da entidade) — não a substitui. Normal = 1.00; maiores ~1.05–1.10; menores ~0.90. Persistido no JSON do herói; PackBridge / merge preservam o campo.
 
 Arquétipo intransitivo (Armadura→Impacto→Escudo→Poder→Armadura, ±25%; Versátil neutro) está no código com `RULES.archetype_matchup = false` (**DESLIGADO**).
 
@@ -59,7 +61,7 @@ Cartas/heróis `ent_*` em `addons/hotn3_entities/entities.json`; `PackBridge` in
 
 | Chave | Nome | Comportamento |
 |---|---|---|
-| `penetrating` | Penetrante | Ignora bloqueio + escudo temporário; só ½ Armadura (Impacto) ou Escudo permanente (Poder). |
+| `penetrating` | Penetrante | Ignora Proteção e Barreira por completo; ignora block/escudo de carta; só ½ Armadura (Impacto) ou Escudo permanente (Poder). |
 | `lethargic` | Letárgico | Dano desta carta **não** remove Atordoamento (por padrão dano em Vida remove stun). |
 | `recoil` | Recuo | Usuário sofre 1/3 do dano efetivo (arredondado). |
 | `drain` | Dreno | Cura 1/4 do dano efetivo. |

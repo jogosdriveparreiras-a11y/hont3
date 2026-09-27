@@ -357,7 +357,11 @@
           <option value="baluarte">baluarte</option>
         </select>
       </label>
+      <label class="field" style="flex:1"><span>Fator de escala</span>
+        <input type="number" id="hSpriteScale" min="0.5" max="1.5" step="0.01" value="1.00" title="Multiplica largura e altura do sprite em combate (relativo à transform Godot existente)." />
+      </label>
     </div>
+    <div class="hint-box"><strong>Fator de escala</strong> (padrão 1.00): multiplica <em>largura e altura</em> do sprite de combate em relação à transformação já usada no Godot (CombatPresentation / exibição da entidade) — não a substitui. Mais alto = personagem maior (ex.: 1.05–1.10); mais baixo = menor (ex.: 0.90).</div>
     <div class="section-title">Explicação da passiva</div>
     <div class="passive-box" id="passiveExplain">—</div>
     <div class="hint-box">Arquétipo (Armadura→Impacto→Escudo→Poder→Armadura, ±25%) está <strong>implementado mas DESLIGADO</strong> no jogo (`RULES.archetype_matchup = false`).</div>
@@ -442,7 +446,7 @@ const FLAGS = [
   {key:"free", label:"Grátis (free)"},
   {key:"exhaust", label:"Esgota (exhaust)"},
   {key:"final", label:"Final"},
-  {key:"penetrating", label:"Penetrante (ignora bloqueio/escudo temp.; ½ Armadura/Escudo)"},
+  {key:"penetrating", label:"Penetrante (ignora Proteção/Barreira/block; ½ Armadura/Escudo)"},
   {key:"lethargic", label:"Letárgico (dano NÃO remove Atordoamento)"},
   {key:"recoil", label:"Recuo (sofre 1/3 do dano efetivo)"},
   {key:"drain", label:"Dreno (cura 1/4 do dano efetivo)"},
@@ -495,7 +499,7 @@ const ACTIONS = [
     {k:"hit", t:"number", label:"Hit base", def:"1"},
     {k:"heal", t:"number", label:"Heal fator", def:"2"},
   ]},
-  {op:"penetrating", label:"Penetrante", tip:"Ignora bloqueio/escudo de carta; só ½ Armadura (Impacto) ou Escudo (Poder).", args:[]},
+  {op:"penetrating", label:"Penetrante", tip:"Ignora Proteção e Barreira por completo; ignora block/escudo de carta; só ½ Armadura (Impacto) ou Escudo (Poder).", args:[]},
   {op:"lethargic", label:"Letárgico", tip:"Dano desta carta não remove Atordoamento.", args:[]},
   {op:"recoil", label:"Recuo", tip:"Usuário sofre 1/3 do dano efetivo (arredondado).", args:[]},
   {op:"drain", label:"Dreno", tip:"Cura 1/4 do dano efetivo.", args:[]},
@@ -533,6 +537,9 @@ Arquétipo (±25%) existe no código mas está DESLIGADO.
 const HELP_HERO = `PERSONAGENS
 - Vida, Impacto, Poder, Armadura, Escudo (sem Velocidade).
 - Tipo, Arquétipo, Raça/Espécie, Nível, fileira, passiva (com explicação).
+- Fator de escala (sprite_scale, padrão 1.00): multiplica LARGURA e ALTURA do sprite de combate
+  em relação à transform Godot existente (CombatPresentation) — não a substitui.
+  Normal=1.00; maiores ~1.05–1.10; menores ~0.90.
 - Pool mostra a contagem de cartas do deck/pool.
 - Arquétipo intransitivo implementado no jogo mas DESLIGADO (flag).
 - Exportar patch inclui heroes{} + cards{} sujos.`;
@@ -573,7 +580,7 @@ function blankHero() {
   return {
     id: "", name: "", hp: 24, attack: 4, power: 4, armor: 1, escudo: 1,
     type: "TECNICO", row: "back", passive: "rastreador",
-    sprite: "", portrait: "", signature_icon: "",
+    sprite: "", portrait: "", signature_icon: "", sprite_scale: 1.0,
     pool: [], cards: [], archetype: "Nenhum", species: "Humano",
     level_reference: 1, power_reference: 10, tags: [],
   };
@@ -1153,6 +1160,10 @@ function buildHeroObject() {
   h.portrait = document.getElementById("hPortrait").value.trim();
   h.sprite = document.getElementById("hSprite").value.trim();
   h.signature_icon = document.getElementById("hIcon").value.trim();
+  let sc = Number(document.getElementById("hSpriteScale").value);
+  if (!Number.isFinite(sc) || sc <= 0) sc = 1.0;
+  h.sprite_scale = Math.round(sc * 100) / 100;
+  delete h.scale_factor;
   const pool = [];
   document.querySelectorAll("#poolBox input[type=checkbox]:checked").forEach(cb => pool.push(cb.value));
   h.pool = pool;
@@ -1204,7 +1215,7 @@ function updateHeroPreview() {
   const h = buildHeroObject();
   document.getElementById("heroFaceName").textContent = h.name || "(sem nome)";
   document.getElementById("heroFaceStats").textContent =
-    `Vida ${h.hp} · Imp ${h.attack} · Pod ${h.power} · Arm ${h.armor} · Esc ${h.escudo} · ${h.archetype} · ${h.species} · Nv ${h.level_reference} · ${h.type} · ${h.row} · pool ${ (h.pool||[]).length }`;
+    `Vida ${h.hp} · Imp ${h.attack} · Pod ${h.power} · Arm ${h.armor} · Esc ${h.escudo} · escala×${Number(h.sprite_scale||1).toFixed(2)} · ${h.archetype} · ${h.species} · Nv ${h.level_reference} · ${h.type} · ${h.row} · pool ${ (h.pool||[]).length }`;
   const url = heroPreviewUrl();
   const face = document.getElementById("heroFaceArt");
   const img = document.getElementById("heroArtPreview");
@@ -1242,6 +1253,8 @@ function syncHeroForm() {
   document.getElementById("hPortrait").value = heroDraft.portrait || "";
   document.getElementById("hSprite").value = heroDraft.sprite || "";
   document.getElementById("hIcon").value = heroDraft.signature_icon || "";
+  const sc0 = heroDraft.sprite_scale != null ? heroDraft.sprite_scale : (heroDraft.scale_factor != null ? heroDraft.scale_factor : 1.0);
+  document.getElementById("hSpriteScale").value = Number(sc0).toFixed(2);
   updatePassiveExplain();
   renderPool();
   updateHeroPreview();
@@ -1509,7 +1522,7 @@ function wire() {
   };
   document.getElementById("heroFilterText").oninput = renderHeroList;
   document.getElementById("poolFilter").oninput = renderPool;
-  ["hName","hId","hHp","hAttack","hPower","hArmor","hEscudo","hType","hArchetype","hSpecies","hLevel","hRow","hPassive","hPortrait","hSprite","hIcon"].forEach(id => {
+  ["hName","hId","hHp","hAttack","hPower","hArmor","hEscudo","hType","hArchetype","hSpecies","hLevel","hRow","hPassive","hSpriteScale","hPortrait","hSprite","hIcon"].forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
     el.oninput = () => { if (id === "hPassive") updatePassiveExplain(); updateHeroPreview(); };
