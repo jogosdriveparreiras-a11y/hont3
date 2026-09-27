@@ -1,5 +1,13 @@
 ## Não publicado
 
+## 2026-09-27 — Instantâneo corrigido + defesa redesenhada
+
+- Instantâneo: bloqueia Encerrar com carta na mão; **não** encerra fase ao jogar.
+- Novos status: Proteção, Barreira (HP), Resistente, Frágil, Invulnerável (some ao jogar carta).
+- Removidos protected/protecting/dazed; resist → Proteção.
+- Ver `EFFECTS_DEFENSE_REPORT.md`.
+
+
 ### 2026-09-27 — Novos efeitos de carta (Penetrante, Letárgico, Ações, etc.)
 
 - Penetrante, Letárgico, Recuo, Dreno, Instantâneo, Efêmero, Aquecimento.

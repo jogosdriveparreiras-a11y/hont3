@@ -503,7 +503,7 @@
         "target": "SELF",
         "action": [
           "STATUS",
-          "resist",
+          "protecao",
           "1"
         ]
       },
@@ -1013,7 +1013,7 @@
         "target": "SELF",
         "action": [
           "STATUS",
-          "resist",
+          "protecao",
           "1"
         ]
       },
@@ -1391,7 +1391,7 @@
         "target": "SELF",
         "action": [
           "STATUS",
-          "resist",
+          "protecao",
           "1"
         ]
       },
@@ -1611,7 +1611,7 @@
         "target": "SELF",
         "action": [
           "STATUS",
-          "resist",
+          "protecao",
           "1"
         ]
       },
@@ -2203,7 +2203,7 @@
       "actions": [
         [
           "status",
-          "resist",
+          "protecao",
           "1"
         ],
         [
@@ -2484,7 +2484,7 @@
       "actions": [
         [
           "status",
-          "resist",
+          "protecao",
           "1"
         ]
       ],
@@ -2527,7 +2527,7 @@
         ],
         [
           "status",
-          "dazed",
+          "stun",
           "1"
         ]
       ],
@@ -2629,7 +2629,7 @@
         ],
         [
           "status",
-          "resist",
+          "protecao",
           "1"
         ]
       ],
@@ -2808,7 +2808,7 @@
       "actions": [
         [
           "status",
-          "resist",
+          "protecao",
           "1"
         ],
         [
@@ -2902,7 +2902,7 @@
         ],
         [
           "status",
-          "resist",
+          "protecao",
           "1"
         ],
         [
@@ -3295,7 +3295,7 @@
       "actions": [
         [
           "status",
-          "dazed",
+          "stun",
           "1"
         ],
         [
@@ -3497,7 +3497,7 @@
       "actions": [
         [
           "status",
-          "resist",
+          "protecao",
           "1"
         ]
       ],
@@ -3569,7 +3569,7 @@
         ],
         [
           "self_status",
-          "resist",
+          "protecao",
           "1"
         ]
       ],
@@ -3593,7 +3593,7 @@
         ],
         [
           "status",
-          "resist",
+          "protecao",
           "1"
         ]
       ],
@@ -3680,7 +3680,7 @@
         ],
         [
           "status",
-          "resist",
+          "protecao",
           "1"
         ]
       ],
@@ -3928,7 +3928,7 @@
       "actions": [
         [
           "self_status",
-          "resist",
+          "protecao",
           "2"
         ],
         [
@@ -4069,7 +4069,7 @@
       "actions": [
         [
           "status",
-          "resist",
+          "protecao",
           "1"
         ]
       ],
@@ -4260,7 +4260,7 @@
         ],
         [
           "status",
-          "resist",
+          "protecao",
           "1"
         ]
       ],
@@ -4814,7 +4814,7 @@
       "actions": [
         [
           "status",
-          "resist",
+          "protecao",
           "1"
         ],
         [
@@ -5052,7 +5052,7 @@
       "actions": [
         [
           "self_status",
-          "resist",
+          "protecao",
           "1"
         ],
         [
@@ -5081,7 +5081,7 @@
         ],
         [
           "status",
-          "dazed",
+          "stun",
           "1"
         ]
       ],
@@ -5738,7 +5738,7 @@
       "actions": [
         [
           "status",
-          "resist",
+          "protecao",
           "1"
         ]
       ],
@@ -5762,7 +5762,7 @@
         ],
         [
           "status",
-          "dazed",
+          "stun",
           "1"
         ]
       ],
@@ -5855,7 +5855,7 @@
         ],
         [
           "status",
-          "resist",
+          "protecao",
           "1"
         ],
         [
@@ -6150,7 +6150,7 @@
         ],
         [
           "self_status",
-          "resist",
+          "protecao",
           "1"
         ]
       ],
@@ -6289,7 +6289,7 @@
         ],
         [
           "status",
-          "dazed",
+          "stun",
           "1"
         ]
       ],
@@ -6640,7 +6640,7 @@
         ],
         [
           "status",
-          "resist",
+          "protecao",
           "1"
         ]
       ],
@@ -6776,7 +6776,7 @@
       "actions": [
         [
           "self_status",
-          "resist",
+          "protecao",
           "1"
         ]
       ],
@@ -6877,7 +6877,7 @@
       "actions": [
         [
           "status",
-          "resist",
+          "protecao",
           "1"
         ]
       ],
@@ -6968,7 +6968,7 @@
         ],
         [
           "status",
-          "dazed",
+          "stun",
           "1"
         ]
       ],
@@ -7103,7 +7103,7 @@
         ],
         [
           "status",
-          "dazed",
+          "stun",
           "1"
         ]
       ],
@@ -7531,7 +7531,7 @@
         ],
         [
           "self_status",
-          "resist",
+          "protecao",
           "1"
         ]
       ],
@@ -7692,7 +7692,7 @@
         ],
         [
           "self_status",
-          "resist",
+          "protecao",
           "1"
         ]
       ],
@@ -7869,7 +7869,7 @@
         ],
         [
           "status",
-          "resist",
+          "protecao",
           "1"
         ],
         [
@@ -7896,7 +7896,7 @@
         ],
         [
           "status",
-          "dazed",
+          "stun",
           "1"
         ]
       ],
@@ -8007,7 +8007,7 @@
         ],
         [
           "status",
-          "resist",
+          "protecao",
           "1"
         ]
       ],
@@ -8031,7 +8031,7 @@
         ],
         [
           "status",
-          "dazed",
+          "stun",
           "1"
         ]
       ],

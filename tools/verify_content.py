@@ -63,9 +63,10 @@ corrupted counter critical dazed drop en_fuego enhanced fast fatal_fury
 feeding_frenzy frenzy full_force fury_totem invulnerable lifesteal make_em_bleed
 marked momentum naturalist neurally_enhanced next_turn_plays offensive_rush
 opportunist overload overpowered perfect_aim poison portal protected protecting
-ravenous regen resist slow soulbound spike_bomb strengthened strongest_there_is
+ravenous regen resist resistente fragil protecao protection barreira
+slow soulbound spike_bomb strengthened strongest_there_is
 stun summoning symbiote_skin taunt taunted unleashed vampiric_essence
-vulnerable weak webbed_up wounded
+vulnerable weak webbed_up wounded invulneravel
 """.split())
 
 for hero_id, hero in heroes.items():

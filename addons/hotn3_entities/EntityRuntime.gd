@@ -135,7 +135,7 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 		if not ok: return false
 	if int(target.get("hp", 0)) <= 0 and not _has_action(def, "revive_self") and not _has_action(def, "revive_ally"): return false
 	if not bool(def.get("play_while_disabled", false)):
-		for locked in ["stun", "bind", "bound", "dazed", "banished", "finalized"]:
+		for locked in ["stun", "bind", "bound", "banished", "finalized"]:
 			if battle._has_status(source, locked): return false
 	var warmup: int = int(def.get("warmup", 0))
 	if _has_action(def, "warmup"): warmup = int(_action(def, "warmup")[1])
@@ -152,7 +152,7 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 	var owner_free: bool = def.get("owner") == "spider_man" and _counter(source, "free_owner") > 0
 	var is_instant: bool = bool(def.get("instant", false)) or _has_action(def, "instant")
 	if is_instant: card["instant"] = true
-	var plays: int = 0 if bool(def.get("free", is_instant)) or owner_free else 1
+	var plays: int = 0 if bool(def.get("free", false)) or _has_action(def, "free") or owner_free else 1
 	if battle.impulse < cost or battle.card_plays < plays: return false
 	var resolved_def: Dictionary = def.duplicate(true)
 	if def.get("target") == "CHAIN":
@@ -208,7 +208,11 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 					# Impacto − Armadura; Poder − Escudo (atributo). Mods % já em multiplier.
 					var damage_stat := str(def.get("stat", "attack"))
 					var penetrating: bool = bool(def.get("penetrating", false)) or _has_action(def, "penetrating")
-					var defense: int = int(victim.get("escudo", 0)) if damage_stat == "power" else (int(victim.get("armor", 0)) + (2 * int(victim.get("statuses", {}).get("armor", {}).get("stacks", 0))))
+					var _hard: int = int(victim.get("statuses", {}).get("resistente", {}).get("stacks", 0)) if battle._has_status(victim, "resistente") else 0
+					var _frail: int = int(victim.get("statuses", {}).get("fragil", {}).get("stacks", 0)) if battle._has_status(victim, "fragil") else 0
+					var _sb: int = 2 * _hard - 2 * _frail
+					var defense: int = (int(victim.get("escudo", 0)) + _sb) if damage_stat == "power" else (int(victim.get("armor", 0)) + (2 * int(victim.get("statuses", {}).get("armor", {}).get("stacks", 0))) + _sb)
+					defense = maxi(0, defense)
 					if penetrating: defense = int(round(float(defense) * 0.5))
 					# Espécie (±25% tipicamente via vs_species na carta).
 					var vs: Dictionary = def.get("vs_species", {})
@@ -254,7 +258,7 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 				for victim in targets: battle._cleanse(victim)
 			"push", "pull", "move_target":
 				for victim in targets:
-					if battle._has_status(victim, "bound") or battle._has_status(victim, "protecting"): continue
+					if battle._has_status(victim, "bound"): continue
 					victim["row"] = "front" if op == "pull" else ("back" if victim["row"] == "front" else "front")
 					if op == "push":
 						var force := int(a[1])
@@ -314,7 +318,7 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 				source["hp"] = mini(int(source["max_hp"]), int(source["hp"]) + recovered)
 			"gain_en_fuego": battle.impulse = mini(int(battle.rules["impulse_max"]), battle.impulse + int(_counter(source, "en_fuego")) * int(a[1]))
 			"draw_en_fuego": battle._draw(int(_counter(source, "en_fuego")) * int(a[1]))
-			"resist_en_fuego": battle._add_status(source, "resist", 1, int(_counter(source, "en_fuego")) * int(a[1]), int(source["id"]))
+			"resist_en_fuego": battle._add_status(source, "protecao", 1, int(_counter(source, "en_fuego")) * int(a[1]), int(source["id"]))
 			"double_impulse": battle.impulse = mini(int(battle.rules["impulse_max"]), battle.impulse * 2)
 			"redraws": battle.redraws += int(a[1])
 			"moves": battle.moves += int(a[1])
@@ -365,7 +369,7 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 					if held.get("class") == "ATTACK": held["bonus_attack"] = float(held.get("bonus_attack", 0)) + float(a[1])
 			"enhanced_resist":
 				if spent_impulse >= int(a[1]):
-					for ally in battle.living("ALLY"): battle._add_status(ally, "resist", 1, 1, int(source["id"]))
+					for ally in battle.living("ALLY"): battle._add_status(ally, "protecao", 1, 1, int(source["id"]))
 			"ko":
 				if kos.is_empty(): continue
 				match str(a[1]):
@@ -421,6 +425,31 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 					for foe in battle.living("ENEMY"):
 						if foe["id"] != target["id"]:
 							battle._take_damage(source, foe, int(source["attack"])); break
+			"protecao", "protection":
+				var px: int = int(a[1]) if a.size() > 1 else 1
+				for victim in targets:
+					battle._add_status(victim, "protecao", maxi(1, px), px, int(source["id"]))
+			"barreira", "barrier":
+				var rounds: int = 1
+				var bhp: int = 5
+				if a.size() >= 3:
+					rounds = int(a[1]); bhp = int(a[2])
+				elif a.size() >= 2:
+					rounds = 1; bhp = int(a[1])
+				for victim in targets:
+					battle._add_status(victim, "barrier", maxi(1, rounds), maxi(1, bhp), int(source["id"]))
+			"resistente":
+				var rx: int = int(a[1]) if a.size() > 1 else 1
+				for victim in targets:
+					battle._add_status(victim, "resistente", maxi(1, rx), rx, int(source["id"]))
+			"fragil":
+				var fx: int = int(a[1]) if a.size() > 1 else 1
+				for victim in targets:
+					battle._add_status(victim, "fragil", maxi(1, fx), fx, int(source["id"]))
+			"invulneravel", "invulnerable":
+				var ix: int = int(a[1]) if a.size() > 1 else 1
+				for victim in targets:
+					battle._add_status(victim, "invulnerable", maxi(1, ix), 1, int(source["id"]))
 			"quick", "free", "exhaust", "final", "chain", "chain_hand_owner", "random_chain", "full_combo", "bonus_status", "bonus_damaged", "bonus_block", "bonus_targeting_self", "bonus_full_hp", "bonus_en_fuego", "force_if_damaged", "hand_block", "hand_cost_down", "hand_damage_growth", "hand_resist", "overheal_max", "cost_down_en_fuego", "area_en_fuego", "requires_status", "enhanced", "redraw_force", "redraw_bonus", "redraw_strengthened", "play_while_disabled", "penetrating", "lethargic", "recoil", "drain", "instant", "ephemeral", "warmup": pass # Evaluated in preplay, hooks, or _bonus.
 			_:
 				push_error("Unsupported external card action: " + op)
@@ -438,8 +467,10 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 	elif _counter(source, "retain_next") > 0: _consume(source, "retain_next"); battle.hand.append(card)
 	else: battle.discard.append(card)
 	battle.played_cards += 1
-	if is_instant:
-		battle.request_end_turn = true
+	# Instantâneo não encerra a fase — só bloqueia Encerrar enquanto na mão.
+	if battle._has_status(source, "invulnerable"):
+		source["statuses"].erase("invulnerable")
+		battle._log("%s perdeu Invulnerável ao jogar uma carta." % source["name"])
 	battle._after_card_play()
 	battle._check_end()
 	for held in battle.hand:
@@ -486,7 +517,7 @@ func on_turn_start(battle: Variant) -> void:
 			actor["block"] += roundi(float(actor["max_hp"]) * 0.1)
 		if _has_action(def, "hand_resist"):
 			var holder: Dictionary = battle.actor_by_id(int(card["owner"]))
-			battle._add_status(holder, "resist", 1, 1, int(holder["id"]))
+			battle._add_status(holder, "protecao", 1, 1, int(holder["id"]))
 
 func on_draw(battle: Variant, card: Dictionary) -> void:
 	# Required after a card enters the hand, so Roulette is fixed on draw.

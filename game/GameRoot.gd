@@ -914,9 +914,18 @@ func _build_hero_hud(viewport_size: Vector2) -> void:
 	hp_lbl.position = Vector2(350, 72)
 	hero_hud.add_child(hp_lbl)
 	var defend := int(actor.get("block", 0)) + int(actor.get("shield", 0))
+	var bar_hp := 0
+	if battle != null and battle.has_method("_barrier_hp"):
+		bar_hp = int(battle._barrier_hp(actor))
+	elif actor.get("statuses", {}).has("barrier"):
+		var bs: Dictionary = actor["statuses"]["barrier"]
+		bar_hp = int(bs.get("barrier_hp", bs.get("stacks", 0)))
 	var state_y := 100.0
-	if defend > 0:
-		var def_lbl := _label("DEF +%d" % defend, 14, Color("8fd6ff"))
+	if defend > 0 or bar_hp > 0:
+		var def_txt := "DEF +%d" % defend if defend > 0 else ""
+		if bar_hp > 0:
+			def_txt = (def_txt + " · " if def_txt != "" else "") + "Barreira %d" % bar_hp
+		var def_lbl := _label(def_txt, 14, Color("8fd6ff"))
 		def_lbl.position = Vector2(122, state_y)
 		hero_hud.add_child(def_lbl)
 		state_y += 18.0
@@ -1005,9 +1014,18 @@ func _refresh_hero_hud() -> void:
 	hp_lbl.position = Vector2(350, 72)
 	hero_hud.add_child(hp_lbl)
 	var defend := int(actor.get("block", 0)) + int(actor.get("shield", 0))
+	var bar_hp := 0
+	if battle != null and battle.has_method("_barrier_hp"):
+		bar_hp = int(battle._barrier_hp(actor))
+	elif actor.get("statuses", {}).has("barrier"):
+		var bs: Dictionary = actor["statuses"]["barrier"]
+		bar_hp = int(bs.get("barrier_hp", bs.get("stacks", 0)))
 	var state_y := 100.0
-	if defend > 0:
-		var def_lbl := _label("DEF +%d" % defend, 14, Color("8fd6ff"))
+	if defend > 0 or bar_hp > 0:
+		var def_txt := "DEF +%d" % defend if defend > 0 else ""
+		if bar_hp > 0:
+			def_txt = (def_txt + " · " if def_txt != "" else "") + "Barreira %d" % bar_hp
+		var def_lbl := _label(def_txt, 14, Color("8fd6ff"))
 		def_lbl.position = Vector2(122, state_y)
 		hero_hud.add_child(def_lbl)
 		state_y += 18.0
@@ -1135,7 +1153,10 @@ func _build_economy_hud(viewport_size: Vector2) -> void:
 		move_btn.modulate = Color("6eb6ff")
 	economy_hud.add_child(move_btn)
 	var end_btn := _button("ENCERRAR TURNO", func(): _present_enemy_turn())
-	end_btn.disabled = battle.phase != "PLAYER" or enemy_presenting or recover_pick_active
+	var instant_blocks: bool = battle != null and battle.has_method("hand_has_instantaneo") and battle.hand_has_instantaneo("ALLY")
+	end_btn.disabled = battle.phase != "PLAYER" or enemy_presenting or recover_pick_active or instant_blocks or (battle.has_method("can_end_turn") and not battle.can_end_turn())
+	if instant_blocks:
+		end_btn.tooltip_text = "Jogue as cartas Instantâneo da mão antes de encerrar."
 	end_btn.position = Vector2(16, 196)
 	end_btn.custom_minimum_size = Vector2(258, 40)
 	economy_hud.add_child(end_btn)
@@ -1684,7 +1705,37 @@ func _card_has_damage(definition: Dictionary) -> bool:
 	return false
 
 func _status_label(status_id: String) -> String:
-	return str(status_id).replace("_", " ")
+	var key := str(status_id)
+	var labels := {
+		"protecao": "Proteção",
+		"protection": "Proteção",
+		"barrier": "Barreira",
+		"barreira": "Barreira",
+		"resistente": "Resistente",
+		"fragil": "Frágil",
+		"invulnerable": "Invulnerável",
+		"invulneravel": "Invulnerável",
+		"stun": "Atordoado",
+		"dazed": "Atordoado",
+		"resist": "Proteção",
+		"protected": "Proteção",
+		"protecting": "Proteção",
+		"bleed": "Sangramento",
+		"burn": "Queimadura",
+		"weak": "Fraco",
+		"vulnerable": "Vulnerável",
+		"marked": "Marcado",
+		"conceal": "Oculto",
+		"counter": "Contra-ataque",
+		"strengthened": "Fortalecido",
+		"slow": "Lento",
+		"bind": "Prisão",
+		"bound": "Preso",
+		"poison": "Veneno",
+		"block": "Bloqueio",
+		"shield": "Escudo",
+	}
+	return labels.get(key, key.replace("_", " "))
 
 func _rules_bbcode(definition: Dictionary, card: Dictionary) -> String:
 	var lines: Array[String] = []
@@ -1707,7 +1758,7 @@ func _rules_bbcode(definition: Dictionary, card: Dictionary) -> String:
 		keywords.append("[color=#e15b5b][b]Exaustão[/b][/color]")
 	if not keywords.is_empty():
 		lines.append(" · ".join(PackedStringArray(keywords)))
-	var harmful := ["weak", "vulnerable", "bleed", "poison", "burn", "stun", "bind", "bound", "wound", "wounded", "blind", "silence", "dazed", "confused", "corrupted", "drop"]
+	var harmful := ["weak", "vulnerable", "bleed", "poison", "burn", "stun", "bind", "bound", "wound", "wounded", "blind", "silence", "fragil", "confused", "corrupted", "drop"]
 	var effect_lines: Array[String] = []
 	for effect in definition.get("effects", []):
 		var kind := str(effect.get("kind", ""))
@@ -2225,6 +2276,10 @@ func _pick_recover_card(discard_index: int) -> void:
 
 func _present_enemy_turn() -> void:
 	if enemy_presenting or battle == null or battle.phase != "PLAYER": return
+	if battle.has_method("can_end_turn") and not battle.can_end_turn():
+		feedback = "Há Instantâneo na mão — jogue antes de encerrar."
+		_render_battle()
+		return
 	# Auto-resolve pending recover before ending turn.
 	if not battle.pending_recover.is_empty():
 		var left: int = int(battle.pending_recover.get("count", 1))
@@ -2432,7 +2487,7 @@ func _card_description(definition: Dictionary, card: Dictionary = {}) -> String:
 	if definition.get("lethargic", false): parts.append("LETÁRGICO")
 	if definition.get("recoil", false): parts.append("RECUO")
 	if definition.get("drain", false): parts.append("DRENO")
-	if definition.get("instant", false): parts.append("INSTANTÂNEO")
+	if definition.get("instant", false): parts.append("INSTANTÂNEO (obrigatória; bloqueia Encerrar)")
 	if definition.get("ephemeral", false): parts.append("EFÊMERO")
 	if int(definition.get("warmup", 0)) > 0: parts.append("AQUECIMENTO %d" % int(definition["warmup"]))
 	if definition.get("chain", 0) > 0: parts.append("CHAIN %d" % definition["chain"])

@@ -20,9 +20,9 @@ func _initialize() -> void:
 	assert(battle._damage_value(hero, enemy, strike, {}) > base, "Vulnerable deve aumentar dano")
 	enemy["statuses"].erase("vulnerable")
 	var before: int = enemy["hp"]
-	battle._add_status(enemy, "resist", 2, 1, int(enemy["id"]))
+	battle._add_status(enemy, "protecao", 2, 1, int(enemy["id"]))
 	battle._take_damage(hero, enemy, 5)
-	assert(enemy["hp"] == before and not battle._has_status(enemy, "resist"), "Resist deve impedir um dano")
+	assert(enemy["hp"] == before and not battle._has_status(enemy, "protecao"), "Proteção deve impedir um ataque")
 	battle._add_status(enemy, "stun", 2, 1, int(hero["id"]))
 	battle._take_damage(hero, enemy, 3)
 	assert(not battle._has_status(enemy, "stun"), "Stun deve terminar ao sofrer dano")
@@ -51,7 +51,7 @@ func _initialize() -> void:
 	second._cleanse(source)
 	assert(not second._has_status(source, "overload") and not second._has_status(source, "drop"), "Cure remove estados negativos")
 	second._add_status(source, "slow", 2, 1, int(source["id"]))
-	assert(second._cost(source, {"cost": 0, "class": "POWER"}) == 1, "Slow aumenta custo Heroico zero")
+	assert(second._cost(source, {"cost": 1, "class": "POWER"}) == 2, "Slow aumenta custo Heroico")
 	var third = Battle.new()
 	var rogue_team: Array[String] = ["ladino", "guerreiro", "mago"]
 	third.begin("road", rogue_team, {}, 73)
@@ -81,11 +81,11 @@ func _initialize() -> void:
 	fifth._tick_statuses()
 	assert(fifth._has_status(opposite, "corrupted"), "Corrupted deve atingir unidades próximas de qualquer lado")
 	spreader["block"] = 30
-	fifth._add_status(spreader, "resist", 2, 1, int(spreader["id"]))
+	fifth._add_status(spreader, "protecao", 2, 2, int(spreader["id"]))
 	fifth._add_status(spreader, "bleed", 2, 1, int(opposite["id"]))
 	var bleeding_hp: int = spreader["hp"]
 	fifth._tick_statuses()
-	assert(spreader["hp"] < bleeding_hp and spreader["block"] == 30 and fifth._has_status(spreader, "resist"), "Bleed ignora Bloqueio e Resistência")
+	assert(spreader["hp"] < bleeding_hp and spreader["block"] == 30 and fifth._has_status(spreader, "protecao") and int(spreader["statuses"]["protecao"]["stacks"]) == 1, "Bleed ignora Bloqueio e Proteção (−1 stack/rodada)")
 	var sixth = Battle.new()
 	sixth.begin("road", team, {}, 89)
 	var pusher: Dictionary = sixth.living("ALLY")[0]
@@ -129,5 +129,59 @@ func _initialize() -> void:
 	eighth._add_status(fading, "bleed", 2, 1, int(fading["id"]))
 	eighth._tick_statuses()
 	assert(fading["hp"] == 0 and int(fading["statuses"]["en_fuego"]["stacks"]) == 1, "Dano próprio não deve contar como eliminação de inimigo")
+
+	# --- Defesa redesenhada + Instantâneo ---
+	var defb = Battle.new()
+	defb.begin("road", team, {}, 101)
+	var tank: Dictionary = defb.living("ALLY")[0]
+	var foe: Dictionary = defb.living("ENEMY")[0]
+	var hp0: int = int(foe["hp"])
+	defb._add_status(foe, "invulnerable", 2, 1, int(foe["id"]))
+	defb._take_damage(tank, foe, 9)
+	assert(int(foe["hp"]) == hp0, "Invulnerável bloqueia dano")
+	var tank2: Dictionary = defb.living("ALLY")[0]
+	defb._add_status(tank2, "invulnerable", 2, 1, int(tank2["id"]))
+	var self_card_id := "estandarte" if Content.CARDS.has("estandarte") else "corte"
+	defb.hand.clear()
+	defb.hand.append(defb._create_card(self_card_id, int(tank2["id"])))
+	defb.card_plays = 3
+	defb.impulse = 5
+	var tgt := int(tank2["id"]) if self_card_id == "estandarte" else int(foe["id"])
+	assert(defb.play(0, tgt), "Jogar carta limpa Invulnerável")
+	assert(not defb._has_status(tank2, "invulnerable"), "Invulnerável some ao jogar carta")
+
+	foe["statuses"].erase("invulnerable")
+	foe["statuses"].erase("protecao")
+	foe["block"] = 0
+	foe["shield"] = 0
+	defb._add_status(foe, "barrier", 2, 8, int(foe["id"]))
+	var hp1: int = int(foe["hp"])
+	assert(defb._barrier_hp(foe) == 8, "Barreira inicia com 8 HP")
+	defb._take_damage(tank, foe, 5)
+	assert(int(foe["hp"]) == hp1 and defb._barrier_hp(foe) == 3, "Barreira absorve 5 de 8")
+	defb._take_damage(tank, foe, 10)
+	assert(not defb._has_status(foe, "barrier") and int(foe["hp"]) < hp1, "Overflow da Barreira atinge Vida")
+
+	defb._add_status(foe, "resistente", 3, 2, int(foe["id"]))
+	defb._add_status(foe, "fragil", 3, 3, int(foe["id"]))
+	assert(not defb._has_status(foe, "resistente") and defb._has_status(foe, "fragil") and int(foe["statuses"]["fragil"]["stacks"]) == 1, "Frágil cancela Resistente")
+
+	var inst = Battle.new()
+	inst.begin("road", team, {}, 202)
+	var owner: Dictionary = inst.living("ALLY")[0]
+	var fake := inst._create_card("corte", int(owner["id"]))
+	fake["instant"] = true
+	inst.hand.clear()
+	inst.hand.append(fake)
+	assert(inst.hand_has_instantaneo("ALLY"), "Detecta Instantâneo na mão")
+	assert(not inst.can_end_turn(), "Instantâneo bloqueia Encerrar")
+	inst.request_end_turn = false
+	inst.card_plays = 3
+	inst.impulse = 5
+	var enemy_id: int = int(inst.living("ENEMY")[0]["id"])
+	assert(inst.play(0, enemy_id), "Jogar Instantâneo")
+	assert(not inst.request_end_turn, "Instantâneo NÃO pede fim de turno")
+	assert(inst.can_end_turn(), "Sem Instantâneo na mão, pode encerrar")
+
 	print("OK: estados, Chain, Soulbound, impacto, prévia, alvos especiais e KO próprio")
 	quit(0)

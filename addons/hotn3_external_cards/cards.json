@@ -1664,7 +1664,7 @@
       "actions": [
         [
           "status",
-          "resist",
+          "protecao",
           "1"
         ],
         [
@@ -2919,7 +2919,7 @@
         ],
         [
           "self_status",
-          "resist",
+          "protecao",
           "1"
         ]
       ],
@@ -3889,7 +3889,7 @@
         ],
         [
           "self_status",
-          "resist",
+          "protecao",
           "1"
         ]
       ],
@@ -4515,7 +4515,7 @@
       "actions": [
         [
           "status",
-          "resist",
+          "protecao",
           "2"
         ],
         [

@@ -68,7 +68,7 @@ Cartas/heróis `ent_*` em `addons/hotn3_entities/entities.json`; `PackBridge` in
 | `recover_own` N | Recuperar própria | Carta mais recente do descarte daquele dono → mão. |
 | `recover` N | Recuperar | UI escolhe no descarte; auto (mais recente) se encerrar turno sem escolher. |
 | `discard` N | Descarte | Descarta N cartas aleatórias da mão. |
-| `instant` | Instantâneo | Após resolver, encerra a fase do jogador; não pode ser recomprada; grátis se `free` omitido. |
+| `instant` | Instantâneo | Deve ser jogada nesta rodada; bloqueia Encerrar enquanto estiver na mão; não encerra a fase ao jogar; não pode ser recomprada. |
 | `ephemeral` | Efêmero | Se ainda na mão no fim da rodada, descarta. |
 | `warmup` X | Aquecimento | Indisponível por X rodadas após comprar (`drawn_turn + X`). |
 

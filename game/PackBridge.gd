@@ -206,7 +206,20 @@ func describe_actions(definition: Dictionary) -> Array[String]:
 			"heal", "heal_all", "full_heal":
 				parts.append("Cura %s Vida" % str(action[1] if action.size() > 1 else ""))
 			"block", "block_hp":
-				parts.append("Bloqueio")
+				parts.append("Bloqueio (legado)")
+			"protecao", "protection":
+				parts.append("Proteção %s" % str(action[1] if action.size() > 1 else "1"))
+			"barreira", "barrier":
+				if action.size() >= 3:
+					parts.append("Barreira %s rodadas / %s HP" % [str(action[1]), str(action[2])])
+				else:
+					parts.append("Barreira %s HP" % str(action[1] if action.size() > 1 else ""))
+			"resistente":
+				parts.append("Resistente %s" % str(action[1] if action.size() > 1 else "1"))
+			"fragil":
+				parts.append("Frágil %s" % str(action[1] if action.size() > 1 else "1"))
+			"invulneravel", "invulnerable":
+				parts.append("Invulnerável %s" % str(action[1] if action.size() > 1 else "1"))
 			"status", "self_status", "chance_status", "roulette_status":
 				parts.append("Estado %s" % str(action[1] if action.size() > 1 else ""))
 			"draw", "draw_owner", "draw_heroic", "draw_own":
@@ -226,7 +239,7 @@ func describe_actions(definition: Dictionary) -> Array[String]:
 			"drain":
 				parts.append("Dreno (1/4)")
 			"instant":
-				parts.append("Instantâneo")
+				parts.append("Instantâneo (obrigatória nesta rodada)")
 			"ephemeral":
 				parts.append("Efêmero")
 			"warmup":
