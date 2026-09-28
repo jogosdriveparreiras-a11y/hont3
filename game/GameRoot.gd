@@ -83,7 +83,7 @@ var owned_cards: Dictionary = {}
 var inspect_open := false
 var redraw_hold_index := -1
 var redraw_hold_time := 0.0
-const REDRAW_HOLD_SECONDS := 2.0
+const REDRAW_HOLD_SECONDS := 1.0
 var hero_hud: Control = null
 var economy_hud: Control = null
 var recompra_ring: Control = null
@@ -100,6 +100,13 @@ var free_cam_dragging := false
 var free_cam_last := Vector2.ZERO
 var hover_retarget_freeze_until := 0
 var weather_fx_root: Node3D = null
+var anim_test_caster := "ent_alyssa_wine"
+var anim_test_target := "ent_akuji"
+var anim_test_card := ""
+var anim_test_filter_owner := ""
+var anim_test_filter_class := ""
+var anim_test_filter_name := ""
+var anim_test_playing := false
 
 func _ready() -> void:
 	_register_inputs()
@@ -312,6 +319,7 @@ func _show_menu() -> void:
 	menu.add_child(_button("Escolher equipe", _show_team))
 	menu.add_child(_button("Coleção de cartas", _show_collection))
 	menu.add_child(_button("Preparar itens", _show_items))
+	menu.add_child(_button("Teste de Animação", _show_anim_test, "Pré-visualiza RM/FX de qualquer carta (sem combate)"))
 	menu.add_child(_button("Configurações", _show_settings))
 
 func _add_campaign_menu_button(menu: VBoxContainer) -> void:
@@ -320,6 +328,268 @@ func _add_campaign_menu_button(menu: VBoxContainer) -> void:
 
 func _launch_campaign_module() -> void:
 	get_tree().change_scene_to_file("res://addons/hotn3_campaign/CampaignRoot.tscn")
+
+
+func _show_anim_test() -> void:
+	battle = null
+	battle_menu_open = false
+	if presentation != null:
+		presentation.drive_camera = false
+		presentation.clear_actors()
+	_reset_menu_camera()
+	_ensure_bgm_for("menu")
+	_clear_ui()
+	_clear_combat_visuals()
+	if anim_test_card == "" or not Content.CARDS.has(anim_test_card):
+		var keys: Array = Content.CARDS.keys()
+		keys.sort()
+		if not keys.is_empty():
+			anim_test_card = str(keys[0])
+	_spawn_anim_test_actors()
+	var root := Control.new()
+	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hud.add_child(root)
+	var panel := PanelContainer.new()
+	panel.position = Vector2(18, 18)
+	panel.custom_minimum_size = Vector2(520, 640)
+	if ResourceLoader.exists("res://assets/ui/panel.png"):
+		var ps := StyleBoxTexture.new()
+		ps.texture = load("res://assets/ui/panel.png")
+		ps.set_texture_margin_all(28)
+		panel.add_theme_stylebox_override("panel", ps)
+	root.add_child(panel)
+	var col := VBoxContainer.new()
+	col.add_theme_constant_override("separation", 8)
+	panel.add_child(col)
+	col.add_child(_label("TESTE DE ANIMAÇÃO", 28, Color("dcc28b")))
+	col.add_child(_label("Só FX/RM — sem Iniciativa, dano ou status.", 15, Color("9aa6bf")))
+	var caster_name := str(Content.HEROES.get(anim_test_caster, {}).get("name", anim_test_caster))
+	var target_name := str(Content.HEROES.get(anim_test_target, {}).get("name", anim_test_target))
+	col.add_child(_button("Usuário (caster): %s" % caster_name, _anim_test_pick_actor.bind("caster")))
+	col.add_child(_button("Alvo: %s" % target_name, _anim_test_pick_actor.bind("target")))
+	# Filtros
+	var filter_row := HBoxContainer.new()
+	filter_row.add_theme_constant_override("separation", 6)
+	col.add_child(filter_row)
+	var owner_btn := _button("Personagem: %s" % ("Todos" if anim_test_filter_owner == "" else str(Content.HEROES.get(anim_test_filter_owner, {}).get("name", anim_test_filter_owner))), _anim_test_pick_filter_owner)
+	owner_btn.custom_minimum_size = Vector2(240, 40)
+	filter_row.add_child(owner_btn)
+	var class_btn := _button("Tipo: %s" % ("Todos" if anim_test_filter_class == "" else anim_test_filter_class), _anim_test_cycle_filter_class)
+	class_btn.custom_minimum_size = Vector2(160, 40)
+	filter_row.add_child(class_btn)
+	var name_row := HBoxContainer.new()
+	name_row.add_theme_constant_override("separation", 6)
+	col.add_child(name_row)
+	name_row.add_child(_label("Nome:", 16, Color("c9d1dd")))
+	var name_edit := LineEdit.new()
+	name_edit.placeholder_text = "filtrar por nome…"
+	name_edit.text = anim_test_filter_name
+	name_edit.custom_minimum_size = Vector2(280, 34)
+	name_edit.text_changed.connect(func(t: String) -> void:
+		anim_test_filter_name = t
+	)
+	name_edit.text_submitted.connect(func(_t: String) -> void: _show_anim_test())
+	name_row.add_child(name_edit)
+	name_row.add_child(_button("Filtrar", _show_anim_test))
+	var card_name := str(Content.CARDS.get(anim_test_card, {}).get("name", anim_test_card))
+	var cdef: Dictionary = Content.CARDS.get(anim_test_card, {})
+	col.add_child(_label("Carta: %s" % card_name, 18, Color("f0c27a")))
+	col.add_child(_label("anim_self: %s  ·  anim_target: %s" % [str(cdef.get("anim_self", [])), str(cdef.get("anim_target", []))], 13, Color("9aa6bf")))
+	var scroll := ScrollContainer.new()
+	scroll.custom_minimum_size = Vector2(480, 280)
+	col.add_child(scroll)
+	var list := VBoxContainer.new()
+	list.add_theme_constant_override("separation", 3)
+	scroll.add_child(list)
+	for cid in _anim_test_filtered_cards():
+		var defn: Dictionary = Content.CARDS[cid]
+		var owner_id := str(defn.get("owner", ""))
+		var oname := str(Content.HEROES.get(owner_id, {}).get("name", owner_id))
+		var label := "%s%s · %s · %s" % ["▶ " if cid == anim_test_card else "", defn.get("name", cid), oname, defn.get("class", "?")]
+		var b := _button(label, _anim_test_set_card.bind(str(cid)))
+		b.custom_minimum_size = Vector2(450, 36)
+		b.add_theme_font_size_override("font_size", 14)
+		list.add_child(b)
+	var play := _button("▶ Reproduzir animação", _anim_test_play)
+	play.custom_minimum_size = Vector2(280, 48)
+	col.add_child(play)
+	col.add_child(_button("Voltar", _show_menu))
+
+
+func _anim_test_filtered_cards() -> Array[String]:
+	var out: Array[String] = []
+	var needle := anim_test_filter_name.strip_edges().to_lower()
+	var ids: Array = Content.CARDS.keys()
+	ids.sort()
+	for cid0 in ids:
+		var cid := str(cid0)
+		var defn: Dictionary = Content.CARDS[cid]
+		if anim_test_filter_owner != "" and str(defn.get("owner", "")) != anim_test_filter_owner:
+			continue
+		if anim_test_filter_class != "" and str(defn.get("class", "")) != anim_test_filter_class:
+			continue
+		if needle != "":
+			var hay := ("%s %s" % [defn.get("name", ""), cid]).to_lower()
+			if needle not in hay:
+				continue
+		out.append(cid)
+	return out
+
+
+func _anim_test_set_card(card_id: String) -> void:
+	anim_test_card = card_id
+	_show_anim_test()
+
+
+func _anim_test_cycle_filter_class() -> void:
+	var order := ["", "ATTACK", "ESTADO", "DESVANTAGEM", "SKILL", "ITEM"]
+	var idx := order.find(anim_test_filter_class)
+	if idx < 0:
+		idx = 0
+	anim_test_filter_class = order[(idx + 1) % order.size()]
+	_show_anim_test()
+
+
+func _anim_test_pick_filter_owner() -> void:
+	_clear_ui()
+	var menu := _center_panel("FILTRO · PERSONAGEM")
+	menu.add_child(_button("Todos", func() -> void:
+		anim_test_filter_owner = ""
+		_show_anim_test()
+	))
+	var scroll := ScrollContainer.new()
+	scroll.custom_minimum_size = Vector2(520, 420)
+	var list := VBoxContainer.new()
+	list.add_theme_constant_override("separation", 4)
+	scroll.add_child(list)
+	menu.add_child(scroll)
+	var ids: Array = Content.HEROES.keys()
+	ids.sort()
+	for hid in ids:
+		var id := str(hid)
+		var hero: Dictionary = Content.HEROES[id]
+		if not bool(hero.get("playable", true)):
+			continue
+		list.add_child(_button("%s · %s" % [hero.get("name", id), hero.get("type", "?")], func() -> void:
+			anim_test_filter_owner = id
+			_show_anim_test()
+		))
+	menu.add_child(_button("Voltar", _show_anim_test))
+
+
+func _anim_test_pick_actor(role: String) -> void:
+	_clear_ui()
+	var title := "USUÁRIO (CASTER)" if role == "caster" else "ALVO"
+	var menu := _center_panel("TESTE ANIM · %s" % title)
+	var scroll := ScrollContainer.new()
+	scroll.custom_minimum_size = Vector2(520, 460)
+	var list := VBoxContainer.new()
+	list.add_theme_constant_override("separation", 4)
+	scroll.add_child(list)
+	menu.add_child(scroll)
+	var ids: Array = Content.HEROES.keys()
+	ids.sort()
+	for hid in ids:
+		var id := str(hid)
+		var hero: Dictionary = Content.HEROES[id]
+		if str(hero.get("sprite", "")) == "":
+			continue
+		var label := "%s · %s" % [hero.get("name", id), hero.get("type", "?")]
+		list.add_child(_button(label, _anim_test_set_actor.bind(role, id)))
+	menu.add_child(_button("Voltar", _show_anim_test))
+
+
+func _anim_test_set_actor(role: String, hero_id: String) -> void:
+	if role == "caster":
+		anim_test_caster = hero_id
+	else:
+		anim_test_target = hero_id
+	_show_anim_test()
+
+
+func _spawn_anim_test_actors() -> void:
+	_clear_combat_visuals()
+	if presentation != null:
+		presentation.drive_camera = false
+		presentation.clear_actors()
+	var caster_hero: Dictionary = Content.HEROES.get(anim_test_caster, {})
+	var target_hero: Dictionary = Content.HEROES.get(anim_test_target, {})
+	if caster_hero.is_empty() or target_hero.is_empty():
+		return
+	var caster_actor := {
+		"id": 1, "name": caster_hero.get("name", anim_test_caster), "side": "ALLY", "row": "front",
+		"hp": int(caster_hero.get("hp", 20)), "max_hp": int(caster_hero.get("hp", 20)),
+		"sprite": caster_hero.get("sprite", ""), "portrait": caster_hero.get("portrait", ""),
+		"type": caster_hero.get("type", ""), "block": 0, "shield": 0, "statuses": {},
+	}
+	var target_actor := {
+		"id": 2, "name": target_hero.get("name", anim_test_target), "side": "ENEMY", "row": "front",
+		"hp": int(target_hero.get("hp", 20)), "max_hp": int(target_hero.get("hp", 20)),
+		"sprite": target_hero.get("sprite", ""), "portrait": target_hero.get("portrait", ""),
+		"type": target_hero.get("type", ""), "block": 0, "shield": 0, "statuses": {},
+	}
+	var cpos := Vector3(-2.4, 0, 0)
+	var tpos := Vector3(2.4, 0, 0)
+	if battle_view_mode == "lateral":
+		cpos = Vector3(-2.2, 0, 1.2)
+		tpos = Vector3(2.2, 0, 1.2)
+	actor_nodes[1] = _create_actor_visual(caster_actor)
+	actor_nodes[1].position = cpos
+	actor_nodes[2] = _create_actor_visual(target_actor)
+	actor_nodes[2].position = tpos
+	var c_av: Sprite3D = actor_nodes[1].get_node_or_null("Avatar")
+	var t_av: Sprite3D = actor_nodes[2].get_node_or_null("Avatar")
+	if c_av != null:
+		unit_sprites.append(c_av)
+		if presentation != null:
+			presentation.bind_actor(1, c_av, cpos)
+	if t_av != null:
+		unit_sprites.append(t_av)
+		if presentation != null:
+			presentation.bind_actor(2, t_av, tpos)
+	# Sem barras de combate no modo teste
+	for nid in [1, 2]:
+		var body: Node3D = actor_nodes[nid]
+		var hp := body.get_node_or_null("WorldHp")
+		if hp != null:
+			hp.visible = false
+		var np := body.get_node_or_null("Nameplate")
+		if np != null:
+			np.text = str(caster_hero.get("name", "") if nid == 1 else target_hero.get("name", ""))
+	if camera != null:
+		camera.position = Vector3(0, 3.2, 9.5)
+		camera.look_at(Vector3(0, 1.0, 0), Vector3.UP)
+
+
+func _anim_test_play() -> void:
+	if anim_test_playing:
+		return
+	if not Content.CARDS.has(anim_test_card):
+		feedback = "Selecione uma carta."
+		return
+	if fx_player == null or presentation == null:
+		return
+	var definition: Dictionary = Content.CARDS[anim_test_card].duplicate(true)
+	# Garante listas de anim mesmo se vazias
+	if not definition.has("anim_self") or definition["anim_self"] == null:
+		definition["anim_self"] = ["cast"]
+	if not definition.has("anim_target") or definition["anim_target"] == null:
+		definition["anim_target"] = ["hit"]
+	anim_test_playing = true
+	if sound != null:
+		sound.cue("cast", "UI")
+	if presentation != null:
+		presentation.show_action("cast", 1, 2, 0)
+	var dur := float(presentation.play_card_fx(definition, 1, 2))
+	var wait := maxf(0.45, dur)
+	get_tree().create_timer(wait / maxf(animation_speed, 0.25)).timeout.connect(func() -> void:
+		anim_test_playing = false
+		if presentation != null:
+			presentation.show_action("hit", 1, 2, 0)
+	)
+	if session_report != null:
+		session_report.log_ui("anim_test_play", {"card": anim_test_card, "caster": anim_test_caster, "target": anim_test_target, "dur": dur})
 
 
 func _show_arena() -> void:
@@ -1760,7 +2030,7 @@ func _select_card(index: int) -> void:
 	if selected_card == index and not card_confirmed:
 		_confirm_selected_card(index)
 		return
-	var require_msg := _card_require_status_reason(index)
+	var require_msg := _card_select_block_reason(index)
 	if require_msg != "":
 		_show_block_popup(require_msg)
 		return
@@ -2163,10 +2433,10 @@ func _make_3d_card(index: int, card: Dictionary, definition: Dictionary) -> void
 		var dead_mat: ShaderMaterial = mesh.material_override
 		if dead_mat != null:
 			dead_mat.set_shader_parameter("modulate_color", Color(0.55, 0.55, 0.58, 0.75))
-	elif _card_require_status_reason(index) != "":
+	elif _card_select_block_reason(index) != "":
 		var lock_mat: ShaderMaterial = mesh.material_override
 		if lock_mat != null:
-			lock_mat.set_shader_parameter("modulate_color", Color(0.62, 0.55, 0.72, 0.72))
+			lock_mat.set_shader_parameter("modulate_color", Color(0.55, 0.52, 0.58, 0.55))
 	if entering and not reduce_motion:
 		var dur := 0.28 / maxf(animation_speed, 0.25)
 		var arrive := create_tween()
@@ -3012,7 +3282,7 @@ func _on_card_gui(event: InputEvent, index: int) -> void:
 	elif inspect_open and inspected_card == index:
 		call_deferred("_confirm_selected_card", index)
 	else:
-		var require_msg2 := _card_require_status_reason(index)
+		var require_msg2 := _card_select_block_reason(index)
 		if require_msg2 != "":
 			_show_block_popup(require_msg2)
 			get_viewport().set_input_as_handled()
@@ -3063,26 +3333,43 @@ func _update_recompra_meter(progress: float, label_text: String) -> void:
 	_clear_recompra_meter()
 	var vp := get_viewport().get_visible_rect().size
 	var wrap := Control.new()
-	wrap.position = Vector2(vp.x * 0.5 - 70, vp.y * 0.52)
-	wrap.size = Vector2(140, 160)
+	wrap.position = Vector2(vp.x * 0.5 - 88, vp.y * 0.48)
+	wrap.size = Vector2(176, 200)
 	wrap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	wrap.z_index = 35
 	recompra_ring.add_child(wrap)
-	var dim := ColorRect.new()
-	dim.color = Color(0, 0, 0, 0.35)
-	dim.position = Vector2(10, 10)
-	dim.size = Vector2(120, 120)
-	dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	wrap.add_child(dim)
+	# Painel escuro com borda dourada (não ProgressBar)
+	var panel := PanelContainer.new()
+	panel.position = Vector2(0, 0)
+	panel.size = Vector2(176, 200)
+	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.04, 0.06, 0.10, 0.78)
+	style.set_border_width_all(2)
+	style.border_color = Color(0.94, 0.76, 0.42, 0.55 + 0.35 * progress)
+	style.set_corner_radius_all(18)
+	style.shadow_color = Color(0.24, 0.85, 0.50, 0.25 + 0.35 * progress)
+	style.shadow_size = 12
+	panel.add_theme_stylebox_override("panel", style)
+	wrap.add_child(panel)
 	var meter := HotNCircularMeter.new()
-	meter.position = Vector2(20, 20)
-	meter.size = Vector2(100, 100)
+	meter.position = Vector2(28, 22)
+	meter.size = Vector2(120, 120)
 	meter.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	meter.fill_color = Color("3ecf7a").lerp(Color("f0c27a"), progress * 0.45)
+	meter.accent_color = Color("f0c27a")
 	meter.set_progress(progress)
 	wrap.add_child(meter)
-	var lbl := _label(label_text, 16, Color("9dffb0") if progress < 1.0 else Color("3ecf7a"))
+	var title := _label("RECOMPRA", 15, Color("f0c27a"))
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.position = Vector2(8, 148)
+	title.size = Vector2(160, 20)
+	wrap.add_child(title)
+	var pct := int(round(progress * 100.0))
+	var lbl := _label("%s · %d%%" % [label_text, pct] if progress < 1.0 else "PRONTO", 14, Color("9dffb0") if progress < 1.0 else Color("fff6df"))
 	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	lbl.position = Vector2(10, 130)
-	lbl.size = Vector2(120, 24)
+	lbl.position = Vector2(8, 168)
+	lbl.size = Vector2(160, 22)
 	wrap.add_child(lbl)
 
 func _target_needs_player_choice(kind: String) -> bool:
@@ -3660,7 +3947,7 @@ func _input(event: InputEvent) -> void:
 		if idx >= 0:
 			_try_recompra(idx)
 		else:
-			feedback = "Segure ~2s numa carta (ou selecione e pressione de novo) para Recompra."
+			feedback = "Segure ~1s numa carta (ou selecione e pressione de novo) para Recompra."
 			_render_battle()
 	elif event.is_action_pressed("hotn_move"):
 		_start_move_action()
@@ -4043,6 +4330,22 @@ func _update_hand_card_visuals() -> void:
 		if not is_instance_valid(card_mesh): continue
 		if card_mesh.has_meta("dealing"):
 			continue
+		# Com uma carta selecionada, as demais somem (só a escolhida permanece).
+		var hide_others := false
+		if battle != null and selected_card >= 0 and selected_card < battle.hand.size():
+			hide_others = true
+		if hide_others:
+			card_mesh.visible = mesh_index == selected_card
+		else:
+			card_mesh.visible = true
+		# Evita raycast/clique em cartas invisíveis.
+		for child in card_mesh.get_children():
+			if child is Area3D:
+				child.monitoring = card_mesh.visible
+				child.monitorable = card_mesh.visible
+				child.input_ray_pickable = card_mesh.visible
+		if not card_mesh.visible:
+			continue
 		var selection_lock := selected_card >= 0 and not card_confirmed and not inspect_open
 		var raised := false
 		if selection_lock:
@@ -4409,48 +4712,56 @@ func _add_pending_target_actions(viewport_size: Vector2) -> void:
 func _show_block_popup(message: String) -> void:
 	if session_report != null:
 		session_report.log_ui("block_popup", {"message": message})
-	# Popup modal curto explicando por que a Manobra não pode ser usada.
+	# Toast curto: só o motivo, sem botão OK; fade-in → ~1s → fade-out.
+	if hud == null:
+		return
+	var old := hud.get_node_or_null("BlockPopup")
+	if old != null:
+		old.queue_free()
 	var blocker := Control.new()
 	blocker.name = "BlockPopup"
-	blocker.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	blocker.z_index = 40
-	blocker.mouse_filter = Control.MOUSE_FILTER_STOP
+	blocker.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	blocker.z_index = 50
+	blocker.modulate = Color(1, 1, 1, 0)
 	hud.add_child(blocker)
-	var dim := ColorRect.new()
-	dim.color = Color(0, 0, 0, 0.45)
-	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	dim.mouse_filter = Control.MOUSE_FILTER_STOP
-	blocker.add_child(dim)
+	var vp := get_viewport().get_visible_rect().size
 	var panel := PanelContainer.new()
+	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var style := StyleBoxFlat.new()
-	style.bg_color = Color(0.1, 0.12, 0.18, 0.96)
+	style.bg_color = Color(0.08, 0.09, 0.14, 0.94)
 	style.set_border_width_all(2)
-	style.border_color = Color(0.85, 0.55, 0.35, 0.95)
-	style.set_corner_radius_all(12)
-	style.set_content_margin_all(18)
+	style.border_color = Color(0.90, 0.58, 0.35, 0.95)
+	style.set_corner_radius_all(14)
+	style.set_content_margin_all(16)
+	style.shadow_color = Color(0, 0, 0, 0.45)
+	style.shadow_size = 10
 	panel.add_theme_stylebox_override("panel", style)
-	panel.custom_minimum_size = Vector2(420, 140)
-	var col := VBoxContainer.new()
-	col.add_theme_constant_override("separation", 12)
-	panel.add_child(col)
-	col.add_child(_label("Não é possível", 20, Color("f0c27a")))
-	var body := _label(message, 17, Color("f4f1ea"))
+	panel.custom_minimum_size = Vector2(minf(460.0, vp.x * 0.7), 0)
+	var body := _label(message, 18, Color("f4f1ea"))
 	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	body.custom_minimum_size.x = 380
-	col.add_child(body)
-	var ok := _button("Entendi", Callable())
-	ok.pressed.connect(func() -> void:
+	body.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	body.custom_minimum_size.x = mini(420.0, vp.x * 0.64)
+	body.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	panel.add_child(body)
+	blocker.add_child(panel)
+	# Posição aproximada; ajusta após layout
+	panel.position = Vector2((vp.x - panel.custom_minimum_size.x) * 0.5, vp.y * 0.28)
+	var tw := blocker.create_tween()
+	tw.tween_property(blocker, "modulate:a", 1.0, 0.14)
+	tw.tween_interval(1.0)
+	tw.tween_property(blocker, "modulate:a", 0.0, 0.28)
+	tw.tween_callback(func() -> void:
 		if is_instance_valid(blocker):
 			blocker.queue_free()
 	)
-	col.add_child(ok)
-	blocker.add_child(panel)
-	panel.position = Vector2((get_viewport().get_visible_rect().size.x - 420) * 0.5, (get_viewport().get_visible_rect().size.y - 160) * 0.4)
-	dim.gui_input.connect(func(ev: InputEvent) -> void:
-		if ev is InputEventMouseButton and ev.pressed:
-			if is_instance_valid(blocker):
-				blocker.queue_free()
-	)
+	var recenter := func() -> void:
+		if not is_instance_valid(panel):
+			return
+		var sz := panel.get_combined_minimum_size()
+		if sz.x < 10.0:
+			sz = panel.size
+		panel.position = Vector2((vp.x - sz.x) * 0.5, vp.y * 0.28)
+	get_tree().create_timer(0.02).timeout.connect(recenter)
 
 
 func _card_require_status_reason(hand_index: int) -> String:
@@ -4473,6 +4784,29 @@ func _card_require_status_reason(hand_index: int) -> String:
 		if have < need_n:
 			var pretty := _status_label(need_st)
 			return "Requer: %s %d" % [pretty, need_n]
+	return ""
+
+func _card_select_block_reason(hand_index: int) -> String:
+	# Motivo que impede SELECIONAR a carta (Iniciativa, fileira, requisitos, jogadas…).
+	if battle == null or hand_index < 0 or hand_index >= battle.hand.size():
+		return "Carta inválida."
+	var req := _card_require_status_reason(hand_index)
+	if req != "":
+		return req
+	var reason := _card_unusable_reason(hand_index, -1)
+	if reason != "":
+		return reason
+	# Fileira/posição: ataques sem Alcance da retaguarda (mesmo sem alvo escolhido).
+	var card: Dictionary = battle.hand[hand_index]
+	var definition: Dictionary = _card_def(str(card.get("id", "")))
+	var source: Dictionary = battle.actor_by_id(int(card.get("owner", -1)))
+	if source.is_empty():
+		return ""
+	var kind := str(definition.get("target", "ENEMY"))
+	var enemy_kinds := ["ENEMY", "ALL_ENEMIES", "ALL_OTHERS", "RANDOM", "FRONT_ROW", "BACK_ROW", "CHAIN"]
+	if kind in enemy_kinds and not bool(definition.get("reach", false)):
+		if str(source.get("row", "")) == "back" and battle.living("ALLY").any(func(a): return a["row"] == "front"):
+			return "Você não pode atacar sem Alcance da linha de trás."
 	return ""
 
 func _card_unusable_reason(hand_index: int, target_id: int = -1) -> String:

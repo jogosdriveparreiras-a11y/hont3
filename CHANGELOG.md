@@ -1,3 +1,10 @@
+## 2026-09-28 — Recompra, seleção bloqueada, mão e Teste de Animação
+
+- **Recompra**: hold-to-redraw em **1,0s** (metade); medidor circular épico (halo, ticks, ponta brilhante, painel dourado) — não ProgressBar.
+- **Seleção**: cartas injogáveis (Iniciativa, fileira/Alcance, requisitos, jogadas, incapacitado…) **não selecionam**; clique mostra toast só com o motivo (fade ~0,14s → 1s → fade-out, sem OK).
+- **Mão**: com uma carta selecionada, as demais ficam **invisíveis** (e sem raycast).
+- **Menu**: **Teste de Animação** — escolhe usuário + alvo (sprites), filtra cartas (personagem/tipo/nome) e reproduz só RM/FX (`anim_self`/`anim_target`), sem efeitos de combate.
+
 ## 2026-09-28 — anim cartas + zoom mão isolado
 
 - **Zoom lateral**: câmera fixa; o mundo (`stage`/`units`) escala e desloca no hover de sprite. Mão 3D (filha da câmera) não muda de tamanho/posição na tela.
