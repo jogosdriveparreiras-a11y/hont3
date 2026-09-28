@@ -1,5 +1,19 @@
 ## 2026-09-28 — Pacote HUD/FX/editor/balanceamento
 
+## 2026-09-28 — UX combate (pt-BR)
+
+- Hover de carta: mantém foco da câmera no dono; compensação de FOV isola o zoom do sprite do tamanho da mão (só a carta sob hover escala).
+- Alvo inimigo: clique mostra prévia de dano e pede **Confirmar alvo** antes de resolver (`pending_target_id`).
+- Menu de combate (botão topo-direita + ESC): BGM, clima, câmera livre, vista.
+- Removido `warp_mouse`; freeze ~0,5s de retarget no hover de sprite.
+- IMPACTO/PODER + escudo/espada alinhados à borda esquerda da carta.
+- Face da carta: resumos curtos (`Lento 1`); glossário completo só em Inspecionar.
+- Modo carta selecionada: sem hover/zoom em outras; câmera normal; Cancelar ou clique fora.
+- SFX distintos `confirm` / `cancel`.
+- Breath: pés fixos, stretch só na parte superior.
+- Barras de HP: ícone de tipo antes dos números (💥⚔️👁️🎭⚡🧪).
+
+
 - **CardFace**: fonte épica/serif no título (`assets/fonts/CardTitle.ttf`), nome do personagem centralizado, emblema de Impacto à esquerda, caixa de regras semi-transparente, INICIATIVA no canto inferior esquerdo; `CardFace.tscn` editável.
 - **FX de combate**: `FxPlayer.gd` + presets; toda Manobra toca animação no conjurador e no alvo (padrão `cast`/`hit` se a carta não definir); timing parallel/wait no editor.
 - **Config (ESC)**: seletor de BGM listando `assets/audio/bgm` (+ fantasy/).

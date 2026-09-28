@@ -81,6 +81,16 @@ const REDRAW_HOLD_SECONDS := 2.0
 var hero_hud: Control = null
 var economy_hud: Control = null
 var recompra_ring: Control = null
+var pending_target_id := -1
+var battle_menu_open := false
+var weather_mode := "none"  # none | rain | fog | heat | night
+var free_camera := false
+var free_cam_yaw := 0.0
+var free_cam_pitch := 0.0
+var free_cam_dragging := false
+var free_cam_last := Vector2.ZERO
+var hover_retarget_freeze_until := 0
+var weather_fx_root: Node3D = null
 
 func _ready() -> void:
 	_register_inputs()
@@ -367,7 +377,10 @@ func _cycle_bgm(step: int) -> void:
 			break
 	idx = (idx + step) % tracks.size()
 	_apply_bgm_track(str(tracks[idx]))
-	_show_settings()
+	if battle != null and battle_menu_open:
+		_render_battle()
+	elif battle == null:
+		_show_settings()
 
 func _apply_bgm_track(track_id: String) -> void:
 	bgm_track = track_id
@@ -848,6 +861,10 @@ func _begin_battle_session() -> void:
 	inspect_open = false
 	inspected_card = -1
 	card_confirmed = false
+	pending_target_id = -1
+	battle_menu_open = false
+	free_camera = false
+	hover_retarget_freeze_until = 0
 	battle = Battle.new()
 	battle.event.connect(_on_event)
 	battle.visual.connect(_on_visual)
@@ -994,6 +1011,13 @@ func _render_battle() -> void:
 	if inspect_open and inspected_card >= 0 and inspected_card < battle.hand.size() and battle.phase == "PLAYER":
 		_add_inspect_overlay(inspected_card, viewport_size)
 	_add_phase_prompt(viewport_size)
+	_add_battle_menu_button(viewport_size)
+	if pending_target_id >= 0 and card_confirmed and battle.phase == "PLAYER":
+		_add_pending_target_actions(viewport_size)
+		_apply_target_preview(pending_target_id)
+	if battle_menu_open and battle.phase == "PLAYER":
+		_add_battle_menu_overlay(viewport_size)
+	_apply_weather_fx()
 	visible_uids.clear()
 	for visible_card in battle.hand:
 		visible_uids[visible_card["uid"]] = true
@@ -1028,7 +1052,7 @@ func _build_hero_hud(viewport_size: Vector2) -> void:
 	name_lbl.size = Vector2(280, 30)
 	name_lbl.clip_text = true
 	hero_hud.add_child(name_lbl)
-	var type_lbl := _label(str(actor.get("type", "")), 14, _type_color(str(actor.get("type", ""))))
+	var type_lbl := _label("%s %s" % [_type_icon(str(actor.get("type", ""))), str(actor.get("type", ""))], 14, _type_color(str(actor.get("type", ""))))
 	type_lbl.position = Vector2(122, 48)
 	hero_hud.add_child(type_lbl)
 	var hp := int(actor.get("hp", 0))
@@ -1057,7 +1081,7 @@ func _build_hero_hud(viewport_size: Vector2) -> void:
 	hero_hud.add_child(glow)
 	hero_hud.move_child(glow, fill.get_index())
 	fill.color = Color(0.45, 1.0, 0.7, 1.0)
-	var hp_lbl := _label("%d/%d" % [hp, max_hp], 16, Color("f4f1ea"))
+	var hp_lbl := _label("%s %d/%d" % [_type_icon(str(actor.get("type", ""))), hp, max_hp], 16, Color("f4f1ea"))
 	hp_lbl.position = Vector2(350, 72)
 	hero_hud.add_child(hp_lbl)
 	var defend := int(actor.get("block", 0)) + int(actor.get("shield", 0))
@@ -1130,7 +1154,7 @@ func _refresh_hero_hud() -> void:
 	name_lbl.size = Vector2(280, 30)
 	name_lbl.clip_text = true
 	hero_hud.add_child(name_lbl)
-	var type_lbl := _label(str(actor.get("type", "")), 14, _type_color(str(actor.get("type", ""))))
+	var type_lbl := _label("%s %s" % [_type_icon(str(actor.get("type", ""))), str(actor.get("type", ""))], 14, _type_color(str(actor.get("type", ""))))
 	type_lbl.position = Vector2(122, 48)
 	hero_hud.add_child(type_lbl)
 	var hp := int(actor.get("hp", 0))
@@ -1157,8 +1181,8 @@ func _refresh_hero_hud() -> void:
 	glow.size = Vector2(fill.size.x + 6, 22)
 	hero_hud.add_child(glow)
 	hero_hud.move_child(glow, fill.get_index())
-	var hp_lbl := _label("%d/%d" % [hp, max_hp], 16, Color("f4f1ea"))
-	hp_lbl.position = Vector2(350, 72)
+	var hp_lbl := _label("%s %d/%d" % [_type_icon(str(actor.get("type", ""))), hp, max_hp], 16, Color("f4f1ea"))
+	hp_lbl.position = Vector2(340, 72)
 	hero_hud.add_child(hp_lbl)
 	var defend := int(actor.get("block", 0)) + int(actor.get("shield", 0))
 	var bar_hp := 0
@@ -1440,6 +1464,7 @@ func _choose_target(actor_id: int) -> void:
 		if preview.get("playable", false): _animate_card_depart(selected_card)
 		successful = battle.play(selected_card, actor_id, chain_targets)
 	chain_targets.clear()
+	pending_target_id = -1
 	if successful:
 		if presentation != null:
 			presentation.play_card_fx(definition, caster_id, actor_id)
@@ -1498,7 +1523,7 @@ func _render_actors() -> void:
 				unit_sprites.append(avatar)
 				presentation.bind_actor(id, avatar, location)
 			var nameplate: Label3D = actor_nodes[id].get_node("Nameplate")
-			nameplate.text = "%d/%d" % [actor["hp"], actor["max_hp"]]
+			nameplate.text = "%s %d/%d" % [_type_icon(str(actor.get("type", ""))), actor["hp"], actor["max_hp"]]
 			_update_world_hp_bar(actor_nodes[id], actor)
 	for id in actor_nodes.keys():
 		if not present.has(id):
@@ -1899,6 +1924,16 @@ func _arc_pose(index: int, count: int) -> Dictionary:
 	var rot := Vector3(-0.05, 0.0, -ang)
 	return {"position": pos, "rotation": rot}
 
+func _type_icon(kind: String) -> String:
+	match str(kind).to_upper():
+		"BRUTO": return "💥"
+		"TECNICO": return "⚔️"
+		"MENTAL": return "👁️"
+		"PSICOLOGICO": return "🎭"
+		"PROJETIVO": return "⚡"
+		"QUIMICO": return "🧪"
+		_: return "◆"
+
 func _type_color(kind: String) -> Color:
 	match kind:
 		"BRUTO": return Color("6e1c24")
@@ -2010,8 +2045,75 @@ func _status_label(status_id: String) -> String:
 		"atento": "Atento",
 		"wounded": "Ferido",
 		"wound": "Ferido",
+		"confused": "Confuso",
+		"confuso": "Confuso",
+		"blind": "Cego",
+		"silence": "Silêncio",
+		"taunt": "Provocação",
+		"taunted": "Provocado",
+		"regen": "Regen",
+		"berserk_enemy": "Fúria",
 	}
-	return labels.get(key, key.replace("_", " "))
+	return labels.get(key, key.replace("_", " ").capitalize())
+
+func _effect_short_bbcode(definition: Dictionary, card: Dictionary = {}) -> String:
+	# Resumos curtos na face da carta (ex.: "Lento 1"). Glossário completo só no Inspecionar.
+	var bits: Array[String] = []
+	var target_names := {"SELF": "Si", "ALLY": "Aliado", "ALL_ALLIES": "Aliados", "ENEMY": "Inimigo", "SINGLE": "Inimigo", "ENEMY_ROW": "Linha", "ROW": "Linha", "FRONT_ROW": "Frente", "BACK_ROW": "Retaguarda", "ALL_ENEMIES": "Inimigos", "ALL_OTHERS": "Outros", "ADJACENT": "Adjacentes", "RANDOM": "Aleatório", "CHAIN": "Cadeia", "ANY_UNIT": "Qualquer"}
+	var tgt := str(definition.get("target", "ENEMY"))
+	if tgt != "ENEMY" and tgt != "SINGLE":
+		bits.append(target_names.get(tgt, tgt))
+	if definition.get("quick", false): bits.append("Rápida")
+	if definition.get("free", false): bits.append("Livre")
+	if definition.get("reach", false): bits.append("Alcance")
+	if definition.get("exhaust", false) or definition.get("item", false): bits.append("[color=#e15b5b]Exaustão[/color]")
+	for effect in definition.get("effects", []):
+		var kind := str(effect.get("kind", ""))
+		if kind == "DAMAGE":
+			continue
+		elif kind == "HEAL":
+			bits.append("Cura %d" % int(effect.get("amount", 0)))
+		elif kind == "STATUS":
+			var sid := str(effect.get("id", ""))
+			var n := maxi(1, int(effect.get("stacks", effect.get("duration", 1))))
+			bits.append("%s %d" % [_status_label(sid), n])
+		elif kind == "PUSH":
+			bits.append("Empurra")
+		elif kind == "PULL":
+			bits.append("Puxa")
+		elif kind == "MOVE":
+			bits.append("Troca linha")
+		elif kind in ["CURE", "CLEANSE"]:
+			bits.append("Limpa")
+		elif kind == "DRAW":
+			bits.append("Compra %d" % int(effect.get("amount", 1)))
+		elif kind == "BLOCK" or kind == "SHIELD":
+			bits.append("Barreira %d" % int(effect.get("amount", 0)))
+		elif kind != "":
+			bits.append(kind.capitalize())
+	for action in definition.get("actions", []):
+		if typeof(action) != TYPE_ARRAY or action.is_empty():
+			continue
+		var op := str(action[0])
+		if op in ["hit", "hit_per_impulse", "hit_per_hand", "roulette_hit", "hit_from_block", "hit_from_protecao", "hit_from_barrier"]:
+			continue
+		elif op == "status":
+			var sid2 := str(action[1]) if action.size() > 1 else "?"
+			var stacks := int(action[2]) if action.size() > 2 else 1
+			bits.append("%s %d" % [_status_label(sid2), maxi(1, stacks)])
+		elif op in ["protecao", "protection"]:
+			bits.append("Proteção %d" % (int(action[1]) if action.size() > 1 else 1))
+		elif op in ["barreira", "barrier", "barreira_hp"]:
+			bits.append("Barreira %d" % (int(action[1]) if action.size() > 1 else 1))
+		elif op in ["heal", "heal_all", "full_heal"]:
+			bits.append("Cura")
+		elif op in ["push"]:
+			bits.append("Empurra")
+		elif op in ["pull"]:
+			bits.append("Puxa")
+	if bits.is_empty() and _card_has_damage(definition):
+		bits.append("Dano")
+	return " · ".join(PackedStringArray(bits))
 
 func _rules_bbcode(definition: Dictionary, card: Dictionary) -> String:
 	var lines: Array[String] = []
@@ -2147,7 +2249,7 @@ func _card_spec(card: Dictionary, definition: Dictionary, owner: Dictionary) -> 
 		"stat_label": str(readout["label"]),
 		"stat_value": int(readout["value"]),
 		"stat_color": readout["color"],
-		"rules": _rules_bbcode(definition, card),
+		"rules": _effect_short_bbcode(definition, card),
 		"gain": int(definition.get("gain", 0)),
 		"cost": int(definition.get("cost", 0)),
 		"dead": dead,
@@ -2509,7 +2611,9 @@ func _confirm_selected_card(index: int = -1) -> void:
 	var kind := str(definition.get("target", "ENEMY"))
 	selected_card = index
 	card_confirmed = true
+	pending_target_id = -1
 	selected_action = ""
+	if sound != null: sound.cue("confirm", "UI")
 	_show_actor_portrait(int(battle.hand[index]["owner"]), true)
 	if not _target_needs_player_choice(kind):
 		var auto_id := _auto_primary_target_id(definition, int(battle.hand[index]["owner"]))
@@ -2892,6 +2996,8 @@ func _clear_enemy_card_overlay() -> void:
 
 func _input(event: InputEvent) -> void:
 	if battle == null or battle.phase != "PLAYER" or enemy_presenting: return
+	if battle_menu_open and not (event.is_action_pressed("hotn_cancel") or event.is_action_pressed("hotn_confirm")):
+		return
 	if event is InputEventKey and event.echo: return
 	if event.is_action_pressed("hotn_next") or event.is_action_pressed("hotn_previous"):
 		if battle.hand.is_empty(): return
@@ -2911,7 +3017,11 @@ func _input(event: InputEvent) -> void:
 		_show_actor_portrait(hovered_actor, false)
 		_render_battle()
 	elif event.is_action_pressed("hotn_confirm"):
-		if selected_card >= 0 and not card_confirmed:
+		if battle_menu_open:
+			_close_battle_menu()
+		elif pending_target_id >= 0:
+			_confirm_pending_target()
+		elif selected_card >= 0 and not card_confirmed:
 			_confirm_selected_card(selected_card)
 		elif inspected_card >= 0 and not card_confirmed:
 			_confirm_inspected()
@@ -2933,23 +3043,26 @@ func _input(event: InputEvent) -> void:
 	elif event.is_action_pressed("hotn_end"):
 		_present_enemy_turn()
 	elif event.is_action_pressed("hotn_cancel"):
-		selected_card = -1
-		inspected_card = -1
-		card_confirmed = false
-		selected_action = ""
-		chain_targets.clear()
-		feedback = ""
-		_render_battle()
+		_handle_battle_cancel()
 	else:
 		return
 	get_viewport().set_input_as_handled()
 
 func _activate_actor(actor_id: int) -> void:
-	if battle == null or battle.phase != "PLAYER": return
+	if battle == null or battle.phase != "PLAYER" or battle_menu_open: return
 	hovered_actor = actor_id
 	_show_actor_portrait(actor_id, true)
-	if selected_action == "move" or selected_action.begins_with("item:") or (card_confirmed and selected_card >= 0):
+	if selected_action == "move" or selected_action.begins_with("item:"):
+		if sound != null: sound.cue("confirm", "UI")
 		_choose_target(actor_id)
+		return
+	if card_confirmed and selected_card >= 0:
+		# Prévia + confirmação antes de resolver (não aplica no primeiro clique no alvo).
+		pending_target_id = actor_id
+		_apply_target_preview(actor_id)
+		if sound != null: sound.cue("select", "UI")
+		_render_battle()
+		return
 
 func _unhandled_input(input: InputEvent) -> void:
 	if battle == null or battle.phase != "PLAYER" or enemy_presenting or not input is InputEventMouseButton:
@@ -2967,9 +3080,19 @@ func _unhandled_input(input: InputEvent) -> void:
 		_on_card_gui(click, int(hit["collider"].get_meta("card_index")))
 		get_viewport().set_input_as_handled()
 		return
+	if battle_menu_open:
+		return
 	if click.pressed and hit.has("collider") and hit["collider"].has_meta("actor_id"):
 		_activate_actor(int(hit["collider"].get_meta("actor_id")))
 		get_viewport().set_input_as_handled()
+	elif click.pressed and not hit.has("collider"):
+		# Clique fora: cancela carta selecionada (pré-confirmação) ou alvo pendente.
+		if pending_target_id >= 0:
+			_cancel_pending_target()
+			get_viewport().set_input_as_handled()
+		elif selected_card >= 0 and not card_confirmed:
+			_deselect_card()
+			get_viewport().set_input_as_handled()
 	elif not click.pressed and redraw_hold_index >= 0:
 		# Released off-card: cancel hold without playing click
 		redraw_hold_index = -1
@@ -3062,15 +3185,21 @@ func _process(delta: float) -> void:
 		var spr_s := float(unit_sprites[i].get_meta("sprite_scale", 1.0))
 		if reduce_motion:
 			unit_sprites[i].scale = Vector3(spr_s, spr_s, 1.0)
+			unit_sprites[i].position.y = 1.1
 		else:
-			# Classic idle breath: vertical stretch + slight horizontal squash
+			# Idle breath: pin feet (bottom), stretch only the upper portion gently.
 			var wave := sin(Time.get_ticks_msec() * 0.0024 + float(i) * 1.7)
-			var sy := 1.0 + wave * 0.028
-			var sx := 1.0 - wave * 0.016
+			var sy := 1.0 + wave * 0.022
+			var sx := 1.0 - wave * 0.012
 			unit_sprites[i].scale = Vector3(sx * spr_s, sy * spr_s, 1.0)
+			# Base center y=1.1 with height ≈ 2.2*spr_s; lift center so bottom stays fixed.
+			unit_sprites[i].position.y = 1.1 + 1.1 * spr_s * (sy - 1.0)
 	if battle != null and battle.phase == "PLAYER":
 		_tick_recompra_hold(delta)
-	if battle != null and battle.phase == "PLAYER" and camera != null:
+	if battle != null and battle.phase == "PLAYER" and camera != null and not battle_menu_open:
+		var selection_lock := selected_card >= 0 and not card_confirmed and not inspect_open
+		var now_ms := Time.get_ticks_msec()
+		var freeze_hover := now_ms < hover_retarget_freeze_until
 		var pointer := get_viewport().get_mouse_position()
 		var origin := camera.project_ray_origin(pointer)
 		var query := PhysicsRayQueryParameters3D.create(origin, origin + camera.project_ray_normal(pointer) * 80.0)
@@ -3079,11 +3208,22 @@ func _process(delta: float) -> void:
 		var hit := get_world_3d().direct_space_state.intersect_ray(query)
 		var new_card := int(hit["collider"].get_meta("card_index")) if hit.has("collider") and hit["collider"].has_meta("card_index") else -1
 		var new_actor := int(hit["collider"].get_meta("actor_id")) if new_card < 0 and hit.has("collider") and hit["collider"].has_meta("actor_id") else -1
+		# Modo carta selecionada (pré-confirmação): sem hover/zoom em outras cartas/sprites.
+		if selection_lock:
+			new_card = selected_card
+			new_actor = -1
+		elif pending_target_id >= 0:
+			new_actor = pending_target_id
+		elif freeze_hover and hovered_actor >= 0:
+			# Mantém o sprite atual enquanto o zoom assenta (sem warp do mouse).
+			if new_actor != hovered_actor:
+				new_actor = hovered_actor
+				new_card = -1
 		var hover_dirty := false
 		if new_card != hovered_card:
 			hovered_card = new_card
 			hover_dirty = true
-			if hovered_card >= 0 and hovered_card < battle.hand.size():
+			if hovered_card >= 0 and hovered_card < battle.hand.size() and not selection_lock:
 				_show_actor_portrait(int(battle.hand[hovered_card]["owner"]), false)
 				if is_instance_valid(hover_hint):
 					hover_hint.text = _card_description(_card_def(str(battle.hand[hovered_card]["id"])), battle.hand[hovered_card])
@@ -3092,33 +3232,11 @@ func _process(delta: float) -> void:
 			hover_dirty = true
 			if hovered_actor >= 0:
 				_show_actor_portrait(hovered_actor, false)
-				if card_confirmed and selected_card >= 0 and selected_card < battle.hand.size() and is_instance_valid(hover_hint):
-					var estimate: Dictionary = battle.preview(selected_card, hovered_actor, chain_targets)
+				if card_confirmed and selected_card >= 0 and selected_card < battle.hand.size():
+					_apply_target_preview(hovered_actor)
+				elif not damage_preview_by_actor.is_empty():
 					damage_preview_by_actor.clear()
-					if not estimate.is_empty():
-						var dmg_total := 0
-						var status_bits: PackedStringArray = []
-						var est_map: Dictionary = estimate.get("targets", {})
-						for vid in est_map.keys():
-							var row: Dictionary = est_map[vid]
-							var dmg := int(row.get("damage", 0))
-							if dmg > 0:
-								damage_preview_by_actor[int(vid)] = dmg
-								dmg_total += dmg
-							for st in row.get("statuses", []):
-								if not status_bits.has(str(st)):
-									status_bits.append(str(st))
-						var extra := ""
-						if not status_bits.is_empty():
-							extra = " · efeitos: " + ", ".join(status_bits)
-						for se in estimate.get("self_effects", []):
-							extra += " · self:" + str(se)
-						hover_hint.text = "Prévia: %s perde ~%d HP%s" % [battle.actor_by_id(hovered_actor).get("name", ""), dmg_total, extra]
-						_refresh_actor_hp_bars()
-				else:
-					if not damage_preview_by_actor.is_empty():
-						damage_preview_by_actor.clear()
-						_refresh_actor_hp_bars()
+					_refresh_actor_hp_bars()
 		if hover_dirty:
 			_refresh_hero_hud()
 	for id in actor_nodes.keys():
@@ -3126,21 +3244,27 @@ func _process(delta: float) -> void:
 		if not is_instance_valid(body): continue
 		var avatar: Sprite3D = body.get_node_or_null("Avatar")
 		if avatar == null: continue
-		var hot := int(id) == hovered_actor
+		var hot := int(id) == hovered_actor or int(id) == pending_target_id
 		avatar.modulate = Color("ffe1a8") if hot else Color.WHITE
 	_update_hand_card_visuals()
-	if presentation != null and battle != null and battle.phase == "PLAYER":
-		# Foco: sprite sob o mouse, senão dono da carta sob hover (se vivo), senão dono da selecionada.
-		var focus_id := hovered_actor
-		if focus_id < 0 and hovered_card >= 0 and hovered_card < battle.hand.size():
-			focus_id = int(battle.hand[hovered_card].get("owner", -1))
-		if focus_id < 0 and selected_card >= 0 and selected_card < battle.hand.size():
-			focus_id = int(battle.hand[selected_card].get("owner", -1))
+	_compensate_hand_for_camera_fov()
+	if presentation != null and battle != null and battle.phase == "PLAYER" and not battle_menu_open:
+		var selection_lock2 := selected_card >= 0 and not card_confirmed and not inspect_open
+		# Em modo selecionado (pré-confirmação): câmera normal, sem zoom de hover.
+		var focus_id := -1
+		if not selection_lock2:
+			focus_id = hovered_actor
+			if focus_id < 0 and hovered_card >= 0 and hovered_card < battle.hand.size():
+				focus_id = int(battle.hand[hovered_card].get("owner", -1))
+			if focus_id < 0 and card_confirmed and selected_card >= 0 and selected_card < battle.hand.size():
+				focus_id = pending_target_id if pending_target_id >= 0 else -1
 		if focus_id >= 0:
 			var focus_actor: Dictionary = battle.actor_by_id(focus_id)
 			if focus_actor.is_empty() or int(focus_actor.get("hp", 0)) <= 0:
 				focus_id = -1
-		if battle_view_mode == "lateral":
+		if free_camera:
+			_tick_free_camera(delta)
+		elif battle_view_mode == "lateral":
 			var want_focus := Vector3.ZERO
 			var want_zoom := 1.0
 			if focus_id >= 0 and actor_nodes.has(focus_id):
@@ -3166,8 +3290,8 @@ func _process(delta: float) -> void:
 		_hide_idle_portraits()
 
 func _maybe_center_mouse_on_sprite(actor_id: int, body: Node3D) -> void:
-	# Quebra o loop zoom↔hover: ao tocar o sprite, captura o mouse no centro projetado
-	# para que, após o zoom, o cursor continue sobre o personagem.
+	# Sem warp_mouse: congela retarget de hover ~0.5s enquanto o zoom assenta,
+	# para personagens vizinhos permanecerem selecionáveis sem salto do cursor.
 	if camera == null or body == null or not is_instance_valid(body):
 		return
 	if hovered_actor != actor_id:
@@ -3175,24 +3299,98 @@ func _maybe_center_mouse_on_sprite(actor_id: int, body: Node3D) -> void:
 	var now := Time.get_ticks_msec()
 	if actor_id == _sprite_mouse_lock_id and now < _sprite_mouse_lock_until:
 		return
-	var screen: Vector2 = camera.unproject_position(body.position + Vector3(0, 1.1, 0))
-	var vp := get_viewport()
-	if vp == null:
-		return
-	var cur := vp.get_mouse_position()
-	if cur.distance_to(screen) < 36.0:
-		_sprite_mouse_lock_id = actor_id
-		_sprite_mouse_lock_until = now + 450
-		return
-	vp.warp_mouse(screen)
 	_sprite_mouse_lock_id = actor_id
-	_sprite_mouse_lock_until = now + 450
+	_sprite_mouse_lock_until = now + 500
+	hover_retarget_freeze_until = now + 500
+
+func _compensate_hand_for_camera_fov() -> void:
+	# Isola o zoom da câmera (foco no sprite) do tamanho aparente da mão 3D.
+	if camera == null or cards_3d == null or not is_instance_valid(cards_3d):
+		return
+	var base_fov := 42.0 if battle_view_mode == "lateral" else 51.0
+	var t0 := tan(deg_to_rad(base_fov * 0.5))
+	var t1 := tan(deg_to_rad(maxf(camera.fov, 1.0) * 0.5))
+	var s := clampf(t1 / maxf(t0, 0.001), 0.55, 1.35)
+	cards_3d.scale = Vector3(s, s, s)
+
+func _apply_target_preview(actor_id: int) -> void:
+	if battle == null or selected_card < 0 or selected_card >= battle.hand.size() or actor_id < 0:
+		return
+	var estimate: Dictionary = battle.preview(selected_card, actor_id, chain_targets)
+	damage_preview_by_actor.clear()
+	if estimate.is_empty():
+		if is_instance_valid(hover_hint):
+			hover_hint.text = "Alvo inválido"
+		_refresh_actor_hp_bars()
+		return
+	var dmg_total := 0
+	var status_bits: PackedStringArray = []
+	var est_map: Dictionary = estimate.get("targets", {})
+	for vid in est_map.keys():
+		var row: Dictionary = est_map[vid]
+		var dmg := int(row.get("damage", 0))
+		if dmg > 0:
+			damage_preview_by_actor[int(vid)] = dmg
+			dmg_total += dmg
+		for st in row.get("statuses", []):
+			if not status_bits.has(str(st)):
+				status_bits.append(str(st))
+	var extra := ""
+	if not status_bits.is_empty():
+		extra = " · " + ", ".join(status_bits)
+	for se in estimate.get("self_effects", []):
+		extra += " · self:" + str(se)
+	if is_instance_valid(hover_hint):
+		var vp := get_viewport().get_visible_rect().size
+		hover_hint.visible = true
+		hover_hint.z_index = 25
+		hover_hint.add_theme_font_size_override("font_size", 18)
+		hover_hint.add_theme_color_override("font_color", Color("ffd49b"))
+		hover_hint.text = "Prévia: %s perde ~%d HP%s — confirme o alvo" % [battle.actor_by_id(actor_id).get("name", ""), dmg_total, extra]
+		hover_hint.position = Vector2(vp.x * 0.5 - 280, vp.y * 0.12)
+		hover_hint.size = Vector2(560, 48)
+		hover_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_refresh_actor_hp_bars()
+
+func _tick_free_camera(delta: float) -> void:
+	if presentation == null or camera == null:
+		return
+	if Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
+		var cur := get_viewport().get_mouse_position()
+		if not free_cam_dragging:
+			free_cam_dragging = true
+			free_cam_last = cur
+		else:
+			var dxy := cur - free_cam_last
+			free_cam_last = cur
+			free_cam_yaw -= dxy.x * 0.004
+			free_cam_pitch = clampf(free_cam_pitch - dxy.y * 0.003, -0.45, 0.55)
+	else:
+		free_cam_dragging = false
+	var radius := 16.8
+	var base := Vector3(sin(free_cam_yaw) * radius, 11.15 + free_cam_pitch * 6.0, cos(free_cam_yaw) * radius)
+	presentation.camera_position = base
+	presentation.orbit = free_cam_yaw
+	presentation.ally_focus = Vector3.ZERO
+	presentation.focus_target = Vector3.ZERO
+	presentation.zoom = 1.0
+	if battle_view_mode == "lateral":
+		camera.position = Vector3(sin(free_cam_yaw) * 4.0, 8.4 + free_cam_pitch * 4.0, 15.2)
+		camera.look_at(Vector3(free_cam_yaw * 2.0, 1.0, 0.0), Vector3.UP)
+	else:
+		camera.position = base
+		camera.look_at(Vector3(0, 0.75, 0), Vector3.UP)
 
 func _update_hand_card_visuals() -> void:
 	for mesh_index in range(card_meshes.size()):
 		var card_mesh: MeshInstance3D = card_meshes[mesh_index]
 		if not is_instance_valid(card_mesh): continue
-		var raised := mesh_index == hovered_card and mesh_index != selected_card or mesh_index == inspected_card
+		var selection_lock := selected_card >= 0 and not card_confirmed and not inspect_open
+		var raised := false
+		if selection_lock:
+			raised = mesh_index == selected_card
+		else:
+			raised = (mesh_index == hovered_card and mesh_index != selected_card) or mesh_index == inspected_card or (mesh_index == selected_card and card_confirmed)
 		var target_scale := Vector3(1.14, 1.14, 1.14) if raised else Vector3.ONE
 		card_mesh.scale = card_mesh.scale.lerp(target_scale, 0.35)
 		var base_pos: Vector3 = card_mesh.get_meta("base_pos", card_mesh.position)
@@ -3224,10 +3422,14 @@ func _phase_prompt_text() -> String:
 		return "Fase dos adversários"
 	if inspect_open:
 		return "Volte quando terminar de Inspecionar"
+	if battle_menu_open:
+		return "Menu de combate"
+	if pending_target_id >= 0 and card_confirmed:
+		return "Confirme o alvo"
 	if card_confirmed and selected_card >= 0:
-		return "Selecione um alvo"
+		return "Selecione um alvo — prévia ao passar o mouse"
 	if selected_card >= 0 and not card_confirmed:
-		return "Confirme"
+		return "Confirme a Manobra (ou Cancelar / clique fora)"
 	return "Selecione uma Manobra ou encerre o turno"
 
 func _add_phase_prompt(viewport_size: Vector2) -> void:
@@ -3285,15 +3487,212 @@ func _add_selected_card_actions(index: int, viewport_size: Vector2) -> void:
 	hud.add_child(col)
 
 func _deselect_card() -> void:
+	if sound != null: sound.cue("cancel", "UI")
 	selected_card = -1
 	card_confirmed = false
 	inspected_card = -1
 	inspect_open = false
+	pending_target_id = -1
 	chain_targets.clear()
 	damage_preview_by_actor.clear()
 	portrait_sticky_until = 0
 	_hide_idle_portraits()
 	_render_battle()
+
+func _confirm_pending_target() -> void:
+	if pending_target_id < 0 or not card_confirmed or selected_card < 0:
+		return
+	var tid := pending_target_id
+	pending_target_id = -1
+	if sound != null: sound.cue("confirm", "UI")
+	_choose_target(tid)
+
+func _cancel_pending_target() -> void:
+	if sound != null: sound.cue("cancel", "UI")
+	pending_target_id = -1
+	damage_preview_by_actor.clear()
+	_refresh_actor_hp_bars()
+	_render_battle()
+
+func _handle_battle_cancel() -> void:
+	if battle_menu_open:
+		_close_battle_menu()
+		return
+	if pending_target_id >= 0:
+		_cancel_pending_target()
+		return
+	if inspect_open:
+		if sound != null: sound.cue("cancel", "UI")
+		_cancel_inspect()
+		return
+	if selected_card >= 0 or card_confirmed or selected_action != "":
+		_deselect_card()
+		selected_action = ""
+		feedback = ""
+		return
+	_open_battle_menu()
+
+func _open_battle_menu() -> void:
+	if battle == null:
+		return
+	battle_menu_open = true
+	if sound != null: sound.cue("select", "UI")
+	_render_battle()
+
+func _close_battle_menu() -> void:
+	battle_menu_open = false
+	if sound != null: sound.cue("cancel", "UI")
+	_render_battle()
+
+func _set_weather(mode: String) -> void:
+	weather_mode = mode
+	_apply_weather_fx()
+	_save_config()
+	if battle_menu_open:
+		_render_battle()
+
+func _toggle_free_camera() -> void:
+	free_camera = not free_camera
+	if free_camera:
+		free_cam_yaw = presentation.orbit if presentation != null else 0.0
+		free_cam_pitch = 0.0
+	else:
+		if presentation != null:
+			presentation.orbit = 0.0
+			presentation.zoom = 1.0
+			presentation.focus_target = Vector3.ZERO
+			presentation.ally_focus = Vector3.ZERO
+		_apply_battle_view()
+	_save_config()
+	if battle_menu_open:
+		_render_battle()
+
+func _apply_weather_fx() -> void:
+	if stage == null:
+		return
+	if weather_fx_root != null and is_instance_valid(weather_fx_root):
+		weather_fx_root.queue_free()
+	weather_fx_root = null
+	if weather_mode == "none":
+		return
+	var root := Node3D.new()
+	root.name = "WeatherFx"
+	stage.add_child(root)
+	weather_fx_root = root
+	var particles := CPUParticles3D.new()
+	particles.amount = 80 if weather_mode == "rain" else 40
+	particles.lifetime = 1.6
+	particles.emission_shape = CPUParticles3D.EMISSION_SHAPE_BOX
+	particles.emission_box_extents = Vector3(10, 0.2, 8)
+	particles.position = Vector3(0, 7.5, 0)
+	particles.direction = Vector3(0.15, -1, 0) if weather_mode == "rain" else Vector3(0, -0.2, 0.1)
+	particles.spread = 12.0 if weather_mode == "rain" else 40.0
+	particles.initial_velocity_min = 4.0 if weather_mode == "rain" else 0.4
+	particles.initial_velocity_max = 7.5 if weather_mode == "rain" else 1.2
+	particles.gravity = Vector3(0, -6, 0) if weather_mode == "rain" else Vector3(0, -0.4, 0)
+	var mesh := SphereMesh.new()
+	mesh.radius = 0.03 if weather_mode == "rain" else 0.06
+	mesh.height = 0.06 if weather_mode == "rain" else 0.12
+	particles.mesh = mesh
+	match weather_mode:
+		"rain":
+			particles.color = Color(0.65, 0.78, 1.0, 0.7)
+		"fog":
+			particles.color = Color(0.75, 0.78, 0.85, 0.35)
+		"heat":
+			particles.color = Color(1.0, 0.55, 0.25, 0.4)
+		"night":
+			particles.color = Color(0.35, 0.4, 0.7, 0.45)
+		_:
+			particles.color = Color(1, 1, 1, 0.3)
+	root.add_child(particles)
+	particles.emitting = true
+	if camera != null:
+		match weather_mode:
+			"heat":
+				pass
+			"night":
+				pass
+
+func _add_battle_menu_button(viewport_size: Vector2) -> void:
+	var btn := _button("Menu", Callable(), "Abre o menu de combate (ESC)")
+	btn.name = "BattleMenuButton"
+	btn.custom_minimum_size = Vector2(110, 40)
+	btn.position = Vector2(viewport_size.x - 128, 14)
+	btn.z_index = 35
+	btn.pressed.connect(func() -> void:
+		if battle_menu_open: _close_battle_menu()
+		else: _open_battle_menu()
+	)
+	hud.add_child(btn)
+
+func _add_battle_menu_overlay(viewport_size: Vector2) -> void:
+	var wrap := Control.new()
+	wrap.name = "BattleMenuOverlay"
+	wrap.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	wrap.z_index = 50
+	wrap.mouse_filter = Control.MOUSE_FILTER_STOP
+	hud.add_child(wrap)
+	var dim := ColorRect.new()
+	dim.color = Color(0, 0, 0, 0.55)
+	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	dim.mouse_filter = Control.MOUSE_FILTER_STOP
+	wrap.add_child(dim)
+	var panel := PanelContainer.new()
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.09, 0.11, 0.17, 0.97)
+	style.set_border_width_all(2)
+	style.border_color = Color(0.85, 0.68, 0.35, 0.95)
+	style.set_corner_radius_all(14)
+	style.set_content_margin_all(18)
+	panel.add_theme_stylebox_override("panel", style)
+	panel.custom_minimum_size = Vector2(420, 0)
+	panel.position = Vector2(viewport_size.x * 0.5 - 210, 80)
+	wrap.add_child(panel)
+	var col := VBoxContainer.new()
+	col.add_theme_constant_override("separation", 10)
+	panel.add_child(col)
+	col.add_child(_label("MENU DE COMBATE", 26, Color("f0c27a")))
+	col.add_child(_label("BGM", 16, Color("d5deea")))
+	col.add_child(_bgm_picker_row())
+	col.add_child(_button("Parar BGM", func() -> void:
+		bgm_track = "__stop__"
+		if sound != null: sound.stop_bgm()
+		_save_config()
+	))
+	col.add_child(_label("Clima / efeitos", 16, Color("d5deea")))
+	var climate_ids := ["none", "rain", "fog", "heat", "night"]
+	var climate_names := ["Limpo", "Chuva", "Névoa", "Calor", "Noite"]
+	for i in range(climate_ids.size()):
+		var mode: String = climate_ids[i]
+		var mark := "● " if weather_mode == mode else "○ "
+		col.add_child(_button(mark + climate_names[i], _set_weather.bind(mode)))
+	var cam_lbl := "Câmera livre: sim (arraste botão direito)" if free_camera else "Câmera livre: não"
+	col.add_child(_button(cam_lbl, _toggle_free_camera))
+	col.add_child(_button("Vista: %s" % ("Lateral" if battle_view_mode == "lateral" else "Normal"), func() -> void:
+		_toggle_battle_view()
+		battle_menu_open = true
+		_render_battle()
+	))
+	col.add_child(_button("Fechar (ESC)", _close_battle_menu))
+
+func _add_pending_target_actions(viewport_size: Vector2) -> void:
+	var col := VBoxContainer.new()
+	col.name = "PendingTargetActions"
+	col.add_theme_constant_override("separation", 8)
+	col.position = Vector2(viewport_size.x * 0.5 - 100, viewport_size.y * 0.62)
+	col.z_index = 20
+	var actor: Dictionary = battle.actor_by_id(pending_target_id)
+	col.add_child(_label("Alvo: %s" % actor.get("name", "?"), 18, Color("f0e6d0")))
+	var conf := _button("Confirmar alvo", Callable(), "Aplica a Manobra neste alvo")
+	conf.custom_minimum_size = Vector2(200, 42)
+	conf.pressed.connect(_confirm_pending_target)
+	col.add_child(conf)
+	var canc := _button("Cancelar alvo", Callable(), "Volta à escolha de alvo")
+	canc.custom_minimum_size = Vector2(200, 42)
+	canc.pressed.connect(_cancel_pending_target)
+	col.add_child(canc)
+	hud.add_child(col)
 
 func _show_block_popup(message: String) -> void:
 	# Popup modal curto explicando por que a Manobra não pode ser usada.
@@ -3401,6 +3800,8 @@ func _save_config() -> void:
 	config.set_value("settings", "battle_view_mode", battle_view_mode)
 	config.set_value("settings", "sensitive_content", sensitive_content)
 	config.set_value("settings", "bgm_track", bgm_track)
+	config.set_value("settings", "weather_mode", weather_mode)
+	config.set_value("settings", "free_camera", free_camera)
 	config.save("user://hotn3.cfg")
 
 func _load_config() -> void:
@@ -3434,4 +3835,8 @@ func _load_config() -> void:
 			battle_view_mode = "normal"
 		sensitive_content = bool(config.get_value("settings", "sensitive_content", sensitive_content))
 		bgm_track = str(config.get_value("settings", "bgm_track", bgm_track))
+		weather_mode = str(config.get_value("settings", "weather_mode", weather_mode))
+		if weather_mode not in ["none", "rain", "fog", "heat", "night"]:
+			weather_mode = "none"
+		free_camera = bool(config.get_value("settings", "free_camera", free_camera))
 		animation_speed = clampf(float(config.get_value("settings", "animation_speed", animation_speed)), 0.5, 2.0)

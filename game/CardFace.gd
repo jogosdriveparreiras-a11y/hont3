@@ -86,19 +86,19 @@ func _build_layout() -> void:
 	# Impact emblem LEFT — number on shield; IMPACTO/PODER on shield ribbon
 	var show_damage := bool(spec.get("show_damage", false)) and not bool(spec.get("item", false))
 	if show_damage:
-		var block_h := mid_gap * 0.90
-		var block_y := chip_bottom + (mid_gap - block_h) * 0.5
-		var block_x := width * 0.05
-		var icon_side := block_h
+		# Cluster pinned to LEFT card edge (label + shield/sword + value stay grouped).
+		var icon_side := minf(mid_gap * 0.62, width * 0.36)
+		var block_y := chip_bottom + (mid_gap - icon_side) * 0.5
+		var block_x := -width * 0.02
 		var stat_lbl := Label.new()
 		stat_lbl.name = "StatLabel"
 		var raw_label := str(spec.get("stat_label", "ATAQUE"))
 		stat_lbl.text = "PODER" if raw_label == "PODER" else "IMPACTO"
 		stat_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		stat_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		stat_lbl.position = Vector2(block_x, block_y + icon_side * 0.10)
+		stat_lbl.position = Vector2(block_x, block_y + icon_side * 0.08)
 		stat_lbl.size = Vector2(icon_side, icon_side * 0.16)
-		stat_lbl.add_theme_font_size_override("font_size", int(clampf(block_h * 0.10, 10, 22)))
+		stat_lbl.add_theme_font_size_override("font_size", int(clampf(icon_side * 0.12, 10, 20)))
 		stat_lbl.add_theme_color_override("font_color", Color("f4f1ea"))
 		stat_lbl.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.85))
 		stat_lbl.add_theme_constant_override("shadow_offset_x", 1)
@@ -112,14 +112,13 @@ func _build_layout() -> void:
 		dmg.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		dmg.position = Vector2(block_x + icon_side * 0.22, block_y + icon_side * 0.30)
 		dmg.size = Vector2(icon_side * 0.56, icon_side * 0.36)
-		dmg.add_theme_font_size_override("font_size", int(clampf(block_h * 0.28, 22, 64)))
+		dmg.add_theme_font_size_override("font_size", int(clampf(icon_side * 0.30, 20, 52)))
 		dmg.add_theme_color_override("font_color", spec.get("stat_color", Color.WHITE))
 		dmg.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.9))
 		dmg.add_theme_constant_override("shadow_offset_x", 2)
 		dmg.add_theme_constant_override("shadow_offset_y", 2)
 		dmg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		add_child(dmg)
-
 	# Rules box — ONLY intentional semi-transparent element
 	var rules_box := ColorRect.new()
 	rules_box.name = "RulesBox"
@@ -224,11 +223,11 @@ func _draw_impact_icon() -> void:
 	var chip_bottom := sig_y + icon_diameter + height * 0.010 + height * 0.038
 	var rules_top := height * 0.60
 	var mid_gap := maxf(1.0, rules_top - chip_bottom)
-	var block_h := mid_gap * 0.90
-	var block_y := chip_bottom + (mid_gap - block_h) * 0.5
-	var block_x := width * 0.05
-	var origin := Vector2(block_x + block_h * 0.5, block_y + block_h * 0.5)
-	var icon_size := Vector2(block_h, block_h)
+	var icon_side := minf(mid_gap * 0.62, width * 0.36)
+	var block_y := chip_bottom + (mid_gap - icon_side) * 0.5
+	var block_x := -width * 0.02
+	var origin := Vector2(block_x + icon_side * 0.5, block_y + icon_side * 0.5)
+	var icon_size := Vector2(icon_side, icon_side)
 	if _shield_tex != null:
 		draw_texture_rect(_shield_tex, Rect2(origin - icon_size * 0.5, icon_size), false)
 	else:

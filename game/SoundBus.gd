@@ -25,7 +25,7 @@ func _ready() -> void:
 		voice.set_meta("channel", "SFX")
 		cue_players.append(voice)
 		add_child(voice)
-	for id in ["hover", "select", "draw", "redraw", "cast", "hit", "block", "heal", "status", "death", "victory", "resist", "move"]:
+	for id in ["hover", "select", "confirm", "cancel", "draw", "redraw", "cast", "hit", "block", "heal", "status", "death", "victory", "resist", "move"]:
 		cues[id] = _synthesize(id)
 	_scan_bgm()
 	# Prefer a battle track if present; else synth fallback.
@@ -103,8 +103,8 @@ func stop_bgm() -> void:
 	current_bgm = "__stop__"
 
 func _synthesize(id: String) -> AudioStreamWAV:
-	var frequencies := {"hover": 480.0, "select": 610.0, "draw": 460.0, "redraw": 310.0, "cast": 390.0, "hit": 120.0, "block": 190.0, "heal": 720.0, "status": 350.0, "death": 95.0, "victory": 530.0, "resist": 260.0, "move": 330.0}
-	var durations := {"hover": 0.055, "select": 0.11, "draw": 0.12, "redraw": 0.14, "cast": 0.18, "hit": 0.15, "block": 0.16, "heal": 0.30, "status": 0.18, "death": 0.42, "victory": 0.50, "resist": 0.14, "move": 0.13}
+	var frequencies := {"hover": 480.0, "select": 610.0, "confirm": 740.0, "cancel": 280.0, "draw": 460.0, "redraw": 310.0, "cast": 390.0, "hit": 120.0, "block": 190.0, "heal": 720.0, "status": 350.0, "death": 95.0, "victory": 530.0, "resist": 260.0, "move": 330.0}
+	var durations := {"hover": 0.055, "select": 0.11, "confirm": 0.13, "cancel": 0.10, "draw": 0.12, "redraw": 0.14, "cast": 0.18, "hit": 0.15, "block": 0.16, "heal": 0.30, "status": 0.18, "death": 0.42, "victory": 0.50, "resist": 0.14, "move": 0.13}
 	var count := int(RATE * float(durations[id]))
 	var frequency: float = frequencies[id]
 	var pcm := PackedByteArray()
