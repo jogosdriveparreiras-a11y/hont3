@@ -1609,6 +1609,12 @@ func enemy_step() -> bool:
 		return false
 	if str(choice.get("kind", "")) == "redraw":
 		return _redraw_side("ENEMY", int(choice.get("index", 0)))
+	var card_id := str(choice.get("card", {}).get("id", ""))
+	# Cartas ent_/ms_ resolvem actions via PackBridge (battle.play só lê effects).
+	if card_id.begins_with("ent_") or card_id.begins_with("ms_"):
+		var bridge: PackBridge = PackBridge.new()
+		var mode := "entities" if card_id.begins_with("ent_") else "external"
+		return bridge.play_card(self, mode, int(choice["index"]), int(choice["target"]), choice.get("chain", []))
 	return play(int(choice["index"]), int(choice["target"]), choice.get("chain", []))
 
 func finish_enemy_phase() -> void:

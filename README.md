@@ -21,3 +21,11 @@ O projeto não inclui campanha narrativa, exploração da Abadia, amizades, diá
 ## Recursos incluídos
 
 Os oito sprites herdados do HotN2 sem licença documentada foram substituídos por cópias verificadas de recursos do RPG Maker MZ licenciados pelo usuário. Efeitos, partículas, BGM e imagens MZ estão inventariados em `ASSETS.md`; os termos aplicáveis são resumidos em `ASSET_LICENSES.md`. `ARCHITECTURE.md`, `GAME_DESIGN.md`, `BALANCE.md`, `CREDITS.md` e `CHANGELOG.md` descrevem o projeto.
+
+## Relatório de sessão (debug)
+
+Cada execução grava um arquivo JSONL em `user://reports/hotn3_session_YYYYMMDD_HHMMSS.jsonl`
+(caminho absoluto: use **Copiar caminho do report** no menu). Inclui cliques de UI, cartas,
+alvos, log de combate, decisões da IA inimiga e efeitos visuais relevantes. Envie esse
+arquivo ao reportar bugs.
+

@@ -148,9 +148,11 @@ func is_pack_card(card_id: String) -> bool:
 func play_card(battle: Variant, mode: String, hand_index: int, target_id: int, chain_ids: Array = []) -> bool:
 	if battle == null:
 		return false
-	if hand_index < 0 or hand_index >= battle.hand.size():
+	# Usa a mão do lado ativo (PLAYER→hand, ENEMY→enemy_hand) para a IA inimiga.
+	var acting_hand: Array = battle._hand_of(battle._acting()) if battle.has_method("_hand_of") else battle.hand
+	if hand_index < 0 or hand_index >= acting_hand.size():
 		return false
-	var card_id: String = str(battle.hand[hand_index].get("id", ""))
+	var card_id: String = str(acting_hand[hand_index].get("id", ""))
 	if mode == "entities" or card_id.begins_with("ent_"):
 		return entities.play(battle, hand_index, target_id, chain_ids)
 	if mode == "external" or card_id.begins_with("ms_"):

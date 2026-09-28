@@ -10,9 +10,11 @@ const CardFace = preload("res://game/CardFace.gd")
 const CollectionRules = preload("res://game/CollectionRules.gd")
 const CampaignRules = preload("res://game/CampaignRules.gd")
 const ArenaBuilder = preload("res://game/ArenaBuilder.gd")
+const SessionReport = preload("res://game/SessionReport.gd")
 
 var battle
 var packs = PackBridge.new()
+var session_report = SessionReport.new()
 var pack_mode := "default"
 var camera: Camera3D
 var stage: Node3D
@@ -103,6 +105,9 @@ func _ready() -> void:
 	_register_inputs()
 	_load_config()
 	_make_world()
+	var report_path := session_report.start("launch")
+	if report_path != "":
+		print("HotN3 session report: ", report_path)
 	_show_menu()
 
 func _make_world() -> void:
@@ -238,7 +243,13 @@ func _button(text_value: String, on_click: Callable = Callable(), hint: String =
 	button.add_theme_font_size_override("font_size", 18)
 	button.tooltip_text = hint
 	if on_click.is_valid():
-		button.pressed.connect(on_click)
+		var label := text_value
+		var cb := on_click
+		button.pressed.connect(func() -> void:
+			if session_report != null:
+				session_report.log_ui("button", {"label": label, "hint": hint})
+			cb.call()
+		)
 	if ResourceLoader.exists("res://assets/ui/button.png"):
 		var style := StyleBoxTexture.new()
 		style.texture = load("res://assets/ui/button.png")
@@ -281,6 +292,7 @@ func _show_menu() -> void:
 	_add_campaign_menu_button(menu)
 	menu.add_child(_button("Selecionar missão", _show_missions))
 	menu.add_child(_button("Arena", _show_arena, "Escolha 3 aliados e 3 inimigos para um combate livre"))
+	menu.add_child(_button("Copiar caminho do report", _copy_session_report_path, "Relatório JSONL desta sessão (para enviar no debug)"))
 	menu.add_child(_button("Escolher equipe", _show_team))
 	menu.add_child(_button("Coleção de cartas", _show_collection))
 	menu.add_child(_button("Preparar itens", _show_items))
@@ -1087,6 +1099,8 @@ func _cycle_item(id: String) -> void:
 	_show_items()
 
 func _start_mission() -> void:
+	if session_report != null:
+		session_report.log_battle("start_mission", {"mission": mission_id, "team": team.duplicate()})
 	if not _mission_unlocked(mission_id):
 		_show_missions()
 		return
@@ -1150,14 +1164,20 @@ func _on_event(message: String) -> void:
 	event_history.append(message)
 	if event_history.size() > 24:
 		event_history.pop_front()
+	if session_report != null:
+		session_report.log_battle("log", {"text": message})
 
 func _on_visual(kind: String, source_id: int, target_id: int, amount: int) -> void:
+	if session_report != null and kind in ["cast", "hit", "heal", "death", "status", "block", "guard", "immune", "resist"]:
+		session_report.log_battle("visual", {"kind": kind, "source": source_id, "target": target_id, "amount": amount})
 	if presentation != null: presentation.show_action(kind, source_id, target_id, amount)
 	if kind in ["cast", "hit", "heal", "death", "status", "block", "guard"]:
 		_show_actor_portrait(source_id, true)
 		if target_id != source_id: _show_actor_portrait(target_id, true)
 
 func _on_finished(won: bool) -> void:
+	if session_report != null:
+		session_report.log_battle("finished", {"won": won, "mission": mission_id, "turn": int(battle.turn) if battle != null else -1})
 	if won: sound.cue("victory")
 	else: sound.cue("death")
 	var reward := 0
@@ -1669,9 +1689,14 @@ func _add_actor_button(parent: VBoxContainer, actor: Dictionary) -> void:
 
 func _select_card(index: int) -> void:
 	if sound != null: sound.cue("select", "UI")
+	if session_report != null and battle != null and index >= 0 and index < battle.hand.size():
+		var c: Dictionary = battle.hand[index]
+		session_report.log_card("select", {"index": index, "id": str(c.get("id", "")), "owner": int(c.get("owner", -1))})
 	if selected_action == "redraw":
 		selected_action = ""
 		_animate_card_depart(index)
+		if session_report != null:
+			session_report.log_card("redraw", {"index": index})
 		packs.redraw_card(battle, pack_mode, index)
 		return
 	selected_action = ""
@@ -1724,6 +1749,8 @@ func _choose_target(actor_id: int) -> void:
 	var card_id: String = str(battle.hand[selected_card].get("id", ""))
 	var caster_id: int = int(battle.hand[selected_card].get("owner", -1))
 	var successful: bool = false
+	if session_report != null:
+		session_report.log_card("target_confirm", {"card": card_id, "target": actor_id, "chain": chain_targets.duplicate()})
 	if packs.is_pack_card(card_id) or pack_mode != "default":
 		_animate_card_depart(selected_card)
 		successful = packs.play_card(battle, pack_mode, selected_card, actor_id, chain_targets)
@@ -1731,6 +1758,8 @@ func _choose_target(actor_id: int) -> void:
 		var preview: Dictionary = battle.preview(selected_card, actor_id, chain_targets)
 		if preview.is_empty():
 			feedback = "Alvo indisponível para esta carta."
+			if session_report != null:
+				session_report.log_card("target_blocked", {"card": card_id, "target": actor_id, "reason": "preview_empty"})
 			chain_targets.clear()
 			_render_battle()
 			return
@@ -1738,6 +1767,8 @@ func _choose_target(actor_id: int) -> void:
 		successful = battle.play(selected_card, actor_id, chain_targets)
 	chain_targets.clear()
 	pending_target_id = -1
+	if session_report != null:
+		session_report.log_card("play_result", {"card": card_id, "target": actor_id, "ok": successful})
 	if successful:
 		if presentation != null:
 			presentation.play_card_fx(definition, caster_id, actor_id)
@@ -2847,6 +2878,8 @@ func _build_hand_card(index: int, card: Dictionary, definition: Dictionary, heig
 	return host
 
 func _note_card_hover(index: int, host: Control, width: float, height: float) -> void:
+	if session_report != null and hovered_card != index and index >= 0:
+		session_report.log_card("hover", {"index": index})
 	if battle == null or battle.phase != "PLAYER": return
 	var changed_hover := hovered_card != index
 	hovered_card = index
@@ -3025,6 +3058,8 @@ func _on_inspect_blocker_gui(event: InputEvent) -> void:
 	get_viewport().set_input_as_handled()
 
 func _confirm_selected_card(index: int = -1) -> void:
+	if session_report != null:
+		session_report.log_card("confirm", {"index": index if index >= 0 else selected_card})
 	suppress_inspect_cancel = false
 	if index < 0:
 		index = selected_card if selected_card >= 0 else inspected_card
@@ -3333,8 +3368,12 @@ func _present_enemy_turn() -> void:
 	if enemy_presenting or battle == null or battle.phase != "PLAYER": return
 	if battle.has_method("can_end_turn") and not battle.can_end_turn():
 		feedback = "Há Instantâneo na mão — jogue antes de encerrar."
+		if session_report != null:
+			session_report.log_ai("end_turn_blocked", {"reason": "instantaneo"})
 		_render_battle()
 		return
+	if session_report != null:
+		session_report.log_ai("enemy_phase_begin", {"turn": int(battle.turn)})
 	# Auto-resolve pending recover before ending turn.
 	if not battle.pending_recover.is_empty():
 		var left: int = int(battle.pending_recover.get("count", 1))
@@ -3374,12 +3413,23 @@ func _step_enemy() -> void:
 	var pace := 2.0 / maxf(animation_speed, 0.25)
 	var choice: Dictionary = battle.peek_enemy_play()
 	if choice.is_empty():
+		if session_report != null:
+			session_report.log_ai("enemy_skip", {"reason": "no_legal_play", "plays_left": int(battle.enemy_card_plays), "hand": battle.enemy_hand.size()})
 		battle.finish_enemy_phase()
 		packs.on_player_turn_resumed(battle, pack_mode)
 		enemy_presenting = false
 		_clear_enemy_card_overlay()
 		_set_orbit(0.0)
 		return
+	if session_report != null:
+		var ai_card: Dictionary = choice.get("card", {})
+		session_report.log_ai("enemy_choice", {
+			"kind": str(choice.get("kind", "")),
+			"card": str(ai_card.get("id", "")),
+			"owner": int(ai_card.get("owner", -1)),
+			"target": int(choice.get("target", -1)),
+			"index": int(choice.get("index", -1)),
+		})
 	if str(choice.get("kind", "")) == "play":
 		var card: Dictionary = choice.get("card", {})
 		var definition: Dictionary = _card_def(str(card.get("id", "")))
@@ -3401,7 +3451,16 @@ func _step_enemy() -> void:
 				if is_instance_valid(body):
 					body.scale = Vector3(1.18, 1.18, 1.18)
 		_clear_enemy_card_overlay()
-		battle.play(int(choice["index"]), target_id, choice.get("chain", []))
+		var card_id := str(card.get("id", ""))
+		var ok := false
+		if packs.is_pack_card(card_id) or pack_mode == "entities":
+			ok = packs.play_card(battle, pack_mode if pack_mode != "default" else ("entities" if card_id.begins_with("ent_") else "external"), int(choice["index"]), target_id, choice.get("chain", []))
+		else:
+			ok = battle.play(int(choice["index"]), target_id, choice.get("chain", []))
+		if not ok:
+			feedback = "Adversário não pôde jogar %s." % str(definition.get("name", card_id))
+			# Evita loop: força fim se a IA escolheu jogada inválida.
+			battle.enemy_card_plays = 0
 		await get_tree().create_timer(pace).timeout
 		if actor_nodes.has(target_id):
 			var reset_body: Node3D = actor_nodes[target_id]
@@ -3964,6 +4023,8 @@ func _add_selected_card_actions(index: int, viewport_size: Vector2) -> void:
 	hud.add_child(col)
 
 func _deselect_card() -> void:
+	if session_report != null:
+		session_report.log_card("cancel", {"index": selected_card})
 	if sound != null: sound.cue("cancel", "UI")
 	selected_card = -1
 	card_confirmed = false
@@ -3977,6 +4038,8 @@ func _deselect_card() -> void:
 	_render_battle()
 
 func _confirm_pending_target() -> void:
+	if session_report != null:
+		session_report.log_card("pending_confirm", {"target": pending_target_id, "card": selected_card})
 	if pending_target_id < 0 or not card_confirmed or selected_card < 0:
 		return
 	var tid := pending_target_id
@@ -3985,6 +4048,8 @@ func _confirm_pending_target() -> void:
 	_choose_target(tid)
 
 func _cancel_pending_target() -> void:
+	if session_report != null:
+		session_report.log_card("pending_cancel", {"target": pending_target_id})
 	if sound != null: sound.cue("cancel", "UI")
 	pending_target_id = -1
 	damage_preview_by_actor.clear()
@@ -4155,6 +4220,11 @@ func _add_battle_menu_overlay(viewport_size: Vector2) -> void:
 		battle_menu_open = true
 		_render_battle()
 	))
+	col.add_child(_button("Copiar caminho do report", _copy_session_report_path, "Copia o caminho do relatório JSONL desta sessão"))
+	var report_hint := "Report: (ainda não iniciado)"
+	if session_report != null and session_report.absolute_path() != "":
+		report_hint = "Report: .../%s" % session_report.path.get_file()
+	col.add_child(_label(report_hint, 14, Color("9aa7b8")))
 	col.add_child(_button("Voltar ao menu principal", _return_to_main_menu, "Abandona o combate e volta ao título"))
 	col.add_child(_button("Fechar (ESC)", _close_battle_menu))
 
@@ -4215,6 +4285,8 @@ func _add_pending_target_actions(viewport_size: Vector2) -> void:
 	hud.add_child(col)
 
 func _show_block_popup(message: String) -> void:
+	if session_report != null:
+		session_report.log_ui("block_popup", {"message": message})
 	# Popup modal curto explicando por que a Manobra não pode ser usada.
 	var blocker := Control.new()
 	blocker.name = "BlockPopup"
@@ -4326,6 +4398,25 @@ func _card_unusable_reason(hand_index: int, target_id: int = -1) -> String:
 					return "Você não pode atingir a retaguarda sem Alcance."
 				return "Alvo fora de alcance."
 	return ""
+
+func _copy_session_report_path() -> void:
+	if session_report == null:
+		feedback = "Report indisponível."
+		return
+	if not session_report.is_active():
+		session_report.start("manual")
+	var abs_path := session_report.copy_path_to_clipboard()
+	if abs_path == "":
+		feedback = "Não foi possível criar o report."
+	else:
+		feedback = "Caminho do report copiado:\n%s" % abs_path
+		if session_report != null:
+			session_report.log_ui("copy_report_path", {"path": abs_path})
+	if battle != null:
+		_render_battle()
+	elif hud != null:
+		# Menu: mostra o caminho num label temporário
+		pass
 
 func _save_config() -> void:
 	var config := ConfigFile.new()
