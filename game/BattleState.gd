@@ -958,9 +958,10 @@ func _take_damage(source: Dictionary, target: Dictionary, amount: int, pierce: b
 	return died
 
 func _purge_dead_cards() -> void:
-	# Deck/discard: remove dead owners (unless soulbound). Hand keeps dead-hero cards
-	# so the player can still hover/inspect them; play() already rejects dead owners.
-	for pile in [deck, discard, enemy_deck, enemy_discard]:
+	# Deck/discard: remove dead owners (unless soulbound).
+	# Mão do jogador: mantém cartas de herói morto para hover/inspecionar (play() rejeita).
+	# Mão inimiga: remove — cartas de morto travam a IA (plays_left > 0 sem jogada legal).
+	for pile in [deck, discard, enemy_deck, enemy_discard, enemy_hand]:
 		for index in range(pile.size() - 1, -1, -1):
 			var owner := actor_by_id(pile[index]["owner"])
 			if owner.get("hp", 0) <= 0 and not owner.get("statuses", {}).has("soulbound"):
@@ -1549,6 +1550,7 @@ func preview(hand_index: int, target_id: int, chain_ids: Array = []) -> Dictiona
 func begin_enemy_phase() -> void:
 	if phase != "PLAYER": return
 	_purge_ephemeral_hand("ALLY")
+	_purge_dead_cards()
 	request_end_turn = false
 	phase = "ENEMY"
 	enemy_card_plays = int(rules["card_plays"])
@@ -1587,12 +1589,16 @@ func peek_enemy_play() -> Dictionary:
 		return {}
 	if enemy_card_plays <= 0:
 		if enemy_redraws > 0 and not enemy_hand.is_empty():
-			return {"kind": "redraw", "index": 0}
+			var ri0 := _best_enemy_redraw_index()
+			if ri0 >= 0:
+				return {"kind": "redraw", "index": ri0}
 		return {}
 	var choice := _best_enemy_play()
 	if choice.is_empty():
 		if enemy_redraws > 0 and not enemy_hand.is_empty():
-			return {"kind": "redraw", "index": 0}
+			var ri := _best_enemy_redraw_index()
+			if ri >= 0:
+				return {"kind": "redraw", "index": ri}
 		return {}
 	var card: Dictionary = enemy_hand[int(choice["index"])]
 	return {
@@ -1634,6 +1640,89 @@ func end_player_turn() -> void:
 		guard += 1
 		if not enemy_step():
 			finish_enemy_phase()
+
+func _enemy_owner_locked(source: Dictionary) -> bool:
+	if source.is_empty() or int(source.get("hp", 0)) <= 0:
+		return true
+	for locked in ["stun", "bind", "bound", "dazed", "banished", "finalized"]:
+		if _has_status(source, locked):
+			return true
+	return false
+
+func _best_enemy_redraw_index() -> int:
+	# Prioriza limpar mão: mortos / indefinidas / caras demais.
+	# Não queima cartas baratas se o único sobrevivente está só incapacitated (bind etc.) —
+	# isso esvaziava Iniciativa e deixava a IA sem Manobra jogável nas rodadas seguintes.
+	var any_unlocked := false
+	for enemy in living("ENEMY"):
+		if not _enemy_owner_locked(enemy):
+			any_unlocked = true
+			break
+	for index in range(enemy_hand.size()):
+		var card: Dictionary = enemy_hand[index]
+		var source := actor_by_id(int(card.get("owner", -1)))
+		var definition: Dictionary = Content.CARDS.get(str(card.get("id", "")), {})
+		if source.is_empty() or int(source.get("hp", 0)) <= 0 or definition.is_empty():
+			return index
+		if _cost(source, definition) > _get_impulse("ENEMY"):
+			return index
+	if any_unlocked:
+		for index in range(enemy_hand.size()):
+			var card2: Dictionary = enemy_hand[index]
+			var source2 := actor_by_id(int(card2.get("owner", -1)))
+			if _enemy_owner_locked(source2):
+				return index
+		# Dono vivo e livre, mas sem alvo legal (alcance/conceal): tenta recompra.
+		return 0 if not enemy_hand.is_empty() else -1
+	return -1
+
+func diagnose_enemy_hand() -> Array:
+	# Para SessionReport: por que cada carta da mão inimiga não é jogável agora.
+	var rows: Array = []
+	for index in range(enemy_hand.size()):
+		var card: Dictionary = enemy_hand[index]
+		var source := actor_by_id(int(card.get("owner", -1)))
+		var definition: Dictionary = Content.CARDS.get(str(card.get("id", "")), {})
+		var reason := ""
+		if definition.is_empty():
+			reason = "no_definition"
+		elif source.is_empty() or int(source.get("hp", 0)) <= 0:
+			reason = "owner_dead"
+		elif _enemy_owner_locked(source):
+			reason = "owner_locked"
+		elif _cost(source, definition) > _get_impulse("ENEMY"):
+			reason = "unaffordable"
+		else:
+			var kind := str(definition.get("target", "ENEMY"))
+			var candidates: Array[Dictionary] = []
+			if kind == "SELF":
+				candidates = [source]
+			elif kind in ["ALLY", "ALL_ALLIES"]:
+				candidates = living("ENEMY")
+			elif kind == "ANY_UNIT":
+				candidates = living("ALLY") + living("ENEMY")
+			else:
+				candidates = living("ALLY")
+			var any_ok := false
+			for target in candidates:
+				var chain: Array = []
+				if kind == "CHAIN":
+					var need := int(definition.get("chain", 1))
+					for _hit in range(need):
+						chain.append(int(target["id"]))
+				var estimate: Dictionary = preview(index, int(target["id"]), chain)
+				if not estimate.is_empty() and estimate.get("playable", false):
+					any_ok = true
+					break
+			reason = "ok" if any_ok else "no_legal_target"
+		rows.append({
+			"index": index,
+			"id": str(card.get("id", "")),
+			"owner": int(card.get("owner", -1)),
+			"target_kind": str(definition.get("target", "")),
+			"reason": reason,
+		})
+	return rows
 
 func _best_enemy_play() -> Dictionary:
 	var best := {}

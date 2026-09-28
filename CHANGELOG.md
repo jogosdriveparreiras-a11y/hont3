@@ -1,3 +1,10 @@
+## 2026-09-28 — IA inimiga: alvos + mão de mortos
+
+- Relatórios `hotn3_session_20260928_165025` / `_163241`: ataques `ENEMY` (Airsoft, Cobertura, Isolar, Lâmina…) miraram aliados do jogador corretamente após cace737; cartas `SELF`/`ALLY` (Passo despercebido, Moto de fuga, Guarda, Plano de assalto) não miram o jogador por design.
+- **Bug real**: cartas de inimigo morto ficavam na `enemy_hand` e a IA recomprava índice 0 à toa — com dono em `bind` isso queimava Manobras de custo 0 e deixava `plays_left>0` sem jogada (`enemy_skip` turns 10–11 Fate / turn 6 Ashlee bound).
+- **Correção**: purge de mortos também na `enemy_hand`; recompra inteligente (`_best_enemy_redraw_index`); `diagnose_enemy_hand` no `enemy_skip` do SessionReport; `enemy_choice` grava `target_kind`/`card_class`.
+- Smoke: `tools/EnemyAiTargetSmoke.gd`.
+
 ## 2026-09-28 — Crash fim de combate (RmAnim visible/freed)
 
 - **Causa**: vitória chama `_center_panel` → `clear_actors()` que `queue_free` nos filhos do presentation (incl. `RmAnim`), enquanto tweens criados em `host_3d` ainda rodavam `_apply_frame` → `s.visible = false` em nó já liberado.

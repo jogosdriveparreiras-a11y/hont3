@@ -3458,7 +3458,16 @@ func _step_enemy() -> void:
 	var choice: Dictionary = battle.peek_enemy_play()
 	if choice.is_empty():
 		if session_report != null:
-			session_report.log_ai("enemy_skip", {"reason": "no_legal_play", "plays_left": int(battle.enemy_card_plays), "hand": battle.enemy_hand.size()})
+			var skip_payload := {
+				"reason": "no_legal_play",
+				"plays_left": int(battle.enemy_card_plays),
+				"hand": battle.enemy_hand.size(),
+				"impulse": int(battle.enemy_impulse),
+				"redraws": int(battle.enemy_redraws),
+			}
+			if battle.has_method("diagnose_enemy_hand"):
+				skip_payload["cards"] = battle.diagnose_enemy_hand()
+			session_report.log_ai("enemy_skip", skip_payload)
 		battle.finish_enemy_phase()
 		packs.on_player_turn_resumed(battle, pack_mode)
 		enemy_presenting = false
@@ -3467,12 +3476,15 @@ func _step_enemy() -> void:
 		return
 	if session_report != null:
 		var ai_card: Dictionary = choice.get("card", {})
+		var ai_def: Dictionary = _card_def(str(ai_card.get("id", "")))
 		session_report.log_ai("enemy_choice", {
 			"kind": str(choice.get("kind", "")),
 			"card": str(ai_card.get("id", "")),
 			"owner": int(ai_card.get("owner", -1)),
 			"target": int(choice.get("target", -1)),
 			"index": int(choice.get("index", -1)),
+			"target_kind": str(ai_def.get("target", "")),
+			"card_class": str(ai_def.get("class", "")),
 		})
 	if str(choice.get("kind", "")) == "play":
 		var card: Dictionary = choice.get("card", {})
