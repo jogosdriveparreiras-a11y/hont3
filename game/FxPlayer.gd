@@ -1,8 +1,10 @@
 extends Node
 class_name HotNFxPlayer
-## Stub FX playback for card anim_self / anim_target.
-## Maps logical ids (and raw Effekseer basenames) to GPUParticles2D / CPUParticles3D.
-## .efkefc files under res://assets/fx/effekseer/ are indexed for a future EffekseerForGodot plugin.
+## FX playback for card anim_self / anim_target.
+## Maps logical ids (and Effekseer basenames) to frame-by-frame billboards + particles.
+## .efkefc under res://assets/fx/effekseer/ indexed for future EffekseerForGodot.
+## RPG Maker MZ Animations.json/PNG/SE sheets: not shipped in-repo — MVP uses particles2d
+## frame strips + SoundBus SFX cues (hit/cast/heal/status).
 
 const PRESETS_PATH := "res://assets/fx/presets.json"
 const EFK_DIR := "res://assets/fx/effekseer/"
@@ -14,11 +16,47 @@ var host_3d: Node3D
 var host_2d: Control
 var animation_speed := 1.0
 var flash_enabled := true
+var rm_player = null
+var sound = null
 
-func configure(world: Node3D, overlay: Control) -> void:
+## Named frame sequences built from particles2d textures (RM-style sheet playback MVP).
+const FRAME_SETS := {
+	"hit": ["flare.png", "flare2.png", "asterisk1.png", "asterisk1g.png"],
+	"slash": ["line_ray1.png", "line_ray1f.png", "line1.png", "line2.png", "line3.png"],
+	"claw": ["asterisk_thick1.png", "asterisk1.png", "asterisk_thin1.png", "flare.png"],
+	"heal": ["shine1.png", "shine2.png", "circle.png", "circle2.png"],
+	"cast": ["circle2.png", "circle3.png", "shine1.png"],
+	"guard": ["hexagon_line1.png", "ring1.png", "hexagon_line2.png"],
+	"shield": ["ring1.png", "hexagon_line1.png", "circle.png"],
+	"status": ["star1.png", "asterisk1g.png", "bubble1.png"],
+	"stun": ["star1.png", "asterisk1.png", "asterisk1g.png"],
+	"lightning": ["thunder1.png", "thunder2.png", "line_ray1.png", "flare2.png"],
+	"thunder": ["thunder2.png", "thunder1.png", "line_ray1f.png"],
+	"fire": ["flame1.png", "flame1g.png", "flare.png"],
+	"ice": ["snow1.png", "snow2.png", "circle2.png"],
+	"darkness": ["smog1.png", "smog2.png", "circle3.png"],
+	"light": ["shine2.png", "shine1.png", "circle.png"],
+	"bleed": ["flare.png", "asterisk_thin1.png", "line_drop1.png"],
+}
+
+const SFX_FOR := {
+	"hit": "hit", "slash": "hit", "claw": "hit", "bleed": "hit",
+	"heal": "heal", "light": "heal",
+	"cast": "cast", "darkness": "cast", "fire": "cast", "ice": "cast",
+	"lightning": "cast", "thunder": "cast",
+	"guard": "block", "shield": "block",
+	"status": "status", "stun": "status",
+}
+
+func configure(world: Node3D, overlay: Control, audio = null) -> void:
 	host_3d = world
 	host_2d = overlay
+	sound = audio
 	_load_presets()
+	if rm_player == null:
+		rm_player = HotNRmAnimPlayer.new()
+		add_child(rm_player)
+	rm_player.configure(world, audio)
 
 func _load_presets() -> void:
 	presets.clear()
@@ -38,7 +76,6 @@ func resolve_spec(fx_id: String) -> Dictionary:
 		return {}
 	if aliases.has(key):
 		return aliases[key]
-	# Raw Effekseer basename (HitSP1, Thunder1, …)
 	var efk_path := EFK_DIR + key + ".efkefc"
 	if ResourceLoader.exists(efk_path) or FileAccess.file_exists(efk_path):
 		var tint := Color("e1d2ff")
@@ -51,7 +88,7 @@ func resolve_spec(fx_id: String) -> Dictionary:
 			tint = Color("ff8a4a"); tex = "flame1.png"
 		elif "ice" in lower:
 			tint = Color("b8e4ff"); tex = "snow1.png"
-		elif "heal" in lower or "light" in lower:
+		elif "heal" in lower:
 			tint = Color("82d9af"); tex = "shine1.png"
 		elif "slash" in lower or "claw" in lower or "hit" in lower:
 			tint = Color("ec755c"); tex = "flare.png"; kind = "slash"
@@ -59,10 +96,9 @@ func resolve_spec(fx_id: String) -> Dictionary:
 			tint = Color("6a4a8a"); tex = "smog1.png"; kind = "rise"
 		elif "protect" in lower or "shield" in lower:
 			tint = Color("a9d5f4"); tex = "ring1.png"; kind = "ring"
-		return {"efk": key, "tex": tex, "tint": tint.to_html(false), "kind": kind}
+		return {"efk": key, "tex": tex, "tint": tint.to_html(false), "kind": kind, "logic": key}
 	return {}
 
-## Play a list of FX on a world position. Returns approximate duration (seconds).
 func play_list(ids: Array, world_pos: Vector3, timing: String = "parallel") -> float:
 	if not flash_enabled or ids.is_empty():
 		return 0.0
@@ -79,28 +115,121 @@ func play_list(ids: Array, world_pos: Vector3, timing: String = "parallel") -> f
 	return max_d / maxf(0.01, animation_speed)
 
 func play_one(fx_id: String, world_pos: Vector3) -> float:
+	var logic := _logic_key(fx_id)
 	var spec := resolve_spec(fx_id)
-	if spec.is_empty():
-		return 0.18
-	var kind := str(spec.get("kind", "burst"))
-	var tint := Color(str(spec.get("tint", "ffffff")))
-	var tex_name := str(spec.get("tex", "particle1.png"))
-	var tex: Texture2D = null
-	var tex_path := TEX_DIR + tex_name
-	if ResourceLoader.exists(tex_path):
-		tex = load(tex_path) as Texture2D
-	# Prefer 3D burst in the arena; overlay 2D flash if camera/overlay available.
-	_spawn_3d(world_pos, tint, kind, tex)
-	_spawn_2d_overlay(world_pos, tint, kind, tex)
-	match kind:
-		"rise":
-			return 0.55
-		"slash":
-			return 0.32
-		"ring":
-			return 0.45
-		_:
-			return 0.36
+	if spec.is_empty() and not FRAME_SETS.has(logic):
+		logic = "hit"
+	var kind := str(spec.get("kind", "burst")) if not spec.is_empty() else "burst"
+	var tint := Color(str(spec.get("tint", "ffffff"))) if not spec.is_empty() else Color("ffd49b")
+	if FRAME_SETS.has(logic):
+		match logic:
+			"heal", "light": tint = Color("82d9af")
+			"slash", "claw", "hit", "bleed": tint = Color("ec755c")
+			"lightning", "thunder": tint = Color("a9d5f4")
+			"darkness": tint = Color("6a4a8a")
+			"fire": tint = Color("ff8a4a")
+			"guard", "shield": tint = Color("a9d5f4")
+			"status", "stun": tint = Color("ba9dea")
+			"cast": tint = Color("e1d2ff")
+	rm_player.animation_speed = animation_speed if rm_player != null else 1.0
+	var rm_dur := 0.0
+	if rm_player != null and rm_player.has_assets():
+		rm_dur = float(rm_player.play_logic(logic, world_pos))
+	if rm_dur <= 0.0:
+		_play_sfx(logic)
+	var frame_dur := _spawn_frame_anim(logic, world_pos, tint) if rm_dur <= 0.0 else 0.0
+	if rm_dur > 0.0:
+		frame_dur = rm_dur
+	_spawn_3d(world_pos, tint, kind, _first_tex(logic, spec))
+	_spawn_2d_overlay(world_pos, tint, kind, _first_tex(logic, spec))
+	return maxf(frame_dur, 0.36 if kind == "burst" else 0.32)
+
+func _logic_key(fx_id: String) -> String:
+	var key := fx_id.strip_edges()
+	if aliases.has(key):
+		var a: Dictionary = aliases[key]
+		# Prefer alias key itself as logic if it's a known set
+		if FRAME_SETS.has(key):
+			return key
+		var efk := str(a.get("efk", key)).to_lower()
+		for cand in FRAME_SETS.keys():
+			if cand in efk or efk in cand:
+				return str(cand)
+		return key if FRAME_SETS.has(key) else str(a.get("kind", "hit"))
+	var lower := key.to_lower()
+	for cand in FRAME_SETS.keys():
+		if cand == lower or cand in lower:
+			return str(cand)
+	if "hit" in lower or "slash" in lower or "claw" in lower:
+		return "hit"
+	if "heal" in lower:
+		return "heal"
+	if "thunder" in lower or "lightn" in lower:
+		return "lightning"
+	if "dark" in lower:
+		return "darkness"
+	if "fire" in lower or "explod" in lower:
+		return "fire"
+	if "guard" in lower or "shield" in lower or "protect" in lower:
+		return "guard"
+	return key if FRAME_SETS.has(key) else "hit"
+
+func _first_tex(logic: String, spec: Dictionary) -> Texture2D:
+	var name := ""
+	if FRAME_SETS.has(logic) and not FRAME_SETS[logic].is_empty():
+		name = str(FRAME_SETS[logic][0])
+	elif not spec.is_empty():
+		name = str(spec.get("tex", "particle1.png"))
+	if name == "":
+		return null
+	var path := TEX_DIR + name
+	if ResourceLoader.exists(path):
+		return load(path) as Texture2D
+	return null
+
+func _play_sfx(logic: String) -> void:
+	if sound == null:
+		return
+	var cue := str(SFX_FOR.get(logic, "hit"))
+	if sound.has_method("cue"):
+		sound.cue(cue, "SFX")
+
+func _spawn_frame_anim(logic: String, world_pos: Vector3, tint: Color) -> float:
+	if host_3d == null or not FRAME_SETS.has(logic):
+		return 0.0
+	var names: Array = FRAME_SETS[logic]
+	var frames: Array[Texture2D] = []
+	for n in names:
+		var path := TEX_DIR + str(n)
+		if ResourceLoader.exists(path):
+			var tex: Texture2D = load(path)
+			if tex != null:
+				frames.append(tex)
+	if frames.is_empty():
+		return 0.0
+	var sprite := Sprite3D.new()
+	sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	sprite.transparent = true
+	sprite.shaded = false
+	sprite.double_sided = true
+	sprite.pixel_size = 0.012
+	sprite.modulate = tint
+	sprite.position = world_pos + Vector3(0, 1.25, 0.05)
+	sprite.texture = frames[0]
+	host_3d.add_child(sprite)
+	var step := 0.055 / maxf(0.01, animation_speed)
+	var tw := host_3d.create_tween()
+	for i in range(frames.size()):
+		var idx := i
+		tw.tween_callback(func() -> void:
+			if is_instance_valid(sprite):
+				sprite.texture = frames[idx]
+				sprite.scale = Vector3.ONE * (1.0 + 0.15 * float(idx) / float(maxi(frames.size() - 1, 1)))
+		)
+		tw.tween_interval(step)
+	tw.tween_property(sprite, "modulate:a", 0.0, 0.12 / maxf(0.01, animation_speed))
+	tw.tween_callback(sprite.queue_free)
+	return step * float(frames.size()) + 0.14
 
 func _spawn_3d(world_pos: Vector3, tint: Color, kind: String, tex: Texture2D) -> void:
 	if host_3d == null:
@@ -117,7 +246,6 @@ func _spawn_3d(world_pos: Vector3, tint: Color, kind: String, tex: Texture2D) ->
 	particles.initial_velocity_max = 3.8 if kind != "slash" else 6.0
 	particles.color = tint
 	if tex != null:
-		# Billboard quads with texture
 		var mat := StandardMaterial3D.new()
 		mat.albedo_texture = tex
 		mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
@@ -125,7 +253,7 @@ func _spawn_3d(world_pos: Vector3, tint: Color, kind: String, tex: Texture2D) ->
 		mat.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
 		mat.vertex_color_use_as_albedo = true
 		var mesh := QuadMesh.new()
-		mesh.size = Vector2(0.35, 0.35)
+		mesh.size = Vector2(0.45, 0.45)
 		particles.mesh = mesh
 		particles.material_override = mat
 	else:
@@ -170,7 +298,6 @@ func _spawn_2d_overlay(world_pos: Vector3, tint: Color, kind: String, tex: Textu
 	cleanup.tween_interval(0.7 / maxf(0.01, animation_speed))
 	cleanup.finished.connect(burst.queue_free)
 
-## Convenience: play card anim fields on caster/target world positions.
 func play_card_anims(definition: Dictionary, self_pos: Vector3, target_pos: Vector3) -> float:
 	var timing := str(definition.get("anim_timing", definition.get("timing", "parallel")))
 	var self_ids: Array = definition.get("anim_self", [])
@@ -179,7 +306,6 @@ func play_card_anims(definition: Dictionary, self_pos: Vector3, target_pos: Vect
 		self_ids = []
 	if typeof(target_ids) != TYPE_ARRAY:
 		target_ids = []
-	# Toda carta precisa de FX no conjurador e no alvo.
 	if self_ids.is_empty():
 		self_ids = ["cast"]
 	if target_ids.is_empty():
@@ -194,6 +320,9 @@ func list_available_ids() -> PackedStringArray:
 	var out: PackedStringArray = PackedStringArray()
 	for key in aliases.keys():
 		out.append(str(key))
+	for key in FRAME_SETS.keys():
+		if not out.has(str(key)):
+			out.append(str(key))
 	var dir := DirAccess.open(EFK_DIR)
 	if dir != null:
 		dir.list_dir_begin()

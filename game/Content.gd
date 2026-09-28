@@ -155,7 +155,7 @@ const ENEMY_CARDS := {
 	"espinhos": {"name": "Pele espinhosa", "target": "SELF", "priority": 16, "effects": [{"kind": "STATUS", "id": "symbiote_skin", "duration": 1}, {"kind": "STATUS", "id": "barrier", "duration": 1, "stacks": 6}]},
 }
 
-const MISSIONS := {
+static var MISSIONS := {
 	"road": {"name": "Estrada abandonada", "objective": "ELIMINATE", "enemies": ["ent_akuji", "ent_fate", "ent_evelyn_graves"], "reinforcements": {3: ["fera", "fera"]}, "environment": [{"name": "Coluna rachada", "cost": 2, "damage": 6, "target": "front"}]},
 	"ritual": {"name": "Círculo de cinzas", "objective": "SURVIVE", "turns": 5, "enemies": ["ent_techna", "ent_nero", "ent_taylor"], "reinforcements": {3: ["fera"]}, "environment": [{"name": "Runa instável", "cost": 2, "status": "vulnerable", "target": "back"}]},
 	"watch": {"name": "Defesa da sentinela", "objective": "PROTECT", "turns": 4, "protect_hp": 40, "enemies": ["ent_quasar", "ent_alistair", "ent_kabuki"], "reinforcements": {2: ["fera"]}, "environment": [{"name": "Cristal de vigília", "cost": 2, "heal": 8, "target": "ally"}]},
@@ -164,7 +164,7 @@ const MISSIONS := {
 }
 
 # Campaign order does not change the combat data: mission identifiers remain stable in saves.
-const CAMPAIGN := {
+static var CAMPAIGN := {
 	"road": {"requires": [], "par": 4, "brief": "Akuji, Fate e Evelyn Graves bloqueiam a estrada. Elimine a patrulha; feras chegam na terceira rodada.", "goal": "Elimine inimigos e reforços."},
 	"ritual": {"requires": ["road"], "par": 5, "brief": "O círculo permanece ativo por cinco rodadas. Techna, Nero e Taylor mantêm o selo.", "goal": "Resista por cinco rodadas."},
 	"watch": {"requires": ["road"], "par": 4, "brief": "Defenda a sentinela até a quarta rodada. Quasar, Alistair e Kabuki pressionam a vigília. Uma fera entra na segunda rodada.", "goal": "Proteja a sentinela por quatro rodadas."},

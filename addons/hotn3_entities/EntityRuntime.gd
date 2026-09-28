@@ -329,7 +329,7 @@ func play_block_reason(battle: Variant, hand_index: int, target_id: int = -1, ch
 			if have < need_n:
 				var pretty := need_st.capitalize()
 				if need_st == "escuridao": pretty = "Escuridão"
-				return "Você precisa de %s %d para usar esta Manobra." % [pretty, need_n]
+				return "Requer: %s %d" % [pretty, need_n]
 	# Alcance / fileira
 	if target_id >= 0:
 		var target: Dictionary = battle.actor_by_id(target_id)
@@ -876,7 +876,12 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 
 func on_turn_start(battle: Variant) -> void:
 	for actor in battle.actors:
-		if actor.has("summon_until") and int(actor["summon_until"]) < int(battle.turn): actor["hp"] = 0
+		if actor.has("summon_until") and int(actor["summon_until"]) < int(battle.turn):
+			if int(actor.get("hp", 0)) > 0:
+				actor["hp"] = 0
+				if battle.has_method("purge_owner_cards"):
+					battle.purge_owner_cards(int(actor["id"]))
+				battle._log("%s (convocado) expirou." % actor.get("name", "?"))
 	for ally in battle.living("ALLY"):
 		var hero: Dictionary = catalog.hero(str(ally.get("archetype", "")))
 		if hero.is_empty(): continue
@@ -1072,10 +1077,58 @@ func _draw_filtered(battle: Variant, source: Dictionary, mode: String, amount: i
 		battle.hand.append(battle.deck.pop_at(found))
 
 func _summon(battle: Variant, source: Dictionary, type: String, duration: int) -> void:
-	# HotN3 has no allied summon action; create a combat ally with an independent ID.
-	var template: Dictionary = source.duplicate(true)
-	template["name"] = "Aliado convocado"
-	template["hp"] = maxi(1, roundi(float(source["max_hp"]) * 0.5))
+	# Invocação = personagem normal (minion): 1 HP típico, frente, deck próprio mesclado.
+	var template_id := str(type)
+	var template: Dictionary = {}
+	if Content.HEROES.has(template_id):
+		template = Content.HEROES[template_id].duplicate(true)
+	else:
+		template = {
+			"name": "Convocado",
+			"hp": 1,
+			"attack": maxi(1, int(source.get("attack", 4)) ),
+			"power": maxi(1, int(source.get("power", 4)) ),
+			"armor": 0,
+			"escudo": 0,
+			"type": str(source.get("type", "TECNICO")),
+			"row": "front",
+			"sprite": str(source.get("sprite", "")),
+			"minion": true,
+			"cards": [],
+			"pool": [],
+		}
+	template["minion"] = true
+	template["row"] = "front"
+	if int(template.get("hp", 1)) > 3:
+		template["hp"] = 1
 	template["statuses"] = {}
-	var ally: Dictionary = battle._create_actor(template, "ALLY", type)
-	ally["summon_until"] = int(battle.turn) + duration
+	var ally: Dictionary = battle._create_actor(template, str(source.get("side", "ALLY")), template_id if template_id != "" else "summon")
+	ally["summon_until"] = int(battle.turn) + maxi(1, duration)
+	ally["summoner_id"] = int(source.get("id", -1))
+	ally["is_summon"] = true
+	# Deck do conjurado: cartas do kit OU 1 ataque Grátis padrão.
+	var card_ids: Array = template.get("cards", template.get("iniciais", []))
+	if card_ids.is_empty():
+		var free_id := "summon_free_strike"
+		if not Content.CARDS.has(free_id):
+			Content.CARDS[free_id] = {
+				"id": free_id,
+				"name": "Golpe Grátis",
+				"class": "ATTACK",
+				"target": "ENEMY",
+				"actions": [["hit", "0"], ["free"]],
+				"free": true,
+				"stat": "attack",
+				"gain": 0,
+				"text": "Grátis. Impacto básico do convocado.",
+				"tier": "inicial",
+			}
+		card_ids = [free_id]
+	var side := str(ally.get("side", "ALLY"))
+	var pile = battle.deck if side == "ALLY" else battle.enemy_deck
+	for cid in card_ids:
+		var card: Dictionary = battle._create_card(str(cid), int(ally["id"]))
+		pile.append(card)
+	battle._shuffle(pile)
+	battle._log("%s convocou %s (cartas mescladas no baralho)." % [source.get("name", "?"), ally.get("name", "?")])
+	battle.changed.emit()

@@ -178,6 +178,15 @@ func _create_card(card_id: String, owner_id: int, changes: Dictionary = {}) -> D
 	next_card_id += 1
 	return {"uid": next_card_id, "id": card_id, "owner": owner_id, "class": Content.CARDS.get(card_id, {}).get("class", ""), "upgrade": int(changes.get("upgrade", 0)), "mod": changes.get("mod", "")}
 
+func purge_owner_cards(owner_id: int) -> void:
+	# Remove cartas deste dono de mão/baralho/descarte (ambos os lados).
+	for pile in [hand, deck, discard, enemy_hand, enemy_deck, enemy_discard]:
+		for i in range(pile.size() - 1, -1, -1):
+			var card: Dictionary = pile[i]
+			if int(card.get("owner", -1)) == owner_id:
+				pile.remove_at(i)
+
+
 func spawn_enemy(enemy_id: String) -> void:
 	if not Content.HEROES.has(enemy_id):
 		return
@@ -922,6 +931,9 @@ func _take_damage(source: Dictionary, target: Dictionary, amount: int, pierce: b
 	var died: bool = target["hp"] <= 0
 	if died:
 		_log("%s caiu." % target["name"])
+		if bool(target.get("is_summon", false)) or bool(target.get("minion", false)):
+			purge_owner_cards(int(target["id"]))
+			_log("%s caiu — cartas removidas do baralho." % target.get("name", "?"))
 		visual.emit("death", int(source["id"]), int(target["id"]), 0)
 		var ability_ko: bool = source["id"] != target["id"] and source["side"] != target["side"] and (not environmental or from_card)
 		if ability_ko and _has_status(source, "fury_totem"): _draw(1)
@@ -1383,8 +1395,21 @@ func preview(hand_index: int, target_id: int, chain_ids: Array = []) -> Dictiona
 	if source.is_empty() or target.is_empty(): return {}
 	var definition: Dictionary = Content.CARDS.get(card["id"], {})
 	if definition.is_empty(): return {}
-	var random_target: bool = str(definition.get("target", "")) == "RANDOM"
-	var targets := _targets(source, target, definition, chain_ids, false)
+	var resolved_def: Dictionary = definition.duplicate(true)
+	if definition.has("target_by_stacks"):
+		var tbs: Dictionary = definition["target_by_stacks"]
+		var st_id := str(tbs.get("status", "escuridao"))
+		var st_n: int = _status_stacks(source, st_id)
+		var chosen := str(resolved_def.get("target", "ENEMY"))
+		for row in tbs.get("thresholds", []):
+			if typeof(row) != TYPE_ARRAY or row.size() < 2:
+				continue
+			if st_n >= int(row[0]):
+				chosen = str(row[1])
+				break
+		resolved_def["target"] = chosen
+	var random_target: bool = str(resolved_def.get("target", "")) == "RANDOM"
+	var targets := _targets(source, target, resolved_def, chain_ids, false)
 	if targets.is_empty(): return {}
 	var rows: Array[String] = []
 	var estimates := {}
@@ -1446,6 +1471,68 @@ func preview(hand_index: int, target_id: int, chain_ids: Array = []) -> Dictiona
 					if not _has_status(victim, "bound"):
 						state["row"] = "back" if state["row"] == "front" else "front"
 						estimate["row_after"] = state["row"]
+	# Cartas de pacote (actions): estimar hit/status como no EntityRuntime.
+	for action in definition.get("actions", []):
+		if typeof(action) != TYPE_ARRAY or action.is_empty():
+			continue
+		var op := str(action[0])
+		if op in ["hit", "hit_per_impulse", "hit_per_hand", "hit_from_block", "hit_from_protecao", "hit_from_barrier", "roulette_hit"]:
+			var card_amt: float = resolve_amount(action[1] if action.size() > 1 else 0, source)
+			if op == "hit_per_impulse":
+				card_amt *= float(_get_impulse(_acting()))
+			if op == "hit_per_hand":
+				card_amt *= float(acting_hand.size())
+			if op == "hit_from_block":
+				card_amt = float(source.get("block", 0))
+			if op == "hit_from_protecao":
+				card_amt = float(source.get("statuses", {}).get("protecao", {}).get("stacks", 0))
+			if op == "hit_from_barrier":
+				var _bh: Dictionary = source.get("statuses", {}).get("barrier", {})
+				card_amt = float(_bh.get("barrier_hp", _bh.get("stacks", 0)))
+			var damage_stat := str(definition.get("stat", "attack"))
+			var offense: float = float(source.get("power" if damage_stat == "power" else "attack", 0))
+			var penetrating: bool = bool(definition.get("penetrating", false))
+			for victim in targets:
+				var state2: Dictionary = defenses[victim["id"]]
+				var estimate2: Dictionary = estimates[victim["id"]]
+				if state2["hp"] <= 0:
+					continue
+				var multiplier: float = 0.5 if _has_status(source, "weak") else 1.0
+				if _has_status(source, "strengthened"):
+					multiplier *= 1.5
+				if _has_status(victim, "vulnerable"):
+					multiplier *= 1.5
+				var defense: int = _defense_for_stat(victim, damage_stat, penetrating)
+				var raw: int = maxi(1, roundi((card_amt + offense) * multiplier) - defense)
+				_estimate_hit(victim, state2, estimate2, raw, penetrating)
+		elif op == "status":
+			var sid := str(action[1]) if action.size() > 1 else ""
+			if sid == "":
+				continue
+			for victim in targets:
+				var estimate3: Dictionary = estimates[victim["id"]]
+				if not estimate3["statuses"].has(sid):
+					estimate3["statuses"].append(sid)
+		elif op == "self_status":
+			var sid2 := str(action[1]) if action.size() > 1 else ""
+			if sid2 != "" and not self_effects.has(sid2):
+				self_effects.append(sid2)
+		elif op == "push":
+			for victim in targets:
+				var state3: Dictionary = defenses[victim["id"]]
+				var estimate4: Dictionary = estimates[victim["id"]]
+				if state3["hp"] <= 0 or _has_status(victim, "bound"):
+					continue
+				if state3["row"] == "front":
+					state3["row"] = "back"
+					estimate4["row_after"] = "back"
+		elif op == "heal":
+			var heal_amt: int = int(round(resolve_amount(action[1] if action.size() > 1 else 0, source)))
+			for victim in targets:
+				var state4: Dictionary = defenses[victim["id"]]
+				var estimate5: Dictionary = estimates[victim["id"]]
+				state4["hp"] = mini(int(victim["max_hp"]), int(state4["hp"]) + heal_amt)
+				estimate5["hp_after"] = state4["hp"]
 	var plays: int = 0 if bool(definition.get("free", false)) else int(definition.get("plays", 1))
 	var side := _acting()
 	var affordable: bool = _get_impulse(side) >= _cost(source, definition) and _get_plays(side) >= plays

@@ -86,6 +86,9 @@ var hero_hud: Control = null
 var economy_hud: Control = null
 var recompra_ring: Control = null
 var pending_target_id := -1
+var status_hover_actor := -1
+var arena_allies: Array[String] = []
+var arena_enemies: Array[String] = []
 var battle_menu_open := false
 var weather_mode := "none"  # none | rain | fog | heat | night
 var free_camera := false
@@ -277,6 +280,7 @@ func _show_menu() -> void:
 	menu.add_child(_label("Missões concluídas: %d/%d · Essência: %d" % [best_stars.size(), Content.MISSIONS.size(), essence], 19))
 	_add_campaign_menu_button(menu)
 	menu.add_child(_button("Selecionar missão", _show_missions))
+	menu.add_child(_button("Arena", _show_arena, "Escolha 3 aliados e 3 inimigos para um combate livre"))
 	menu.add_child(_button("Escolher equipe", _show_team))
 	menu.add_child(_button("Coleção de cartas", _show_collection))
 	menu.add_child(_button("Preparar itens", _show_items))
@@ -288,6 +292,97 @@ func _add_campaign_menu_button(menu: VBoxContainer) -> void:
 
 func _launch_campaign_module() -> void:
 	get_tree().change_scene_to_file("res://addons/hotn3_campaign/CampaignRoot.tscn")
+
+
+func _show_arena() -> void:
+	if arena_allies.is_empty():
+		arena_allies = team.duplicate() if team.size() == 3 else (["ent_alyssa_wine", "ent_adam", "ent_madelyn"] as Array[String])
+	if arena_enemies.is_empty():
+		arena_enemies = ["ent_akuji", "ent_fate", "ent_evelyn_graves"] as Array[String]
+	_clear_ui()
+	var menu := _center_panel("ARENA")
+	menu.add_child(_label("Escolha 3 aliados e 3 inimigos. Combate livre (sem missões).", 17, Color("9aa6bf")))
+	menu.add_child(_label("Aliados", 20, Color("6dffa3")))
+	for i in range(3):
+		var cur := arena_allies[i] if i < arena_allies.size() else ""
+		var name := str(Content.HEROES.get(cur, {}).get("name", cur if cur != "" else "(vazio)"))
+		menu.add_child(_button("Aliado %d: %s" % [i + 1, name], _arena_pick_slot.bind("ally", i)))
+	menu.add_child(_label("Inimigos", 20, Color("ff8a8a")))
+	for i in range(3):
+		var cur2 := arena_enemies[i] if i < arena_enemies.size() else ""
+		var name2 := str(Content.HEROES.get(cur2, {}).get("name", cur2 if cur2 != "" else "(vazio)"))
+		menu.add_child(_button("Inimigo %d: %s" % [i + 1, name2], _arena_pick_slot.bind("enemy", i)))
+	var ready := arena_allies.size() == 3 and arena_enemies.size() == 3
+	ready = ready and arena_allies[0] != "" and arena_enemies[0] != ""
+	var fight := _button("Iniciar combate", _start_arena_battle)
+	fight.disabled = not ready
+	menu.add_child(fight)
+	menu.add_child(_button("Voltar", _show_menu))
+
+func _arena_pick_slot(side: String, slot: int) -> void:
+	_clear_ui()
+	var menu := _center_panel("ARENA · escolher %s %d" % ["aliado" if side == "ally" else "inimigo", slot + 1])
+	var ids: Array = Content.HEROES.keys()
+	ids.sort()
+	var list := VBoxContainer.new()
+	list.add_theme_constant_override("separation", 4)
+	var scroll := ScrollContainer.new()
+	scroll.custom_minimum_size = Vector2(520, 420)
+	scroll.add_child(list)
+	menu.add_child(scroll)
+	for hid in ids:
+		var id := str(hid)
+		var hero: Dictionary = Content.HEROES[id]
+		if not bool(hero.get("playable", true)):
+			continue
+		if bool(hero.get("minion", false)) and side == "ally":
+			continue
+		var label := "%s · %s" % [hero.get("name", id), hero.get("type", "?")]
+		list.add_child(_button(label, _arena_set_slot.bind(side, slot, id)))
+	menu.add_child(_button("Voltar", _show_arena))
+
+func _arena_set_slot(side: String, slot: int, hero_id: String) -> void:
+	if side == "ally":
+		while arena_allies.size() <= slot:
+			arena_allies.append("")
+		# Evita duplicar aliados
+		for i in range(arena_allies.size()):
+			if i != slot and arena_allies[i] == hero_id:
+				arena_allies[i] = ""
+		arena_allies[slot] = hero_id
+	else:
+		while arena_enemies.size() <= slot:
+			arena_enemies.append("")
+		arena_enemies[slot] = hero_id
+	_show_arena()
+
+func _start_arena_battle() -> void:
+	if arena_allies.size() != 3 or arena_enemies.size() != 3:
+		return
+	for id in arena_allies:
+		if id == "" or not Content.HEROES.has(id):
+			return
+	for id in arena_enemies:
+		if id == "" or not Content.HEROES.has(id):
+			return
+	team = arena_allies.duplicate()
+	mission_id = "arena"
+	# Missão sintética temporária
+	if not Content.MISSIONS.has("arena"):
+		Content.MISSIONS["arena"] = {
+			"name": "Arena",
+			"objective": "ELIMINATE",
+			"arena": "street_night",
+			"enemies": arena_enemies.duplicate(),
+			"reinforcements": {},
+			"environment": [],
+		}
+	else:
+		Content.MISSIONS["arena"]["enemies"] = arena_enemies.duplicate()
+	if not Content.CAMPAIGN.has("arena"):
+		Content.CAMPAIGN["arena"] = {"requires": [], "par": 3, "brief": "Combate livre na Arena.", "goal": "Elimine os adversários."}
+	_start_mission()
+
 
 func _show_settings() -> void:
 	var menu := _center_panel("CONFIGURAÇÕES")
@@ -513,6 +608,112 @@ func _refresh_actor_hp_bars() -> void:
 		var actor: Dictionary = battle.actor_by_id(int(id))
 		if actor.is_empty(): continue
 		_update_world_hp_bar(body, actor)
+
+
+func _status_icon_glyph(status_id: String) -> String:
+	match str(status_id).to_lower():
+		"bleed", "sangrando", "sangramento": return "🩸"
+		"burn", "queimadura": return "🔥"
+		"poison", "veneno": return "☠️"
+		"stun", "atordoado": return "💫"
+		"slow", "lento": return "🐢"
+		"weak", "fraco": return "⬇️"
+		"vulnerable", "vulneravel": return "💥"
+		"protecao", "protection", "protegido": return "🛡️"
+		"barreira", "barrier": return "🧱"
+		"resistente": return "🪨"
+		"fragil", "frágil": return "💔"
+		"escuridao", "escuro", "darkness": return "🌑"
+		"atento": return "👁️"
+		"wounded", "ferido": return "🩹"
+		"regen": return "💚"
+		"blind", "cego": return "🙈"
+		"invulneravel", "invulnerável", "invulnerable": return "✨"
+		"marked", "marcado": return "🎯"
+		"strengthened", "fortalecido": return "💪"
+		_: return "◆"
+
+func _update_status_icons(body: Node3D, actor: Dictionary, expanded: bool) -> void:
+	if body == null or not is_instance_valid(body):
+		return
+	var root: Node3D = body.get_node_or_null("StatusIcons")
+	if root == null:
+		root = Node3D.new()
+		root.name = "StatusIcons"
+		root.position = Vector3(0, 2.05, 0)
+		body.add_child(root)
+	for c in root.get_children():
+		c.queue_free()
+	var statuses: Dictionary = actor.get("statuses", {})
+	var keys: Array = []
+	for sid in statuses.keys():
+		var st: Dictionary = statuses[sid]
+		if int(st.get("duration", 0)) <= 0 and int(st.get("stacks", 0)) <= 0:
+			continue
+		# Escuridão may have duration 99
+		keys.append(str(sid))
+	if keys.is_empty():
+		return
+	keys.sort()
+	if camera != null:
+		var cam_pos := camera.global_position
+		var look := Vector3(cam_pos.x, root.global_position.y, cam_pos.z)
+		if look.distance_to(root.global_position) > 0.05:
+			root.look_at(look, Vector3.UP)
+			root.rotate_object_local(Vector3.UP, PI)
+	if not expanded:
+		# Compact row of glyphs under HP
+		var i := 0
+		for sid in keys:
+			if i >= 6:
+				break
+			var lab := Label3D.new()
+			lab.text = _status_icon_glyph(sid)
+			lab.font_size = 28
+			lab.pixel_size = 0.0055
+			lab.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+			lab.position = Vector3((-0.35 + 0.14 * float(i)), 0.0, 0.0)
+			root.add_child(lab)
+			i += 1
+	else:
+		# Vertical list: icon + name
+		var row := 0
+		for sid in keys:
+			if row >= 8:
+				break
+			var st: Dictionary = statuses[sid]
+			var stacks := int(st.get("stacks", 1))
+			var line := "%s %s" % [_status_icon_glyph(sid), _status_label(sid)]
+			if stacks > 1:
+				line += " x%d" % stacks
+			var lab := Label3D.new()
+			lab.text = line
+			lab.font_size = 22
+			lab.pixel_size = 0.005
+			lab.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+			lab.modulate = Color("ffe6b0")
+			lab.position = Vector3(0.0, -0.16 * float(row), 0.0)
+			lab.outline_size = 4
+			lab.outline_modulate = Color(0, 0, 0, 0.85)
+			root.add_child(lab)
+			row += 1
+
+func _portrait_status_lines(actor: Dictionary) -> PackedStringArray:
+	var out: PackedStringArray = []
+	var statuses: Dictionary = actor.get("statuses", {})
+	for sid in statuses.keys():
+		var st: Dictionary = statuses[sid]
+		if int(st.get("duration", 0)) <= 0 and int(st.get("stacks", 0)) <= 0:
+			continue
+		var stacks := int(st.get("stacks", 1))
+		var line := "%s %s" % [_status_icon_glyph(str(sid)), _status_label(str(sid))]
+		if stacks > 1:
+			line += " x%d" % stacks
+		out.append(line)
+		if out.size() >= 6:
+			break
+	return out
+
 
 func _show_character_sheet(hero_id: String) -> void:
 	# Ficha: retrato, attrs, tipo, biografia e cartas (clique amplia + glossário).
@@ -1081,8 +1282,8 @@ func _render_battle() -> void:
 	_add_phase_prompt(viewport_size)
 	_add_battle_menu_button(viewport_size)
 	if pending_target_id >= 0 and card_confirmed and battle.phase == "PLAYER":
-		_add_pending_target_actions(viewport_size)
 		_apply_target_preview(pending_target_id)
+		_add_pending_target_actions(viewport_size)
 	if battle_menu_open and battle.phase == "PLAYER":
 		_add_battle_menu_overlay(viewport_size)
 	_apply_weather_fx()
@@ -1485,6 +1686,10 @@ func _select_card(index: int) -> void:
 	if selected_card == index and not card_confirmed:
 		_confirm_selected_card(index)
 		return
+	var require_msg := _card_require_status_reason(index)
+	if require_msg != "":
+		_show_block_popup(require_msg)
+		return
 	selected_card = index
 	inspected_card = -1
 	inspect_open = false
@@ -1805,9 +2010,14 @@ func _update_world_hp_bar(body: Node3D, actor: Dictionary) -> void:
 			forecast_mesh.material_override = fmat
 			hp_root.add_child(forecast_mesh)
 		var fbox2: BoxMesh = forecast_mesh.mesh
-		fbox2.size = Vector3(0.88 * lost_ratio, 0.045, 0.026)
+		fbox2.size = Vector3(maxf(0.06, 0.88 * lost_ratio), 0.07, 0.04)
 		# Coloca a faixa vermelha imediatamente à direita do HP restante
-		forecast_mesh.position = Vector3(-0.44 + 0.88 * remain_ratio + 0.44 * lost_ratio, fill.position.y, fill.position.z + 0.001)
+		forecast_mesh.position = Vector3(-0.44 + 0.88 * remain_ratio + 0.44 * lost_ratio, fill.position.y, fill.position.z + 0.002)
+		var fmat2: StandardMaterial3D = forecast_mesh.material_override
+		if fmat2 != null:
+			fmat2.albedo_color = Color(1.0, 0.18, 0.22)
+			fmat2.emission = Color(1.0, 0.35, 0.25)
+			fmat2.emission_energy_multiplier = 8.5
 		forecast_mesh.visible = true
 	elif forecast_mesh != null:
 		forecast_mesh.visible = false
@@ -1820,6 +2030,16 @@ func _update_world_hp_bar(body: Node3D, actor: Dictionary) -> void:
 		if gmat != null:
 			gmat.albedo_color = Color(tint.r, tint.g, tint.b, 0.45)
 			gmat.emission = tint
+	# Sempre de frente para a câmera (vista lateral +Z deixava a barra de lado).
+	if camera != null:
+		var cam_pos := camera.global_position
+		var look := Vector3(cam_pos.x, hp_root.global_position.y, cam_pos.z)
+		if look.distance_to(hp_root.global_position) > 0.05:
+			hp_root.look_at(look, Vector3.UP)
+			hp_root.rotate_object_local(Vector3.UP, PI)
+	var aid := int(actor.get("id", -1))
+	var expand := aid == status_hover_actor or aid == hovered_actor or aid == pending_target_id
+	_update_status_icons(body, actor, expand)
 
 func _make_3d_card(index: int, card: Dictionary, definition: Dictionary) -> void:
 	var view := SubViewport.new()
@@ -1860,6 +2080,10 @@ func _make_3d_card(index: int, card: Dictionary, definition: Dictionary) -> void
 		var dead_mat: ShaderMaterial = mesh.material_override
 		if dead_mat != null:
 			dead_mat.set_shader_parameter("modulate_color", Color(0.55, 0.55, 0.58, 0.75))
+	elif _card_require_status_reason(index) != "":
+		var lock_mat: ShaderMaterial = mesh.material_override
+		if lock_mat != null:
+			lock_mat.set_shader_parameter("modulate_color", Color(0.62, 0.55, 0.72, 0.72))
 	if entering and not reduce_motion:
 		var arrive := create_tween()
 		arrive.set_parallel(true)
@@ -1951,11 +2175,12 @@ func _lateral_focus_actor(actor_id: int, zoom_amount: float = 1.65) -> void:
 	if presentation == null or battle_view_mode != "lateral":
 		return
 	presentation.orbit = 0.0
+	# zoom_amount ignorado de propósito: evita FOV/zoom da mão na vista lateral.
 	if actor_id >= 0 and actor_nodes.has(actor_id):
 		var body: Node3D = actor_nodes[actor_id]
 		if is_instance_valid(body):
 			presentation.focus_target = body.position
-			presentation.zoom = zoom_amount
+			presentation.zoom = 1.0
 			return
 	presentation.focus_target = Vector3.ZERO
 	presentation.zoom = 1.0
@@ -2095,7 +2320,9 @@ func _status_label(status_id: String) -> String:
 		"resist": "Proteção",
 		"protected": "Proteção",
 		"protecting": "Proteção",
-		"bleed": "Sangramento",
+		"bleed": "Sangrando",
+		"sangrando": "Sangrando",
+		"sangramento": "Sangrando",
 		"burn": "Queimadura",
 		"weak": "Fraco",
 		"vulnerable": "Vulnerável",
@@ -2124,9 +2351,19 @@ func _status_label(status_id: String) -> String:
 	}
 	return labels.get(key, key.replace("_", " ").capitalize())
 
+func _amp_num(value: String, amplify: bool) -> String:
+	return "[color=#6dffa3]%s[/color]" % value if amplify else value
+
 func _effect_short_bbcode(definition: Dictionary, card: Dictionary = {}) -> String:
-	# Resumos curtos na face da carta (ex.: "Lento 1"). Glossário completo só no Inspecionar.
+	# Resumos curtos na face (BBCode). Glossário completo só no Inspecionar.
 	var bits: Array[String] = []
+	var owner: Dictionary = {}
+	if battle != null and not card.is_empty():
+		owner = battle.actor_by_id(int(card.get("owner", -1)))
+	var e_stacks := 0
+	if not owner.is_empty() and battle != null:
+		e_stacks = battle._status_stacks(owner, "escuridao")
+	var amplify := e_stacks > 0
 	var target_names := {"SELF": "Si", "ALLY": "Aliado", "ALL_ALLIES": "Aliados", "ENEMY": "Inimigo", "SINGLE": "Inimigo", "ENEMY_ROW": "Linha", "ROW": "Linha", "FRONT_ROW": "Frente", "BACK_ROW": "Retaguarda", "ALL_ENEMIES": "Inimigos", "ALL_OTHERS": "Outros", "ADJACENT": "Adjacentes", "RANDOM": "Aleatório", "CHAIN": "Cadeia", "ANY_UNIT": "Qualquer"}
 	var tgt := str(definition.get("target", "ENEMY"))
 	if tgt != "ENEMY" and tgt != "SINGLE":
@@ -2135,6 +2372,20 @@ func _effect_short_bbcode(definition: Dictionary, card: Dictionary = {}) -> Stri
 	if definition.get("free", false): bits.append("Livre")
 	if definition.get("reach", false): bits.append("Alcance")
 	if definition.get("exhaust", false) or definition.get("item", false): bits.append("[color=#e15b5b]Exaustão[/color]")
+	# Requisitos de Escuridão / status próprio
+	for action in definition.get("actions", []):
+		if typeof(action) != TYPE_ARRAY or action.is_empty():
+			continue
+		if str(action[0]) == "requires_self_status":
+			var need_st := str(action[1]) if action.size() > 1 else "?"
+			var need_n := 1
+			if action.size() > 2 and battle != null and not owner.is_empty():
+				need_n = int(round(battle.resolve_amount(action[2], owner)))
+			elif action.size() > 2 and str(action[2]).is_valid_int():
+				need_n = int(action[2])
+			var pretty := _status_label(need_st)
+			bits.append("Requer [b]%s[/b] %d" % [pretty, need_n])
+	# Efeitos STATUS legados
 	for effect in definition.get("effects", []):
 		var kind := str(effect.get("kind", ""))
 		if kind == "DAMAGE":
@@ -2144,7 +2395,7 @@ func _effect_short_bbcode(definition: Dictionary, card: Dictionary = {}) -> Stri
 		elif kind == "STATUS":
 			var sid := str(effect.get("id", ""))
 			var n := maxi(1, int(effect.get("stacks", effect.get("duration", 1))))
-			bits.append("%s %d" % [_status_label(sid), n])
+			bits.append("Adiciona [b]%s[/b] %s" % [_status_label(sid), _amp_num(str(n), amplify)])
 		elif kind == "PUSH":
 			bits.append("Empurra")
 		elif kind == "PULL":
@@ -2157,28 +2408,66 @@ func _effect_short_bbcode(definition: Dictionary, card: Dictionary = {}) -> Stri
 			bits.append("Compra %d" % int(effect.get("amount", 1)))
 		elif kind == "BLOCK" or kind == "SHIELD":
 			bits.append("Barreira %d" % int(effect.get("amount", 0)))
-		elif kind != "":
-			bits.append(kind.capitalize())
+	# Actions pack: status/heal/protecao com escala E
+	var status_bits: Array[String] = []
 	for action in definition.get("actions", []):
 		if typeof(action) != TYPE_ARRAY or action.is_empty():
 			continue
 		var op := str(action[0])
-		if op in ["hit", "hit_per_impulse", "hit_per_hand", "roulette_hit", "hit_from_block", "hit_from_protecao", "hit_from_barrier"]:
+		if op in ["hit", "hit_per_impulse", "hit_per_hand", "roulette_hit", "hit_from_block", "hit_from_protecao", "hit_from_barrier", "requires_self_status", "requires_status", "when_stacks"]:
 			continue
 		elif op == "status":
 			var sid2 := str(action[1]) if action.size() > 1 else "?"
-			var stacks := int(action[2]) if action.size() > 2 else 1
-			bits.append("%s %d" % [_status_label(sid2), maxi(1, stacks)])
+			var stacks_raw = action[2] if action.size() > 2 else 1
+			var stacks := 0
+			if battle != null and not owner.is_empty():
+				stacks = int(round(battle.resolve_amount(stacks_raw, owner)))
+			elif str(stacks_raw).is_valid_int():
+				stacks = int(stacks_raw)
+			elif str(stacks_raw).strip_edges() in ["E", "e", "escuridao"]:
+				stacks = 0
+			status_bits.append("[b]%s[/b] %s" % [_status_label(sid2), _amp_num(str(stacks), amplify)])
 		elif op in ["protecao", "protection"]:
-			bits.append("Proteção %d" % (int(action[1]) if action.size() > 1 else 1))
+			var pn := 1
+			if action.size() > 1 and battle != null and not owner.is_empty():
+				pn = maxi(1, int(round(battle.resolve_amount(action[1], owner))))
+			elif action.size() > 1 and str(action[1]).is_valid_int():
+				pn = maxi(1, int(action[1]))
+			bits.append("[b]Proteção[/b] %s" % _amp_num(str(pn), amplify))
 		elif op in ["barreira", "barrier", "barreira_hp"]:
-			bits.append("Barreira %d" % (int(action[1]) if action.size() > 1 else 1))
+			var bn := 1
+			if action.size() > 1 and battle != null and not owner.is_empty():
+				bn = maxi(1, int(round(battle.resolve_amount(action[1], owner))))
+			bits.append("[b]Barreira[/b] %s" % _amp_num(str(bn), amplify))
+		elif op == "resistente":
+			var rn := 0
+			if action.size() > 1 and battle != null and not owner.is_empty():
+				rn = int(round(battle.resolve_amount(action[1], owner)))
+			elif action.size() > 1 and str(action[1]).is_valid_int():
+				rn = int(action[1])
+			bits.append("[b]Resistente[/b] %s" % _amp_num(str(rn), amplify))
 		elif op in ["heal", "heal_all", "full_heal"]:
-			bits.append("Cura")
+			var hn := 0
+			if action.size() > 1 and battle != null and not owner.is_empty():
+				hn = int(round(battle.resolve_amount(action[1], owner)))
+			bits.append("Cura %s" % _amp_num(str(hn), amplify) if hn > 0 else "")
 		elif op in ["push"]:
 			bits.append("Empurra")
 		elif op in ["pull"]:
 			bits.append("Puxa")
+		elif op == "self_status":
+			var sid3 := str(action[1]) if action.size() > 1 else "?"
+			var sn := 1
+			if action.size() > 2 and battle != null and not owner.is_empty():
+				sn = maxi(1, int(round(battle.resolve_amount(action[2], owner))))
+			bits.append("[b]%s[/b] %s" % [_status_label(sid3), _amp_num(str(sn), amplify)])
+	if not status_bits.is_empty():
+		if status_bits.size() == 1:
+			bits.append("Adiciona %s" % status_bits[0])
+		elif status_bits.size() == 2:
+			bits.append("Adiciona %s e %s" % [status_bits[0], status_bits[1]])
+		else:
+			bits.append("Adiciona " + ", ".join(PackedStringArray(status_bits.slice(0, status_bits.size() - 1))) + " e " + status_bits[-1])
 	if bits.is_empty() and _card_has_damage(definition):
 		bits.append("Dano")
 	return " · ".join(PackedStringArray(bits))
@@ -2422,16 +2711,81 @@ func _show_actor_portrait(actor_id: int, sticky: bool) -> void:
 	var widget := portrait_left if str(actor.get("side", "")) == "ALLY" else portrait_right
 	widget.texture = _unit_portrait(actor)
 	widget.show()
+	_attach_portrait_statuses(widget, actor)
+	# Prévia de alvo: mostra estados nos dois retratos (ator + alvo).
+	if pending_target_id >= 0 and not damage_preview_by_actor.is_empty():
+		var other_id := pending_target_id if actor_id != pending_target_id else int(battle.hand[selected_card].get("owner", -1)) if selected_card >= 0 and selected_card < battle.hand.size() else -1
+		if other_id >= 0 and other_id != actor_id:
+			var other: Dictionary = battle.actor_by_id(other_id)
+			if not other.is_empty():
+				var other_w := portrait_left if str(other.get("side", "")) == "ALLY" else portrait_right
+				other_w.texture = _unit_portrait(other)
+				other_w.show()
+				_attach_portrait_statuses(other_w, other)
 	if sticky:
 		portrait_sticky_until = maxi(portrait_sticky_until, Time.get_ticks_msec() + int(1100.0 / maxf(animation_speed, 0.25)))
 
+func _attach_portrait_statuses(widget: Control, actor: Dictionary) -> void:
+	if widget == null or not is_instance_valid(widget):
+		return
+	var old = widget.get_node_or_null("StatusList")
+	if old != null:
+		old.queue_free()
+	var lines := _portrait_status_lines(actor)
+	if lines.is_empty():
+		return
+	var box := VBoxContainer.new()
+	box.name = "StatusList"
+	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	box.position = Vector2(12, widget.size.y * 0.72 if widget.size.y > 10 else 420)
+	for line in lines:
+		var lab := Label.new()
+		lab.text = line
+		lab.add_theme_font_size_override("font_size", 15)
+		lab.add_theme_color_override("font_color", Color("ffe6b0"))
+		lab.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.85))
+		lab.add_theme_constant_override("shadow_offset_x", 1)
+		lab.add_theme_constant_override("shadow_offset_y", 1)
+		lab.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		box.add_child(lab)
+	widget.add_child(box)
+
 func _hide_idle_portraits() -> void:
-	if Time.get_ticks_msec() < portrait_sticky_until: return
-	if hovered_card >= 0 or hovered_actor >= 0: return
-	# Retratos ficam visíveis enquanto houver carta selecionada (até resolver).
-	if selected_card >= 0: return
-	if portrait_left != null: portrait_left.hide()
-	if portrait_right != null: portrait_right.hide()
+	# Hover curto não sticky: limpa já. Sticky de ação ainda respeita o timer.
+	if Time.get_ticks_msec() < portrait_sticky_until:
+		return
+	_refresh_portraits_for_focus()
+
+func _refresh_portraits_for_focus() -> void:
+	# Retrato só permanece se houver foco válido (hover / seleção / inspeção / prévia).
+	if battle == null:
+		if portrait_left != null: portrait_left.hide()
+		if portrait_right != null: portrait_right.hide()
+		return
+	var keep_id := -1
+	if hovered_actor >= 0:
+		keep_id = hovered_actor
+	elif hovered_card >= 0 and hovered_card < battle.hand.size():
+		keep_id = int(battle.hand[hovered_card].get("owner", -1))
+	elif inspect_open and inspected_card >= 0 and inspected_card < battle.hand.size():
+		keep_id = int(battle.hand[inspected_card].get("owner", -1))
+	elif selected_card >= 0 and selected_card < battle.hand.size():
+		keep_id = int(battle.hand[selected_card].get("owner", -1))
+	elif pending_target_id >= 0:
+		keep_id = pending_target_id
+	if keep_id < 0:
+		if portrait_left != null: portrait_left.hide()
+		if portrait_right != null: portrait_right.hide()
+		return
+	_show_actor_portrait(keep_id, false)
+	# Esconde o lado oposto se não houver motivo (prévia de alvo mantém ambos).
+	if pending_target_id < 0 or damage_preview_by_actor.is_empty():
+		var actor: Dictionary = battle.actor_by_id(keep_id)
+		var side := str(actor.get("side", ""))
+		if side == "ALLY" and portrait_right != null and pending_target_id < 0:
+			# Mantém só o retrato do foco, a menos que haja alvo pendente.
+			pass
+
 
 func _build_hand_card(index: int, card: Dictionary, definition: Dictionary, height: float) -> Panel:
 	var width := height * 0.68
@@ -2477,11 +2831,17 @@ func _build_hand_card(index: int, card: Dictionary, definition: Dictionary, heig
 		_note_card_hover(index, host, width, height)
 	)
 	host.mouse_exited.connect(func() -> void:
-		if hovered_card == index and inspected_card != index:
+		if hovered_card == index and inspected_card != index and selected_card != index:
 			hovered_card = -1
 			host.scale = Vector2.ONE
 			host.z_index = 0
-			_hide_idle_portraits()
+			portrait_sticky_until = 0
+			_refresh_portraits_for_focus()
+		elif hovered_card == index and selected_card == index:
+			# Saiu do hover mas carta segue selecionada → retrato do dono selecionado.
+			host.scale = Vector2.ONE
+			host.z_index = 0
+			_refresh_portraits_for_focus()
 	)
 	host.gui_input.connect(func(event: InputEvent) -> void: _on_card_gui(event, index))
 	return host
@@ -2533,6 +2893,11 @@ func _on_card_gui(event: InputEvent, index: int) -> void:
 	elif inspect_open and inspected_card == index:
 		call_deferred("_confirm_selected_card", index)
 	else:
+		var require_msg2 := _card_require_status_reason(index)
+		if require_msg2 != "":
+			_show_block_popup(require_msg2)
+			get_viewport().set_input_as_handled()
+			return
 		selected_card = index
 		inspected_card = -1
 		inspect_open = false
@@ -2730,8 +3095,8 @@ func _status_plain(id: String, stacks: int = 1) -> String:
 			return "Vulnerável %d — sofre dano extra ao ser atingido." % n
 		"stun", "atordoado":
 			return "Atordoado — não pode jogar Manobras enquanto durar."
-		"bleed", "sangramento":
-			return "Sangramento %d — perde Vida no início do turno e o efeito reduz 1 pilha." % n
+		"bleed", "sangramento", "sangrando":
+			return "[b]Sangrando[/b]: Causa dano no fim da rodada. Diminui com o tempo."
 		"poison", "veneno":
 			return "Veneno %d — dano contínuo de veneno a cada turno." % n
 		"burn", "queimadura":
@@ -2745,7 +3110,9 @@ func _status_plain(id: String, stacks: int = 1) -> String:
 		"atento":
 			return "Atento — reage melhor / bônus defensivo temporário."
 		"wounded", "ferido":
-			return "Ferido — marca de ferimento que potencializa certas Manobras."
+			return "[b]Ferido[/b]: Causa dano quando o personagem usa uma Manobra. Diminui com o tempo."
+		"escuridao", "escuro", "darkness":
+			return "[b]Escuridão[/b]: Quando [b]Alyssa[/b] recebe dano, [b]Escuridão[/b] aumenta em 1."
 		"protecao", "protegido":
 			return "Proteção %d — funciona como Escudo: absorve dano de Impacto." % n
 		"barreira", "barrier":
@@ -2817,11 +3184,33 @@ func _effect_glossary_lines(definition: Dictionary, card: Dictionary = {}) -> Pa
 				line2 = "Compra carta(s) para a mão."
 			"slow", "lento":
 				line2 = _status_plain("slow", int(action[1]) if action.size() > 1 else 1)
+			"when_stacks":
+				var stn := _status_label(str(action[1]) if action.size() > 1 else "?")
+				var need := str(action[2]) if action.size() > 2 else "?"
+				var extra := str(action[3]) if action.size() > 3 else ""
+				line2 = "Se [b]%s[/b] ≥ %s: efeito extra (%s)." % [stn, need, extra]
+			"requires_self_status", "requires_status":
+				line2 = ""  # já coberto pelo texto / glossário Escuridão
 			_:
-				line2 = op
+				if op.begins_with("_") or op in ["quick", "free", "exhaust", "final", "reach"]:
+					line2 = ""
+				else:
+					line2 = op
 		if line2 != "" and not seen.has(line2):
 			lines.append(line2)
 			seen[line2] = true
+	# Glossário fixo para efeitos Alyssa / status recorrentes citados na carta.
+	var blob := (str(definition.get("text", "")) + " " + " ".join(PackedStringArray(lines))).to_lower()
+	var actions_blob := str(definition.get("actions", [])).to_lower()
+	if ("escuridao" in actions_blob or "escuridão" in blob or "escuridao" in blob) and not seen.has("__esc__"):
+		lines.append(_status_plain("escuridao"))
+		seen["__esc__"] = true
+	if ("bleed" in actions_blob or "sangr" in blob) and not seen.has("__bleed__"):
+		lines.append(_status_plain("bleed"))
+		seen["__bleed__"] = true
+	if ("wounded" in actions_blob or "ferido" in blob) and not seen.has("__wound__"):
+		lines.append(_status_plain("wounded"))
+		seen["__wound__"] = true
 	if lines.is_empty():
 		lines.append(_card_description(definition, card))
 	return lines
@@ -2869,9 +3258,15 @@ func _add_inspect_overlay(index: int, viewport_size: Vector2) -> void:
 	if tier != "":
 		col.add_child(_label("Tier: %s" % tier, 15, Color("9aa6bf")))
 	for line in _effect_glossary_lines(definition, card):
-		var lab := _label("• " + line, 15, Color("d5deea"))
-		lab.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		var lab := RichTextLabel.new()
+		lab.bbcode_enabled = true
+		lab.fit_content = true
+		lab.scroll_active = false
+		lab.text = "• " + line
+		lab.add_theme_font_size_override("normal_font_size", 15)
+		lab.add_theme_color_override("default_color", Color("d5deea"))
 		lab.custom_minimum_size.x = panel.custom_minimum_size.x - 28
+		lab.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		col.add_child(lab)
 	var btn_col := VBoxContainer.new()
 	btn_col.add_theme_constant_override("separation", 8)
@@ -3249,19 +3644,19 @@ func _process(delta: float) -> void:
 	for i in range(unit_sprites.size()):
 		if not is_instance_valid(unit_sprites[i]):
 			continue
-		unit_sprites[i].position.y = 1.1
-		var spr_s := float(unit_sprites[i].get_meta("sprite_scale", 1.0))
-		if reduce_motion:
-			unit_sprites[i].scale = Vector3(spr_s, spr_s, 1.0)
-			unit_sprites[i].position.y = 1.1
-		else:
-			# Idle breath: pin feet (bottom), stretch only the upper portion gently.
-			var wave := sin(Time.get_ticks_msec() * 0.0024 + float(i) * 1.7)
-			var sy := 1.0 + wave * 0.022
-			var sx := 1.0 - wave * 0.012
-			unit_sprites[i].scale = Vector3(sx * spr_s, sy * spr_s, 1.0)
-			# Base center y=1.1 with height ≈ 2.2*spr_s; lift center so bottom stays fixed.
-			unit_sprites[i].position.y = 1.1 + 1.1 * spr_s * (sy - 1.0)
+		var spr := unit_sprites[i]
+		var spr_s := float(spr.get_meta("sprite_scale", 1.0))
+		# Breath fica ligado mesmo com "Reduzir movimento da câmera" — só pausa durante ação.
+		var busy := Time.get_ticks_msec() < int(spr.get_meta("action_until", 0))
+		if busy:
+			continue
+		# Idle breath: pin feet (bottom), stretch only the upper portion gently.
+		var wave := sin(Time.get_ticks_msec() * 0.0022 + float(i) * 1.7)
+		var sy := 1.0 + wave * 0.038
+		var sx := 1.0 - wave * 0.018
+		spr.scale = Vector3(sx * spr_s, sy * spr_s, 1.0)
+		# Base center y=1.1 with height ≈ 2.2*spr_s; lift center so bottom stays fixed.
+		spr.position.y = 1.1 + 1.1 * spr_s * (sy - 1.0)
 	if battle != null and battle.phase == "PLAYER":
 		_tick_recompra_hold(delta)
 	if battle != null and battle.phase == "PLAYER" and camera != null and not battle_menu_open:
@@ -3297,9 +3692,11 @@ func _process(delta: float) -> void:
 					hover_hint.text = _card_description(_card_def(str(battle.hand[hovered_card]["id"])), battle.hand[hovered_card])
 		if new_actor != hovered_actor:
 			hovered_actor = new_actor
+			status_hover_actor = new_actor
 			hover_dirty = true
 			if hovered_actor >= 0:
 				_show_actor_portrait(hovered_actor, false)
+				_refresh_actor_hp_bars()
 				if card_confirmed and selected_card >= 0 and selected_card < battle.hand.size():
 					_apply_target_preview(hovered_actor)
 				elif not damage_preview_by_actor.is_empty():
@@ -3307,6 +3704,10 @@ func _process(delta: float) -> void:
 					_refresh_actor_hp_bars()
 		if hover_dirty:
 			_refresh_hero_hud()
+			# Sem hover e sem seleção/inspeção → limpa retrato imediatamente.
+			if hovered_card < 0 and hovered_actor < 0:
+				portrait_sticky_until = 0
+				_refresh_portraits_for_focus()
 	for id in actor_nodes.keys():
 		var body: Node3D = actor_nodes[id]
 		if not is_instance_valid(body): continue
@@ -3334,12 +3735,12 @@ func _process(delta: float) -> void:
 			_tick_free_camera(delta)
 		elif battle_view_mode == "lateral":
 			var want_focus := Vector3.ZERO
+			# Sem FOV/zoom da mão: só desloca o foco no sprite (zoom fixo em 1.0).
 			var want_zoom := 1.0
 			if focus_id >= 0 and actor_nodes.has(focus_id):
 				var body: Node3D = actor_nodes[focus_id]
 				if is_instance_valid(body):
 					want_focus = body.position
-					want_zoom = 1.55
 					_maybe_center_mouse_on_sprite(focus_id, body)
 			presentation.focus_target = presentation.focus_target.lerp(want_focus, 1.0 - exp(-delta * 5.0))
 			presentation.zoom = lerpf(presentation.zoom, want_zoom, 1.0 - exp(-delta * 5.0))
@@ -3753,15 +4154,53 @@ func _add_pending_target_actions(viewport_size: Vector2) -> void:
 	var col := VBoxContainer.new()
 	col.name = "PendingTargetActions"
 	col.add_theme_constant_override("separation", 8)
-	col.position = Vector2(viewport_size.x * 0.5 - 100, viewport_size.y * 0.62)
 	col.z_index = 20
+	# Posiciona perto da barra de HP / prévia do alvo (não no rodapé genérico).
+	var anchor := Vector2(viewport_size.x * 0.5 - 110, viewport_size.y * 0.28)
+	if camera != null and actor_nodes.has(pending_target_id):
+		var body: Node3D = actor_nodes[pending_target_id]
+		if is_instance_valid(body):
+			var hp_root: Node3D = body.get_node_or_null("WorldHp")
+			var world_pt := (hp_root.global_position if hp_root != null else body.global_position + Vector3(0, 2.4, 0))
+			var screen: Vector2 = camera.unproject_position(world_pt)
+			anchor = Vector2(clampf(screen.x - 110.0, 12.0, viewport_size.x - 240.0), clampf(screen.y + 18.0, 64.0, viewport_size.y - 180.0))
+	col.position = anchor
 	var actor: Dictionary = battle.actor_by_id(pending_target_id)
-	col.add_child(_label("Alvo: %s" % actor.get("name", "?"), 18, Color("f0e6d0")))
-	var conf := _button("Confirmar alvo", Callable(), "Aplica a Manobra neste alvo")
+	var dmg := int(damage_preview_by_actor.get(pending_target_id, 0))
+	var title := "Alvo: %s" % actor.get("name", "?")
+	if dmg > 0:
+		title += "  (−%d HP)" % dmg
+	col.add_child(_label(title, 18, Color("f0e6d0")))
+	# Barra 2D de prévia (HP atual + faixa vermelha) — legível na vista lateral.
+	var hp := float(actor.get("hp", 0))
+	var max_hp := maxf(1.0, float(actor.get("max_hp", 1)))
+	var bar_w := 200.0
+	var bar_h := 16.0
+	var bar_wrap := Control.new()
+	bar_wrap.custom_minimum_size = Vector2(bar_w, bar_h + 4)
+	var bar_bg := ColorRect.new()
+	bar_bg.color = Color(0.08, 0.09, 0.12, 0.95)
+	bar_bg.size = Vector2(bar_w, bar_h)
+	bar_wrap.add_child(bar_bg)
+	var remain := clampf((hp - float(dmg)) / max_hp, 0.0, 1.0)
+	var lost := clampf(float(dmg) / max_hp, 0.0, hp / max_hp)
+	var fill_g := ColorRect.new()
+	fill_g.color = Color(0.35, 0.95, 0.55, 1.0)
+	fill_g.position = Vector2(0, 0)
+	fill_g.size = Vector2(bar_w * remain, bar_h)
+	bar_wrap.add_child(fill_g)
+	if lost > 0.001:
+		var fill_r := ColorRect.new()
+		fill_r.color = Color(1.0, 0.22, 0.28, 1.0)
+		fill_r.position = Vector2(bar_w * remain, 0)
+		fill_r.size = Vector2(bar_w * lost, bar_h)
+		bar_wrap.add_child(fill_r)
+	col.add_child(bar_wrap)
+	var conf := _button("Confirmar", Callable(), "Aplica a Manobra neste alvo")
 	conf.custom_minimum_size = Vector2(200, 42)
 	conf.pressed.connect(_confirm_pending_target)
 	col.add_child(conf)
-	var canc := _button("Cancelar alvo", Callable(), "Volta à escolha de alvo")
+	var canc := _button("Cancelar", Callable(), "Volta à escolha de alvo")
 	canc.custom_minimum_size = Vector2(200, 42)
 	canc.pressed.connect(_cancel_pending_target)
 	col.add_child(canc)
@@ -3810,6 +4249,29 @@ func _show_block_popup(message: String) -> void:
 			if is_instance_valid(blocker):
 				blocker.queue_free()
 	)
+
+
+func _card_require_status_reason(hand_index: int) -> String:
+	# Bloqueia seleção quando falta Escuridão (ou outro requires_self_status).
+	if battle == null or hand_index < 0 or hand_index >= battle.hand.size():
+		return ""
+	var card: Dictionary = battle.hand[hand_index]
+	var definition: Dictionary = _card_def(str(card.get("id", "")))
+	var source: Dictionary = battle.actor_by_id(int(card.get("owner", -1)))
+	if source.is_empty():
+		return ""
+	for a in definition.get("actions", []):
+		if typeof(a) != TYPE_ARRAY or a.is_empty():
+			continue
+		if str(a[0]) != "requires_self_status":
+			continue
+		var need_st := str(a[1] if a.size() > 1 else "?")
+		var need_n: int = int(round(battle.resolve_amount(a[2] if a.size() > 2 else 1, source)))
+		var have: int = battle._status_stacks(source, need_st)
+		if have < need_n:
+			var pretty := _status_label(need_st)
+			return "Requer: %s %d" % [pretty, need_n]
+	return ""
 
 func _card_unusable_reason(hand_index: int, target_id: int = -1) -> String:
 	if battle == null or hand_index < 0 or hand_index >= battle.hand.size():

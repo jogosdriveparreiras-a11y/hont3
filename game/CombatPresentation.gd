@@ -33,7 +33,7 @@ func configure(view: Camera3D, labels: Control, audio, fx = null) -> void:
 	sound = audio
 	fx_player = fx
 	if fx_player != null:
-		fx_player.configure(self, overlay)
+		fx_player.configure(self, overlay, sound)
 
 func bind_actor(id: int, sprite: Sprite3D, world_position: Vector3) -> void:
 	sprites[id] = sprite

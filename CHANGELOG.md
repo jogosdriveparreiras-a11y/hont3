@@ -1,3 +1,20 @@
+## 2026-09-28 — Retrato, status, Arena, invocações, RM anims
+
+- Retrato some ao sair do hover (mantém se carta selecionada/inspeção/prévia).
+- Ícones de status sob a barra de HP; lista expandida no hover; também nos retratos na prévia.
+- **Arena** no menu: escolhe 3 aliados + 3 inimigos.
+- Invocações: personagem normal, deck mesclado; ao morrer/expirar remove cartas do dono.
+- Animações RM (`assets/fx/rm_animations/`) com playback frame+SE.
+
+## 2026-09-28 — Combate UX: breath, alvo, Escuridão, FX
+
+- **Breath** idle restaurado (pés fixos, stretch superior); independente de “Reduzir movimento da câmera”.
+- **Vista lateral**: hover no sprite só desloca o foco — **sem FOV/zoom** da mão.
+- **Prévia de alvo**: `BattleState.preview` estima `actions` (hit/status); barra `HpForecast` + **Confirmar** juntos perto do HP.
+- **Escuridão**: cartas com `requires_self_status` ficam bloqueadas; clique → popup `Requer: Escuridão X`.
+- **Face/Inspeção**: BBCode (`[b]Escuridão[/b]`, Sangrando/Ferido); valores amplificados por E em verde; glossário Expandido.
+- **FX**: `FxPlayer` toca sequências frame-a-frame (particles2d) + SFX; Animations.json MZ não está no repo (MVP com sheets TRP).
+
 ## 2026-09-28 — BGM título/combate + menu principal
 
 - **Tocar** no seletor de BGM: usa a faixa do seletor (`bgm_pick`), não o `__stop__` salvo — Parar + Tocar retoma a música.
