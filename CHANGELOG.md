@@ -1,3 +1,11 @@
+## 2026-09-28 — BGM título/combate + menu principal
+
+- **Tocar** no seletor de BGM: usa a faixa do seletor (`bgm_pick`), não o `__stop__` salvo — Parar + Tocar retoma a música.
+- Menu/título toca **`title`** por padrão; combate toca **`Battle1`** (troca contextual entre os defaults).
+- Inclui `assets/audio/bgm/title.mp3` no repositório.
+- Menu de combate: **Voltar ao menu principal** (abandona a luta e volta ao título).
+- SoundBus deixa de auto-iniciar BGM; GameRoot controla por contexto. MP3 com loop via `AudioStreamMP3`.
+
 ## 2026-09-28 — Pacote HUD/FX/editor/balanceamento
 
 ## 2026-09-28 — UX combate (pt-BR)

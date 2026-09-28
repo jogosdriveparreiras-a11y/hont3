@@ -67,7 +67,11 @@ var animation_speed := 1.0
 var battle_view_mode := "normal"
 ## Conteúdo sensível: ON=cast/ original; OFF=cast_sensitive/ (generics se não houver ent_*).
 var sensitive_content := false
-var bgm_track := "Battle1"
+const MENU_BGM_DEFAULT := "title"
+const BATTLE_BGM_DEFAULT := "Battle1"
+var bgm_track := MENU_BGM_DEFAULT
+## Última faixa real do seletor (Tocar/ciclos); sobrevive a Parar BGM.
+var bgm_pick := MENU_BGM_DEFAULT
 var fx_player = null
 var _sprite_mouse_lock_id := -1
 var _sprite_mouse_lock_until := 0
@@ -168,8 +172,8 @@ func _make_world() -> void:
 	fx_player = FxPlayer.new()
 	add_child(fx_player)
 	presentation.configure(camera, fx_overlay, sound, fx_player)
-	if sound != null and bgm_track != "" and bgm_track != "__stop__":
-		sound.play_bgm(bgm_track)
+	_sync_bgm_pick_from_track()
+	_ensure_bgm_for("menu")
 	portrait_left = _make_portrait(false)
 	portrait_right = _make_portrait(true)
 	fx_overlay.add_child(portrait_left)
@@ -264,6 +268,10 @@ func _center_panel(title: String) -> VBoxContainer:
 	return contents
 
 func _show_menu() -> void:
+	battle_menu_open = false
+	if battle != null:
+		battle = null
+	_ensure_bgm_for("menu")
 	var menu := _center_panel("HEROES OF THE NIGHTMARE 3")
 	menu.add_child(_label("Três heróis. Duas linhas. Um deck compartilhado.", 20))
 	menu.add_child(_label("Missões concluídas: %d/%d · Essência: %d" % [best_stars.size(), Content.MISSIONS.size(), essence], 19))
@@ -355,31 +363,68 @@ func _toggle_sensitive_content() -> void:
 	else:
 		_show_settings()
 
+func _is_real_bgm(track_id: String) -> bool:
+	return track_id != "" and track_id != "__stop__" and track_id != "__synth__"
+
+func _sync_bgm_pick_from_track() -> void:
+	if _is_real_bgm(bgm_track):
+		bgm_pick = bgm_track
+	elif not _is_real_bgm(bgm_pick):
+		bgm_pick = MENU_BGM_DEFAULT
+
+func _bgm_resolve_pick() -> String:
+	if _is_real_bgm(bgm_pick):
+		return bgm_pick
+	if _is_real_bgm(bgm_track):
+		return bgm_track
+	if sound != null and _is_real_bgm(str(sound.current_bgm)):
+		return str(sound.current_bgm)
+	return MENU_BGM_DEFAULT
+
+func _bgm_default_for(context: String) -> String:
+	return BATTLE_BGM_DEFAULT if context == "battle" else MENU_BGM_DEFAULT
+
+func _ensure_bgm_for(context: String) -> void:
+	if bgm_track == "__stop__":
+		if sound != null:
+			sound.stop_bgm()
+		return
+	var track := bgm_track
+	if not _is_real_bgm(track):
+		track = _bgm_default_for(context)
+	elif context == "menu" and track == BATTLE_BGM_DEFAULT:
+		# Primeira abertura / padrão de combate: tema de menu no título.
+		track = MENU_BGM_DEFAULT
+	elif context == "battle" and track == MENU_BGM_DEFAULT:
+		track = BATTLE_BGM_DEFAULT
+	bgm_pick = track
+	if sound != null:
+		sound.play_bgm(track)
+
 func _bgm_picker_row() -> HBoxContainer:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 8)
-	var tracks: PackedStringArray = PackedStringArray()
-	if sound != null:
-		tracks = sound.list_bgm()
-	var current := bgm_track
-	if sound != null and str(sound.current_bgm) != "":
-		current = str(sound.current_bgm)
-	var name_lbl := _label(current if current != "" else "(nenhuma)", 16, Color("f4f1ea"))
+	var pick := _bgm_resolve_pick()
+	var stopped := bgm_track == "__stop__" or (sound != null and str(sound.current_bgm) == "__stop__")
+	var label_text := ("%s (parada)" % pick) if stopped else pick
+	var name_lbl := _label(label_text if label_text != "" else "(nenhuma)", 16, Color("f4f1ea"))
 	name_lbl.custom_minimum_size = Vector2(220, 28)
 	name_lbl.clip_text = true
 	row.add_child(name_lbl)
 	row.add_child(_button("◀", func(): _cycle_bgm(-1)))
 	row.add_child(_button("▶", func(): _cycle_bgm(1)))
-	row.add_child(_button("Tocar", func(): _apply_bgm_track(bgm_track)))
+	# Tocar usa a faixa do seletor (bgm_pick), nunca o "__stop__" salvo.
+	row.add_child(_button("Tocar", func(): _apply_bgm_track(_bgm_resolve_pick())))
 	return row
 
 func _cycle_bgm(step: int) -> void:
 	var tracks: PackedStringArray = sound.list_bgm() if sound != null else PackedStringArray()
 	if tracks.is_empty():
 		return
+	var current_pick := _bgm_resolve_pick()
 	var idx := 0
 	for i in range(tracks.size()):
-		if str(tracks[i]) == bgm_track:
+		if str(tracks[i]) == current_pick:
 			idx = i
 			break
 	idx = (idx + step) % tracks.size()
@@ -390,17 +435,31 @@ func _cycle_bgm(step: int) -> void:
 		_show_settings()
 
 func _apply_bgm_track(track_id: String) -> void:
+	if track_id == "__stop__" or track_id == "":
+		_stop_bgm_setting()
+		return
 	bgm_track = track_id
+	bgm_pick = track_id
 	if sound != null:
 		sound.play_bgm(bgm_track)
 	_save_config()
 
 func _stop_bgm_setting() -> void:
+	# Preferir a faixa que está tocando (ex.: Battle1 no combate com preferência title).
+	if sound != null and _is_real_bgm(str(sound.current_bgm)):
+		bgm_pick = str(sound.current_bgm)
+	elif _is_real_bgm(bgm_track):
+		bgm_pick = bgm_track
+	elif not _is_real_bgm(bgm_pick):
+		bgm_pick = MENU_BGM_DEFAULT
 	bgm_track = "__stop__"
 	if sound != null:
 		sound.stop_bgm()
 	_save_config()
-	_show_settings()
+	if battle != null and battle_menu_open:
+		_render_battle()
+	elif battle == null:
+		_show_settings()
 
 func _apply_battle_view() -> void:
 	if presentation == null:
@@ -854,6 +913,7 @@ func _start_mission() -> void:
 	else:
 		battle.begin(mission_id, team, equipped, 0, improvements, loadout)
 	_apply_accessibility()
+	_ensure_bgm_for("battle")
 	_render_battle()
 
 func _begin_battle_session() -> void:
@@ -3552,6 +3612,14 @@ func _close_battle_menu() -> void:
 	if sound != null: sound.cue("cancel", "UI")
 	_render_battle()
 
+func _return_to_main_menu() -> void:
+	battle_menu_open = false
+	free_camera = false
+	if sound != null: sound.cue("cancel", "UI")
+	battle = null
+	_clear_combat_visuals()
+	_show_menu()
+
 func _set_weather(mode: String) -> void:
 	weather_mode = mode
 	_apply_weather_fx()
@@ -3663,11 +3731,7 @@ func _add_battle_menu_overlay(viewport_size: Vector2) -> void:
 	col.add_child(_label("MENU DE COMBATE", 26, Color("f0c27a")))
 	col.add_child(_label("BGM", 16, Color("d5deea")))
 	col.add_child(_bgm_picker_row())
-	col.add_child(_button("Parar BGM", func() -> void:
-		bgm_track = "__stop__"
-		if sound != null: sound.stop_bgm()
-		_save_config()
-	))
+	col.add_child(_button("Parar BGM", _stop_bgm_setting))
 	col.add_child(_label("Clima / efeitos", 16, Color("d5deea")))
 	var climate_ids := ["none", "rain", "fog", "heat", "night"]
 	var climate_names := ["Limpo", "Chuva", "Névoa", "Calor", "Noite"]
@@ -3682,6 +3746,7 @@ func _add_battle_menu_overlay(viewport_size: Vector2) -> void:
 		battle_menu_open = true
 		_render_battle()
 	))
+	col.add_child(_button("Voltar ao menu principal", _return_to_main_menu, "Abandona o combate e volta ao título"))
 	col.add_child(_button("Fechar (ESC)", _close_battle_menu))
 
 func _add_pending_target_actions(viewport_size: Vector2) -> void:
@@ -3843,6 +3908,7 @@ func _load_config() -> void:
 			battle_view_mode = "normal"
 		sensitive_content = bool(config.get_value("settings", "sensitive_content", sensitive_content))
 		bgm_track = str(config.get_value("settings", "bgm_track", bgm_track))
+		_sync_bgm_pick_from_track()
 		weather_mode = str(config.get_value("settings", "weather_mode", weather_mode))
 		if weather_mode not in ["none", "rain", "fog", "heat", "night"]:
 			weather_mode = "none"

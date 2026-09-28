@@ -28,15 +28,8 @@ func _ready() -> void:
 	for id in ["hover", "select", "confirm", "cancel", "draw", "redraw", "cast", "hit", "block", "heal", "status", "death", "victory", "resist", "move"]:
 		cues[id] = _synthesize(id)
 	_scan_bgm()
-	# Prefer a battle track if present; else synth fallback.
-	if bgm_tracks.has("Battle1"):
-		play_bgm("Battle1")
-	elif not bgm_tracks.is_empty():
-		play_bgm(bgm_tracks[0])
-	else:
-		music.stream = _make_music()
-		music.play()
-		current_bgm = "__synth__"
+	# GameRoot escolhe a faixa por contexto (menu/batalha); não iniciar aqui.
+	current_bgm = ""
 	_apply_levels()
 
 func _scan_bgm() -> void:
@@ -82,15 +75,23 @@ func play_bgm(track_id: String) -> bool:
 	if path.ends_with(".ogg"):
 		stream = AudioStreamOggVorbis.load_from_file(path)
 	elif path.ends_with(".mp3"):
-		# Fallback: try ResourceLoader if .import exists
 		if ResourceLoader.exists(path):
 			stream = load(path) as AudioStream
+		if stream == null:
+			var bytes := FileAccess.get_file_as_bytes(path)
+			if bytes.size() > 0:
+				var mp3 := AudioStreamMP3.new()
+				mp3.data = bytes
+				mp3.loop = true
+				stream = mp3
 	if stream == null and ResourceLoader.exists(path):
 		stream = load(path) as AudioStream
 	if stream == null:
 		return false
 	if stream is AudioStreamOggVorbis:
 		(stream as AudioStreamOggVorbis).loop = true
+	elif stream is AudioStreamMP3:
+		(stream as AudioStreamMP3).loop = true
 	music.stop()
 	music.stream = stream
 	music.volume_db = _volume_db("MUSIC")
