@@ -1,3 +1,8 @@
+## 2026-09-28 — anim cartas + zoom mão isolado
+
+- **Zoom lateral**: câmera fixa; o mundo (`stage`/`units`) escala e desloca no hover de sprite. Mão 3D (filha da câmera) não muda de tamanho/posição na tela.
+- **Anims da mão**: compra/recompra entram da **direita** (deck→arco); jogar/recompra saem para a **esquerda** (fade+scale), sem interferir no fluxo seleção→confirmação.
+
 ## 2026-09-28 — IA inimiga: alvos + mão de mortos
 
 - Relatórios `hotn3_session_20260928_165025` / `_163241`: ataques `ENEMY` (Airsoft, Cobertura, Isolar, Lâmina…) miraram aliados do jogador corretamente após cace737; cartas `SELF`/`ALLY` (Passo despercebido, Moto de fuga, Guarda, Plano de assalto) não miram o jogador por design.

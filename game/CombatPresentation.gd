@@ -127,14 +127,19 @@ func _animate_sprite(id: int, kind: String) -> void:
 		sprite.scale = base * 1.12
 		tween.parallel().tween_property(sprite, "scale", base, 0.22 / animation_speed)
 
+func _actor_world_pos(id: int) -> Vector3:
+	if sprites.has(id) and is_instance_valid(sprites[id]):
+		return sprites[id].global_position
+	return positions.get(id, Vector3.ZERO)
+
 func _float_text(id: int, value: String, tint: Color) -> void:
-	if not positions.has(id) or overlay == null or camera == null: return
+	if (not positions.has(id) and not sprites.has(id)) or overlay == null or camera == null: return
 	var label := Label.new()
 	label.text = value
 	label.add_theme_font_size_override("font_size", 29)
 	label.add_theme_color_override("font_color", tint)
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	label.position = camera.unproject_position(positions[id] + Vector3(0, 2.35, 0))
+	label.position = camera.unproject_position(_actor_world_pos(id) + Vector3(0, 2.35, 0))
 	overlay.add_child(label)
 	var tween := label.create_tween()
 	tween.set_parallel(true)
@@ -146,7 +151,7 @@ func _float_text(id: int, value: String, tint: Color) -> void:
 	)
 
 func _burst(id: int, tint: Color) -> void:
-	if not positions.has(id) or not flash_enabled: return
+	if (not positions.has(id) and not sprites.has(id)) or not flash_enabled: return
 	var particles := CPUParticles3D.new()
 	particles.amount = 12
 	particles.lifetime = 0.36 / animation_speed
@@ -162,7 +167,7 @@ func _burst(id: int, tint: Color) -> void:
 	mesh.radius = 0.045
 	mesh.height = 0.09
 	particles.mesh = mesh
-	particles.position = positions[id] + Vector3(0, 1.2, 0)
+	particles.position = _actor_world_pos(id) + Vector3(0, 1.2, 0)
 	add_child(particles)
 	particles.emitting = true
 	var cleanup := particles.create_tween()
@@ -173,9 +178,9 @@ func _burst(id: int, tint: Color) -> void:
 	)
 
 func _focus(id: int) -> void:
-	if camera == null or not positions.has(id) or motion_scale <= 0.0: return
+	if camera == null or (not positions.has(id) and not sprites.has(id)) or motion_scale <= 0.0: return
 	if camera_tween != null and camera_tween.is_running(): camera_tween.kill()
-	var point: Vector3 = positions[id]
+	var point: Vector3 = _actor_world_pos(id)
 	punch = Vector3(point.x * 0.12, -0.15, 0) * motion_scale
 	camera_tween = create_tween()
 	camera_tween.tween_property(self, "punch", Vector3.ZERO, 0.34 / animation_speed)
@@ -198,17 +203,13 @@ func _process(delta: float) -> void:
 		if shake_enabled and shake_time > 0.0:
 			offset = Vector3(randf_range(-shake_strength, shake_strength), randf_range(-shake_strength, shake_strength), 0)
 		if view_mode == "lateral":
-			# Vista lateral: câmera em +Z (NÃO -X). Fileiras no eixo X ficam
-			# esquerda→direita: retaguarda aliada > frente aliada > frente inimiga > retaguarda inimiga.
-			# Divisórias amarelas em Z (ArenaBuilder) separam as quatro colunas.
-			var z := clampf(zoom, 1.0, 2.4)
-			var dist := 15.2 / z
-			var height := 8.4 / sqrt(z)
-			var look := Vector3(focus_target.x, 1.05, focus_target.z * 0.35)
-			var base := Vector3(focus_target.x * 0.22, height, dist)
+			# Vista lateral: câmera FIXA em +Z (FOV/posição estáveis).
+			# Zoom/foco movem o mundo (stage+units) em GameRoot — a mão 3D filha
+			# da câmera permanece do mesmo tamanho/posição na tela.
+			var base := Vector3(0.0, 8.4, 15.2)
 			camera.position = base + punch + offset
-			_safe_look_at(look)
-			camera.fov = lerpf(camera.fov, 42.0 / (0.55 + 0.45 * z), 1.0 - exp(-delta * 6.0))
+			_safe_look_at(Vector3(0.0, 1.05, 0.0))
+			camera.fov = lerpf(camera.fov, 42.0, 1.0 - exp(-delta * 6.0))
 		else:
 			var radius := 16.8
 			var base := Vector3(sin(orbit) * radius, 11.15, cos(orbit) * radius)
@@ -233,17 +234,17 @@ func _process(delta: float) -> void:
 			atlas.region = Rect2(col * width, row * height, width, height)
 
 func _play_preset(preset: String, actor_id: int) -> void:
-	if fx_player == null or not positions.has(actor_id):
+	if fx_player == null or (not positions.has(actor_id) and not sprites.has(actor_id)):
 		return
 	fx_player.animation_speed = animation_speed
 	fx_player.flash_enabled = flash_enabled
-	fx_player.play_one(preset, positions[actor_id])
+	fx_player.play_one(preset, _actor_world_pos(actor_id))
 
 func play_card_fx(definition: Dictionary, source_id: int, target_id: int) -> float:
 	if fx_player == null:
 		return 0.0
 	fx_player.animation_speed = animation_speed
 	fx_player.flash_enabled = flash_enabled
-	var self_pos: Vector3 = positions.get(source_id, Vector3.ZERO)
-	var target_pos: Vector3 = positions.get(target_id, self_pos)
+	var self_pos: Vector3 = _actor_world_pos(source_id)
+	var target_pos: Vector3 = _actor_world_pos(target_id)
 	return float(fx_player.play_card_anims(definition, self_pos, target_pos))

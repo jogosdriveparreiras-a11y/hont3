@@ -230,6 +230,7 @@ func _clear_combat_visuals() -> void:
 	if presentation != null: presentation.clear_actors()
 	_clear_hand_visuals()
 	visible_uids.clear()
+	_reset_battle_world_xform()
 
 func _clear_hand_visuals() -> void:
 	for node in cards_3d.get_children():
@@ -620,6 +621,10 @@ func _apply_battle_view() -> void:
 		presentation.orbit = 0.0
 		if camera != null:
 			camera.fov = 51.0
+		_reset_battle_world_xform()
+	else:
+		if camera != null:
+			camera.fov = 42.0
 
 func _apply_accessibility() -> void:
 	if presentation == null: return
@@ -2148,8 +2153,11 @@ func _make_3d_card(index: int, card: Dictionary, definition: Dictionary) -> void
 	mesh.set_meta("base_pos", slot)
 	mesh.set_meta("base_rot", spin)
 	if entering:
-		mesh.position = slot + Vector3(2.8, 0.45, 0.0)
-		mesh.rotation = spin + Vector3(0, 0, 0.95)
+		# Compra/recompra: entra da direita (deck) no arco da mão.
+		mesh.position = slot + Vector3(3.15, 0.22, 0.12)
+		mesh.rotation = spin + Vector3(0.12, -0.28, 0.72)
+		mesh.scale = Vector3(0.82, 0.82, 0.82)
+		mesh.set_meta("dealing", true)
 	cards_3d.add_child(mesh)
 	if int(owner.get("hp", 0)) <= 0:
 		var dead_mat: ShaderMaterial = mesh.material_override
@@ -2160,10 +2168,21 @@ func _make_3d_card(index: int, card: Dictionary, definition: Dictionary) -> void
 		if lock_mat != null:
 			lock_mat.set_shader_parameter("modulate_color", Color(0.62, 0.55, 0.72, 0.72))
 	if entering and not reduce_motion:
+		var dur := 0.28 / maxf(animation_speed, 0.25)
 		var arrive := create_tween()
+		arrive.set_ease(Tween.EASE_OUT)
+		arrive.set_trans(Tween.TRANS_CUBIC)
 		arrive.set_parallel(true)
-		arrive.tween_property(mesh, "position", slot, 0.34)
-		arrive.tween_property(mesh, "rotation", spin, 0.34)
+		arrive.tween_property(mesh, "position", slot, dur)
+		arrive.tween_property(mesh, "rotation", spin, dur)
+		arrive.tween_property(mesh, "scale", Vector3.ONE, dur)
+		arrive.chain().tween_callback(func() -> void:
+			if is_instance_valid(mesh) and mesh.has_meta("dealing"):
+				mesh.remove_meta("dealing")
+		)
+	elif entering:
+		if mesh.has_meta("dealing"):
+			mesh.remove_meta("dealing")
 	seen_hand[uid] = true
 	var area := Area3D.new()
 	area.set_meta("card_index", index)
@@ -2196,13 +2215,36 @@ func _animate_card_depart(index: int) -> void:
 	if not is_instance_valid(original): return
 	var ghost := MeshInstance3D.new()
 	ghost.mesh = original.mesh
-	ghost.material_override = original.material_override
-	ghost.transform = original.transform
-	camera.add_child(ghost)
+	if original.material_override != null:
+		ghost.material_override = original.material_override.duplicate()
+	else:
+		ghost.material_override = original.material_override
+	ghost.transform = original.global_transform
+	# Sai para a esquerda (fora da mão); parent câmera para acompanhar o HUD 3D.
+	if camera != null:
+		var inv := camera.global_transform.affine_inverse()
+		camera.add_child(ghost)
+		ghost.transform = inv * original.global_transform
+	else:
+		add_child(ghost)
+	var dur := 0.26 / maxf(animation_speed, 0.25)
 	var tween := create_tween()
+	tween.set_ease(Tween.EASE_IN)
+	tween.set_trans(Tween.TRANS_CUBIC)
 	tween.set_parallel(true)
-	tween.tween_property(ghost, "position", original.position + Vector3(-3.4, 0.35, -0.15), 0.32 / animation_speed)
-	tween.tween_property(ghost, "rotation:z", original.rotation.z - 1.15, 0.32 / animation_speed)
+	tween.tween_property(ghost, "position", ghost.position + Vector3(-3.55, 0.28, -0.18), dur)
+	tween.tween_property(ghost, "rotation", ghost.rotation + Vector3(0.18, 0.35, -1.05), dur)
+	tween.tween_property(ghost, "scale", ghost.scale * 0.72, dur)
+	var gmat: ShaderMaterial = ghost.material_override as ShaderMaterial
+	if gmat != null:
+		var from_c := Color.WHITE
+		var raw = gmat.get_shader_parameter("modulate_color")
+		if raw is Color:
+			from_c = raw
+		tween.tween_method(func(a: float) -> void:
+			if is_instance_valid(ghost) and ghost.material_override != null:
+				(ghost.material_override as ShaderMaterial).set_shader_parameter("modulate_color", Color(from_c.r, from_c.g, from_c.b, a))
+		, from_c.a, 0.0, dur)
 	tween.chain().tween_callback(ghost.queue_free)
 
 func _register_inputs() -> void:
@@ -2250,7 +2292,7 @@ func _lateral_focus_actor(actor_id: int, zoom_amount: float = 1.65) -> void:
 	if presentation == null or battle_view_mode != "lateral":
 		return
 	presentation.orbit = 0.0
-	# Zoom no mundo de batalha (sprites). A mão 3D é filha da câmera + compensação de FOV.
+	# Zoom no mundo de batalha (stage+units). Câmera/mão 3D ficam estáticas.
 	if actor_id >= 0 and actor_nodes.has(actor_id):
 		var body: Node3D = actor_nodes[actor_id]
 		if is_instance_valid(body):
@@ -3854,8 +3896,8 @@ func _process(delta: float) -> void:
 			_tick_free_camera(delta)
 		elif battle_view_mode == "lateral":
 			var want_focus := Vector3.ZERO
-			# Zoom só no hover de SPRITE (unidade). Hover de carta foca o dono sem zoom —
-			# assim a mão 3D (filha da câmera + _compensate_hand_for_camera_fov) não cresce.
+			# Zoom só no hover de SPRITE: escala o mundo (stage+units). Hover de carta
+			# foca o dono sem zoom — câmera/mão 3D permanecem estáticas na tela.
 			var want_zoom := 1.0
 			if focus_id >= 0 and actor_nodes.has(focus_id):
 				var body: Node3D = actor_nodes[focus_id]
@@ -3876,6 +3918,7 @@ func _process(delta: float) -> void:
 					focus = Vector3(body.position.x * 0.34, 0.18, 0.0)
 					_maybe_center_mouse_on_sprite(focus_id, body)
 			presentation.ally_focus = presentation.ally_focus.lerp(focus, 1.0 - exp(-delta * 5.0))
+	_apply_battle_world_zoom()
 	if portrait_sticky_until > 0 and Time.get_ticks_msec() >= portrait_sticky_until:
 		portrait_sticky_until = 0
 		_hide_idle_portraits()
@@ -3895,15 +3938,36 @@ func _maybe_center_mouse_on_sprite(actor_id: int, body: Node3D) -> void:
 	hover_retarget_freeze_until = now + 500
 
 func _compensate_hand_for_camera_fov() -> void:
-	# Mão 3D = zona HUD filha da câmera: distância local fixa; só o FOV muda o tamanho
-	# aparente. Escala inversa ao FOV mantém o arco estável quando o mundo dá zoom.
-	if camera == null or cards_3d == null or not is_instance_valid(cards_3d):
+	# Compat: mão é filha da câmera com FOV fixo na lateral — escala HUD sempre 1.
+	if cards_3d == null or not is_instance_valid(cards_3d):
 		return
-	var base_fov := 42.0 if battle_view_mode == "lateral" else 51.0
-	var t0 := tan(deg_to_rad(base_fov * 0.5))
-	var t1 := tan(deg_to_rad(maxf(camera.fov, 1.0) * 0.5))
-	var s := clampf(t1 / maxf(t0, 0.001), 0.55, 1.35)
-	cards_3d.scale = Vector3(s, s, s)
+	cards_3d.scale = Vector3.ONE
+
+func _reset_battle_world_xform() -> void:
+	if stage != null and is_instance_valid(stage):
+		stage.position = Vector3.ZERO
+		stage.scale = Vector3.ONE
+	if units != null and is_instance_valid(units):
+		units.position = Vector3.ZERO
+		units.scale = Vector3.ONE
+
+func _apply_battle_world_zoom() -> void:
+	# Zoom lateral: mundo (arena+unidades) escala/desloca; câmera e mão 3D ficam estáticas.
+	if battle_view_mode != "lateral" or presentation == null or free_camera or battle == null:
+		_reset_battle_world_xform()
+		return
+	var z := clampf(float(presentation.zoom), 1.0, 2.4)
+	var focus: Vector3 = presentation.focus_target
+	# Escala em torno do foco + leve pan para centralizar o ator.
+	var pan_k := 0.20 + (z - 1.0) * 0.28
+	var pos := focus * (1.0 - z) - Vector3(focus.x, 0.0, focus.z) * pan_k
+	var scl := Vector3(z, z, z)
+	if stage != null and is_instance_valid(stage):
+		stage.scale = scl
+		stage.position = pos
+	if units != null and is_instance_valid(units):
+		units.scale = scl
+		units.position = pos
 
 func _apply_target_preview(actor_id: int) -> void:
 	if battle == null or selected_card < 0 or selected_card >= battle.hand.size() or actor_id < 0:
@@ -3977,6 +4041,8 @@ func _update_hand_card_visuals() -> void:
 	for mesh_index in range(card_meshes.size()):
 		var card_mesh: MeshInstance3D = card_meshes[mesh_index]
 		if not is_instance_valid(card_mesh): continue
+		if card_mesh.has_meta("dealing"):
+			continue
 		var selection_lock := selected_card >= 0 and not card_confirmed and not inspect_open
 		var raised := false
 		if selection_lock:
