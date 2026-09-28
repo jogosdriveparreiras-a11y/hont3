@@ -4709,7 +4709,8 @@
         "cast"
       ],
       "anim_target": [
-        "hit"
+        "blow",
+        "push"
       ],
       "anim_timing": "parallel"
     },
@@ -4769,6 +4770,7 @@
         "cast"
       ],
       "anim_target": [
+        "bind",
         "hit"
       ],
       "anim_timing": "parallel"
@@ -4826,10 +4828,11 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "guard"
       ],
       "anim_target": [
-        "status"
+        "buff",
+        "shield"
       ],
       "anim_timing": "parallel"
     },
@@ -4861,7 +4864,8 @@
         "cast"
       ],
       "anim_target": [
-        "hit"
+        "blow",
+        "slow"
       ],
       "anim_timing": "parallel"
     },
@@ -4889,7 +4893,8 @@
         "guard"
       ],
       "anim_target": [
-        "shield"
+        "shield",
+        "buff"
       ],
       "anim_timing": "parallel"
     },
@@ -4920,7 +4925,8 @@
         "cast"
       ],
       "anim_target": [
-        "hit"
+        "blow",
+        "push"
       ],
       "anim_timing": "parallel"
     },
@@ -4949,10 +4955,11 @@
       "gain": 2,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "guard"
       ],
       "anim_target": [
-        "heal"
+        "heal",
+        "shield"
       ],
       "anim_timing": "parallel"
     },
@@ -4984,10 +4991,12 @@
       "cost": 5,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "cast",
+        "darkness"
       ],
       "anim_target": [
-        "hit"
+        "blow",
+        "bind"
       ],
       "anim_timing": "parallel"
     },
@@ -5307,9 +5316,11 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
+        "darkness",
         "cast"
       ],
       "anim_target": [
+        "pull",
         "hit"
       ],
       "anim_timing": "parallel"
@@ -5338,7 +5349,8 @@
         "cast"
       ],
       "anim_target": [
-        "status"
+        "confusion",
+        "debuff"
       ],
       "anim_timing": "parallel"
     },
@@ -5366,7 +5378,7 @@
         "darkness"
       ],
       "anim_target": [
-        "status"
+        "buff"
       ],
       "anim_timing": "parallel"
     },
@@ -5398,7 +5410,8 @@
         "cast"
       ],
       "anim_target": [
-        "hit"
+        "summon",
+        "light"
       ],
       "anim_timing": "parallel"
     },
@@ -5427,9 +5440,11 @@
       "cost": 2,
       "tier": "inicial",
       "anim_self": [
+        "darkness",
         "cast"
       ],
       "anim_target": [
+        "bind",
         "hit"
       ],
       "anim_timing": "parallel"
@@ -5455,10 +5470,12 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
+        "darkness",
         "cast"
       ],
       "anim_target": [
-        "status"
+        "banish",
+        "debuff"
       ],
       "anim_timing": "parallel"
     },
@@ -5490,7 +5507,8 @@
         "cast"
       ],
       "anim_target": [
-        "hit"
+        "hit",
+        "debuff"
       ],
       "anim_timing": "parallel"
     },
@@ -5519,10 +5537,12 @@
       "cost": 3,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "cast",
+        "darkness"
       ],
       "anim_target": [
-        "hit"
+        "blow",
+        "debuff"
       ],
       "anim_timing": "parallel"
     },
@@ -5547,9 +5567,11 @@
       "gain": 2,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "cast",
+        "darkness"
       ],
       "anim_target": [
+        "confusion",
         "status"
       ],
       "anim_timing": "parallel"
@@ -5582,10 +5604,12 @@
       "cost": 5,
       "tier": "evoluida",
       "anim_self": [
+        "darkness",
         "cast"
       ],
       "anim_target": [
-        "hit"
+        "banish",
+        "blow"
       ],
       "anim_timing": "parallel"
     },
@@ -10550,8 +10574,7 @@
         "cast"
       ],
       "anim_target": [
-        "slash",
-        "HitSP1"
+        "slash"
       ],
       "anim_timing": "parallel"
     },
@@ -10591,7 +10614,8 @@
       "text": "Requer Escuridão 1+. Impacto 2×E. Bleed E. Ferido E.",
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "cast",
+        "darkness"
       ],
       "anim_target": [
         "claw",
@@ -10653,11 +10677,12 @@
       "text": "Lento 1 em toda a equipe inimiga.",
       "tier": "inicial",
       "anim_self": [
+        "darkness",
         "cast"
       ],
       "anim_target": [
-        "status",
-        "stun"
+        "slow",
+        "debuff"
       ],
       "anim_timing": "wait_last"
     },
@@ -10745,8 +10770,7 @@
         "darkness"
       ],
       "anim_target": [
-        "lightning",
-        "Thunder1"
+        "lightning"
       ],
       "anim_timing": "wait_last"
     },
@@ -10777,7 +10801,7 @@
         "cast"
       ],
       "anim_target": [
-        "light"
+        "buff"
       ],
       "anim_timing": "parallel"
     },
@@ -10806,7 +10830,7 @@
         "cast"
       ],
       "anim_target": [
-        "status"
+        "buff"
       ],
       "anim_timing": "parallel"
     },
@@ -10830,7 +10854,7 @@
         "darkness"
       ],
       "anim_target": [
-        "status"
+        "debuff"
       ],
       "anim_timing": "parallel"
     },
@@ -10875,7 +10899,7 @@
       ],
       "anim_target": [
         "slash",
-        "CrossHit"
+        "blow"
       ],
       "anim_timing": "parallel"
     },
@@ -10917,7 +10941,8 @@
       "melhorada_de": "ent_alyssa_wine_garras_e_presas",
       "chrome_3d": true,
       "anim_self": [
-        "cast"
+        "cast",
+        "darkness"
       ],
       "anim_target": [
         "claw",
@@ -10956,7 +10981,7 @@
       ],
       "anim_target": [
         "shield",
-        "light"
+        "buff"
       ],
       "anim_timing": "parallel"
     },
@@ -10984,11 +11009,12 @@
       "melhorada_de": "ent_alyssa_wine_a_filha_dele",
       "chrome_3d": true,
       "anim_self": [
+        "darkness",
         "cast"
       ],
       "anim_target": [
-        "status",
-        "stun"
+        "slow",
+        "debuff"
       ],
       "anim_timing": "wait_last"
     },
@@ -11082,7 +11108,7 @@
       ],
       "anim_target": [
         "lightning",
-        "Thunder3"
+        "thunder"
       ],
       "anim_timing": "wait_last"
     },
@@ -11115,6 +11141,7 @@
         "cast"
       ],
       "anim_target": [
+        "buff",
         "light"
       ],
       "anim_timing": "parallel"
@@ -11146,7 +11173,7 @@
         "cast"
       ],
       "anim_target": [
-        "status",
+        "buff",
         "light"
       ],
       "anim_timing": "parallel"

@@ -14,7 +14,9 @@ Padrão: **Normal** (vista atual top-down/overhead). Lateral é opt-in.
 - Ordem esquerda → direita: retaguarda aliada → frente aliada → frente inimiga → retaguarda inimiga.
 - Câmera na vista lateral fica no eixo **+Z** (olhando o campo), **não** em −X — as quatro fileiras no eixo X aparecem como colunas; três divisórias amarelas (ArenaBuilder) separam as colunas.
 - Sem rotação de órbita 180° na fase inimiga; em vez disso, a câmera **foca/dá zoom** no inimigo que está jogando a carta.
-- Hover (aliado ou inimigo): centra a câmera no sprite **sem** alterar FOV/zoom (evita zoom da mão 3D).
+- **Hover de sprite (unidade):** centra a câmera e aplica zoom (~1.55) no mundo de batalha.
+- **Hover de carta:** foca o dono **sem** zoom (a mão não cresce).
+- A mão 3D (`Cartas3D`) é **filha da câmera** (zona HUD 3D à frente do mundo). `_compensate_hand_for_camera_fov` escala a mão na razão inversa do FOV para o arco permanecer estável quando o mundo dá zoom.
 - A vista Normal permanece intacta e continua o comportamento antigo (órbita na fase inimiga, leve foco em aliados).
 
 Arquivos: `game/CombatPresentation.gd`, `game/GameRoot.gd`.

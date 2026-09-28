@@ -17,24 +17,36 @@ var sound = null
 var animation_speed := 1.0
 var ready_ok := false
 
-## Logical FX id → animation name substring (pt or en).
+## Logical FX id → preferred animation name substrings (pt or en).
+## Order matters for tie-breaks; _resolve also prefers existing sheets + longer matches.
 const ALIAS := {
-	"hit": ["Acerto Físico", "Hit", "Physical"],
-	"slash": ["Corte Físico", "Slash"],
-	"claw": ["Garra", "Claw"],
-	"heal": ["Cura", "Recovery", "Heal"],
-	"cast": ["Habilidade", "Skill"],
-	"guard": ["Barreira", "Barrier", "Guard"],
-	"shield": ["Barreira", "Barrier"],
-	"status": ["Estado", "State"],
-	"stun": ["Paralis", "Stun"],
-	"lightning": ["Trovão", "Thunder"],
-	"thunder": ["Trovão", "Thunder"],
-	"fire": ["Fogo", "Fire"],
-	"ice": ["Gelo", "Ice"],
-	"darkness": ["Escuridão", "Darkness", "Dark"],
-	"light": ["Luz", "Light", "Holy"],
+	"hit": ["Acerto Físico", "Acerto Especial 1", "Hit", "Physical"],
+	"slash": ["Corte Físico", "Corte Especial 1", "Slash"],
+	"claw": ["Garra Físico", "Garra Especial", "Garra", "Claw"],
+	"heal": ["Cura Única 1", "Cura Única 2", "Cura", "Recovery", "Heal"],
+	"cast": ["Especial Geral 1", "Especial Geral 2", "Special1", "Habilidade", "Skill"],
+	"guard": ["Fortalecer 2", "Fortalecer 3", "Fortalecer", "Barreira", "Barrier", "Guard"],
+	"shield": ["Fortalecer 2", "Fortalecer 3", "Fortalecer", "Barreira", "Barrier"],
+	"status": ["Enfraquecer 1", "Enfraquecer 2", "Estado", "State"],
+	"stun": ["Paralisia", "Paralis", "Stun"],
+	"lightning": ["Relâmpago Único 1", "Relâmpago Único 2", "Relâmpago", "Trovão", "Thunder"],
+	"thunder": ["Relâmpago Único 2", "Relâmpago Único 1", "Relâmpago", "Trovão", "Thunder"],
+	"fire": ["Incendiar Único 1", "Incendiar Único 2", "Fogo", "Fire"],
+	"ice": ["Congelar Único 1", "Congelar Único 2", "Gelo", "Ice"],
+	"darkness": ["Escuridão Único 1", "Escuridão Único 2", "Escuridão", "Darkness", "Dark"],
+	"light": ["Cura Única 2", "Cura Única 1", "Recovery", "Luz", "Light", "Holy"],
 	"bleed": ["Veneno", "Poison", "Damage"],
+	"bind": ["Paralisia", "Enfraquecer 2", "Enfraquecer", "Vincular", "Curse", "Bind"],
+	"absorb": ["Cura Única 1", "Recovery", "Absorver", "Absorb"],
+	"blow": ["Varredura", "Impacto", "Blow"],
+	"slow": ["Enfraquecer 2", "Enfraquecer 1", "Enfraquecer"],
+	"buff": ["Fortalecer 3", "Fortalecer 2", "Fortalecer"],
+	"debuff": ["Enfraquecer 2", "Enfraquecer 1", "Enfraquecer"],
+	"summon": ["Especial Geral 2", "Especial Geral 1", "Special3", "Flash"],
+	"confusion": ["Confusão", "Chaos"],
+	"banish": ["Escuridão Único 2", "Escuridão Único 1", "Morte", "Darkness"],
+	"pull": ["Varredura", "Impacto", "Blow", "Hit", "Absorver", "Absorb"],
+	"push": ["Varredura", "Impacto", "Blow"],
 }
 
 func configure(world: Node3D, audio = null) -> void:
@@ -68,17 +80,57 @@ func play_logic(logic: String, world_pos: Vector3) -> float:
 		return 0.0
 	return _play_anim(anim, world_pos)
 
+func _sheet_exists(anim: Dictionary) -> bool:
+	var sheet_name := str(anim.get("animation1Name", ""))
+	if sheet_name == "":
+		return false
+	var tex_path := SHEETS + sheet_name + ".png"
+	return ResourceLoader.exists(tex_path) or FileAccess.file_exists(tex_path)
+
 func _resolve(logic: String) -> Dictionary:
 	var key := logic.strip_edges().to_lower()
 	var names: Array = ALIAS.get(key, [key])
+	var best: Dictionary = {}
+	var best_score := -1
 	for anim in animations:
 		if typeof(anim) != TYPE_DICTIONARY:
 			continue
 		var n := str(anim.get("name", ""))
-		for cand in names:
-			if str(cand).to_lower() in n.to_lower() or n.to_lower() in str(cand).to_lower():
-				return anim
-	# Fallback: id 1 Hit
+		if n == "":
+			continue
+		var n_l := n.to_lower()
+		var sheet_name := str(anim.get("animation1Name", ""))
+		var sheet_l := sheet_name.to_lower()
+		for ci in range(names.size()):
+			var cand := str(names[ci])
+			var c_l := cand.to_lower()
+			var matched := false
+			var score := 0
+			if n_l == c_l:
+				matched = true
+				score = 1000 - ci
+			elif c_l != "" and c_l in n_l:
+				matched = true
+				score = 500 + c_l.length() * 10 - ci
+			elif n_l != "" and n_l in c_l:
+				matched = true
+				score = 300 + n_l.length() * 5 - ci
+			elif sheet_l != "" and (c_l == sheet_l or c_l in sheet_l or sheet_l in c_l):
+				matched = true
+				score = 200 + mini(c_l.length(), sheet_l.length()) * 5 - ci
+			if not matched:
+				continue
+			if _sheet_exists(anim):
+				score += 5000
+			if score > best_score:
+				best_score = score
+				best = anim
+	if not best.is_empty():
+		return best
+	# Fallback: first anim with an existing sheet, else id 1 Hit
+	for anim in animations:
+		if typeof(anim) == TYPE_DICTIONARY and _sheet_exists(anim):
+			return anim
 	if animations.size() > 1 and typeof(animations[1]) == TYPE_DICTIONARY:
 		return animations[1]
 	return {}
@@ -89,7 +141,6 @@ func _play_anim(anim: Dictionary, world_pos: Vector3) -> float:
 		return 0.0
 	var tex_path := SHEETS + sheet_name + ".png"
 	if not ResourceLoader.exists(tex_path) and not FileAccess.file_exists(tex_path):
-		# try without path case
 		return 0.0
 	var sheet: Texture2D = load(tex_path) as Texture2D
 	if sheet == null:
@@ -163,13 +214,19 @@ func _fire_timings(timings: Array, frame_index: int) -> void:
 			continue
 		if int(t.get("frame", -1)) != frame_index:
 			continue
-		var se: Dictionary = t.get("se", {})
-		var se_name := str(se.get("name", ""))
-		if se_name == "" or sound == null:
+		# RM JSON often has "se": null — Dictionary.get default is NOT used when key exists.
+		var se_raw = t.get("se", null)
+		if typeof(se_raw) != TYPE_DICTIONARY:
+			continue
+		var se: Dictionary = se_raw
+		var se_name := str(se.get("name", "")).strip_edges()
+		if se_name == "" or se_name.to_lower() == "null" or sound == null:
 			continue
 		_play_se(se_name, float(se.get("volume", 90)) / 100.0)
 
 func _play_se(name: String, vol: float) -> void:
+	if name == "" or sound == null:
+		return
 	var path_ogg := SE_DIR + name + ".ogg"
 	var path_wav := SE_DIR + name + ".wav"
 	var path := path_ogg if FileAccess.file_exists(path_ogg) or ResourceLoader.exists(path_ogg) else path_wav
@@ -184,6 +241,8 @@ func _play_se(name: String, vol: float) -> void:
 	elif ResourceLoader.exists(path):
 		stream = load(path) as AudioStream
 	if stream == null:
+		return
+	if host_3d == null:
 		return
 	var player := AudioStreamPlayer.new()
 	player.stream = stream

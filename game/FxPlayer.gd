@@ -37,15 +37,28 @@ const FRAME_SETS := {
 	"darkness": ["smog1.png", "smog2.png", "circle3.png"],
 	"light": ["shine2.png", "shine1.png", "circle.png"],
 	"bleed": ["flare.png", "asterisk_thin1.png", "line_drop1.png"],
+	"bind": ["hexagon_line2.png", "ring1.png", "asterisk1g.png"],
+	"blow": ["flare2.png", "line_ray1.png", "asterisk_thick1.png"],
+	"slow": ["smog1.png", "circle3.png", "star1.png"],
+	"buff": ["shine1.png", "ring1.png", "circle.png"],
+	"debuff": ["smog2.png", "asterisk1g.png", "star1.png"],
+	"summon": ["shine2.png", "circle2.png", "flare.png"],
+	"confusion": ["star1.png", "asterisk1.png", "bubble1.png"],
+	"banish": ["smog2.png", "smog1.png", "circle3.png"],
+	"pull": ["line_ray1f.png", "flare.png", "circle2.png"],
+	"push": ["line_ray1.png", "flare2.png", "asterisk_thick1.png"],
+	"absorb": ["shine1.png", "circle.png", "flare.png"],
 }
 
 const SFX_FOR := {
 	"hit": "hit", "slash": "hit", "claw": "hit", "bleed": "hit",
-	"heal": "heal", "light": "heal",
+	"blow": "hit", "push": "hit", "pull": "hit",
+	"heal": "heal", "light": "heal", "absorb": "heal", "buff": "heal", "summon": "cast",
 	"cast": "cast", "darkness": "cast", "fire": "cast", "ice": "cast",
-	"lightning": "cast", "thunder": "cast",
+	"lightning": "cast", "thunder": "cast", "banish": "cast",
 	"guard": "block", "shield": "block",
-	"status": "status", "stun": "status",
+	"status": "status", "stun": "status", "bind": "status", "slow": "status",
+	"debuff": "status", "confusion": "status",
 }
 
 func configure(world: Node3D, overlay: Control, audio = null) -> void:
@@ -123,13 +136,13 @@ func play_one(fx_id: String, world_pos: Vector3) -> float:
 	var tint := Color(str(spec.get("tint", "ffffff"))) if not spec.is_empty() else Color("ffd49b")
 	if FRAME_SETS.has(logic):
 		match logic:
-			"heal", "light": tint = Color("82d9af")
-			"slash", "claw", "hit", "bleed": tint = Color("ec755c")
+			"heal", "light", "absorb", "buff", "summon": tint = Color("82d9af")
+			"slash", "claw", "hit", "bleed", "blow", "push", "pull": tint = Color("ec755c")
 			"lightning", "thunder": tint = Color("a9d5f4")
-			"darkness": tint = Color("6a4a8a")
+			"darkness", "banish": tint = Color("6a4a8a")
 			"fire": tint = Color("ff8a4a")
 			"guard", "shield": tint = Color("a9d5f4")
-			"status", "stun": tint = Color("ba9dea")
+			"status", "stun", "bind", "slow", "debuff", "confusion": tint = Color("ba9dea")
 			"cast": tint = Color("e1d2ff")
 	rm_player.animation_speed = animation_speed if rm_player != null else 1.0
 	var rm_dur := 0.0

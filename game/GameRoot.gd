@@ -2175,12 +2175,12 @@ func _lateral_focus_actor(actor_id: int, zoom_amount: float = 1.65) -> void:
 	if presentation == null or battle_view_mode != "lateral":
 		return
 	presentation.orbit = 0.0
-	# zoom_amount ignorado de propósito: evita FOV/zoom da mão na vista lateral.
+	# Zoom no mundo de batalha (sprites). A mão 3D é filha da câmera + compensação de FOV.
 	if actor_id >= 0 and actor_nodes.has(actor_id):
 		var body: Node3D = actor_nodes[actor_id]
 		if is_instance_valid(body):
 			presentation.focus_target = body.position
-			presentation.zoom = 1.0
+			presentation.zoom = zoom_amount
 			return
 	presentation.focus_target = Vector3.ZERO
 	presentation.zoom = 1.0
@@ -2926,6 +2926,10 @@ func _try_recompra(index: int) -> bool:
 	inspected_card = -1
 	selected_card = -1
 	card_confirmed = false
+	pending_target_id = -1
+	hovered_card = -1
+	# Sempre reconstrói a mão imediatamente (changed pode ter rodado antes do depart limpar).
+	_render_battle()
 	return ok
 
 func _clear_recompra_meter() -> void:
@@ -3735,13 +3739,16 @@ func _process(delta: float) -> void:
 			_tick_free_camera(delta)
 		elif battle_view_mode == "lateral":
 			var want_focus := Vector3.ZERO
-			# Sem FOV/zoom da mão: só desloca o foco no sprite (zoom fixo em 1.0).
+			# Zoom só no hover de SPRITE (unidade). Hover de carta foca o dono sem zoom —
+			# assim a mão 3D (filha da câmera + _compensate_hand_for_camera_fov) não cresce.
 			var want_zoom := 1.0
 			if focus_id >= 0 and actor_nodes.has(focus_id):
 				var body: Node3D = actor_nodes[focus_id]
 				if is_instance_valid(body):
 					want_focus = body.position
-					_maybe_center_mouse_on_sprite(focus_id, body)
+					if hovered_actor >= 0 and hovered_actor == focus_id:
+						want_zoom = 1.55
+						_maybe_center_mouse_on_sprite(focus_id, body)
 			presentation.focus_target = presentation.focus_target.lerp(want_focus, 1.0 - exp(-delta * 5.0))
 			presentation.zoom = lerpf(presentation.zoom, want_zoom, 1.0 - exp(-delta * 5.0))
 			presentation.orbit = 0.0
@@ -3773,7 +3780,8 @@ func _maybe_center_mouse_on_sprite(actor_id: int, body: Node3D) -> void:
 	hover_retarget_freeze_until = now + 500
 
 func _compensate_hand_for_camera_fov() -> void:
-	# Isola o zoom da câmera (foco no sprite) do tamanho aparente da mão 3D.
+	# Mão 3D = zona HUD filha da câmera: distância local fixa; só o FOV muda o tamanho
+	# aparente. Escala inversa ao FOV mantém o arco estável quando o mundo dá zoom.
 	if camera == null or cards_3d == null or not is_instance_valid(cards_3d):
 		return
 	var base_fov := 42.0 if battle_view_mode == "lateral" else 51.0

@@ -1,3 +1,10 @@
+## 2026-09-28 — RM anims (Alyssa/Dominika/Evelyn), recompra, zoom sprite
+
+- **Crash SE RM**: `_fire_timings` não tipa mais `se` nulo como Dictionary (timings RM com `"se": null`); `_play_se` ignora nome vazio. "A Filha Dele" remapeada para `slow/debuff` (sem stun/Paralisia).
+- **Animações RM** em todas as cartas de Alyssa Wine, Dominika Seur e Evelyn Graves (`anim_self` / `anim_target`); `RmAnimPlayer` com aliases amplos e preferência por sheets existentes.
+- **Recompra**: após hold-to-redraw, `_render_battle()` reconstrói a mão na hora (carta nova aparece no arco sem precisar clicar outra).
+- **Zoom lateral**: restaura zoom no hover de **sprite**; hover de carta sem zoom; mão 3D isolada (filha da câmera + compensação de FOV).
+
 ## 2026-09-28 — Retrato, status, Arena, invocações, RM anims
 
 - Retrato some ao sair do hover (mantém se carta selecionada/inspeção/prévia).
