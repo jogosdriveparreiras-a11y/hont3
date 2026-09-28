@@ -71,6 +71,12 @@ func configure(world: Node3D, overlay: Control, audio = null) -> void:
 		add_child(rm_player)
 	rm_player.configure(world, audio)
 
+func stop_active() -> void:
+	# Free RmAnim roots (kills their bound tweens). Other FX children are
+	# freed once by CombatPresentation.clear_actors — avoid dual-free here.
+	if rm_player != null and rm_player.has_method("stop_all"):
+		rm_player.stop_all()
+
 func _load_presets() -> void:
 	presets.clear()
 	aliases.clear()
@@ -231,7 +237,7 @@ func _spawn_frame_anim(logic: String, world_pos: Vector3, tint: Color) -> float:
 	sprite.texture = frames[0]
 	host_3d.add_child(sprite)
 	var step := 0.055 / maxf(0.01, animation_speed)
-	var tw := host_3d.create_tween()
+	var tw := sprite.create_tween()
 	for i in range(frames.size()):
 		var idx := i
 		tw.tween_callback(func() -> void:
@@ -241,7 +247,10 @@ func _spawn_frame_anim(logic: String, world_pos: Vector3, tint: Color) -> float:
 		)
 		tw.tween_interval(step)
 	tw.tween_property(sprite, "modulate:a", 0.0, 0.12 / maxf(0.01, animation_speed))
-	tw.tween_callback(sprite.queue_free)
+	tw.tween_callback(func() -> void:
+		if is_instance_valid(sprite):
+			sprite.queue_free()
+	)
 	return step * float(frames.size()) + 0.14
 
 func _spawn_3d(world_pos: Vector3, tint: Color, kind: String, tex: Texture2D) -> void:
@@ -277,9 +286,12 @@ func _spawn_3d(world_pos: Vector3, tint: Color, kind: String, tex: Texture2D) ->
 	particles.position = world_pos + Vector3(0, 1.15, 0)
 	host_3d.add_child(particles)
 	particles.emitting = true
-	var cleanup := host_3d.create_tween()
+	var cleanup := particles.create_tween()
 	cleanup.tween_interval(0.85 / maxf(0.01, animation_speed))
-	cleanup.finished.connect(particles.queue_free)
+	cleanup.finished.connect(func() -> void:
+		if is_instance_valid(particles):
+			particles.queue_free()
+	)
 
 func _spawn_2d_overlay(world_pos: Vector3, tint: Color, kind: String, tex: Texture2D) -> void:
 	if host_2d == null or host_2d.get_viewport() == null:
@@ -306,10 +318,14 @@ func _spawn_2d_overlay(world_pos: Vector3, tint: Color, kind: String, tex: Textu
 	if tex != null:
 		burst.texture = tex
 	host_2d.add_child(burst)
+	burst.name = "FxBurst"
 	burst.emitting = true
-	var cleanup := host_2d.create_tween()
+	var cleanup := burst.create_tween()
 	cleanup.tween_interval(0.7 / maxf(0.01, animation_speed))
-	cleanup.finished.connect(burst.queue_free)
+	cleanup.finished.connect(func() -> void:
+		if is_instance_valid(burst):
+			burst.queue_free()
+	)
 
 func play_card_anims(definition: Dictionary, self_pos: Vector3, target_pos: Vector3) -> float:
 	var timing := str(definition.get("anim_timing", definition.get("timing", "parallel")))

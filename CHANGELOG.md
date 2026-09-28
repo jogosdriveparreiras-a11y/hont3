@@ -1,3 +1,9 @@
+## 2026-09-28 — Crash fim de combate (RmAnim visible/freed)
+
+- **Causa**: vitória chama `_center_panel` → `clear_actors()` que `queue_free` nos filhos do presentation (incl. `RmAnim`), enquanto tweens criados em `host_3d` ainda rodavam `_apply_frame` → `s.visible = false` em nó já liberado.
+- **Correção**: `is_instance_valid` antes de tocar `visible`/propriedades; tween da anim RM ligado ao `root` (morre com o free); `stop_active`/`stop_all` no teardown; callbacks de free também validam instância (FxPlayer + float/burst).
+- Relatório `hotn3_session_20260928_163241.jsonl` confirma sequência: hit → Fate caiu → death → `finished won` imediatamente antes do crash.
+
 ## 2026-09-28 — IA inimiga ent_ + relatório de sessão
 
 ## 2026-09-28 (boot menu)

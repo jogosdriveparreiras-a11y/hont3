@@ -169,21 +169,37 @@ func _play_anim(anim: Dictionary, world_pos: Vector3) -> float:
 		root.add_child(spr)
 		sprites.append(spr)
 	var step := FRAME_SEC / maxf(0.01, animation_speed)
-	var tw := host_3d.create_tween()
+	# Tween bound to root: clear_actors()/queue_free kills playback instead of
+	# leaving host_3d callbacks touching previously-freed sprites.
+	var tw := root.create_tween()
 	for fi in range(frames.size()):
 		var frame_cells: Array = frames[fi] if typeof(frames[fi]) == TYPE_ARRAY else []
 		var capture_fi := fi
 		var capture_cells := frame_cells
 		tw.tween_callback(func() -> void:
+			if not is_instance_valid(root):
+				return
 			_apply_frame(sprites, capture_cells, cell_w, cell_h, rows)
 			_fire_timings(timings, capture_fi)
 		)
 		tw.tween_interval(step)
-	tw.tween_callback(root.queue_free)
+	tw.tween_callback(func() -> void:
+		if is_instance_valid(root):
+			root.queue_free()
+	)
 	return step * float(maxi(frames.size(), 1)) + 0.05
+
+func stop_all() -> void:
+	if host_3d == null or not is_instance_valid(host_3d):
+		return
+	for child in host_3d.get_children():
+		if str(child.name).begins_with("RmAnim") and is_instance_valid(child) and not child.is_queued_for_deletion():
+			child.queue_free()
 
 func _apply_frame(sprites: Array[Sprite3D], cells: Array, cell_w: float, cell_h: float, rows: int) -> void:
 	for s in sprites:
+		if not is_instance_valid(s):
+			continue
 		s.visible = false
 	var used := 0
 	for cell in cells:
@@ -196,6 +212,8 @@ func _apply_frame(sprites: Array[Sprite3D], cells: Array, cell_w: float, cell_h:
 			continue
 		var spr: Sprite3D = sprites[used]
 		used += 1
+		if not is_instance_valid(spr):
+			continue
 		var col := pattern % COLS
 		var row := mini(rows - 1, int(pattern / COLS))
 		var atlas := spr.texture as AtlasTexture
@@ -249,4 +267,7 @@ func _play_se(name: String, vol: float) -> void:
 	player.volume_db = linear_to_db(clampf(vol, 0.05, 1.0))
 	host_3d.add_child(player)
 	player.play()
-	player.finished.connect(player.queue_free)
+	player.finished.connect(func() -> void:
+		if is_instance_valid(player):
+			player.queue_free()
+	)

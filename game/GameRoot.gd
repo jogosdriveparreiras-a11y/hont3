@@ -222,9 +222,11 @@ func _clear_ui() -> void:
 
 func _clear_combat_visuals() -> void:
 	for node in units.get_children():
-		units.remove_child(node)
-		node.queue_free()
+		if is_instance_valid(node):
+			units.remove_child(node)
+			node.queue_free()
 	actor_nodes.clear()
+	unit_sprites.clear()
 	if presentation != null: presentation.clear_actors()
 	_clear_hand_visuals()
 	visible_uids.clear()

@@ -48,11 +48,20 @@ func forget_actor(id: int) -> void:
 func clear_actors() -> void:
 	sprites.clear()
 	positions.clear()
-	for child in get_children(): child.queue_free()
-	if overlay != null:
+	# Abort RM/FX playback before freeing children so tweens cannot touch freed nodes.
+	if fx_player != null and fx_player.has_method("stop_active"):
+		fx_player.stop_active()
+	if camera_tween != null and camera_tween.is_valid():
+		camera_tween.kill()
+		camera_tween = null
+	for child in get_children():
+		if is_instance_valid(child) and not child.is_queued_for_deletion():
+			child.queue_free()
+	if overlay != null and is_instance_valid(overlay):
 		for child in overlay.get_children():
 			if str(child.name) in ["PortraitLeft", "PortraitRight"]: continue
-			child.queue_free()
+			if is_instance_valid(child) and not child.is_queued_for_deletion():
+				child.queue_free()
 	camera_position = camera_origin
 	punch = Vector3.ZERO
 	orbit = 0.0
@@ -110,7 +119,7 @@ func _animate_sprite(id: int, kind: String) -> void:
 	sprite.set_meta("action_until", Time.get_ticks_msec() + int(250.0 / animation_speed))
 	if not flash_enabled: return
 	sprite.modulate = Color("ffdddd") if kind == "hit" else Color("e1d2ff") if kind == "status" else Color("ffffff")
-	var tween := create_tween()
+	var tween := sprite.create_tween()
 	tween.tween_property(sprite, "modulate", Color.WHITE, 0.22 / animation_speed)
 	if kind == "cast":
 		var base_s := float(sprite.get_meta("sprite_scale", 1.0))
@@ -127,11 +136,14 @@ func _float_text(id: int, value: String, tint: Color) -> void:
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	label.position = camera.unproject_position(positions[id] + Vector3(0, 2.35, 0))
 	overlay.add_child(label)
-	var tween := create_tween()
+	var tween := label.create_tween()
 	tween.set_parallel(true)
 	tween.tween_property(label, "position", label.position + Vector2(0, -55 * motion_scale), 0.55 / animation_speed)
 	tween.tween_property(label, "modulate:a", 0.0, 0.55 / animation_speed)
-	tween.chain().tween_callback(label.queue_free)
+	tween.chain().tween_callback(func() -> void:
+		if is_instance_valid(label):
+			label.queue_free()
+	)
 
 func _burst(id: int, tint: Color) -> void:
 	if not positions.has(id) or not flash_enabled: return
@@ -153,9 +165,12 @@ func _burst(id: int, tint: Color) -> void:
 	particles.position = positions[id] + Vector3(0, 1.2, 0)
 	add_child(particles)
 	particles.emitting = true
-	var cleanup := create_tween()
+	var cleanup := particles.create_tween()
 	cleanup.tween_interval(0.65 / animation_speed)
-	cleanup.finished.connect(particles.queue_free)
+	cleanup.finished.connect(func() -> void:
+		if is_instance_valid(particles):
+			particles.queue_free()
+	)
 
 func _focus(id: int) -> void:
 	if camera == null or not positions.has(id) or motion_scale <= 0.0: return
