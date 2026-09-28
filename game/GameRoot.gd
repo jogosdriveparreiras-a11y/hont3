@@ -267,12 +267,19 @@ func _show_menu() -> void:
 	var menu := _center_panel("HEROES OF THE NIGHTMARE 3")
 	menu.add_child(_label("Três heróis. Duas linhas. Um deck compartilhado.", 20))
 	menu.add_child(_label("Missões concluídas: %d/%d · Essência: %d" % [best_stars.size(), Content.MISSIONS.size(), essence], 19))
+	_add_campaign_menu_button(menu)
 	menu.add_child(_button("Selecionar missão", _show_missions))
 	menu.add_child(_button("Escolher equipe", _show_team))
 	menu.add_child(_button("Coleção de cartas", _show_collection))
 	menu.add_child(_button("Preparar itens", _show_items))
 	menu.add_child(_button("Configurações", _show_settings))
-	menu.add_child(_button("Iniciar missão: %s" % Content.MISSIONS[mission_id]["name"], _start_mission))
+
+func _add_campaign_menu_button(menu: VBoxContainer) -> void:
+	if ResourceLoader.exists("res://addons/hotn3_campaign/CampaignRoot.tscn"):
+		menu.add_child(_button("Campanha", _launch_campaign_module, "A Fenda das Três Vigílias · três capítulos"))
+
+func _launch_campaign_module() -> void:
+	get_tree().change_scene_to_file("res://addons/hotn3_campaign/CampaignRoot.tscn")
 
 func _show_settings() -> void:
 	var menu := _center_panel("CONFIGURAÇÕES")
@@ -427,6 +434,7 @@ func _show_missions() -> void:
 		if not accessible: menu.add_child(_label("Requer: %s" % ", ".join(PackedStringArray(campaign["requires"])), 15))
 	menu.add_child(_label("Selecionada: %s" % Content.MISSIONS[mission_id]["name"], 19))
 	menu.add_child(_label(Content.CAMPAIGN[mission_id]["brief"], 18))
+	menu.add_child(_button("Jogar Missão: %s" % Content.MISSIONS[mission_id]["name"], _start_mission))
 	menu.add_child(_button("Voltar", _show_menu))
 
 func _mission_unlocked(id: String) -> bool:
