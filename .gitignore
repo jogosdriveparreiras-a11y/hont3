@@ -22,3 +22,4 @@ playtest_out/
 /*.webp
 /*.png
 /assets/cast/cast ref/
+__pycache__/
