@@ -10,24 +10,36 @@ var _file: FileAccess = null
 var _line_count := 0
 
 func start(reason: String = "launch") -> String:
+	# Nunca deve bloquear o boot do jogo: falhas de IO só desligam o report.
 	if not enabled:
 		return ""
 	close()
 	var stamp := _stamp_filename()
 	started_at = Time.get_datetime_string_from_system(false, true)
-	var dir_user := "user://reports"
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(dir_user))
-	path = "%s/hotn3_session_%s.jsonl" % [dir_user, stamp]
-	_file = FileAccess.open(path, FileAccess.WRITE_READ)
-	if _file == null:
-		# Fallback editor / sandbox
-		var fallback_dir := "res://playtest_out/reports"
-		DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(fallback_dir))
-		path = "%s/hotn3_session_%s.jsonl" % [fallback_dir, stamp]
-		_file = FileAccess.open(path, FileAccess.WRITE_READ)
+	path = ""
+	_file = null
 	_line_count = 0
+	var candidates: Array[String] = ["user://reports", "res://playtest_out/reports"]
+	for dir_user in candidates:
+		var abs_dir := ProjectSettings.globalize_path(dir_user)
+		if abs_dir == "" or abs_dir.begins_with("user://") or abs_dir.begins_with("res://"):
+			# globalize falhou — tenta mesmo assim via DirAccess relativo
+			DirAccess.make_dir_recursive_absolute(dir_user)
+		else:
+			DirAccess.make_dir_recursive_absolute(abs_dir)
+		var try_path := "%s/hotn3_session_%s.jsonl" % [dir_user, stamp]
+		# WRITE (não WRITE_READ): no Windows WRITE_READ em user:// novo pode falhar/travar.
+		var f := FileAccess.open(try_path, FileAccess.WRITE)
+		if f != null:
+			_file = f
+			path = try_path
+			break
+		push_warning("HotN3SessionReport: falha ao abrir %s (err=%s)" % [try_path, FileAccess.get_open_error()])
+	if _file == null:
+		path = ""
+		push_warning("HotN3SessionReport: sem arquivo gravável nesta tentativa.")
+		return ""
 	log_event("session", {"event": "start", "reason": reason, "tz": "America/Sao_Paulo", "godot": Engine.get_version_info()})
-	# Cópia espelho em playtest_out quando user:// funcionou (facilita achar no projeto).
 	_maybe_mirror_header()
 	return absolute_path()
 
@@ -53,6 +65,10 @@ func log_event(category: String, payload: Dictionary = {}) -> void:
 		"cat": category,
 		"data": payload,
 	}
+	# Protege o frame do jogo se o FS travar/fechar o handle.
+	if not is_instance_valid(_file):
+		_file = null
+		return
 	_file.seek_end()
 	_file.store_line(JSON.stringify(row))
 	_file.flush()

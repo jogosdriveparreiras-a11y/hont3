@@ -105,10 +105,17 @@ func _ready() -> void:
 	_register_inputs()
 	_load_config()
 	_make_world()
+	# Menu ANTES do SessionReport: no Windows FileAccess em user:// pode falhar/atrasar
+	# e deixava a arena vazia sem HUD (boot em branco).
+	_show_menu()
+	call_deferred("_boot_session_report")
+
+func _boot_session_report() -> void:
+	if session_report == null:
+		return
 	var report_path := session_report.start("launch")
 	if report_path != "":
 		print("HotN3 session report: ", report_path)
-	_show_menu()
 
 func _make_world() -> void:
 	stage = Node3D.new()
@@ -127,7 +134,7 @@ func _make_world() -> void:
 	camera.position = Vector3(0, 11.5, 18)
 	camera.fov = 51
 	add_child(camera)
-	camera.look_at(Vector3(0, 0.5, 0), Vector3.UP)
+	_safe_look_at(camera, Vector3(0, 0.5, 0))
 	camera.current = true
 	cards_3d.reparent(camera, false)
 	var sun := DirectionalLight3D.new()
@@ -180,6 +187,8 @@ func _make_world() -> void:
 	fx_player = FxPlayer.new()
 	add_child(fx_player)
 	presentation.configure(camera, fx_overlay, sound, fx_player)
+	if presentation != null:
+		presentation.drive_camera = false
 	_sync_bgm_pick_from_track()
 	_ensure_bgm_for("menu")
 	portrait_left = _make_portrait(false)
@@ -285,6 +294,10 @@ func _show_menu() -> void:
 	battle_menu_open = false
 	if battle != null:
 		battle = null
+	if presentation != null:
+		presentation.drive_camera = false
+		presentation.clear_actors()
+	_reset_menu_camera()
 	_ensure_bgm_for("menu")
 	var menu := _center_panel("HEROES OF THE NIGHTMARE 3")
 	menu.add_child(_label("Três heróis. Duas linhas. Um deck compartilhado.", 20))
@@ -567,6 +580,33 @@ func _stop_bgm_setting() -> void:
 		_render_battle()
 	elif battle == null:
 		_show_settings()
+
+func _reset_menu_camera() -> void:
+	# Vista estável no título (evita look_at singular / debugger pause no editor).
+	if camera == null:
+		return
+	camera.position = Vector3(0, 11.5, 18)
+	camera.fov = 51.0
+	_safe_look_at(camera, Vector3(0, 0.5, 0))
+	if presentation != null:
+		presentation.camera_position = camera.position
+		presentation.orbit = 0.0
+		presentation.ally_focus = Vector3.ZERO
+		presentation.focus_target = Vector3.ZERO
+		presentation.zoom = 1.0
+		presentation.punch = Vector3.ZERO
+
+func _safe_look_at(node: Node3D, target: Vector3, up: Vector3 = Vector3.UP) -> void:
+	if node == null:
+		return
+	var origin := node.global_position if node.is_inside_tree() else node.position
+	var dir := target - origin
+	if dir.length_squared() < 1e-6:
+		return
+	var up_n := up.normalized()
+	if absf(dir.normalized().dot(up_n)) > 0.998:
+		target += Vector3(0.05, 0.0, 0.05)
+	node.look_at(target, up)
 
 func _apply_battle_view() -> void:
 	if presentation == null:
@@ -1207,6 +1247,8 @@ func _mission_stars() -> int:
 
 func _render_battle() -> void:
 	if battle == null or battle.phase == "FINISHED": return
+	if presentation != null:
+		presentation.drive_camera = true
 	_clear_ui()
 	_clear_hand_visuals()
 	hero_hud = null

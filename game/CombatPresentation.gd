@@ -26,6 +26,8 @@ var zoom := 1.0
 ## Ponto de interesse (hover / foco inimigo).
 var focus_target := Vector3.ZERO
 var fx_player = null
+## Se false, não move a câmera (menu/título — evita look_at no boot).
+var drive_camera := true
 
 func configure(view: Camera3D, labels: Control, audio, fx = null) -> void:
 	camera = view
@@ -163,8 +165,19 @@ func _focus(id: int) -> void:
 	camera_tween = create_tween()
 	camera_tween.tween_property(self, "punch", Vector3.ZERO, 0.34 / animation_speed)
 
+func _safe_look_at(target: Vector3, up: Vector3 = Vector3.UP) -> void:
+	if camera == null:
+		return
+	var origin := camera.global_position if camera.is_inside_tree() else camera.position
+	var dir := target - origin
+	if dir.length_squared() < 1e-6:
+		return
+	if absf(dir.normalized().dot(up.normalized())) > 0.998:
+		target += Vector3(0.05, 0.0, 0.05)
+	camera.look_at(target, up)
+
 func _process(delta: float) -> void:
-	if camera != null:
+	if camera != null and drive_camera:
 		shake_time = maxf(0.0, shake_time - delta)
 		var offset := Vector3.ZERO
 		if shake_enabled and shake_time > 0.0:
@@ -179,13 +192,13 @@ func _process(delta: float) -> void:
 			var look := Vector3(focus_target.x, 1.05, focus_target.z * 0.35)
 			var base := Vector3(focus_target.x * 0.22, height, dist)
 			camera.position = base + punch + offset
-			camera.look_at(look, Vector3.UP)
+			_safe_look_at(look)
 			camera.fov = lerpf(camera.fov, 42.0 / (0.55 + 0.45 * z), 1.0 - exp(-delta * 6.0))
 		else:
 			var radius := 16.8
 			var base := Vector3(sin(orbit) * radius, 11.15, cos(orbit) * radius)
 			camera.position = base + ally_focus + punch + offset
-			camera.look_at(Vector3(ally_focus.x * 2.1, 0.75, 0.0), Vector3.UP)
+			_safe_look_at(Vector3(ally_focus.x * 2.1, 0.75, 0.0))
 			camera.fov = lerpf(camera.fov, 51.0, 1.0 - exp(-delta * 6.0))
 	for id in sprites:
 		var sprite: Sprite3D = sprites[id]

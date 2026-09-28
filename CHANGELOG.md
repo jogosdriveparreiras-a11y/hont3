@@ -1,5 +1,12 @@
 ## 2026-09-28 — IA inimiga ent_ + relatório de sessão
 
+## 2026-09-28 (boot menu)
+
+- Boot: menu principal antes do SessionReport (evita tela vazia se `user://reports` travar no Windows).
+- SessionReport: `FileAccess.WRITE` em vez de `WRITE_READ`; falha de IO não bloqueia o jogo.
+- Câmera: `drive_camera` desligado no título; `look_at` seguro (sem `det==0` no editor).
+
+
 - **Bug real (Task A)**: missões usam inimigos `ent_*` cujas Manobras têm `actions` (não `effects`). A IA chamava `BattleState.play()`, que só resolve `effects` — cartas inimigas gastavam Iniciativa/jogadas sem causar dano. **Correção**: `EntityRuntime.play` / `PackBridge.play_card` side-aware (PLAYER+ENEMY); `enemy_step` e `_step_enemy` despacham cartas `ent_`/`ms_` pelo PackBridge.
 - **Relatório de sessão (Task B)**: `game/SessionReport.gd` grava JSONL append-only em `user://reports/hotn3_session_YYYYMMDD_HHMMSS.jsonl` (fuso local / America/Sao_Paulo no relógio do box). Auto-inicia no launch; botão **Copiar caminho do report** no menu principal e no menu de combate. Categorias: `ui`, `card`, `battle`, `ai`, `error`, `session`.
 - Smoke: `tools/EnemyHitSmoke.gd`.
