@@ -1,5 +1,7 @@
 extends SceneTree
 
+const Content = preload("res://game/Content.gd")
+
 # Execute após a importação: godot --headless --path . -s res://tools/SceneSmoke.gd
 func _initialize() -> void:
 	call_deferred("_run")
@@ -43,13 +45,16 @@ func _run() -> void:
 	# Equipe sem conflito com inimigos da missão "road"
 	game.set("team", ["ent_adam", "ent_madelyn", "ent_ashlee"] as Array[String])
 	game.set("mission_id", "road")
-	game.call("_show_decks")
+	game.call("_show_collection_screen")
 	await process_frame
-	assert(game.call("_equip_card", "mago", 0, "fagulha_incerta"), "Equipar carta do pool deve funcionar")
-	assert(game.call("_equip_card", "mago", 1, "fagulha_incerta"), "Até duas cópias devem ser permitidas")
-	assert(not game.call("_equip_card", "mago", 2, "fagulha_incerta"), "A terceira cópia deve ser recusada")
-	assert(game.call("_equip_card", "paladino", 0, "cerco_frente"), "Carta rara deve equipar")
-	assert(not game.call("_equip_card", "paladino", 1, "cerco_frente"), "Carta de limite um não admite cópia adicional")
+	game.call("_ensure_owned_cards")
+	var owned_deck: Array = game.call("_combat_deck_for_hero", "ent_adam")
+	assert(owned_deck.size() >= 5, "Coleção inicial deve formar o deck automaticamente")
+	var adam: Dictionary = Content.HEROES["ent_adam"]
+	if not adam.get("evoluidas", []).is_empty():
+		var reward_card := str(adam["evoluidas"][0])
+		game.call("_grant_owned_card", "ent_adam", reward_card)
+		assert(game.call("_combat_deck_for_hero", "ent_adam").has(reward_card), "Carta adquirida deve entrar automaticamente no deck")
 	# Conflito de herói único vs pool inimigo
 	assert(game.call("_hero_conflicts_with_mission", "ent_akuji", "road"), "Akuji deve conflitar com a estrada")
 	assert(not game.call("_hero_conflicts_with_mission", "ent_adam", "road"), "Adam não conflita com a estrada")
@@ -78,5 +83,5 @@ func _run() -> void:
 	battle.end_player_turn()
 	await process_frame
 	assert(battle.phase in ["PLAYER", "FINISHED"] and battle.turn >= 2, "O turno inimigo deve terminar")
-	print("OK: cena, menu, controles, ajustes, atores persistentes, decks, cartas 3D e turno")
+	print("OK: cena, menu, controles, ajustes, atores persistentes, coleção automática, cartas 3D e turno")
 	quit(0)

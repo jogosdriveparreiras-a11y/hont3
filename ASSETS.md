@@ -1,18 +1,37 @@
-# Origem dos recursos incluídos
+# Inventário e origem dos recursos
 
-As oito imagens abaixo foram copiadas sem alteração da cópia local do projeto `jogosdriveparreiras-a11y/HotN2`, cujo registro indica a branch `main` no commit `6c972f245d538cf58ffaba87957ebdf0a4113155`. Os hashes SHA-256 conferem com os arquivos dessa cópia. O commit identifica o local de onde vieram os bytes, não seu autor original nem a autorização de redistribuição. Não há licença ou atribuição do criador das imagens na cópia. **A redistribuição pública dos sprites continua sem licença confirmada.**
+## Arte-base compatível com o runtime
 
-| Arquivo | SHA-256 |
-| --- | --- |
-| `en_dog.png` | `8c5379b758523ae89c435bf9e6736e7ae4a200d66f0950d293ebae4103c9b9ee` |
-| `en_elite.png` | `7c532d8ffcdd341438e1c9d3fa1bf0b317f16974410ef7e5e17c14f0bb3a766e` |
-| `en_sniper.png` | `a455f6313c7efe1b7b3126ac4559cfd5ab89ed813bfec68769eb222e56302f29` |
-| `hero_cleric.png` | `56e0ff405eef9f63e88901f84951b52bd53ccbcc6c0fdb2bb4f85287f34ac1fd` |
-| `hero_fighter.png` | `cd6fb3603007c534a94f1f185cd5c66a817e68b9fde42e6952c7c73c5f1829b5` |
-| `hero_paladin.png` | `6392ec6bd07e65e61f06eccd044475d10fb07aba34619256e47b53768f7ee82e` |
-| `hero_rogue.png` | `cc0e2f47e35875988e297887008f82ea96c393f9fa0310b3385673d8c145e0fe` |
-| `hero_wizard.png` | `a91ed66033793b1fd9822db76ccfb2f1986fc26af00527cf9575e192a0c24e90` |
+Os oito nomes históricos na raiz continuam existindo porque `Content.gd` os referencia. Seus bytes antigos, cuja licença não estava documentada, foram substituídos por cópias de imagens do RPG Maker MZ DLC em `assets/cast_sensitive/`. Assim o jogo mantém as referências sem carregar a arte antiga.
 
-`AppleGaramond.ttf`, que trazia indicação de direitos reservados em seus metadados, e `CinzelDecorative-Bold.otf` estavam ligados apenas a cenas antigas fora do jogo ativo e foram removidos com essas cenas. A música `battle_music.ogg`, também sem proveniência documentada, foi removida. Música, ambiente e efeitos sonoros do projeto atual são gerados em `game/SoundBus.gd`; arena, interface e cartas são desenhadas por código.
+| Destino usado pelo jogo | Fonte versionada | SHA-256 |
+| --- | --- | --- |
+| `hero_fighter.png` | `assets/cast_sensitive/Actor1_1.png` | `ddfe7ef9c5a71b8271a9f125ec76960dba913b448cdeab4e991b156f9ef2a5cf` |
+| `hero_wizard.png` | `assets/cast_sensitive/Actor2_2.png` | `02aae539d86980d587327b1e017232151ad5ddfdf4538bdf245d44fe04680c45` |
+| `hero_rogue.png` | `assets/cast_sensitive/Actor2_5.png` | `368d0c8d7542d7e9c19af81cf4de02689c07fb63fe1f21ec88dc938a38f0821f` |
+| `hero_cleric.png` | `assets/cast_sensitive/Actor3_1.png` | `693ac07bb4ada507612e94c0a07faa3d88414382f521cbf3f034913eb19eddfb` |
+| `hero_paladin.png` | `assets/cast_sensitive/Actor1_4.png` | `fda1510e8978824a23c299d0fbc42c4dbd95006e1f0032ed6158d21347b196f1` |
+| `en_dog.png` | `assets/cast_sensitive/Monster_7.png` | `3cd3419d73f29e2ea6181b8a83b3ace6328b8a3ef88fbb7b70a3660d77235818` |
+| `en_elite.png` | `assets/cast_sensitive/Monster_4.png` | `8a40c4f7c8596674c2ccf1ca6867eac1e5cda803bf49e2a1854396933ad35af4` |
+| `en_sniper.png` | `assets/cast_sensitive/Monster_2.png` | `35938deb350c8f6605568fdf6bf730427f5096d8e068ff4aed8f0636990e447e` |
 
-Antes de uma publicação pública, obter licença e crédito de cada sprite junto ao autor ou substituí-lo por arte com licença comprovada. O pacote atual é fonte de desenvolvimento; o histórico do projeto HotN2 não demonstra, por si, permissão de redistribuição dos recursos.
+## Pacotes RPG Maker MZ
+
+O usuário confirmou em 2026-09-27 que possui as licenças dos DLCs usados. Os arquivos permanecem sujeitos aos termos das respectivas licenças RPG Maker; possuir o projeto não transfere direitos de redistribuição isolada dos recursos.
+
+| Destino | Origem declarada | Inventário |
+| --- | --- | --- |
+| `assets/fx/effekseer/` | `3D Particle Effect Pack/effects` | subconjunto listado em `assets/fx/effekseer/index.json` |
+| `assets/fx/particles2d/` | `TRP_ParticleMZ/materials/particles` | arquivos listados em `assets/fx/particles2d/index.json` |
+| `assets/audio/bgm/` | `TRP_ParticleMZ/sample_project_en/audio/bgm` e `FantasyResourcePack/bgm/ogg/96kbps` | 50 arquivos OGG |
+| `assets/cast_sensitive/` | `BasicResources/pictures` e placeholders próprios preexistentes | imagens alternativas e fontes das oito substituições acima |
+
+O script `tools/copy_mz_dlc_assets.ps1` registra os caminhos locais usados para reconstruir esse conjunto. `tools/verify_assets.py` confere as cópias, índices e quantidades.
+
+## Elenco HotN
+
+As artes em `assets/cast/` pertencem ao conteúdo do projeto HotN e são ligadas aos 27 personagens de `addons/hotn3_entities/entities.json`. As três substituições locais de Alyssa, Dominika e Evelyn permanecem modificações do usuário e não foram descartadas.
+
+## Recursos removidos
+
+As fontes `AppleGaramond.ttf` e `CinzelDecorative-Bold.otf`, a música antiga `battle_music.ogg` e as cenas legadas `Main.tscn` e `Card.tscn` não fazem parte do projeto ativo.

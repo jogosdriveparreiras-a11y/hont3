@@ -14,3 +14,11 @@ data_*/
 _playtest/
 *.ctex
 playtest_out/
+/_*.txt
+/Abrir_HotN3_Godot.bat
+/*.jpg
+/*.jpeg
+/*.gif
+/*.webp
+/*.png
+/assets/cast/cast ref/

@@ -1,0 +1,134 @@
+{
+  "version": 1,
+  "note": "Logical FX ids used in card anim_self/anim_target. Stub playback uses particles2d textures; efkefc kept for future EffekseerForGodot.",
+  "aliases": {
+    "hit": {
+      "efk": "HitSP1",
+      "tex": "flare.png",
+      "tint": "#ec755c",
+      "kind": "burst"
+    },
+    "slash": {
+      "efk": "SlashSP1",
+      "tex": "line_ray1.png",
+      "tint": "#ffd49b",
+      "kind": "slash"
+    },
+    "claw": {
+      "efk": "ClawSP1",
+      "tex": "asterisk1.png",
+      "tint": "#cf6b5a",
+      "kind": "slash"
+    },
+    "heal": {
+      "efk": "Light2",
+      "tex": "shine1.png",
+      "tint": "#82d9af",
+      "kind": "rise"
+    },
+    "stun": {
+      "efk": "StarsHit",
+      "tex": "star1.png",
+      "tint": "#f0e08a",
+      "kind": "burst"
+    },
+    "lightning": {
+      "efk": "Thunder1",
+      "tex": "thunder1.png",
+      "tint": "#a9d5f4",
+      "kind": "burst"
+    },
+    "thunder": {
+      "efk": "Thunder2",
+      "tex": "thunder2.png",
+      "tint": "#9ec8ff",
+      "kind": "burst"
+    },
+    "fire": {
+      "efk": "Fire1",
+      "tex": "flame1.png",
+      "tint": "#ff8a4a",
+      "kind": "rise"
+    },
+    "ice": {
+      "efk": "Ice1",
+      "tex": "snow1.png",
+      "tint": "#b8e4ff",
+      "kind": "burst"
+    },
+    "darkness": {
+      "efk": "Darkness1",
+      "tex": "smog1.png",
+      "tint": "#6a4a8a",
+      "kind": "rise"
+    },
+    "light": {
+      "efk": "Light1",
+      "tex": "shine2.png",
+      "tint": "#fff4c8",
+      "kind": "rise"
+    },
+    "guard": {
+      "efk": "Protection",
+      "tex": "hexagon_line1.png",
+      "tint": "#a9d5f4",
+      "kind": "ring"
+    },
+    "shield": {
+      "efk": "Shield",
+      "tex": "ring1.png",
+      "tint": "#8ab4e8",
+      "kind": "ring"
+    },
+    "cast": {
+      "efk": "Neutral1",
+      "tex": "particle1.png",
+      "tint": "#e1d2ff",
+      "kind": "rise"
+    },
+    "poison": {
+      "efk": "PoisonAll",
+      "tex": "bubble1.png",
+      "tint": "#7dcf6a",
+      "kind": "rise"
+    },
+    "explosion": {
+      "efk": "Explosion1",
+      "tex": "flare2.png",
+      "tint": "#ff6b3d",
+      "kind": "burst"
+    },
+    "pierce": {
+      "efk": "PierceSP1",
+      "tex": "line_ray2.png",
+      "tint": "#e8e0d0",
+      "kind": "slash"
+    },
+    "arrow": {
+      "efk": "Arrow",
+      "tex": "line1.png",
+      "tint": "#d0c4a8",
+      "kind": "slash"
+    },
+    "wind": {
+      "efk": "Wind1",
+      "tex": "smoke1.png",
+      "tint": "#c8e8d8",
+      "kind": "rise"
+    },
+    "status": {
+      "efk": "Neutral2",
+      "tex": "star_thin1.png",
+      "tint": "#ba9dea",
+      "kind": "burst"
+    },
+    "bleed": {
+      "efk": "CrossHit",
+      "tex": "particle3.png",
+      "tint": "#c04040",
+      "kind": "burst"
+    }
+  },
+  "efk_dir": "res://assets/fx/effekseer/",
+  "tex_dir": "res://assets/fx/particles2d/"
+}

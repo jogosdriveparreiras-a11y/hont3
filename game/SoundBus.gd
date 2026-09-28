@@ -2,6 +2,7 @@ extends Node
 class_name HotNSoundBus
 
 const RATE := 22050
+const BGM_DIR := "res://assets/audio/bgm/"
 const CHANNELS := ["MUSIC", "SFX", "UI", "AMBIENCE"]
 var levels: Dictionary = {"MASTER": 0.8, "MUSIC": 0.35, "SFX": 0.7, "UI": 0.55, "AMBIENCE": 0.18}
 var music: AudioStreamPlayer
@@ -9,12 +10,12 @@ var ambience: AudioStreamPlayer
 var cue_players: Array[AudioStreamPlayer] = []
 var cues: Dictionary = {}
 var next_voice := 0
+var current_bgm := ""
+var bgm_tracks: PackedStringArray = PackedStringArray()
 
 func _ready() -> void:
 	music = AudioStreamPlayer.new()
 	add_child(music)
-	music.stream = _make_music()
-	music.play()
 	ambience = AudioStreamPlayer.new()
 	add_child(ambience)
 	ambience.stream = _make_ambience()
@@ -26,7 +27,80 @@ func _ready() -> void:
 		add_child(voice)
 	for id in ["hover", "select", "draw", "redraw", "cast", "hit", "block", "heal", "status", "death", "victory", "resist", "move"]:
 		cues[id] = _synthesize(id)
+	_scan_bgm()
+	# Prefer a battle track if present; else synth fallback.
+	if bgm_tracks.has("Battle1"):
+		play_bgm("Battle1")
+	elif not bgm_tracks.is_empty():
+		play_bgm(bgm_tracks[0])
+	else:
+		music.stream = _make_music()
+		music.play()
+		current_bgm = "__synth__"
 	_apply_levels()
+
+func _scan_bgm() -> void:
+	bgm_tracks = PackedStringArray()
+	_scan_bgm_dir(BGM_DIR, "")
+	_scan_bgm_dir(BGM_DIR + "fantasy/", "fantasy/")
+	bgm_tracks.sort()
+
+func _scan_bgm_dir(path: String, prefix: String) -> void:
+	var dir := DirAccess.open(path)
+	if dir == null:
+		return
+	dir.list_dir_begin()
+	var fname := dir.get_next()
+	while fname != "":
+		if fname.ends_with(".ogg") or fname.ends_with(".mp3") or fname.ends_with(".wav"):
+			bgm_tracks.append(prefix + fname.get_basename())
+		fname = dir.get_next()
+
+func list_bgm() -> PackedStringArray:
+	if bgm_tracks.is_empty():
+		_scan_bgm()
+	return bgm_tracks
+
+func play_bgm(track_id: String) -> bool:
+	var id := track_id.strip_edges()
+	if id == "" or id == "__stop__":
+		stop_bgm()
+		return true
+	if id == "__synth__":
+		music.stop()
+		music.stream = _make_music()
+		music.volume_db = _volume_db("MUSIC")
+		music.play()
+		current_bgm = id
+		return true
+	var path := BGM_DIR + id + ".ogg"
+	if not FileAccess.file_exists(path) and not ResourceLoader.exists(path):
+		path = BGM_DIR + id + ".mp3"
+	if not FileAccess.file_exists(path) and not ResourceLoader.exists(path):
+		return false
+	var stream: AudioStream = null
+	if path.ends_with(".ogg"):
+		stream = AudioStreamOggVorbis.load_from_file(path)
+	elif path.ends_with(".mp3"):
+		# Fallback: try ResourceLoader if .import exists
+		if ResourceLoader.exists(path):
+			stream = load(path) as AudioStream
+	if stream == null and ResourceLoader.exists(path):
+		stream = load(path) as AudioStream
+	if stream == null:
+		return false
+	if stream is AudioStreamOggVorbis:
+		(stream as AudioStreamOggVorbis).loop = true
+	music.stop()
+	music.stream = stream
+	music.volume_db = _volume_db("MUSIC")
+	music.play()
+	current_bgm = id
+	return true
+
+func stop_bgm() -> void:
+	music.stop()
+	current_bgm = "__stop__"
 
 func _synthesize(id: String) -> AudioStreamWAV:
 	var frequencies := {"hover": 480.0, "select": 610.0, "draw": 460.0, "redraw": 310.0, "cast": 390.0, "hit": 120.0, "block": 190.0, "heal": 720.0, "status": 350.0, "death": 95.0, "victory": 530.0, "resist": 260.0, "move": 330.0}
@@ -72,7 +146,6 @@ func _make_ambience() -> AudioStreamWAV:
 	return wav
 
 func _make_music() -> AudioStreamWAV:
-	# Four original phrases; the waveform and sounds are produced locally.
 	var notes := [220.0, 261.63, 329.63, 261.63, 196.0, 246.94, 293.66, 246.94, 174.61, 220.0, 261.63, 220.0, 164.81, 196.0, 246.94, 196.0]
 	var roots := [110.0, 98.0, 87.31, 82.41]
 	var count := RATE * 8

@@ -205,6 +205,7 @@
 <div class="mode-tabs">
   <button class="btn active" data-mode="cards" id="tabCards">Cartas</button>
   <button class="btn" data-mode="heroes" id="tabHeroes">Personagens</button>
+  <button class="btn" data-mode="attrs" id="tabAttrs">Tabela de atributos</button>
   <button class="btn" data-mode="dict" id="tabDict">Dicionário</button>
 </div>
 <div class="layout" id="layoutCards">
@@ -275,6 +276,29 @@
     <div class="hint-box">Impacto: Carta + Impacto − Armadura + Mods · Poder: Carta + Poder − Escudo + Mods. Chain fica em Efeitos.</div>
     <div class="section-title">Mod vs espécies (±0.25 típico)</div>
     <div id="vsSpeciesBox" class="row" style="gap:10px;flex-wrap:wrap"></div>
+    <div class="section-title">Animações (FX)</div>
+    <div class="hint-box">Listas de FX no conjurador (<code>anim_self</code>) e no alvo (<code>anim_target</code>). Timing: <strong>parallel</strong> (simultâneo) ou <strong>wait_last</strong> (espera a última).</div>
+    <div class="row" style="gap:12px;align-items:flex-start;flex-wrap:wrap">
+      <div style="flex:1;min-width:200px">
+        <div class="muted">Conjurador (anim_self)</div>
+        <select id="animSelfPick" style="width:100%;margin:4px 0"></select>
+        <button type="button" class="btn" id="btnAddAnimSelf">Adicionar</button>
+        <div id="animSelfList" style="margin-top:6px"></div>
+      </div>
+      <div style="flex:1;min-width:200px">
+        <div class="muted">Alvo (anim_target)</div>
+        <select id="animTargetPick" style="width:100%;margin:4px 0"></select>
+        <button type="button" class="btn" id="btnAddAnimTarget">Adicionar</button>
+        <div id="animTargetList" style="margin-top:6px"></div>
+      </div>
+      <div style="min-width:160px">
+        <div class="muted">Timing</div>
+        <select id="animTiming" style="width:100%;margin:4px 0">
+          <option value="parallel">Simultâneo (parallel)</option>
+          <option value="wait_last">Esperar última (wait_last)</option>
+        </select>
+      </div>
+    </div>
     <div class="section-title">Flags</div>
     <div class="row" id="flags"></div>
     <div class="section-title">Unlock</div>
@@ -434,6 +458,25 @@
       <button class="btn" id="btnDownloadHero">Baixar este herói .json</button>
     </div>
   </div>
+</div>
+
+
+<div class="layout hidden" id="layoutAttrTable" style="grid-template-columns: 1fr;">
+  <main style="max-width:100%">
+    <div class="section-title">Tabela comparativa de personagens</div>
+    <div class="hint-box">Clique no cabeçalho para ordenar. Edite as células e use <strong>Salvar atributos</strong> para gravar todos de uma vez no catálogo (depois exporte <code>entities.json</code>).</div>
+    <div class="row" style="margin-bottom:10px">
+      <button class="btn primary" id="btnSaveAttrTable">Salvar atributos</button>
+      <button class="btn" id="btnRefreshAttrTable">Atualizar tabela</button>
+      <span class="muted" id="attrTableStatus"></span>
+    </div>
+    <div style="overflow:auto; max-height:70vh; border:1px solid #2a3348; border-radius:8px">
+      <table id="attrTable" style="width:100%; border-collapse:collapse; font-size:13px">
+        <thead id="attrTableHead"></thead>
+        <tbody id="attrTableBody"></tbody>
+      </table>
+    </div>
+  </main>
 </div>
 
 <div class="layout hidden" id="layoutDict" style="grid-template-columns: 1fr;">
@@ -702,6 +745,8 @@ function heroList() {
   return HEROES_FALLBACK;
 }
 
+const FX_IDS = ["Arrow", "BreathDarkness", "BreathFire", "BreathLight", "BreathThunder", "ClawSP1", "ClawSP2", "CrossClaw", "CrossHit", "CrossSlash", "Darkness1", "Darkness2", "Darkness3", "Darkness4", "Explosion1", "Explosion2", "Fire1", "Fire2", "HeartMark1", "HitSP1", "HitSP2", "Ice1", "Ice2", "Light1", "Light2", "Light3", "Light4", "Neutral1", "Neutral2", "PierceSP1", "PierceSP2", "PoisonAll", "Protection", "Reflection", "Shield", "Shoot1", "SlashSP1", "SlashSP2", "SlashSP3", "Smokescreen", "Song1", "StarsHit", "Thunder1", "Thunder2", "Thunder3", "Thunder4", "Wind1", "Wind2", "arrow", "bleed", "cast", "claw", "darkness", "explosion", "fire", "guard", "heal", "hit", "ice", "light", "lightning", "pierce", "poison", "shield", "slash", "status", "stun", "thunder", "wind"];
+
 function blankCard(owner) {
   owner = owner || (heroList()[0] && heroList()[0].id) || "ent_adam";
   return {
@@ -709,6 +754,7 @@ function blankCard(owner) {
     actions: [["hit","0"]], reach: false, stat: "attack",
     unlock: "starting", exhaust: false, gain: 1, cost: 0, art: "",
     tier: "inicial", melhorada_de: "", chrome_3d: false,
+    anim_self: [], anim_target: [], anim_timing: "parallel",
   };
 }
 
@@ -799,7 +845,69 @@ function updatePassiveExplain() {
   el.textContent = PASSIVES[id] || ("Aprimoramento: " + id);
 }
 
+
+function fillAnimSelects() {
+  ["animSelfPick", "animTargetPick"].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const cur = el.value;
+    el.innerHTML = '<option value="">— escolher FX —</option>';
+    FX_IDS.forEach(fx => el.insertAdjacentHTML("beforeend", `<option value="${fx}">${fx}</option>`));
+    if (cur) el.value = cur;
+  });
+}
+
+function renderAnimList(which) {
+  const box = document.getElementById(which === "self" ? "animSelfList" : "animTargetList");
+  if (!box) return;
+  const arr = which === "self" ? (draft.anim_self || []) : (draft.anim_target || []);
+  box.innerHTML = "";
+  arr.forEach((fx, i) => {
+    const row = document.createElement("div");
+    row.className = "row";
+    row.style.gap = "6px";
+    row.style.marginBottom = "4px";
+    row.innerHTML = `<span class="chip">${fx}</span>`;
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "btn danger";
+    btn.textContent = "×";
+    btn.onclick = () => {
+      arr.splice(i, 1);
+      if (which === "self") draft.anim_self = arr; else draft.anim_target = arr;
+      renderAnimList(which);
+    };
+    row.appendChild(btn);
+    box.appendChild(row);
+  });
+}
+
+function wireAnimUi() {
+  fillAnimSelects();
+  const add = (which) => {
+    const pick = document.getElementById(which === "self" ? "animSelfPick" : "animTargetPick");
+    const fx = pick && pick.value;
+    if (!fx) return;
+    if (which === "self") {
+      draft.anim_self = draft.anim_self || [];
+      draft.anim_self.push(fx);
+    } else {
+      draft.anim_target = draft.anim_target || [];
+      draft.anim_target.push(fx);
+    }
+    renderAnimList(which);
+  };
+  const b1 = document.getElementById("btnAddAnimSelf");
+  const b2 = document.getElementById("btnAddAnimTarget");
+  if (b1) b1.onclick = () => add("self");
+  if (b2) b2.onclick = () => add("target");
+  const timing = document.getElementById("animTiming");
+  if (timing) timing.onchange = () => { draft.anim_timing = timing.value || "parallel"; };
+}
+
+
 function fillSelects() {
+  wireAnimUi();
   const fo = document.getElementById("filterOwner");
   const ow = document.getElementById("owner");
   const heroes = heroList();
@@ -1033,6 +1141,12 @@ function buildCardObject() {
   };
   if (draft.melhorada_de) c.melhorada_de = draft.melhorada_de;
   if (draft.chrome_3d || draft.tier === "melhorada") c.chrome_3d = true;
+  if (Array.isArray(draft.anim_self) && draft.anim_self.length) c.anim_self = draft.anim_self.slice();
+  if (Array.isArray(draft.anim_target) && draft.anim_target.length) c.anim_target = draft.anim_target.slice();
+  const timingEl = document.getElementById("animTiming");
+  const timing = (timingEl && timingEl.value) || draft.anim_timing || "parallel";
+  if (timing) c.anim_timing = timing;
+
   if (hasDmg) c.stat = draft.stat || "attack";
   // Custo XOR Ganho
   let cost = Number(document.getElementById("cost").value || 0);
@@ -1173,6 +1287,12 @@ function syncForm(fromDraft) {
     draft.gain = 0;
   }
   syncChips();
+  const at = document.getElementById("animTiming");
+  if (at) at.value = draft.anim_timing || "parallel";
+  draft.anim_self = Array.isArray(draft.anim_self) ? draft.anim_self : [];
+  draft.anim_target = Array.isArray(draft.anim_target) ? draft.anim_target : [];
+  renderAnimList("self");
+  renderAnimList("target");
   renderActions();
   updatePreview();
   renderList();
@@ -1250,6 +1370,10 @@ function loadCard(id) {
   draft.tier = c.tier || cardTier(c);
   draft.melhorada_de = c.melhorada_de || "";
   draft.chrome_3d = !!c.chrome_3d || draft.tier === "melhorada";
+  draft.anim_self = Array.isArray(c.anim_self) ? c.anim_self.slice() : [];
+  draft.anim_target = Array.isArray(c.anim_target) ? c.anim_target.slice() : [];
+  draft.anim_timing = c.anim_timing || "parallel";
+
   const tm = document.getElementById("toggleMelhorada");
   if (tm) tm.classList.toggle("on", draft.tier === "melhorada");
   syncForm(true);
@@ -1506,13 +1630,18 @@ function setMode(m) {
   mode = m;
   document.getElementById("tabCards").classList.toggle("active", m === "cards");
   document.getElementById("tabHeroes").classList.toggle("active", m === "heroes");
+  const tabAttrs = document.getElementById("tabAttrs");
+  if (tabAttrs) tabAttrs.classList.toggle("active", m === "attrs");
   const tabDict = document.getElementById("tabDict");
   if (tabDict) tabDict.classList.toggle("active", m === "dict");
   document.getElementById("layoutCards").classList.toggle("hidden", m !== "cards");
   document.getElementById("layoutHeroes").classList.toggle("hidden", m !== "heroes");
+  const layoutAttrs = document.getElementById("layoutAttrTable");
+  if (layoutAttrs) layoutAttrs.classList.toggle("hidden", m !== "attrs");
   const layoutDict = document.getElementById("layoutDict");
   if (layoutDict) layoutDict.classList.toggle("hidden", m !== "dict");
   if (m === "dict") renderDictionary();
+  if (m === "attrs") renderAttrTable();
 }
 
 function updateAssetStatus() {
@@ -1526,14 +1655,109 @@ function updateAssetStatus() {
   }
 }
 
+
+/* ——— Tabela comparativa de atributos ——— */
+let attrSortKey = "name";
+let attrSortDir = 1;
+const ATTR_COLS = [
+  {key:"id", label:"Id", editable:false},
+  {key:"name", label:"Nome", editable:false},
+  {key:"hp", label:"Vida", editable:true},
+  {key:"attack", label:"Impacto", editable:true},
+  {key:"power", label:"Poder", editable:true},
+  {key:"armor", label:"Armadura", editable:true},
+  {key:"escudo", label:"Escudo", editable:true},
+  {key:"type", label:"Tipo", editable:false},
+  {key:"archetype", label:"Arquétipo", editable:false},
+];
+
+function renderAttrTable() {
+  const head = document.getElementById("attrTableHead");
+  const body = document.getElementById("attrTableBody");
+  if (!head || !body) return;
+  head.innerHTML = "";
+  const trh = document.createElement("tr");
+  ATTR_COLS.forEach(col => {
+    const th = document.createElement("th");
+    th.textContent = col.label + (attrSortKey === col.key ? (attrSortDir > 0 ? " ▲" : " ▼") : "");
+    th.style.cssText = "position:sticky;top:0;background:#151b2b;padding:8px;text-align:left;cursor:pointer;border-bottom:1px solid #2a3348;white-space:nowrap";
+    th.onclick = () => {
+      if (attrSortKey === col.key) attrSortDir *= -1;
+      else { attrSortKey = col.key; attrSortDir = 1; }
+      renderAttrTable();
+    };
+    trh.appendChild(th);
+  });
+  head.appendChild(trh);
+  const rows = Object.values(catalog.heroes || {}).slice();
+  rows.sort((a, b) => {
+    const av = a[attrSortKey], bv = b[attrSortKey];
+    if (typeof av === "number" && typeof bv === "number") return (av - bv) * attrSortDir;
+    return String(av ?? "").localeCompare(String(bv ?? ""), "pt-BR") * attrSortDir;
+  });
+  body.innerHTML = "";
+  rows.forEach(h => {
+    const tr = document.createElement("tr");
+    tr.dataset.hid = h.id;
+    ATTR_COLS.forEach(col => {
+      const td = document.createElement("td");
+      td.style.cssText = "padding:6px 8px;border-bottom:1px solid #1c2436";
+      if (col.editable) {
+        const inp = document.createElement("input");
+        inp.type = "number";
+        inp.min = "0";
+        inp.value = h[col.key] ?? 0;
+        inp.dataset.field = col.key;
+        inp.style.cssText = "width:72px;background:#0e1420;color:#e8eefc;border:1px solid #2a3348;border-radius:4px;padding:4px";
+        td.appendChild(inp);
+      } else {
+        td.textContent = h[col.key] ?? "";
+      }
+      tr.appendChild(td);
+    });
+    body.appendChild(tr);
+  });
+  const st = document.getElementById("attrTableStatus");
+  if (st) st.textContent = rows.length + " personagens";
+}
+
+function saveAttrTable() {
+  const body = document.getElementById("attrTableBody");
+  if (!body) return;
+  let n = 0;
+  body.querySelectorAll("tr").forEach(tr => {
+    const hid = tr.dataset.hid;
+    if (!hid || !catalog.heroes[hid]) return;
+    tr.querySelectorAll("input[data-field]").forEach(inp => {
+      const field = inp.dataset.field;
+      const val = Number(inp.value);
+      if (!Number.isNaN(val)) {
+        catalog.heroes[hid][field] = val;
+        n++;
+      }
+    });
+    dirtyHeroIds.add(hid);
+  });
+  toast("Atributos salvos no catálogo (" + n + " campos). Exporte entities.json completo para gravar no disco.");
+  renderAttrTable();
+  if (selectedHeroId) syncHeroForm();
+}
+
+
 function wire() {
   fillSelects();
   updateAssetStatus();
 
   document.getElementById("tabCards").onclick = () => setMode("cards");
   document.getElementById("tabHeroes").onclick = () => setMode("heroes");
+  const tabAttrsBtn = document.getElementById("tabAttrs");
+  if (tabAttrsBtn) tabAttrsBtn.onclick = () => setMode("attrs");
   const tabDictBtn = document.getElementById("tabDict");
   if (tabDictBtn) tabDictBtn.onclick = () => setMode("dict");
+  const btnSaveAttr = document.getElementById("btnSaveAttrTable");
+  if (btnSaveAttr) btnSaveAttr.onclick = saveAttrTable;
+  const btnRefAttr = document.getElementById("btnRefreshAttrTable");
+  if (btnRefAttr) btnRefAttr.onclick = renderAttrTable;
   const dictFilter = document.getElementById("dictFilter");
   if (dictFilter) dictFilter.oninput = () => renderDictionary();
 

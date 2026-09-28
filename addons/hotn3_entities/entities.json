@@ -8,10 +8,10 @@
       "species": "Humano",
       "level_reference": 2,
       "power_reference": 12,
-      "hp": 24,
-      "attack": 4,
-      "power": 4,
-      "armor": 1,
+      "hp": 66,
+      "attack": 27,
+      "power": 27,
+      "armor": 20,
       "type": "TECNICO",
       "row": "back",
       "sprite": "res://assets/cast/ent_adam_sprite.png",
@@ -69,7 +69,7 @@
       "source_page": "Adam.md",
       "portrait": "res://assets/cast/ent_adam_portrait.png",
       "signature_icon": "res://assets/cast/ent_adam_icon.png",
-      "escudo": 1,
+      "escudo": 20,
       "aprimoramento": "rastreador",
       "grupos": [
         "Preparo",
@@ -99,10 +99,10 @@
       "species": "Inumano",
       "level_reference": 8,
       "power_reference": 310,
-      "hp": 36,
-      "attack": 10,
-      "power": 10,
-      "armor": 2,
+      "hp": 100,
+      "attack": 40,
+      "power": 40,
+      "armor": 22,
       "type": "BRUTO",
       "row": "front",
       "sprite": "res://assets/cast/ent_akuji_sprite.png",
@@ -168,7 +168,7 @@
       "source_page": "Akuji.md",
       "portrait": "res://assets/cast/ent_akuji_portrait.png",
       "signature_icon": "res://assets/cast/ent_akuji_icon.png",
-      "escudo": 1,
+      "escudo": 20,
       "aprimoramento": "vanguarda",
       "grupos": [
         "Canhão",
@@ -198,10 +198,10 @@
       "species": "Humano",
       "level_reference": 1,
       "power_reference": 8,
-      "hp": 22,
-      "attack": 3,
-      "power": 3,
-      "armor": 1,
+      "hp": 60,
+      "attack": 24,
+      "power": 24,
+      "armor": 20,
       "type": "TECNICO",
       "row": "back",
       "sprite": "res://assets/cast/ent_alexis_sprite.png",
@@ -255,7 +255,7 @@
       "source_page": "Alexis.md",
       "portrait": "res://assets/cast/ent_alexis_portrait.png",
       "signature_icon": "res://assets/cast/ent_alexis_icon.png",
-      "escudo": 1,
+      "escudo": 20,
       "aprimoramento": "rastreador",
       "grupos": [
         "Encantador",
@@ -285,10 +285,10 @@
       "species": "Inumano",
       "level_reference": 8,
       "power_reference": 340,
-      "hp": 43,
-      "attack": 10,
-      "power": 10,
-      "armor": 4,
+      "hp": 120,
+      "attack": 40,
+      "power": 40,
+      "armor": 27,
       "type": "MENTAL",
       "row": "front",
       "sprite": "res://assets/cast/ent_alistair_sprite.png",
@@ -354,7 +354,7 @@
       "source_page": "Alistair.md",
       "portrait": "res://assets/cast/ent_alistair_portrait.png",
       "signature_icon": "res://assets/cast/ent_alistair_icon.png",
-      "escudo": 5,
+      "escudo": 29,
       "aprimoramento": "baluarte",
       "grupos": [
         "Vanguarda",
@@ -384,10 +384,10 @@
       "species": "Inumano",
       "level_reference": 6,
       "power_reference": 200,
-      "hp": 39,
-      "attack": 8,
-      "power": 8,
-      "armor": 4,
+      "hp": 109,
+      "attack": 36,
+      "power": 36,
+      "armor": 27,
       "type": "BRUTO",
       "row": "front",
       "sprite": "res://assets/cast/ent_alyssa_wine_sprite.png",
@@ -456,7 +456,7 @@
       "source_page": "Alyssa_Wine.md",
       "portrait": "res://assets/cast/ent_alyssa_wine_portrait.png",
       "signature_icon": "res://assets/cast/ent_alyssa_wine_icon.png",
-      "escudo": 3,
+      "escudo": 24,
       "aprimoramento": {
         "id": "escuridao",
         "name": "Escuridão",
@@ -499,10 +499,10 @@
       "species": "Humano",
       "level_reference": 5,
       "power_reference": 85,
-      "hp": 30,
-      "attack": 7,
-      "power": 7,
-      "armor": 1,
+      "hp": 83,
+      "attack": 33,
+      "power": 33,
+      "armor": 20,
       "type": "TECNICO",
       "row": "back",
       "sprite": "res://assets/cast/ent_ashlee_sprite.png",
@@ -565,7 +565,7 @@
       "source_page": "Ashlee.md",
       "portrait": "res://assets/cast/ent_ashlee_portrait.png",
       "signature_icon": "res://assets/cast/ent_ashlee_icon.png",
-      "escudo": 1,
+      "escudo": 20,
       "aprimoramento": "rastreador",
       "grupos": [
         "Preparo",
@@ -595,10 +595,10 @@
       "species": "Humano",
       "level_reference": 3,
       "power_reference": 45,
-      "hp": 26,
-      "attack": 5,
-      "power": 5,
-      "armor": 2,
+      "hp": 71,
+      "attack": 29,
+      "power": 29,
+      "armor": 22,
       "type": "PSICOLOGICO",
       "row": "back",
       "sprite": "res://assets/cast/ent_daeva_sprite.png",
@@ -657,7 +657,7 @@
       "source_page": "Daeva.md",
       "portrait": "res://assets/cast/ent_daeva_portrait.png",
       "signature_icon": "res://assets/cast/ent_daeva_icon.png",
-      "escudo": 2,
+      "escudo": 22,
       "aprimoramento": "oportunista",
       "grupos": [
         "Furtivo",
@@ -687,10 +687,10 @@
       "species": "Humano",
       "level_reference": 4,
       "power_reference": 85,
-      "hp": 28,
-      "attack": 6,
-      "power": 6,
-      "armor": 2,
+      "hp": 77,
+      "attack": 31,
+      "power": 31,
+      "armor": 22,
       "type": "PSICOLOGICO",
       "row": "back",
       "sprite": "res://assets/cast/ent_damian_alrosa_sprite.png",
@@ -748,7 +748,7 @@
       "source_page": "Damian_Alrosa.md",
       "portrait": "res://assets/cast/ent_damian_alrosa_portrait.png",
       "signature_icon": "res://assets/cast/ent_damian_alrosa_icon.png",
-      "escudo": 2,
+      "escudo": 22,
       "aprimoramento": "oportunista",
       "grupos": [
         "Calculista",
@@ -778,10 +778,10 @@
       "species": "Inumano",
       "level_reference": 5,
       "power_reference": 110,
-      "hp": 37,
-      "attack": 7,
-      "power": 7,
-      "armor": 4,
+      "hp": 103,
+      "attack": 33,
+      "power": 33,
+      "armor": 27,
       "type": "BRUTO",
       "row": "front",
       "sprite": "res://assets/cast/ent_dominika_seur_sprite.png",
@@ -839,7 +839,7 @@
       "source_page": "Dominika_Seur.md",
       "portrait": "res://assets/cast/ent_dominika_seur_portrait.png",
       "signature_icon": "res://assets/cast/ent_dominika_seur_icon.png",
-      "escudo": 3,
+      "escudo": 24,
       "aprimoramento": "baluarte",
       "grupos": [
         "Inabalável",
@@ -869,10 +869,10 @@
       "species": "Humano",
       "level_reference": 1,
       "power_reference": 5,
-      "hp": 22,
-      "attack": 3,
-      "power": 3,
-      "armor": 1,
+      "hp": 60,
+      "attack": 24,
+      "power": 24,
+      "armor": 20,
       "type": "TECNICO",
       "row": "back",
       "sprite": "res://assets/cast/ent_dylan_sprite.png",
@@ -922,7 +922,7 @@
       "source_page": "Dylan.md",
       "portrait": "res://assets/cast/ent_dylan_portrait.png",
       "signature_icon": "res://assets/cast/ent_dylan_icon.png",
-      "escudo": 1,
+      "escudo": 20,
       "aprimoramento": "rastreador",
       "grupos": [
         "Encantador",
@@ -952,10 +952,10 @@
       "species": "Meio-Monstro",
       "level_reference": 5,
       "power_reference": 100,
-      "hp": 30,
-      "attack": 7,
-      "power": 8,
-      "armor": 1,
+      "hp": 83,
+      "attack": 33,
+      "power": 36,
+      "armor": 20,
       "type": "PROJETIVO",
       "row": "back",
       "sprite": "res://assets/cast/ent_evelyn_graves_sprite.png",
@@ -1014,7 +1014,7 @@
       "source_page": "Evelyn_Graves.md",
       "portrait": "res://assets/cast/ent_evelyn_graves_portrait.png",
       "signature_icon": "res://assets/cast/ent_evelyn_graves_icon.png",
-      "escudo": 3,
+      "escudo": 24,
       "aprimoramento": "canalizar",
       "grupos": [
         "Marionetista",
@@ -1044,10 +1044,10 @@
       "species": "Inumano",
       "level_reference": 8,
       "power_reference": 450,
-      "hp": 36,
-      "attack": 10,
-      "power": 10,
-      "armor": 2,
+      "hp": 100,
+      "attack": 40,
+      "power": 40,
+      "armor": 22,
       "type": "BRUTO",
       "row": "front",
       "sprite": "res://assets/cast/ent_fate_sprite.png",
@@ -1106,7 +1106,7 @@
       "source_page": "Fate.md",
       "portrait": "res://assets/cast/ent_fate_portrait.png",
       "signature_icon": "res://assets/cast/ent_fate_icon.png",
-      "escudo": 1,
+      "escudo": 20,
       "aprimoramento": "vanguarda",
       "grupos": [
         "Velocista",
@@ -1136,10 +1136,10 @@
       "species": "Meio-Sangue",
       "level_reference": 10,
       "power_reference": 500,
-      "hp": 40,
-      "attack": 10,
-      "power": 10,
-      "armor": 1,
+      "hp": 111,
+      "attack": 40,
+      "power": 40,
+      "armor": 20,
       "type": "PROJETIVO",
       "row": "back",
       "sprite": "res://assets/cast/ent_hynda_valdtagen_sprite.png",
@@ -1201,7 +1201,7 @@
       "source_page": "Hynda_Valdtagen.md",
       "portrait": "res://assets/cast/ent_hynda_valdtagen_portrait.png",
       "signature_icon": "res://assets/cast/ent_hynda_valdtagen_icon.png",
-      "escudo": 4,
+      "escudo": 27,
       "aprimoramento": "canalizar",
       "grupos": [
         "Acrobata",
@@ -1231,10 +1231,10 @@
       "species": "Ciborgue",
       "level_reference": 8,
       "power_reference": 220,
-      "hp": 36,
-      "attack": 10,
-      "power": 10,
-      "armor": 2,
+      "hp": 100,
+      "attack": 40,
+      "power": 40,
+      "armor": 22,
       "type": "PSICOLOGICO",
       "row": "back",
       "sprite": "res://assets/cast/ent_kabuki_sprite.png",
@@ -1305,7 +1305,7 @@
       "source_page": "Kabuki.md",
       "portrait": "res://assets/cast/ent_kabuki_portrait.png",
       "signature_icon": "res://assets/cast/ent_kabuki_icon.png",
-      "escudo": 2,
+      "escudo": 22,
       "aprimoramento": "oportunista",
       "grupos": [
         "Acrobata",
@@ -1335,10 +1335,10 @@
       "species": "Meio-Sangue",
       "level_reference": 4,
       "power_reference": 90,
-      "hp": 35,
-      "attack": 6,
-      "power": 6,
-      "armor": 4,
+      "hp": 97,
+      "attack": 31,
+      "power": 31,
+      "armor": 27,
       "type": "MENTAL",
       "row": "front",
       "sprite": "res://assets/cast/ent_konrad_sprite.png",
@@ -1392,7 +1392,7 @@
       "source_page": "Konrad.md",
       "portrait": "res://assets/cast/ent_konrad_portrait.png",
       "signature_icon": "res://assets/cast/ent_konrad_icon.png",
-      "escudo": 5,
+      "escudo": 29,
       "aprimoramento": "baluarte",
       "grupos": [
         "Furtivo",
@@ -1422,10 +1422,10 @@
       "species": "Inumano",
       "level_reference": 8,
       "power_reference": 290,
-      "hp": 36,
-      "attack": 10,
-      "power": 10,
-      "armor": 1,
+      "hp": 100,
+      "attack": 40,
+      "power": 40,
+      "armor": 20,
       "type": "PROJETIVO",
       "row": "back",
       "sprite": "res://assets/cast/ent_leona_sprite.png",
@@ -1487,7 +1487,7 @@
       "source_page": "Leona.md",
       "portrait": "res://assets/cast/ent_leona_portrait.png",
       "signature_icon": "res://assets/cast/ent_leona_icon.png",
-      "escudo": 4,
+      "escudo": 27,
       "aprimoramento": "canalizar",
       "grupos": [
         "Carniceiro",
@@ -1517,10 +1517,10 @@
       "species": "Inumano",
       "level_reference": 6,
       "power_reference": 150,
-      "hp": 32,
-      "attack": 8,
-      "power": 9,
-      "armor": 1,
+      "hp": 89,
+      "attack": 36,
+      "power": 38,
+      "armor": 20,
       "type": "PROJETIVO",
       "row": "back",
       "sprite": "res://assets/cast/ent_lust_sprite.png",
@@ -1578,7 +1578,7 @@
       "source_page": "Lust.md",
       "portrait": "res://assets/cast/ent_lust_portrait.png",
       "signature_icon": "res://assets/cast/ent_lust_icon.png",
-      "escudo": 3,
+      "escudo": 24,
       "aprimoramento": "canalizar",
       "grupos": [
         "Encantador",
@@ -1608,10 +1608,10 @@
       "species": "Meio-Monstro",
       "level_reference": 5,
       "power_reference": 105,
-      "hp": 30,
-      "attack": 8,
-      "power": 7,
-      "armor": 2,
+      "hp": 83,
+      "attack": 36,
+      "power": 33,
+      "armor": 22,
       "type": "BRUTO",
       "row": "front",
       "sprite": "res://assets/cast/ent_madelyn_sprite.png",
@@ -1669,7 +1669,7 @@
       "source_page": "Madelyn.md",
       "portrait": "res://assets/cast/ent_madelyn_portrait.png",
       "signature_icon": "res://assets/cast/ent_madelyn_icon.png",
-      "escudo": 1,
+      "escudo": 20,
       "aprimoramento": "vanguarda",
       "grupos": [
         "Frenético",
@@ -1699,10 +1699,10 @@
       "species": "Meio-Sangue",
       "level_reference": 8,
       "power_reference": 400,
-      "hp": 36,
-      "attack": 10,
-      "power": 10,
-      "armor": 1,
+      "hp": 100,
+      "attack": 40,
+      "power": 40,
+      "armor": 20,
       "type": "PROJETIVO",
       "row": "back",
       "sprite": "res://assets/cast/ent_mingau_o_feiticeiro_sprite.png",
@@ -1765,7 +1765,7 @@
       "source_page": "Mingau_o_Feiticeiro.md",
       "portrait": "res://assets/cast/ent_mingau_o_feiticeiro_portrait.png",
       "signature_icon": "res://assets/cast/ent_mingau_o_feiticeiro_icon.png",
-      "escudo": 4,
+      "escudo": 27,
       "aprimoramento": "canalizar",
       "grupos": [
         "Anomalia",
@@ -1795,10 +1795,10 @@
       "species": "Mutante",
       "level_reference": 3,
       "power_reference": 75,
-      "hp": 26,
-      "attack": 5,
-      "power": 6,
-      "armor": 1,
+      "hp": 71,
+      "attack": 29,
+      "power": 31,
+      "armor": 20,
       "type": "PROJETIVO",
       "row": "back",
       "sprite": "res://assets/cast/ent_mutante_generico_sprite.png",
@@ -1848,7 +1848,7 @@
       "source_page": "Mutante_Generico.md",
       "portrait": "res://assets/cast/ent_mutante_generico_portrait.png",
       "signature_icon": "res://assets/cast/ent_mutante_generico_icon.png",
-      "escudo": 2,
+      "escudo": 22,
       "aprimoramento": "canalizar",
       "grupos": [
         "Canhão",
@@ -1878,10 +1878,10 @@
       "species": "Humano",
       "level_reference": 4,
       "power_reference": 95,
-      "hp": 28,
-      "attack": 6,
-      "power": 7,
-      "armor": 1,
+      "hp": 77,
+      "attack": 31,
+      "power": 33,
+      "armor": 20,
       "type": "PROJETIVO",
       "row": "back",
       "sprite": "res://assets/cast/ent_nero_sprite.png",
@@ -1943,7 +1943,7 @@
       "source_page": "Nero.md",
       "portrait": "res://assets/cast/ent_nero_portrait.png",
       "signature_icon": "res://assets/cast/ent_nero_icon.png",
-      "escudo": 2,
+      "escudo": 22,
       "aprimoramento": "canalizar",
       "grupos": [
         "Invocador",
@@ -1973,10 +1973,10 @@
       "species": "Humano",
       "level_reference": 1,
       "power_reference": 15,
-      "hp": 22,
-      "attack": 3,
-      "power": 3,
-      "armor": 2,
+      "hp": 60,
+      "attack": 24,
+      "power": 24,
+      "armor": 22,
       "type": "PSICOLOGICO",
       "row": "back",
       "sprite": "res://assets/cast/ent_niu_valdtagen_sprite.png",
@@ -2023,7 +2023,7 @@
       "source_page": "Niu_Valdtagen.md",
       "portrait": "res://assets/cast/ent_niu_valdtagen_portrait.png",
       "signature_icon": "res://assets/cast/ent_niu_valdtagen_icon.png",
-      "escudo": 2,
+      "escudo": 22,
       "aprimoramento": "oportunista",
       "grupos": [
         "Furtivo",
@@ -2053,10 +2053,10 @@
       "species": "Meio-Monstro",
       "level_reference": 8,
       "power_reference": 200,
-      "hp": 36,
-      "attack": 10,
-      "power": 10,
-      "armor": 2,
+      "hp": 100,
+      "attack": 40,
+      "power": 40,
+      "armor": 22,
       "type": "BRUTO",
       "row": "front",
       "sprite": "res://assets/cast/ent_pesadelo_vivo_sprite.png",
@@ -2119,7 +2119,7 @@
       "source_page": "Pesadelo_Vivo.md",
       "portrait": "res://assets/cast/ent_pesadelo_vivo_portrait.png",
       "signature_icon": "res://assets/cast/ent_pesadelo_vivo_icon.png",
-      "escudo": 1,
+      "escudo": 20,
       "aprimoramento": "vanguarda",
       "grupos": [
         "Frenético",
@@ -2149,10 +2149,10 @@
       "species": "Meio-Monstro",
       "level_reference": 9,
       "power_reference": 320,
-      "hp": 38,
-      "attack": 10,
-      "power": 10,
-      "armor": 2,
+      "hp": 106,
+      "attack": 40,
+      "power": 40,
+      "armor": 22,
       "type": "PSICOLOGICO",
       "row": "back",
       "sprite": "res://assets/cast/ent_pietro_caos_sprite.png",
@@ -2226,7 +2226,7 @@
       "source_page": "Pietro_Caos.md",
       "portrait": "res://assets/cast/ent_pietro_caos_portrait.png",
       "signature_icon": "res://assets/cast/ent_pietro_caos_icon.png",
-      "escudo": 2,
+      "escudo": 22,
       "aprimoramento": "oportunista",
       "grupos": [
         "Desperto",
@@ -2256,10 +2256,10 @@
       "species": "Inumano",
       "level_reference": 9,
       "power_reference": 380,
-      "hp": 38,
-      "attack": 10,
-      "power": 10,
-      "armor": 2,
+      "hp": 106,
+      "attack": 40,
+      "power": 40,
+      "armor": 22,
       "type": "BRUTO",
       "row": "front",
       "sprite": "res://assets/cast/ent_quasar_sprite.png",
@@ -2322,7 +2322,7 @@
       "source_page": "Quasar.md",
       "portrait": "res://assets/cast/ent_quasar_portrait.png",
       "signature_icon": "res://assets/cast/ent_quasar_icon.png",
-      "escudo": 1,
+      "escudo": 20,
       "aprimoramento": "vanguarda",
       "grupos": [
         "Duelista",
@@ -2352,10 +2352,10 @@
       "species": "Mutante",
       "level_reference": 5,
       "power_reference": 120,
-      "hp": 37,
-      "attack": 7,
-      "power": 7,
-      "armor": 4,
+      "hp": 103,
+      "attack": 33,
+      "power": 33,
+      "armor": 27,
       "type": "MENTAL",
       "row": "front",
       "sprite": "res://assets/cast/ent_taylor_sprite.png",
@@ -2413,7 +2413,7 @@
       "source_page": "Taylor.md",
       "portrait": "res://assets/cast/ent_taylor_portrait.png",
       "signature_icon": "res://assets/cast/ent_taylor_icon.png",
-      "escudo": 5,
+      "escudo": 29,
       "aprimoramento": "baluarte",
       "grupos": [
         "Marionetista",
@@ -2443,10 +2443,10 @@
       "species": "Ciborgue",
       "level_reference": 5,
       "power_reference": 105,
-      "hp": 37,
-      "attack": 7,
-      "power": 7,
-      "armor": 4,
+      "hp": 103,
+      "attack": 33,
+      "power": 33,
+      "armor": 27,
       "type": "BRUTO",
       "row": "front",
       "sprite": "res://assets/cast/ent_techna_sprite.png",
@@ -2505,7 +2505,7 @@
       "source_page": "Techna.md",
       "portrait": "res://assets/cast/ent_techna_portrait.png",
       "signature_icon": "res://assets/cast/ent_techna_icon.png",
-      "escudo": 3,
+      "escudo": 24,
       "aprimoramento": "baluarte",
       "grupos": [
         "Preparo",
@@ -2548,7 +2548,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_adam_cobertura_improvisada": {
       "id": "ent_adam_cobertura_improvisada",
@@ -2569,7 +2576,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_adam_avaliar_o_risco": {
       "id": "ent_adam_avaliar_o_risco",
@@ -2589,7 +2603,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_adam_puxar_para_tras": {
       "id": "ent_adam_puxar_para_tras",
@@ -2613,7 +2634,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_adam_abrigo_rapido": {
       "id": "ent_adam_abrigo_rapido",
@@ -2634,7 +2662,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_adam_cuidar_dos_feridos": {
       "id": "ent_adam_cuidar_dos_feridos",
@@ -2657,7 +2692,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "heal"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_adam_armadilha_de_campo": {
       "id": "ent_adam_armadilha_de_campo",
@@ -2682,7 +2724,14 @@
       "unlock": "starting",
       "exhaust": false,
       "cost": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_adam_nao_vou_deixar": {
       "id": "ent_adam_nao_vou_deixar",
@@ -2708,7 +2757,14 @@
       "unlock": "starting",
       "exhaust": false,
       "cost": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_adam_rota_de_fuga": {
       "id": "ent_adam_rota_de_fuga",
@@ -2733,7 +2789,14 @@
       "unlock": "progression",
       "exhaust": false,
       "gain": 2,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_adam_ultima_linha": {
       "id": "ent_adam_ultima_linha",
@@ -2758,7 +2821,14 @@
       "unlock": "progression",
       "exhaust": false,
       "cost": 3,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_akuji_brasa_negra": {
       "id": "ent_akuji_brasa_negra",
@@ -2783,7 +2853,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_akuji_escamas_da_fornalha": {
       "id": "ent_akuji_escamas_da_fornalha",
@@ -2804,7 +2881,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_akuji_sopro_abrasador": {
       "id": "ent_akuji_sopro_abrasador",
@@ -2829,7 +2913,14 @@
       "unlock": "starting",
       "exhaust": false,
       "cost": 3,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_akuji_forma_de_cinzas": {
       "id": "ent_akuji_forma_de_cinzas",
@@ -2850,7 +2941,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_akuji_chama_sem_luz": {
       "id": "ent_akuji_chama_sem_luz",
@@ -2875,7 +2973,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_akuji_leitura_de_pactos": {
       "id": "ent_akuji_leitura_de_pactos",
@@ -2900,7 +3005,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_akuji_asas_de_energia_negra": {
       "id": "ent_akuji_asas_de_energia_negra",
@@ -2925,7 +3037,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_akuji_incendio_dirigido": {
       "id": "ent_akuji_incendio_dirigido",
@@ -2950,7 +3069,14 @@
       "unlock": "starting",
       "exhaust": false,
       "cost": 4,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_akuji_cinzas_retornam": {
       "id": "ent_akuji_cinzas_retornam",
@@ -2974,7 +3100,14 @@
       "unlock": "progression",
       "exhaust": false,
       "gain": 1,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_akuji_noite_em_combustao": {
       "id": "ent_akuji_noite_em_combustao",
@@ -3002,7 +3135,14 @@
       "unlock": "progression",
       "exhaust": true,
       "cost": 5,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_alexis_alerta_aos_gritos": {
       "id": "ent_alexis_alerta_aos_gritos",
@@ -3023,7 +3163,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_alexis_objeto_arremessado": {
       "id": "ent_alexis_objeto_arremessado",
@@ -3043,7 +3190,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_alexis_tapete_sob_os_pes": {
       "id": "ent_alexis_tapete_sob_os_pes",
@@ -3068,7 +3222,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_alexis_reunir_o_grupo": {
       "id": "ent_alexis_reunir_o_grupo",
@@ -3088,7 +3249,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_alexis_escapar_para_cobertura": {
       "id": "ent_alexis_escapar_para_cobertura",
@@ -3109,7 +3277,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_alexis_primeiros_socorros": {
       "id": "ent_alexis_primeiros_socorros",
@@ -3129,7 +3304,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "heal"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_alexis_distracao_teatral": {
       "id": "ent_alexis_distracao_teatral",
@@ -3150,7 +3332,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_alexis_proteger_um_amigo": {
       "id": "ent_alexis_proteger_um_amigo",
@@ -3176,7 +3365,14 @@
       "unlock": "starting",
       "exhaust": false,
       "cost": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_alexis_colecao_improvavel": {
       "id": "ent_alexis_colecao_improvavel",
@@ -3201,7 +3397,14 @@
       "unlock": "progression",
       "exhaust": false,
       "gain": 2,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_alexis_coragem_tardia": {
       "id": "ent_alexis_coragem_tardia",
@@ -3226,7 +3429,14 @@
       "unlock": "progression",
       "exhaust": false,
       "cost": 3,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_alistair_punho_de_armadura": {
       "id": "ent_alistair_punho_de_armadura",
@@ -3249,7 +3459,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_alistair_armadura_instantanea": {
       "id": "ent_alistair_armadura_instantanea",
@@ -3274,7 +3491,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_alistair_arco_de_luz": {
       "id": "ent_alistair_arco_de_luz",
@@ -3299,7 +3523,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_alistair_desafio_da_vanguarda": {
       "id": "ent_alistair_desafio_da_vanguarda",
@@ -3323,7 +3554,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_alistair_esconjuro": {
       "id": "ent_alistair_esconjuro",
@@ -3348,7 +3586,14 @@
       "unlock": "starting",
       "exhaust": false,
       "cost": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_alistair_tempo_de_reacao": {
       "id": "ent_alistair_tempo_de_reacao",
@@ -3373,7 +3618,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_alistair_corrida_desesperada": {
       "id": "ent_alistair_corrida_desesperada",
@@ -3397,7 +3649,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_alistair_liga_ouro_aco": {
       "id": "ent_alistair_liga_ouro_aco",
@@ -3418,7 +3677,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_alistair_espada_sagrada": {
       "id": "ent_alistair_espada_sagrada",
@@ -3443,7 +3709,14 @@
       "unlock": "progression",
       "exhaust": false,
       "cost": 3,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_alistair_muralha_luminosa": {
       "id": "ent_alistair_muralha_luminosa",
@@ -3472,7 +3745,14 @@
       "unlock": "progression",
       "exhaust": true,
       "cost": 5,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_ashlee_disparo_de_contencao": {
       "id": "ent_ashlee_disparo_de_contencao",
@@ -3497,7 +3777,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_ashlee_scanner_de_soma": {
       "id": "ent_ashlee_scanner_de_soma",
@@ -3522,7 +3809,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_ashlee_protocolo_de_quarentena": {
       "id": "ent_ashlee_protocolo_de_quarentena",
@@ -3543,7 +3837,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_ashlee_kit_medico": {
       "id": "ent_ashlee_kit_medico",
@@ -3566,7 +3867,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "heal"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_ashlee_isolar_alvo": {
       "id": "ent_ashlee_isolar_alvo",
@@ -3590,7 +3898,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_ashlee_dados_de_campo": {
       "id": "ent_ashlee_dados_de_campo",
@@ -3614,7 +3929,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_ashlee_armadilha_de_isolamento": {
       "id": "ent_ashlee_armadilha_de_isolamento",
@@ -3640,7 +3962,14 @@
       "unlock": "starting",
       "exhaust": false,
       "cost": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_ashlee_compartilhar_equipamento": {
       "id": "ent_ashlee_compartilhar_equipamento",
@@ -3661,7 +3990,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_ashlee_analise_completa": {
       "id": "ent_ashlee_analise_completa",
@@ -3687,7 +4023,14 @@
       "unlock": "progression",
       "exhaust": false,
       "gain": 2,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_ashlee_quarentena_total": {
       "id": "ent_ashlee_quarentena_total",
@@ -3715,7 +4058,14 @@
       "unlock": "progression",
       "exhaust": true,
       "cost": 4,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_daeva_tiro_de_airsoft": {
       "id": "ent_daeva_tiro_de_airsoft",
@@ -3740,7 +4090,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_daeva_plano_de_assalto": {
       "id": "ent_daeva_plano_de_assalto",
@@ -3760,7 +4117,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_daeva_moto_de_fuga": {
       "id": "ent_daeva_moto_de_fuga",
@@ -3781,7 +4145,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_daeva_passo_despercebido": {
       "id": "ent_daeva_passo_despercebido",
@@ -3802,7 +4173,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_daeva_cobertura_de_corredor": {
       "id": "ent_daeva_cobertura_de_corredor",
@@ -3826,7 +4204,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_daeva_aviso_por_radio": {
       "id": "ent_daeva_aviso_por_radio",
@@ -3847,7 +4232,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_daeva_distracao_arriscada": {
       "id": "ent_daeva_distracao_arriscada",
@@ -3873,7 +4265,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_daeva_lealdade_teimosa": {
       "id": "ent_daeva_lealdade_teimosa",
@@ -3898,7 +4297,14 @@
       "unlock": "starting",
       "exhaust": false,
       "cost": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "heal"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_daeva_saida_calculada": {
       "id": "ent_daeva_saida_calculada",
@@ -3923,7 +4329,14 @@
       "unlock": "progression",
       "exhaust": false,
       "gain": 2,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_daeva_todos_para_fora": {
       "id": "ent_daeva_todos_para_fora",
@@ -3949,7 +4362,14 @@
       "unlock": "progression",
       "exhaust": false,
       "cost": 3,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_damian_alrosa_oferta_irrecusavel": {
       "id": "ent_damian_alrosa_oferta_irrecusavel",
@@ -3970,7 +4390,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_damian_alrosa_clausula_oculta": {
       "id": "ent_damian_alrosa_clausula_oculta",
@@ -3995,7 +4422,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_damian_alrosa_rede_de_contatos": {
       "id": "ent_damian_alrosa_rede_de_contatos",
@@ -4015,7 +4449,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_damian_alrosa_pocao_negociada": {
       "id": "ent_damian_alrosa_pocao_negociada",
@@ -4040,7 +4481,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "heal"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_damian_alrosa_ritual_condicionado": {
       "id": "ent_damian_alrosa_ritual_condicionado",
@@ -4066,7 +4514,14 @@
       "unlock": "starting",
       "exhaust": false,
       "cost": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_damian_alrosa_recurso_reservado": {
       "id": "ent_damian_alrosa_recurso_reservado",
@@ -4087,7 +4542,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_damian_alrosa_executar_contrato": {
       "id": "ent_damian_alrosa_executar_contrato",
@@ -4112,7 +4574,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_damian_alrosa_renegociar_termos": {
       "id": "ent_damian_alrosa_renegociar_termos",
@@ -4137,7 +4606,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_damian_alrosa_preco_da_promessa": {
       "id": "ent_damian_alrosa_preco_da_promessa",
@@ -4162,7 +4638,14 @@
       "unlock": "progression",
       "exhaust": false,
       "cost": 3,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_damian_alrosa_pacto_irrevogavel": {
       "id": "ent_damian_alrosa_pacto_irrevogavel",
@@ -4190,7 +4673,14 @@
       "unlock": "progression",
       "exhaust": true,
       "cost": 5,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_dominika_seur_massa_em_avanco": {
       "id": "ent_dominika_seur_massa_em_avanco",
@@ -4214,7 +4704,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_dominika_seur_corpo_acolchoado": {
       "id": "ent_dominika_seur_corpo_acolchoado",
@@ -4235,7 +4732,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_dominika_seur_engolfamento": {
       "id": "ent_dominika_seur_engolfamento",
@@ -4260,7 +4764,14 @@
       "unlock": "starting",
       "exhaust": false,
       "cost": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_dominika_seur_regeneracao_volumosa": {
       "id": "ent_dominika_seur_regeneracao_volumosa",
@@ -4280,7 +4791,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "heal"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_dominika_seur_pressao_inabalavel": {
       "id": "ent_dominika_seur_pressao_inabalavel",
@@ -4306,7 +4824,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_dominika_seur_esmagamento_lento": {
       "id": "ent_dominika_seur_esmagamento_lento",
@@ -4331,7 +4856,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_dominika_seur_campo_de_massa": {
       "id": "ent_dominika_seur_campo_de_massa",
@@ -4352,7 +4884,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_dominika_seur_avanco_colossal": {
       "id": "ent_dominika_seur_avanco_colossal",
@@ -4376,7 +4915,14 @@
       "unlock": "starting",
       "exhaust": false,
       "cost": 3,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_dominika_seur_absorver_impacto": {
       "id": "ent_dominika_seur_absorver_impacto",
@@ -4401,7 +4947,14 @@
       "unlock": "progression",
       "exhaust": false,
       "gain": 2,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "heal"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_dominika_seur_onda_de_engolfamento": {
       "id": "ent_dominika_seur_onda_de_engolfamento",
@@ -4429,7 +4982,14 @@
       "unlock": "progression",
       "exhaust": true,
       "cost": 5,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_dylan_avisar_o_perigo": {
       "id": "ent_dylan_avisar_o_perigo",
@@ -4450,7 +5010,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_dylan_xicara_improvisada": {
       "id": "ent_dylan_xicara_improvisada",
@@ -4470,7 +5037,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_dylan_nao_entre_em_panico": {
       "id": "ent_dylan_nao_entre_em_panico",
@@ -4493,7 +5067,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "heal"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_dylan_versos_de_coragem": {
       "id": "ent_dylan_versos_de_coragem",
@@ -4514,7 +5095,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_dylan_atrair_atencao": {
       "id": "ent_dylan_atrair_atencao",
@@ -4539,7 +5127,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_dylan_saida_da_cafeteria": {
       "id": "ent_dylan_saida_da_cafeteria",
@@ -4560,7 +5155,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_dylan_buscar_ajuda": {
       "id": "ent_dylan_buscar_ajuda",
@@ -4580,7 +5182,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_dylan_ficar_junto": {
       "id": "ent_dylan_ficar_junto",
@@ -4606,7 +5215,14 @@
       "unlock": "starting",
       "exhaust": false,
       "cost": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_dylan_guardar_a_porta": {
       "id": "ent_dylan_guardar_a_porta",
@@ -4627,7 +5243,14 @@
       "unlock": "progression",
       "exhaust": false,
       "gain": 2,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_dylan_nao_abandonar_ninguem": {
       "id": "ent_dylan_nao_abandonar_ninguem",
@@ -4652,7 +5275,14 @@
       "unlock": "progression",
       "exhaust": false,
       "cost": 3,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "heal"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_evelyn_graves_puxao_do_reino_quebrado": {
       "id": "ent_evelyn_graves_puxao_do_reino_quebrado",
@@ -4675,7 +5305,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_evelyn_graves_fio_de_marionete": {
       "id": "ent_evelyn_graves_fio_de_marionete",
@@ -4696,7 +5333,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_evelyn_graves_sombra_ilusoria": {
       "id": "ent_evelyn_graves_sombra_ilusoria",
@@ -4717,7 +5361,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "darkness"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_evelyn_graves_eco_invocado": {
       "id": "ent_evelyn_graves_eco_invocado",
@@ -4742,7 +5393,14 @@
       "unlock": "starting",
       "exhaust": false,
       "cost": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_evelyn_graves_arrastar_consciencia": {
       "id": "ent_evelyn_graves_arrastar_consciencia",
@@ -4767,7 +5425,14 @@
       "unlock": "starting",
       "exhaust": false,
       "cost": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_evelyn_graves_porta_no_vazio": {
       "id": "ent_evelyn_graves_porta_no_vazio",
@@ -4788,7 +5453,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_evelyn_graves_encanto_predatorio": {
       "id": "ent_evelyn_graves_encanto_predatorio",
@@ -4813,7 +5485,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_evelyn_graves_ruptura_psiquica": {
       "id": "ent_evelyn_graves_ruptura_psiquica",
@@ -4838,7 +5517,14 @@
       "unlock": "starting",
       "exhaust": false,
       "cost": 3,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_evelyn_graves_teatro_da_mente": {
       "id": "ent_evelyn_graves_teatro_da_mente",
@@ -4859,7 +5545,14 @@
       "unlock": "progression",
       "exhaust": false,
       "gain": 2,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_evelyn_graves_reino_escancarado": {
       "id": "ent_evelyn_graves_reino_escancarado",
@@ -4887,7 +5580,14 @@
       "unlock": "progression",
       "exhaust": true,
       "cost": 5,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_fate_espada_da_fronteira": {
       "id": "ent_fate_espada_da_fronteira",
@@ -4911,7 +5611,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_fate_guarda_interdimensional": {
       "id": "ent_fate_guarda_interdimensional",
@@ -4937,7 +5644,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_fate_lamina_perfurante": {
       "id": "ent_fate_lamina_perfurante",
@@ -4961,7 +5675,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_fate_passo_de_fronteira": {
       "id": "ent_fate_passo_de_fronteira",
@@ -4985,7 +5706,14 @@
       "exhaust": false,
       "gain": 1,
       "quick": true,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_fate_dever_da_alfandega": {
       "id": "ent_fate_dever_da_alfandega",
@@ -5004,7 +5732,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_fate_retaliacao_imediata": {
       "id": "ent_fate_retaliacao_imediata",
@@ -5025,7 +5760,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_fate_sentir_anomalia": {
       "id": "ent_fate_sentir_anomalia",
@@ -5046,7 +5788,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_fate_golpe_de_custodia": {
       "id": "ent_fate_golpe_de_custodia",
@@ -5071,7 +5820,14 @@
       "unlock": "starting",
       "exhaust": false,
       "cost": 3,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_fate_fenda_de_aco": {
       "id": "ent_fate_fenda_de_aco",
@@ -5095,7 +5851,14 @@
       "unlock": "progression",
       "exhaust": false,
       "cost": 3,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_fate_julgamento_da_fronteira": {
       "id": "ent_fate_julgamento_da_fronteira",
@@ -5123,7 +5886,14 @@
       "unlock": "progression",
       "exhaust": true,
       "cost": 5,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_hynda_valdtagen_glifo_ofensivo": {
       "id": "ent_hynda_valdtagen_glifo_ofensivo",
@@ -5143,7 +5913,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_hynda_valdtagen_pocao_restauradora": {
       "id": "ent_hynda_valdtagen_pocao_restauradora",
@@ -5166,7 +5943,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "heal"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_hynda_valdtagen_portal_da_bruxa": {
       "id": "ent_hynda_valdtagen_portal_da_bruxa",
@@ -5191,7 +5975,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_hynda_valdtagen_chuva_de_glifos": {
       "id": "ent_hynda_valdtagen_chuva_de_glifos",
@@ -5211,7 +6002,14 @@
       "unlock": "starting",
       "exhaust": false,
       "cost": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_hynda_valdtagen_pocao_adaptativa": {
       "id": "ent_hynda_valdtagen_pocao_adaptativa",
@@ -5237,7 +6035,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_hynda_valdtagen_reescrever_terreno": {
       "id": "ent_hynda_valdtagen_reescrever_terreno",
@@ -5262,7 +6067,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_hynda_valdtagen_meteoro_menor": {
       "id": "ent_hynda_valdtagen_meteoro_menor",
@@ -5286,7 +6098,14 @@
       "unlock": "starting",
       "exhaust": false,
       "cost": 3,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_hynda_valdtagen_transmutacao_de_emergencia": {
       "id": "ent_hynda_valdtagen_transmutacao_de_emergencia",
@@ -5308,7 +6127,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "heal"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_hynda_valdtagen_circulo_planar": {
       "id": "ent_hynda_valdtagen_circulo_planar",
@@ -5333,7 +6159,14 @@
       "unlock": "progression",
       "exhaust": false,
       "cost": 3,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_hynda_valdtagen_meteoro_continental": {
       "id": "ent_hynda_valdtagen_meteoro_continental",
@@ -5360,7 +6193,14 @@
       "exhaust": true,
       "cost": 6,
       "final": true,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_kabuki_golpe_acrobatico": {
       "id": "ent_kabuki_golpe_acrobatico",
@@ -5384,7 +6224,14 @@
       "exhaust": false,
       "gain": 1,
       "quick": true,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_kabuki_armadura_furtiva": {
       "id": "ent_kabuki_armadura_furtiva",
@@ -5414,7 +6261,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_kabuki_sabotar_interface": {
       "id": "ent_kabuki_sabotar_interface",
@@ -5439,7 +6293,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_kabuki_salto_de_contencao": {
       "id": "ent_kabuki_salto_de_contencao",
@@ -5464,7 +6325,14 @@
       "unlock": "starting",
       "exhaust": false,
       "cost": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_kabuki_evasao_calculada": {
       "id": "ent_kabuki_evasao_calculada",
@@ -5489,7 +6357,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_kabuki_sensor_desligado": {
       "id": "ent_kabuki_sensor_desligado",
@@ -5515,7 +6390,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_kabuki_nocaute_rapido": {
       "id": "ent_kabuki_nocaute_rapido",
@@ -5540,7 +6422,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_kabuki_palco_de_sombras": {
       "id": "ent_kabuki_palco_de_sombras",
@@ -5561,7 +6450,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "darkness"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_kabuki_danca_cibernetica": {
       "id": "ent_kabuki_danca_cibernetica",
@@ -5586,7 +6482,14 @@
       "exhaust": false,
       "cost": 3,
       "chain": 3,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_kabuki_operacao_fantasma": {
       "id": "ent_kabuki_operacao_fantasma",
@@ -5614,7 +6517,14 @@
       "unlock": "progression",
       "exhaust": true,
       "cost": 5,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_konrad_incisao_precisa": {
       "id": "ent_konrad_incisao_precisa",
@@ -5639,7 +6549,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_konrad_pele_de_escudo": {
       "id": "ent_konrad_pele_de_escudo",
@@ -5660,7 +6577,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_konrad_predador_da_penumbra": {
       "id": "ent_konrad_predador_da_penumbra",
@@ -5681,7 +6605,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_konrad_ferida_aberta": {
       "id": "ent_konrad_ferida_aberta",
@@ -5706,7 +6637,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_konrad_ilusao_de_cobertura": {
       "id": "ent_konrad_ilusao_de_cobertura",
@@ -5727,7 +6665,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_konrad_desviar_a_atencao": {
       "id": "ent_konrad_desviar_a_atencao",
@@ -5753,7 +6698,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_konrad_passo_carniceiro": {
       "id": "ent_konrad_passo_carniceiro",
@@ -5777,7 +6729,14 @@
       "exhaust": false,
       "gain": 1,
       "quick": true,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_konrad_desmontagem": {
       "id": "ent_konrad_desmontagem",
@@ -5800,7 +6759,14 @@
       "unlock": "starting",
       "exhaust": false,
       "cost": 3,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "bleed"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_konrad_isca_cruel": {
       "id": "ent_konrad_isca_cruel",
@@ -5826,7 +6792,14 @@
       "unlock": "progression",
       "exhaust": false,
       "gain": 2,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_konrad_corte_de_armagedom": {
       "id": "ent_konrad_corte_de_armagedom",
@@ -5854,7 +6827,14 @@
       "unlock": "progression",
       "exhaust": true,
       "cost": 5,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "slash"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_leona_mordida_de_marbas": {
       "id": "ent_leona_mordida_de_marbas",
@@ -5877,7 +6857,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_leona_fome_sem_fim": {
       "id": "ent_leona_fome_sem_fim",
@@ -5898,7 +6885,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_leona_fios_de_cabelo": {
       "id": "ent_leona_fios_de_cabelo",
@@ -5923,7 +6917,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_leona_regenerar_pelo_consumo": {
       "id": "ent_leona_regenerar_pelo_consumo",
@@ -5946,7 +6947,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "heal"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_leona_doenca_lembrada": {
       "id": "ent_leona_doenca_lembrada",
@@ -5972,7 +6980,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_leona_forma_parcial": {
       "id": "ent_leona_forma_parcial",
@@ -5998,7 +7013,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_leona_devoracao": {
       "id": "ent_leona_devoracao",
@@ -6021,7 +7043,14 @@
       "unlock": "starting",
       "exhaust": false,
       "cost": 3,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_leona_fome_contagiosa": {
       "id": "ent_leona_fome_contagiosa",
@@ -6042,7 +7071,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_leona_cabelos_famintos": {
       "id": "ent_leona_cabelos_famintos",
@@ -6070,7 +7106,14 @@
       "exhaust": false,
       "cost": 3,
       "chain": 3,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_leona_banquete_de_marbas": {
       "id": "ent_leona_banquete_de_marbas",
@@ -6096,7 +7139,14 @@
       "unlock": "progression",
       "exhaust": true,
       "cost": 5,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_lust_runa_de_soma": {
       "id": "ent_lust_runa_de_soma",
@@ -6121,7 +7171,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "heal"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_lust_projecao_eterea": {
       "id": "ent_lust_projecao_eterea",
@@ -6142,7 +7199,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_lust_ilusao_do_desejo": {
       "id": "ent_lust_ilusao_do_desejo",
@@ -6163,7 +7227,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_lust_fluxo_de_energia": {
       "id": "ent_lust_fluxo_de_energia",
@@ -6183,7 +7254,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_lust_transferencia_runica": {
       "id": "ent_lust_transferencia_runica",
@@ -6204,7 +7282,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_lust_distracao_sensorial": {
       "id": "ent_lust_distracao_sensorial",
@@ -6229,7 +7314,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_lust_emprestar_soma": {
       "id": "ent_lust_emprestar_soma",
@@ -6255,7 +7347,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_lust_encanto_de_area": {
       "id": "ent_lust_encanto_de_area",
@@ -6280,7 +7379,14 @@
       "unlock": "starting",
       "exhaust": false,
       "cost": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_lust_corpo_de_projecao": {
       "id": "ent_lust_corpo_de_projecao",
@@ -6301,7 +7407,14 @@
       "unlock": "progression",
       "exhaust": false,
       "gain": 2,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_lust_runa_compartilhada": {
       "id": "ent_lust_runa_compartilhada",
@@ -6330,7 +7443,14 @@
       "unlock": "progression",
       "exhaust": true,
       "cost": 4,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_madelyn_ataque_teatral": {
       "id": "ent_madelyn_ataque_teatral",
@@ -6354,7 +7474,14 @@
       "exhaust": false,
       "gain": 1,
       "quick": true,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_madelyn_risada_confusa": {
       "id": "ent_madelyn_risada_confusa",
@@ -6375,7 +7502,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_madelyn_disparo_inesperado": {
       "id": "ent_madelyn_disparo_inesperado",
@@ -6400,7 +7534,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_madelyn_frenesi_de_palco": {
       "id": "ent_madelyn_frenesi_de_palco",
@@ -6425,7 +7566,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_madelyn_sombra_mentirosa": {
       "id": "ent_madelyn_sombra_mentirosa",
@@ -6446,7 +7594,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "darkness"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_madelyn_riso_cortante": {
       "id": "ent_madelyn_riso_cortante",
@@ -6471,7 +7626,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_madelyn_recuperacao_caotica": {
       "id": "ent_madelyn_recuperacao_caotica",
@@ -6494,7 +7656,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "heal"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_madelyn_improviso_perigoso": {
       "id": "ent_madelyn_improviso_perigoso",
@@ -6514,7 +7683,14 @@
       "unlock": "starting",
       "exhaust": false,
       "cost": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_madelyn_cortina_de_fumaca": {
       "id": "ent_madelyn_cortina_de_fumaca",
@@ -6535,7 +7711,14 @@
       "unlock": "progression",
       "exhaust": false,
       "gain": 2,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_madelyn_ultimo_ato": {
       "id": "ent_madelyn_ultimo_ato",
@@ -6563,7 +7746,14 @@
       "exhaust": true,
       "cost": 5,
       "chain": 4,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_mingau_o_feiticeiro_arranhao_transformador": {
       "id": "ent_mingau_o_feiticeiro_arranhao_transformador",
@@ -6588,7 +7778,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_mingau_o_feiticeiro_varinha_roubada": {
       "id": "ent_mingau_o_feiticeiro_varinha_roubada",
@@ -6609,7 +7806,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_mingau_o_feiticeiro_gato_intangivel": {
       "id": "ent_mingau_o_feiticeiro_gato_intangivel",
@@ -6635,7 +7839,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_mingau_o_feiticeiro_encantar_subordinado": {
       "id": "ent_mingau_o_feiticeiro_encantar_subordinado",
@@ -6656,7 +7867,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_mingau_o_feiticeiro_salto_impossivel": {
       "id": "ent_mingau_o_feiticeiro_salto_impossivel",
@@ -6680,7 +7898,14 @@
       "exhaust": false,
       "gain": 1,
       "quick": true,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_mingau_o_feiticeiro_tinta_anomala": {
       "id": "ent_mingau_o_feiticeiro_tinta_anomala",
@@ -6705,7 +7930,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_mingau_o_feiticeiro_fios_de_marionete": {
       "id": "ent_mingau_o_feiticeiro_fios_de_marionete",
@@ -6730,7 +7962,14 @@
       "unlock": "starting",
       "exhaust": false,
       "cost": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_mingau_o_feiticeiro_sabotagem_felina": {
       "id": "ent_mingau_o_feiticeiro_sabotagem_felina",
@@ -6751,7 +7990,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_mingau_o_feiticeiro_transformacao_em_cadeia": {
       "id": "ent_mingau_o_feiticeiro_transformacao_em_cadeia",
@@ -6781,7 +8027,14 @@
       "exhaust": false,
       "cost": 3,
       "chain": 3,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_mingau_o_feiticeiro_reinado_da_varinha": {
       "id": "ent_mingau_o_feiticeiro_reinado_da_varinha",
@@ -6809,7 +8062,14 @@
       "unlock": "progression",
       "exhaust": true,
       "cost": 5,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_mutante_generico_rajada_elemental": {
       "id": "ent_mutante_generico_rajada_elemental",
@@ -6829,7 +8089,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_mutante_generico_parede_do_elemento": {
       "id": "ent_mutante_generico_parede_do_elemento",
@@ -6850,7 +8117,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_mutante_generico_onda_de_impacto": {
       "id": "ent_mutante_generico_onda_de_impacto",
@@ -6874,7 +8148,14 @@
       "unlock": "starting",
       "exhaust": false,
       "cost": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_mutante_generico_carga_instavel": {
       "id": "ent_mutante_generico_carga_instavel",
@@ -6899,7 +8180,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_mutante_generico_barreira_condensada": {
       "id": "ent_mutante_generico_barreira_condensada",
@@ -6920,7 +8208,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_mutante_generico_canalizar_ordem": {
       "id": "ent_mutante_generico_canalizar_ordem",
@@ -6940,7 +8235,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_mutante_generico_feixe_concentrado": {
       "id": "ent_mutante_generico_feixe_concentrado",
@@ -6965,7 +8267,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_mutante_generico_ruptura_de_terreno": {
       "id": "ent_mutante_generico_ruptura_de_terreno",
@@ -6990,7 +8299,14 @@
       "unlock": "starting",
       "exhaust": false,
       "cost": 3,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_mutante_generico_massa_elemental": {
       "id": "ent_mutante_generico_massa_elemental",
@@ -7011,7 +8327,14 @@
       "unlock": "progression",
       "exhaust": false,
       "gain": 2,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_mutante_generico_descarga_total": {
       "id": "ent_mutante_generico_descarga_total",
@@ -7034,7 +8357,14 @@
       "unlock": "progression",
       "exhaust": true,
       "cost": 5,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_nero_foice_de_sangue": {
       "id": "ent_nero_foice_de_sangue",
@@ -7059,7 +8389,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_nero_escudo_de_ossos": {
       "id": "ent_nero_escudo_de_ossos",
@@ -7080,7 +8417,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_nero_inferi_temporario": {
       "id": "ent_nero_inferi_temporario",
@@ -7105,7 +8449,14 @@
       "unlock": "starting",
       "exhaust": false,
       "cost": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_nero_toque_no_equilibrio": {
       "id": "ent_nero_toque_no_equilibrio",
@@ -7126,7 +8477,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_nero_vinculo_de_sangue": {
       "id": "ent_nero_vinculo_de_sangue",
@@ -7151,7 +8509,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "heal"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_nero_golpe_ritual": {
       "id": "ent_nero_golpe_ritual",
@@ -7176,7 +8541,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_nero_marcha_dos_inferi": {
       "id": "ent_nero_marcha_dos_inferi",
@@ -7196,7 +8568,14 @@
       "unlock": "starting",
       "exhaust": false,
       "cost": 3,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_nero_chamar_o_caido": {
       "id": "ent_nero_chamar_o_caido",
@@ -7219,7 +8598,14 @@
       "unlock": "starting",
       "exhaust": true,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_nero_circulo_funerario": {
       "id": "ent_nero_circulo_funerario",
@@ -7245,7 +8631,14 @@
       "unlock": "progression",
       "exhaust": false,
       "gain": 2,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_nero_portao_do_necroterio": {
       "id": "ent_nero_portao_do_necroterio",
@@ -7273,7 +8666,14 @@
       "unlock": "progression",
       "exhaust": true,
       "cost": 5,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_niu_valdtagen_esquiva_involuntaria": {
       "id": "ent_niu_valdtagen_esquiva_involuntaria",
@@ -7294,7 +8694,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_niu_valdtagen_pedra_atirada": {
       "id": "ent_niu_valdtagen_pedra_atirada",
@@ -7314,7 +8721,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_niu_valdtagen_sorte_absurda": {
       "id": "ent_niu_valdtagen_sorte_absurda",
@@ -7334,7 +8748,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_niu_valdtagen_sumir_no_corredor": {
       "id": "ent_niu_valdtagen_sumir_no_corredor",
@@ -7355,7 +8776,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_niu_valdtagen_passo_de_fuga": {
       "id": "ent_niu_valdtagen_passo_de_fuga",
@@ -7379,7 +8807,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_niu_valdtagen_alerta_silencioso": {
       "id": "ent_niu_valdtagen_alerta_silencioso",
@@ -7400,7 +8835,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_niu_valdtagen_residuo_planar": {
       "id": "ent_niu_valdtagen_residuo_planar",
@@ -7425,7 +8867,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_niu_valdtagen_plano_improvisado": {
       "id": "ent_niu_valdtagen_plano_improvisado",
@@ -7450,7 +8899,14 @@
       "unlock": "starting",
       "exhaust": false,
       "cost": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_niu_valdtagen_encontrar_saida": {
       "id": "ent_niu_valdtagen_encontrar_saida",
@@ -7471,7 +8927,14 @@
       "unlock": "progression",
       "exhaust": false,
       "gain": 2,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_niu_valdtagen_coincidencia_impossivel": {
       "id": "ent_niu_valdtagen_coincidencia_impossivel",
@@ -7496,7 +8959,14 @@
       "unlock": "progression",
       "exhaust": false,
       "cost": 3,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_pesadelo_vivo_sombra_encarnada": {
       "id": "ent_pesadelo_vivo_sombra_encarnada",
@@ -7520,7 +8990,14 @@
       "exhaust": false,
       "gain": 1,
       "quick": true,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "darkness"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_pesadelo_vivo_imagem_do_trauma": {
       "id": "ent_pesadelo_vivo_imagem_do_trauma",
@@ -7541,7 +9018,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_pesadelo_vivo_desaparecer": {
       "id": "ent_pesadelo_vivo_desaparecer",
@@ -7562,7 +9046,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_pesadelo_vivo_frenesi_subito": {
       "id": "ent_pesadelo_vivo_frenesi_subito",
@@ -7587,7 +9078,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_pesadelo_vivo_eco_mental": {
       "id": "ent_pesadelo_vivo_eco_mental",
@@ -7612,7 +9110,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_pesadelo_vivo_reino_quebrado": {
       "id": "ent_pesadelo_vivo_reino_quebrado",
@@ -7637,7 +9142,14 @@
       "unlock": "starting",
       "exhaust": false,
       "cost": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_pesadelo_vivo_medo_personalizado": {
       "id": "ent_pesadelo_vivo_medo_personalizado",
@@ -7658,7 +9170,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_pesadelo_vivo_sombra_desperta": {
       "id": "ent_pesadelo_vivo_sombra_desperta",
@@ -7679,7 +9198,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "darkness"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_pesadelo_vivo_estilhacar_realidade": {
       "id": "ent_pesadelo_vivo_estilhacar_realidade",
@@ -7704,7 +9230,14 @@
       "unlock": "progression",
       "exhaust": false,
       "cost": 3,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_pesadelo_vivo_pesadelo_sem_fim": {
       "id": "ent_pesadelo_vivo_pesadelo_sem_fim",
@@ -7732,7 +9265,14 @@
       "unlock": "progression",
       "exhaust": true,
       "cost": 5,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_pietro_caos_corrente_de_buer": {
       "id": "ent_pietro_caos_corrente_de_buer",
@@ -7755,7 +9295,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_pietro_caos_recompor_carne": {
       "id": "ent_pietro_caos_recompor_carne",
@@ -7775,7 +9322,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "heal"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_pietro_caos_riso_do_caos": {
       "id": "ent_pietro_caos_riso_do_caos",
@@ -7796,7 +9350,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_pietro_caos_garras_de_ceifador": {
       "id": "ent_pietro_caos_garras_de_ceifador",
@@ -7821,7 +9382,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "claw"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_pietro_caos_sabotar_sistema": {
       "id": "ent_pietro_caos_sabotar_sistema",
@@ -7842,7 +9410,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_pietro_caos_fome_de_medo": {
       "id": "ent_pietro_caos_fome_de_medo",
@@ -7870,7 +9445,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_pietro_caos_aura_apocaliptica": {
       "id": "ent_pietro_caos_aura_apocaliptica",
@@ -7891,7 +9473,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_pietro_caos_regeneracao_selvagem": {
       "id": "ent_pietro_caos_regeneracao_selvagem",
@@ -7914,7 +9503,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "heal"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_pietro_caos_arrebentar_a_linha": {
       "id": "ent_pietro_caos_arrebentar_a_linha",
@@ -7938,7 +9534,14 @@
       "unlock": "progression",
       "exhaust": false,
       "cost": 3,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_pietro_caos_caos_completo": {
       "id": "ent_pietro_caos_caos_completo",
@@ -7966,7 +9569,14 @@
       "unlock": "progression",
       "exhaust": true,
       "cost": 5,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_quasar_jab_divino": {
       "id": "ent_quasar_jab_divino",
@@ -7990,7 +9600,14 @@
       "exhaust": false,
       "gain": 1,
       "quick": true,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_quasar_contra_de_combate": {
       "id": "ent_quasar_contra_de_combate",
@@ -8011,7 +9628,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_quasar_uppercut": {
       "id": "ent_quasar_uppercut",
@@ -8035,7 +9659,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_quasar_riso_provocador": {
       "id": "ent_quasar_riso_provocador",
@@ -8059,7 +9690,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_quasar_percepcao_relampago": {
       "id": "ent_quasar_percepcao_relampago",
@@ -8084,7 +9722,15 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "lightning",
+        "Thunder1"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_quasar_sequencia_desarmada": {
       "id": "ent_quasar_sequencia_desarmada",
@@ -8109,7 +9755,14 @@
       "exhaust": false,
       "gain": 1,
       "chain": 3,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_quasar_recuperacao_acelerada": {
       "id": "ent_quasar_recuperacao_acelerada",
@@ -8132,7 +9785,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "heal"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_quasar_golpe_de_abertura": {
       "id": "ent_quasar_golpe_de_abertura",
@@ -8157,7 +9817,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_quasar_assalto_de_vanguarda": {
       "id": "ent_quasar_assalto_de_vanguarda",
@@ -8180,7 +9847,14 @@
       "unlock": "progression",
       "exhaust": false,
       "cost": 3,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_quasar_impacto_de_quasar": {
       "id": "ent_quasar_impacto_de_quasar",
@@ -8207,7 +9881,14 @@
       "unlock": "progression",
       "exhaust": true,
       "cost": 5,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_taylor_lanca_mental": {
       "id": "ent_taylor_lanca_mental",
@@ -8227,7 +9908,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_taylor_fortaleza_de_zaphter": {
       "id": "ent_taylor_fortaleza_de_zaphter",
@@ -8253,7 +9941,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_taylor_fio_de_marionete": {
       "id": "ent_taylor_fio_de_marionete",
@@ -8274,7 +9969,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_taylor_asas_projetadas": {
       "id": "ent_taylor_asas_projetadas",
@@ -8295,7 +9997,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_taylor_lamina_psiquica": {
       "id": "ent_taylor_lamina_psiquica",
@@ -8319,7 +10028,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_taylor_desvio_de_mente": {
       "id": "ent_taylor_desvio_de_mente",
@@ -8340,7 +10056,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_taylor_mapa_tatico": {
       "id": "ent_taylor_mapa_tatico",
@@ -8365,7 +10088,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_taylor_voo_de_cobertura": {
       "id": "ent_taylor_voo_de_cobertura",
@@ -8389,7 +10119,14 @@
       "exhaust": false,
       "gain": 1,
       "quick": true,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_taylor_comando_remoto": {
       "id": "ent_taylor_comando_remoto",
@@ -8414,7 +10151,14 @@
       "unlock": "progression",
       "exhaust": false,
       "cost": 3,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_taylor_nave_mae": {
       "id": "ent_taylor_nave_mae",
@@ -8443,7 +10187,14 @@
       "unlock": "progression",
       "exhaust": true,
       "cost": 5,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_techna_choque_incapacitante": {
       "id": "ent_techna_choque_incapacitante",
@@ -8468,7 +10219,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_techna_placas_modulares": {
       "id": "ent_techna_placas_modulares",
@@ -8489,7 +10247,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_techna_laco_de_contencao": {
       "id": "ent_techna_laco_de_contencao",
@@ -8510,7 +10275,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_techna_varredura_de_alvos": {
       "id": "ent_techna_varredura_de_alvos",
@@ -8535,7 +10307,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_techna_sabotar_arma": {
       "id": "ent_techna_sabotar_arma",
@@ -8560,7 +10339,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_techna_kit_de_captura": {
       "id": "ent_techna_kit_de_captura",
@@ -8586,7 +10372,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_techna_armadilha_de_campo": {
       "id": "ent_techna_armadilha_de_campo",
@@ -8611,7 +10404,14 @@
       "unlock": "starting",
       "exhaust": false,
       "cost": 2,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_techna_cacada_inteligente": {
       "id": "ent_techna_cacada_inteligente",
@@ -8636,7 +10436,14 @@
       "unlock": "starting",
       "exhaust": false,
       "gain": 1,
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_techna_armadura_de_bloqueio": {
       "id": "ent_techna_armadura_de_bloqueio",
@@ -8661,7 +10468,14 @@
       "unlock": "progression",
       "exhaust": false,
       "gain": 2,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_techna_protocolo_nocaute": {
       "id": "ent_techna_protocolo_nocaute",
@@ -8689,7 +10503,14 @@
       "unlock": "progression",
       "exhaust": true,
       "cost": 5,
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_alyssa_wine_bastao_retratil": {
       "id": "ent_alyssa_wine_bastao_retratil",
@@ -8724,7 +10545,15 @@
       "exhaust": false,
       "gain": 1,
       "text": "Impacto 1+E. Escuridão 1+: Chain 1 (alvo extra). Escuridão 2+: Empurra.",
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "slash",
+        "HitSP1"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_alyssa_wine_garras_e_presas": {
       "id": "ent_alyssa_wine_garras_e_presas",
@@ -8760,7 +10589,15 @@
       "exhaust": false,
       "gain": 1,
       "text": "Requer Escuridão 1+. Impacto 2×E. Bleed E. Ferido E.",
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "claw",
+        "bleed"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_alyssa_wine_premonicao": {
       "id": "ent_alyssa_wine_premonicao",
@@ -8785,7 +10622,14 @@
       "exhaust": false,
       "gain": 2,
       "text": "Proteção 1. Resistente 1.",
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_alyssa_wine_a_filha_dele": {
       "id": "ent_alyssa_wine_a_filha_dele",
@@ -8807,7 +10651,15 @@
       "exhaust": false,
       "gain": 2,
       "text": "Lento 1 em toda a equipe inimiga.",
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status",
+        "stun"
+      ],
+      "anim_timing": "wait_last"
     },
     "ent_alyssa_wine_regeneracao": {
       "id": "ent_alyssa_wine_regeneracao",
@@ -8837,7 +10689,14 @@
       "exhaust": false,
       "gain": 2,
       "text": "Requer Escuridão 2+. Cura 2×E. Resistente 2×E.",
-      "tier": "inicial"
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "heal"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_alyssa_wine_relampago": {
       "id": "ent_alyssa_wine_relampago",
@@ -8880,7 +10739,16 @@
       "exhaust": false,
       "cost": 3,
       "text": "Requer Escuridão 4+. Poder 2×E. Fileira inimiga + Alcance. E5: todos os inimigos. E6+: todos os outros (exceto ela).",
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast",
+        "darkness"
+      ],
+      "anim_target": [
+        "lightning",
+        "Thunder1"
+      ],
+      "anim_timing": "wait_last"
     },
     "ent_alyssa_wine_intelecto": {
       "id": "ent_alyssa_wine_intelecto",
@@ -8904,7 +10772,14 @@
       "exhaust": false,
       "gain": 2,
       "text": "Compra todas as cartas de item do baralho. Ao recomprar esta carta: +1 Ação (funciona mesmo sem itens).",
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "light"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_alyssa_wine_super_sentidos": {
       "id": "ent_alyssa_wine_super_sentidos",
@@ -8926,7 +10801,14 @@
       "exhaust": false,
       "gain": 2,
       "text": "Atento 2: ignora desvantagem de arquétipo/tipo e pode ferir Invulnerável.",
-      "tier": "evoluida"
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_alyssa_wine_desvantagem_tormenta": {
       "id": "ent_alyssa_wine_desvantagem_tormenta",
@@ -8943,7 +10825,14 @@
       "gain": 0,
       "passive_like": true,
       "text": "Desvantagem — Tormenta: se Escuridão ≥ 4, no fim do turno todos os outros (aliados e inimigos) sofrem 1 de dano (penetrante).",
-      "tier": "desvantagem"
+      "tier": "desvantagem",
+      "anim_self": [
+        "darkness"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_alyssa_wine_bastao_retratil_plus": {
       "id": "ent_alyssa_wine_bastao_retratil_plus",
@@ -8980,7 +10869,15 @@
       "text": "Impacto 1+E. Escuridão 1+: Chain 1 (alvo extra). Escuridão 2+: Empurra. · Melhorada (+).",
       "tier": "melhorada",
       "melhorada_de": "ent_alyssa_wine_bastao_retratil",
-      "chrome_3d": true
+      "chrome_3d": true,
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "slash",
+        "CrossHit"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_alyssa_wine_garras_e_presas_plus": {
       "id": "ent_alyssa_wine_garras_e_presas_plus",
@@ -9018,7 +10915,15 @@
       "text": "Requer Escuridão 1+. Impacto 2×E. Bleed E. Ferido E. · Melhorada (+).",
       "tier": "melhorada",
       "melhorada_de": "ent_alyssa_wine_garras_e_presas",
-      "chrome_3d": true
+      "chrome_3d": true,
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "claw",
+        "bleed"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_alyssa_wine_premonicao_plus": {
       "id": "ent_alyssa_wine_premonicao_plus",
@@ -9045,7 +10950,15 @@
       "text": "Proteção 1. Resistente 1. · Melhorada (+).",
       "tier": "melhorada",
       "melhorada_de": "ent_alyssa_wine_premonicao",
-      "chrome_3d": true
+      "chrome_3d": true,
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield",
+        "light"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_alyssa_wine_a_filha_dele_plus": {
       "id": "ent_alyssa_wine_a_filha_dele_plus",
@@ -9069,7 +10982,15 @@
       "text": "Lento 1 em toda a equipe inimiga. · Melhorada (+).",
       "tier": "melhorada",
       "melhorada_de": "ent_alyssa_wine_a_filha_dele",
-      "chrome_3d": true
+      "chrome_3d": true,
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status",
+        "stun"
+      ],
+      "anim_timing": "wait_last"
     },
     "ent_alyssa_wine_regeneracao_plus": {
       "id": "ent_alyssa_wine_regeneracao_plus",
@@ -9101,7 +11022,15 @@
       "text": "Requer Escuridão 2+. Cura 2×E. Resistente 2×E. · Melhorada (+).",
       "tier": "melhorada",
       "melhorada_de": "ent_alyssa_wine_regeneracao",
-      "chrome_3d": true
+      "chrome_3d": true,
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "heal",
+        "light"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_alyssa_wine_relampago_plus": {
       "id": "ent_alyssa_wine_relampago_plus",
@@ -9146,7 +11075,16 @@
       "text": "Requer Escuridão 4+. Poder 2×E. Fileira inimiga + Alcance. E5: todos os inimigos. E6+: todos os outros (exceto ela). · Melhorada (+).",
       "tier": "melhorada",
       "melhorada_de": "ent_alyssa_wine_relampago",
-      "chrome_3d": true
+      "chrome_3d": true,
+      "anim_self": [
+        "cast",
+        "darkness"
+      ],
+      "anim_target": [
+        "lightning",
+        "Thunder3"
+      ],
+      "anim_timing": "wait_last"
     },
     "ent_alyssa_wine_intelecto_plus": {
       "id": "ent_alyssa_wine_intelecto_plus",
@@ -9172,7 +11110,14 @@
       "text": "Compra todas as cartas de item do baralho. Ao recomprar esta carta: +1 Ação (funciona mesmo sem itens). · Melhorada (+).",
       "tier": "melhorada",
       "melhorada_de": "ent_alyssa_wine_intelecto",
-      "chrome_3d": true
+      "chrome_3d": true,
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "light"
+      ],
+      "anim_timing": "parallel"
     },
     "ent_alyssa_wine_super_sentidos_plus": {
       "id": "ent_alyssa_wine_super_sentidos_plus",
@@ -9196,7 +11141,15 @@
       "text": "Atento 2: ignora desvantagem de arquétipo/tipo e pode ferir Invulnerável. · Melhorada (+).",
       "tier": "melhorada",
       "melhorada_de": "ent_alyssa_wine_super_sentidos",
-      "chrome_3d": true
+      "chrome_3d": true,
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status",
+        "light"
+      ],
+      "anim_timing": "parallel"
     }
   }
 }

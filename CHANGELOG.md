@@ -1,11 +1,41 @@
+## 2026-09-28 — Pacote HUD/FX/editor/balanceamento
+
+- **CardFace**: fonte épica/serif no título (`assets/fonts/CardTitle.ttf`), nome do personagem centralizado, emblema de Impacto à esquerda, caixa de regras semi-transparente, INICIATIVA no canto inferior esquerdo; `CardFace.tscn` editável.
+- **FX de combate**: `FxPlayer.gd` + presets; toda Manobra toca animação no conjurador e no alvo (padrão `cast`/`hit` se a carta não definir); timing parallel/wait no editor.
+- **Config (ESC)**: seletor de BGM listando `assets/audio/bgm` (+ fantasy/).
+- **HUD economia**: Iniciativa em 10 segmentos; Ações / Recompras / Movimentos com ícones que esmaecem ao gastar.
+- **Câmera/retratos**: hover de carta foca o dono (se vivo); retratos laterais permanecem com carta selecionada até resolver; sem hover/seleção → ocultos. Warp do mouse ao centro do sprite ao focar (quebra loop zoom↔hover).
+- **Seleção**: botão **Cancelar** para desmarcar; inspeção com glossário em linguagem de jogo (ex.: Lento explica o +1 de Iniciativa).
+- **Conteúdo sensível (invertido)**: OFF → `cast_sensitive/` com mapeamento **único** por personagem (sem placeholders genéricos); ON → arte original `cast/`.
+- **Balanceamento**: Vida 60–120; Impacto/Poder/Armadura/Escudo 20–40 nos heróis do pack e Content; dano absoluto de cartas Content ~20–40. Hits do pack continuam como modificadores sobre Impacto/Poder.
+- **Editor HTML**: aba **Tabela de atributos** comparativa de todos os personagens, ordenação por coluna, células editáveis + **Salvar atributos** (grava no catálogo; exportar `entities.json`).
+- Inclui trabalho local Windows: `ArenaBuilder.gd`, `CampaignRules.gd`, `CollectionRules.gd`, refactor de `GameRoot.gd`, smoke tools.
+
+## 2026-09-28 — mão, seleção e HUD de batalha
+
+- Cartas da mão menores e mais altas; hover eleva, endireita, ilumina e traz a carta para a frente.
+- O primeiro clique volta a exibir a carta completa e fixa no centro, com o segundo clique mantendo a confirmação.
+- Nós visuais dos personagens agora são recriados quando a textura esperada muda, evitando que Alyssa e Dominika herdem sprites provisórios.
+- Textos do cabeçalho, log, objetivo, economia e cartas foram reposicionados ou ajustados para permanecer dentro de seus painéis.
+- A regressão visual agora verifica hover, seleção central, vista lateral e os arquivos exatos dos sprites de Alyssa e Dominika.
+
+## 2026-09-27 — validação, coleção e proveniência
+
+- Coleção e campanha extraídas para `CollectionRules.gd` e `CampaignRules.gd`.
+- Removidos seleção de slots, limites de cópia, sanitização e persistência do editor de deck antigo.
+- Os oito sprites herdados sem licença documentada foram substituídos por cópias verificadas do DLC RPG Maker MZ.
+- `verify_assets.py` agora valida os índices Effekseer/TRP, 50 BGM e as oito substituições por hash.
+- Documentação alinhada com 27 personagens jogáveis, 553 definições de carta, cinco missões e validação no Godot 4.6.1.
+- Imagens de referência, logs locais e o inicializador específico da máquina foram adicionados ao `.gitignore` sem apagar os arquivos locais.
+
 ## 2026-09-27 — Battle UX, deck automático, conteúdo sensível, editor
 
 - Log de combate só na janela esquerda; prompt de fase centralizado no topo.
 - Seleção de carta: 2º clique confirma; botão **Inspecionar** abre overlay (sem Confirmar).
 - Popup pt-BR quando a Manobra não pode ser usada (Alcance / Escuridão / etc.).
 - Sem editor de deck: coleção = todas as possuídas; Melhoradas substituem a base; deck só cresce.
-- Vista lateral: linhas amarelas de fileira permanecem horizontais; sprites inimigos espelhados.
-- Config: toggle **Conteúdo sensível** + placeholders em `assets/cast_sensitive/`.
+- Vista lateral: quatro fileiras aparecem da esquerda para a direita, com divisórias amarelas no chão e inimigos espelhados.
+- Config: **Conteúdo sensível = Não** usa as alternativas de `assets/cast_sensitive/`; **Sim** usa a arte original de `assets/cast/`.
 - `tools/card_editor.html`: corrigido SyntaxError (aspas em Desvantagem) que deixava "Carregando…" eterno.
 
 ## 2026-09-27 — Nomenclatura oficial (Manobras / Aprimoramento / Melhoradas / Combos)

@@ -25,11 +25,15 @@ var view_mode := "normal"
 var zoom := 1.0
 ## Ponto de interesse (hover / foco inimigo).
 var focus_target := Vector3.ZERO
+var fx_player = null
 
-func configure(view: Camera3D, labels: Control, audio) -> void:
+func configure(view: Camera3D, labels: Control, audio, fx = null) -> void:
 	camera = view
 	overlay = labels
 	sound = audio
+	fx_player = fx
+	if fx_player != null:
+		fx_player.configure(self, overlay)
 
 func bind_actor(id: int, sprite: Sprite3D, world_position: Vector3) -> void:
 	sprites[id] = sprite
@@ -85,6 +89,15 @@ func show_action(kind: String, source_id: int, target_id: int, amount: int) -> v
 	elif kind == "status":
 		_burst(target_id, Color("ba9dea"))
 		_animate_sprite(target_id, "status")
+		_play_preset("status", target_id)
+	if kind == "hit":
+		_play_preset("hit", target_id)
+	elif kind == "heal":
+		_play_preset("heal", target_id)
+	elif kind in ["cast", "counter"]:
+		_play_preset("cast", source_id)
+	elif kind in ["block", "guard"]:
+		_play_preset("guard", target_id)
 
 func _animate_sprite(id: int, kind: String) -> void:
 	if not sprites.has(id): return
@@ -189,3 +202,19 @@ func _process(delta: float) -> void:
 			var width := atlas.atlas.get_width() / float(columns)
 			var height := atlas.atlas.get_height() / float(rows)
 			atlas.region = Rect2(col * width, row * height, width, height)
+
+func _play_preset(preset: String, actor_id: int) -> void:
+	if fx_player == null or not positions.has(actor_id):
+		return
+	fx_player.animation_speed = animation_speed
+	fx_player.flash_enabled = flash_enabled
+	fx_player.play_one(preset, positions[actor_id])
+
+func play_card_fx(definition: Dictionary, source_id: int, target_id: int) -> float:
+	if fx_player == null:
+		return 0.0
+	fx_player.animation_speed = animation_speed
+	fx_player.flash_enabled = flash_enabled
+	var self_pos: Vector3 = positions.get(source_id, Vector3.ZERO)
+	var target_pos: Vector3 = positions.get(target_id, self_pos)
+	return float(fx_player.play_card_anims(definition, self_pos, target_pos))

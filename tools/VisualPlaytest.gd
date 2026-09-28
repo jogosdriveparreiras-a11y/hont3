@@ -36,6 +36,7 @@ func _run() -> void:
 	await process_frame
 	await process_frame
 	game.set("reduce_motion", false)
+	game.set("sensitive_content", false)
 	game.set("sound_levels", {"MASTER": 0.0, "MUSIC": 0.0, "SFX": 0.0, "UI": 0.0, "AMBIENCE": 0.0})
 	if game.get("sound") != null:
 		game.call("_set_volume", 0.0, "MASTER")
@@ -179,11 +180,10 @@ func _run() -> void:
 	_save(dirs, "playtest_hotn3_pass3_battle.png")
 	_save(dirs, "playtest_hotn3_pass3_hover.png")
 	if battle.hand.size() > 0:
-		game.set("inspected_card", 0)
 		game.set("hovered_card", 0)
-		game.set("selected_card", -1)
+		game.set("selected_card", 0)
 		game.set("card_confirmed", false)
-		game.call("_render_battle")
+		game.call("_open_inspect", 0)
 		for i in range(16):
 			await process_frame
 		_save(dirs, "playtest_hotn3_pass3_inspect.png")

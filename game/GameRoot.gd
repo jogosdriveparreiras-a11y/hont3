@@ -4,8 +4,12 @@ const Content = preload("res://game/Content.gd")
 const Battle = preload("res://game/BattleState.gd")
 const SoundBus = preload("res://game/SoundBus.gd")
 const Presentation = preload("res://game/CombatPresentation.gd")
+const FxPlayer = preload("res://game/FxPlayer.gd")
 const PackBridge = preload("res://game/PackBridge.gd")
 const CardFace = preload("res://game/CardFace.gd")
+const CollectionRules = preload("res://game/CollectionRules.gd")
+const CampaignRules = preload("res://game/CampaignRules.gd")
+const ArenaBuilder = preload("res://game/ArenaBuilder.gd")
 
 var battle
 var packs = PackBridge.new()
@@ -29,10 +33,9 @@ var chain_targets: Array[int] = []
 var recover_pick_active := false
 var feedback := ""
 var event_history: Array[String] = []
-var deck_hero := ""
-var deck_filter := "TODAS"
-var deck_selected := ""
-var deck_slot := -1
+var collection_hero := ""
+var collection_filter := "TODAS"
+var collection_selected := ""
 var card_hit_areas: Array[Button] = []
 var card_meshes: Array[MeshInstance3D] = []
 var unit_sprites: Array[Sprite3D] = []
@@ -62,8 +65,13 @@ var reduce_motion := false
 var animation_speed := 1.0
 ## Vista de combate: "normal" (padrão) | "lateral" (aliados à esquerda).
 var battle_view_mode := "normal"
-## Conteúdo sensível: troca sprites/retratos para assets/cast_sensitive/.
+## Conteúdo sensível: quando desativado, usa as alternativas seguras em assets/cast_sensitive/.
 var sensitive_content := false
+var bgm_track := "Battle1"
+var fx_player = null
+var _sprite_mouse_lock_id := -1
+var _sprite_mouse_lock_until := 0
+var _sensitive_map: Dictionary = {}
 ## Cartas possuídas por herói (deck = todas; Melhoradas substituem a base).
 var owned_cards: Dictionary = {}
 ## Overlay Inspecionar só abre pelo botão (não no clique da carta).
@@ -148,7 +156,11 @@ func _make_world() -> void:
 	for channel in sound_levels: sound.set_level(channel, float(sound_levels[channel]))
 	presentation = Presentation.new()
 	add_child(presentation)
-	presentation.configure(camera, fx_overlay, sound)
+	fx_player = FxPlayer.new()
+	add_child(fx_player)
+	presentation.configure(camera, fx_overlay, sound, fx_player)
+	if sound != null and bgm_track != "" and bgm_track != "__stop__":
+		sound.play_bgm(bgm_track)
 	portrait_left = _make_portrait(false)
 	portrait_right = _make_portrait(true)
 	fx_overlay.add_child(portrait_left)
@@ -162,92 +174,12 @@ func _material(color: Color, unshaded: bool = false) -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()
 	material.albedo_color = color
 	material.roughness = 0.7
-	if unshaded: material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	if unshaded:
+		material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	return material
 
-func _add_box(pos: Vector3, size: Vector3, color: Color, parent: Node3D = null) -> MeshInstance3D:
-	var mesh := MeshInstance3D.new()
-	var box := BoxMesh.new()
-	box.size = size
-	mesh.mesh = box
-	mesh.material_override = _material(color)
-	mesh.position = pos
-	if parent == null: parent = stage
-	parent.add_child(mesh)
-	return mesh
-
-func _clear_arena() -> void:
-	if stage == null:
-		return
-	for child in stage.get_children():
-		stage.remove_child(child)
-		child.queue_free()
-
 func _build_arena(theme: String = "default") -> void:
-	_clear_arena()
-	if theme == "street_night":
-		_build_street_night_arena()
-	else:
-		_build_default_arena()
-
-func _build_default_arena() -> void:
-	_add_box(Vector3(0, -0.30, 0), Vector3(19, 0.5, 12), Color("353c47"))
-	_add_row_guide_lines()
-	for x in [-9.1, 9.1]:
-		for z in [-5.5, 5.5]:
-			_add_box(Vector3(x, 1.75, z), Vector3(0.75, 3.5, 0.75), Color("555169"))
-			_add_box(Vector3(x, 3.5, z), Vector3(1.1, 0.3, 1.1), Color("c8ac76"))
-
-func _add_row_guide_lines() -> void:
-	# Linhas amarelas de fileira: em vista Normal correm em X (separando Z);
-	# em Lateral correm em Z (separando X) para permanecerem horizontais no mapa rotacionado.
-	var tint := Color("bea674")
-	if battle_view_mode == "lateral":
-		# Longas em Z (= horizontais com câmera lateral em -X).
-		for x in [-4.35, -1.65, 1.65, 4.35]:
-			_add_box(Vector3(x, -0.02, 0), Vector3(0.06, 0.045, 12.0), tint)
-	else:
-		for z in [-3.3, -1.7, 1.7, 3.3]:
-			_add_box(Vector3(0, -0.02, z), Vector3(17, 0.04, 0.035), tint)
-
-func _build_street_night_arena() -> void:
-	# Asphalt street + sidewalks matching the procedural box style of the default arena
-	_add_box(Vector3(0, -0.32, 0), Vector3(22, 0.45, 14), Color("1a1d28"))
-	_add_row_guide_lines()
-	_add_box(Vector3(0, -0.06, 0), Vector3(7.2, 0.08, 13.5), Color("2a2e38"))  # road
-	for z in [-5.0, -2.5, 0.0, 2.5, 5.0]:
-		_add_box(Vector3(0, -0.01, z), Vector3(0.35, 0.02, 0.9), Color("c9b56a"))  # dashed center
-	_add_box(Vector3(-5.1, -0.04, 0), Vector3(2.6, 0.08, 13.5), Color("3a3f4d"))  # sidewalk L
-	_add_box(Vector3(5.1, -0.04, 0), Vector3(2.6, 0.08, 13.5), Color("3a3f4d"))  # sidewalk R
-	# Building facades (left / right)
-	for i in range(4):
-		var z := -5.2 + i * 3.4
-		var h := 3.2 + (i % 2) * 1.4
-		_add_box(Vector3(-8.6, h * 0.5, z), Vector3(2.4, h, 3.0), Color("3d3552") if i % 2 == 0 else Color("2f3548"))
-		_add_box(Vector3(8.6, h * 0.5 + 0.2, z), Vector3(2.4, h + 0.4, 3.0), Color("45355a") if i % 2 == 0 else Color("32384a"))
-		# Lit windows
-		for wy in [0.9, 1.9, 2.9]:
-			if wy > h - 0.3:
-				continue
-			_add_box(Vector3(-7.35, wy, z - 0.7), Vector3(0.08, 0.45, 0.55), Color("ffd27a"))
-			_add_box(Vector3(-7.35, wy, z + 0.7), Vector3(0.08, 0.45, 0.55), Color("ffb86b"))
-			_add_box(Vector3(7.35, wy, z - 0.7), Vector3(0.08, 0.45, 0.55), Color("9ad7ff"))
-			_add_box(Vector3(7.35, wy, z + 0.7), Vector3(0.08, 0.45, 0.55), Color("ff9ad0"))
-	# Street lamps
-	for x in [-4.0, 4.0]:
-		for z in [-4.5, 0.0, 4.5]:
-			_add_box(Vector3(x, 1.1, z), Vector3(0.12, 2.2, 0.12), Color("4a4e5c"))
-			_add_box(Vector3(x, 2.25, z), Vector3(0.55, 0.12, 0.55), Color("c8ac76"))
-			var lamp := OmniLight3D.new()
-			lamp.position = Vector3(x, 2.15, z)
-			lamp.light_color = Color("ffd2a0")
-			lamp.light_energy = 1.6
-			lamp.omni_range = 6.5
-			stage.add_child(lamp)
-	# Neon sign block across far end
-	_add_box(Vector3(0, 3.4, -6.4), Vector3(6.5, 0.7, 0.35), Color("6b1f4a"))
-	_add_box(Vector3(0, 3.4, -6.2), Vector3(5.8, 0.45, 0.12), Color("ff4f9a"))
-
+	ArenaBuilder.build(stage, theme, battle_view_mode)
 func _arena_theme_for_mission(mid: String) -> String:
 	var mission: Dictionary = Content.MISSIONS.get(mid, {})
 	return str(mission.get("arena", "default"))
@@ -344,6 +276,9 @@ func _show_settings() -> void:
 	menu.add_child(_button("Reduzir movimento da câmera: %s" % ("sim" if reduce_motion else "não"), _toggle_motion))
 	menu.add_child(_button("Vista de batalha: %s" % ("Lateral" if battle_view_mode == "lateral" else "Normal"), _toggle_battle_view))
 	menu.add_child(_button("Conteúdo sensível: %s" % ("sim" if sensitive_content else "não"), _toggle_sensitive_content))
+	menu.add_child(_label("BGM (música de fundo)", 18))
+	menu.add_child(_bgm_picker_row())
+	menu.add_child(_button("Parar BGM", _stop_bgm_setting))
 	menu.add_child(_button("Voltar", _show_menu))
 
 func _setting_slider(title: String, level: float, callback: Callable) -> HBoxContainer:
@@ -398,6 +333,54 @@ func _toggle_battle_view() -> void:
 func _toggle_sensitive_content() -> void:
 	sensitive_content = not sensitive_content
 	_save_config()
+	if battle != null and battle.phase in ["PLAYER", "ENEMY"]:
+		_clear_combat_visuals()
+		_render_battle()
+	else:
+		_show_settings()
+
+func _bgm_picker_row() -> HBoxContainer:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 8)
+	var tracks: PackedStringArray = PackedStringArray()
+	if sound != null:
+		tracks = sound.list_bgm()
+	var current := bgm_track
+	if sound != null and str(sound.current_bgm) != "":
+		current = str(sound.current_bgm)
+	var name_lbl := _label(current if current != "" else "(nenhuma)", 16, Color("f4f1ea"))
+	name_lbl.custom_minimum_size = Vector2(220, 28)
+	name_lbl.clip_text = true
+	row.add_child(name_lbl)
+	row.add_child(_button("◀", func(): _cycle_bgm(-1)))
+	row.add_child(_button("▶", func(): _cycle_bgm(1)))
+	row.add_child(_button("Tocar", func(): _apply_bgm_track(bgm_track)))
+	return row
+
+func _cycle_bgm(step: int) -> void:
+	var tracks: PackedStringArray = sound.list_bgm() if sound != null else PackedStringArray()
+	if tracks.is_empty():
+		return
+	var idx := 0
+	for i in range(tracks.size()):
+		if str(tracks[i]) == bgm_track:
+			idx = i
+			break
+	idx = (idx + step) % tracks.size()
+	_apply_bgm_track(str(tracks[idx]))
+	_show_settings()
+
+func _apply_bgm_track(track_id: String) -> void:
+	bgm_track = track_id
+	if sound != null:
+		sound.play_bgm(bgm_track)
+	_save_config()
+
+func _stop_bgm_setting() -> void:
+	bgm_track = "__stop__"
+	if sound != null:
+		sound.stop_bgm()
+	_save_config()
 	_show_settings()
 
 func _apply_battle_view() -> void:
@@ -435,9 +418,7 @@ func _show_missions() -> void:
 	menu.add_child(_button("Voltar", _show_menu))
 
 func _mission_unlocked(id: String) -> bool:
-	for needed in Content.CAMPAIGN[id]["requires"]:
-		if not best_stars.has(needed): return false
-	return true
+	return CampaignRules.mission_unlocked(id, Content.CAMPAIGN, best_stars)
 
 func _select_mission(id: String) -> void:
 	if not _mission_unlocked(id): return
@@ -657,103 +638,32 @@ func _show_team_conflict_popup(conflicts: Array[String]) -> void:
 	menu.add_child(_button("Voltar ao menu", _show_menu))
 
 func _show_collection() -> void:
-	_show_decks()
+	_show_collection_screen()
 
 func _ensure_owned_cards() -> void:
-	for hero_id in Content.HEROES:
-		if not Content.HEROES[hero_id].get("playable", true):
-			continue
-		if owned_cards.has(hero_id) and owned_cards[hero_id] is Array and not owned_cards[hero_id].is_empty():
-			continue
-		owned_cards[hero_id] = _default_owned_for(str(hero_id))
-
-func _default_owned_for(hero_id: String) -> Array:
-	var hero: Dictionary = Content.HEROES.get(hero_id, {})
-	var out: Array = []
-	var seen: Dictionary = {}
-	for cid in hero.get("iniciais", hero.get("cards", [])):
-		var id := str(cid)
-		if seen.has(id): continue
-		seen[id] = true
-		out.append(id)
-	var desv := str(hero.get("desvantagem", ""))
-	if desv != "" and not seen.has(desv):
-		out.append(desv)
-	return out
+	owned_cards = CollectionRules.ensure_owned(Content.HEROES, Content.CARDS, owned_cards)
 
 func _grant_owned_card(hero_id: String, card_id: String) -> void:
-	_ensure_owned_cards()
-	var list: Array = owned_cards.get(hero_id, []).duplicate()
-	var cid := str(card_id)
-	var def: Dictionary = _card_def(cid)
-	# Melhorada: remove a base e adiciona a versão +
-	var base := str(def.get("melhorada_de", ""))
-	if base != "":
-		while list.has(base):
-			list.erase(base)
-	if list.has(cid):
-		owned_cards[hero_id] = list
-		return
-	# Se já tem Melhorada desta carta, não adiciona a base
-	for owned_id in list:
-		var odef: Dictionary = _card_def(str(owned_id))
-		if str(odef.get("melhorada_de", "")) == cid:
-			owned_cards[hero_id] = list
-			return
-	list.append(cid)
-	owned_cards[hero_id] = _apply_melhorada_replace(list)
-
-func _apply_melhorada_replace(card_ids: Array) -> Array:
-	var owned_set: Dictionary = {}
-	for cid in card_ids:
-		owned_set[str(cid)] = true
-	var out: Array = []
-	var seen: Dictionary = {}
-	for cid in card_ids:
-		var id := str(cid)
-		var def: Dictionary = _card_def(id)
-		var base := str(def.get("melhorada_de", ""))
-		if base != "":
-			# Melhorada: keep only the plus version
-			if seen.has(id): continue
-			seen[id] = true
-			out.append(id)
-			continue
-		# Base: skip if a Melhorada of it is owned
-		var replaced := false
-		for other in card_ids:
-			var odef: Dictionary = _card_def(str(other))
-			if str(odef.get("melhorada_de", "")) == id:
-				replaced = true
-				break
-		if replaced:
-			continue
-		if seen.has(id): continue
-		seen[id] = true
-		out.append(id)
-	return out
+	owned_cards = CollectionRules.grant(hero_id, card_id, Content.HEROES, Content.CARDS, owned_cards)
 
 func _combat_deck_for_hero(hero_id: String) -> Array:
 	_ensure_owned_cards()
-	var list: Array = owned_cards.get(hero_id, _default_owned_for(hero_id)).duplicate()
-	return _apply_melhorada_replace(list)
+	return CollectionRules.combat_deck(hero_id, Content.HEROES, Content.CARDS, owned_cards)
 
 func _build_equipped_from_owned() -> Dictionary:
-	var result: Dictionary = {}
-	for hero_id in team:
-		result[hero_id] = _combat_deck_for_hero(str(hero_id))
-	return result
-
-func _show_decks() -> void:
 	_ensure_owned_cards()
-	if not team.has(deck_hero): deck_hero = team[0]
-	var hero: Dictionary = Content.HEROES[deck_hero]
-	var selected_cards: Array = _combat_deck_for_hero(deck_hero)
+	return CollectionRules.build_team_decks(team, Content.HEROES, Content.CARDS, owned_cards)
+
+func _show_collection_screen() -> void:
+	_ensure_owned_cards()
+	if not team.has(collection_hero): collection_hero = team[0]
+	var hero: Dictionary = Content.HEROES[collection_hero]
+	var selected_cards: Array = _combat_deck_for_hero(collection_hero)
 	var pool: Array = hero.get("pool", hero["cards"])
-	if not pool.has(deck_selected) and not selected_cards.is_empty():
-		deck_selected = selected_cards[0]
-	elif not pool.has(deck_selected):
-		deck_selected = pool[0] if not pool.is_empty() else ""
+	if not pool.has(collection_selected) and not selected_cards.is_empty():
+		collection_selected = selected_cards[0]
+	elif not pool.has(collection_selected):
+		collection_selected = pool[0] if not pool.is_empty() else ""
 	var menu := _center_panel("COLEÇÃO · %s · %d CARTAS NO DECK" % [hero["name"], selected_cards.size()])
 	menu.add_child(_label("Sem editor de deck: todas as cartas possuídas entram no baralho. Melhoradas substituem a base. Baralho maior = menos reshuffles.", 15))
 	var menu_panel := menu.get_parent() as PanelContainer
@@ -761,15 +671,15 @@ func _show_decks() -> void:
 	var hero_bar := HBoxContainer.new()
 	menu.add_child(hero_bar)
 	for id in team:
-		hero_bar.add_child(_button(("✓ " if id == deck_hero else "") + Content.HEROES[id]["name"], _select_deck_hero.bind(id)))
+		hero_bar.add_child(_button(("✓ " if id == collection_hero else "") + Content.HEROES[id]["name"], _select_collection_hero.bind(id)))
 	var filter_bar := HBoxContainer.new()
 	menu.add_child(filter_bar)
 	for filter_name in ["TODAS", "IMPACTO", "PODER", "ESTADO", "ALCANCE", "MELHORADAS"]:
-		filter_bar.add_child(_button(("● " if deck_filter == filter_name else "") + filter_name.capitalize(), _set_deck_filter.bind(filter_name)))
+		filter_bar.add_child(_button(("● " if collection_filter == filter_name else "") + filter_name.capitalize(), _set_collection_filter.bind(filter_name)))
 	var type_bar := HBoxContainer.new()
 	menu.add_child(type_bar)
 	for filter_name in ["FÍSICO", "MÁGICO", "SUPORTE", "RARAS"]:
-		type_bar.add_child(_button(("● " if deck_filter == filter_name else "") + filter_name.capitalize(), _set_deck_filter.bind(filter_name)))
+		type_bar.add_child(_button(("● " if collection_filter == filter_name else "") + filter_name.capitalize(), _set_collection_filter.bind(filter_name)))
 	var columns := HBoxContainer.new()
 	columns.add_theme_constant_override("separation", 18)
 	menu.add_child(columns)
@@ -780,10 +690,9 @@ func _show_decks() -> void:
 	for position in range(selected_cards.size()):
 		var card_id: String = selected_cards[position]
 		var definition: Dictionary = Content.CARDS[card_id]
-		var selected_prefix := "▶ " if deck_slot == position else ""
-		var button := _button("%s%d · %s" % [selected_prefix, position + 1, definition["name"]], _choose_deck_slot.bind(position, card_id), _card_description(definition))
+		var selected_prefix := "▶ " if collection_selected == card_id else ""
+		var button := _button("%s%d · %s" % [selected_prefix, position + 1, definition["name"]], _choose_collection_card.bind(card_id), _card_description(definition))
 		button.custom_minimum_size = Vector2(260, 48)
-		button.disabled = true
 		slots.add_child(button)
 	var catalogue := ScrollContainer.new()
 	catalogue.custom_minimum_size = Vector2(360, maxf(210.0, get_viewport().get_visible_rect().size.y - 450.0))
@@ -793,20 +702,20 @@ func _show_decks() -> void:
 	available.add_child(_label("POOL DO PERSONAGEM (posse cresce após missões)", 19, Color("d9bd85")))
 	for entry in pool:
 		var card_id: String = entry
-		if not _matches_deck_filter(card_id, deck_hero): continue
+		if not _matches_collection_filter(card_id, collection_hero): continue
 		var definition: Dictionary = Content.CARDS[card_id]
-		var key: String = str(deck_hero) + ":" + str(card_id)
+		var key: String = str(collection_hero) + ":" + str(card_id)
 		var level := int(improvements.get(key, {}).get("upgrade", 0))
 		var cost := int(definition.get("cost", 0))
 		var subtitle := "%s · %s" % [_card_scale_label(definition), "%d Iniciativa" % cost if cost > 0 else "+%d Iniciativa" % int(definition.get("gain", 0))]
-		var button := _button(("▶ " if deck_selected == card_id else "") + definition["name"] + " +%d\n" % level + subtitle, _choose_deck_card.bind(card_id), _card_description(definition))
+		var button := _button(("▶ " if collection_selected == card_id else "") + definition["name"] + " +%d\n" % level + subtitle, _choose_collection_card.bind(card_id), _card_description(definition))
 		button.custom_minimum_size = Vector2(330, 62)
 		available.add_child(button)
 	var details := VBoxContainer.new()
 	details.custom_minimum_size.x = 390
 	columns.add_child(details)
 	details.add_child(_label("DETALHES", 19, Color("d9bd85")))
-	var shown: Dictionary = Content.CARDS[deck_selected]
+	var shown: Dictionary = Content.CARDS[collection_selected]
 	details.add_child(_label(shown["name"], 24, Color("f2dcad")))
 	details.add_child(_label("%s · %s" % [_card_scale_label(shown), _card_type(shown)], 18))
 	details.add_child(_label("Tipo do herói: %s" % hero["type"], 17))
@@ -815,7 +724,7 @@ func _show_decks() -> void:
 	detail_text.custom_minimum_size = Vector2(380, 95)
 	detail_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	details.add_child(detail_text)
-	var selected_key: String = str(deck_hero) + ":" + str(deck_selected)
+	var selected_key: String = str(collection_hero) + ":" + str(collection_selected)
 	var changes: Dictionary = improvements.get(selected_key, {})
 	var upgrade_level := int(changes.get("upgrade", 0))
 	var upgrade_button := _button("Melhoria +%d · custo %d" % [upgrade_level, 3 if upgrade_level == 0 else 6], _upgrade_card.bind(selected_key))
@@ -828,32 +737,25 @@ func _show_decks() -> void:
 	if feedback != "": details.add_child(_label(feedback, 16, Color("e7a777")))
 	menu.add_child(_button("Voltar", _show_menu))
 
-func _select_deck_hero(hero_id: String) -> void:
-	deck_hero = hero_id
-	deck_slot = -1
-	deck_selected = ""
+func _select_collection_hero(hero_id: String) -> void:
+	collection_hero = hero_id
+	collection_selected = ""
 	feedback = ""
-	_show_decks()
+	_show_collection_screen()
 
-func _set_deck_filter(filter_name: String) -> void:
-	deck_filter = filter_name
-	_show_decks()
+func _set_collection_filter(filter_name: String) -> void:
+	collection_filter = filter_name
+	_show_collection_screen()
 
-func _choose_deck_slot(slot: int, card_id: String) -> void:
-	deck_slot = slot
-	deck_selected = card_id
-	feedback = ""
-	_show_decks()
-
-func _matches_deck_filter(card_id: String, hero_id: String) -> bool:
+func _matches_collection_filter(card_id: String, hero_id: String) -> bool:
 	var card: Dictionary = Content.CARDS[card_id]
-	match deck_filter:
+	match collection_filter:
 		"IMPACTO": return _card_has_damage(card) and str(card.get("stat", "attack")) != "power"
 		"PODER": return _card_has_damage(card) and str(card.get("stat", "")) == "power"
 		"ESTADO": return not _card_has_damage(card)
 		"ALCANCE": return card.get("reach", false)
 		"MELHORADAS": return int(improvements.get(hero_id + ":" + card_id, {}).get("upgrade", 0)) > 0
-		"FÍSICO", "MÁGICO", "SUPORTE": return _card_type(card) == deck_filter
+		"FÍSICO", "MÁGICO", "SUPORTE": return _card_type(card) == collection_filter
 		"RARAS": return false
 	return true
 
@@ -863,44 +765,10 @@ func _card_type(definition: Dictionary) -> String:
 			return "MÁGICO" if effect.get("stat", "attack") == "power" else "FÍSICO"
 	return "SUPORTE"
 
-func _choose_deck_card(card_id: String) -> void:
-	deck_selected = card_id
-	feedback = "Deck automático — cartas possuídas entram todas no baralho."
-	_show_decks()
-
-func _equip_card(hero_id: String, slot: int, card_id: String) -> bool:
-	var hero: Dictionary = Content.HEROES.get(hero_id, {})
-	if hero.is_empty() or not hero.get("pool", []).has(card_id): return false
-	var cards: Array = equipped.get(hero_id, hero["cards"]).duplicate()
-	if slot < 0 or slot >= cards.size(): return false
-	var limit := int(Content.CARDS[card_id].get("copy_limit", Content.RULES["copy_limit"]))
-	if cards[slot] != card_id and cards.count(card_id) >= limit:
-		feedback = "Limite de %d cópias de %s." % [limit, Content.CARDS[card_id]["name"]]
-		return false
-	cards[slot] = card_id
-	equipped[hero_id] = cards
-	feedback = "Carta equipada no slot %d." % (slot + 1)
-	_save_config()
-	return true
-
-func _sanitize_decks() -> void:
-	var valid := {}
-	for hero_id in Content.HEROES:
-		var hero: Dictionary = Content.HEROES[hero_id]
-		var cards = equipped.get(hero_id, hero["cards"])
-		if not (cards is Array) or cards.size() != int(Content.RULES["deck_size"]): continue
-		var counts := {}
-		var acceptable := true
-		for card_id in cards:
-			if not hero["pool"].has(card_id):
-				acceptable = false
-				break
-			counts[card_id] = int(counts.get(card_id, 0)) + 1
-			if counts[card_id] > int(Content.CARDS[card_id].get("copy_limit", Content.RULES["copy_limit"])):
-				acceptable = false
-				break
-		if acceptable: valid[hero_id] = cards.duplicate()
-	equipped = valid
+func _choose_collection_card(card_id: String) -> void:
+	collection_selected = card_id
+	feedback = "Coleção automática — todas as cartas possuídas entram no baralho."
+	_show_collection_screen()
 
 func _upgrade_card(key: String) -> void:
 	var change: Dictionary = improvements.get(key, {"upgrade": 0, "mod": ""})
@@ -911,7 +779,7 @@ func _upgrade_card(key: String) -> void:
 	change["upgrade"] = level + 1
 	improvements[key] = change
 	_save_config()
-	_show_decks()
+	_show_collection_screen()
 
 func _cycle_mod(key: String) -> void:
 	if essence < 4: return
@@ -922,7 +790,7 @@ func _cycle_mod(key: String) -> void:
 	essence -= 4
 	improvements[key] = change
 	_save_config()
-	_show_decks()
+	_show_collection_screen()
 
 func _show_items() -> void:
 	var menu := _center_panel("ITENS NO DECK · %d/%d" % [loadout.values().reduce(func(total, n): return total + n, 0), Content.RULES["items_max"]])
@@ -969,6 +837,10 @@ func _start_mission() -> void:
 	_render_battle()
 
 func _begin_battle_session() -> void:
+	# IDs de atores e cartas reiniciam em cada missão; descarte os nós ligados à
+	# sessão anterior para não reutilizar texturas de outro personagem.
+	_clear_combat_visuals()
+	seen_hand.clear()
 	selected_card = -1
 	selected_action = ""
 	chain_targets.clear()
@@ -1020,24 +892,13 @@ func _on_finished(won: bool) -> void:
 	menu.add_child(_button("Menu", _show_menu))
 
 func _award_victory(stars: int) -> int:
-	if stars < 1 or stars > 3: return 0
-	var previous := int(best_stars.get(mission_id, 0))
-	var reward := (3 if previous == 0 else 0) + 2 * maxi(0, stars - previous)
-	best_stars[mission_id] = maxi(previous, stars)
-	essence += reward
-	return reward
+	var result: Dictionary = CampaignRules.award_victory(mission_id, stars, best_stars, essence)
+	best_stars = result["best_stars"]
+	essence = int(result["essence"])
+	return int(result["reward"])
 
 func _mission_stars() -> int:
-	var survivors: Array = battle.living("ALLY")
-	var stars := 1 + (1 if survivors.size() >= 2 else 0)
-	var goal: Dictionary = Content.CAMPAIGN[mission_id]
-	if battle.mission["objective"] in ["SURVIVE", "PROTECT"]:
-		var healthy: bool = survivors.size() == 3 and survivors.all(func(actor): return int(actor["hp"]) * 2 >= int(actor["max_hp"]))
-		if battle.mission["objective"] == "PROTECT": healthy = healthy and battle.protect_hp >= int(battle.mission["protect_hp"]) / 2
-		if healthy: stars += 1
-	elif battle.turn <= int(goal["par"]):
-		stars += 1
-	return stars
+	return CampaignRules.mission_stars(battle, mission_id, Content.CAMPAIGN, int(Content.RULES["team_size"]))
 
 func _render_battle() -> void:
 	if battle == null or battle.phase == "FINISHED": return
@@ -1051,6 +912,10 @@ func _render_battle() -> void:
 	var header := VBoxContainer.new()
 	hud.add_child(header)
 	header.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
+	header.offset_left = 34.0
+	header.offset_top = 14.0
+	header.offset_right = -34.0
+	header.offset_bottom = 46.0
 	header.add_child(_label("%s  ·  RODADA %d" % [battle.mission["name"], battle.turn], 18, Color("e9c891")))
 	_chrome(Vector2(12, 8), Vector2(viewport_size.x - 24, 48), "res://assets/ui/header.png")
 	# Caixa de fase central (também no fim do render para ficar acima do chrome).
@@ -1063,44 +928,46 @@ func _render_battle() -> void:
 	# Left log window — only place for game log text
 	var left_scroll := ScrollContainer.new()
 	left_scroll.name = "LeftLogPanel"
-	left_scroll.position = Vector2(12, 100)
-	left_scroll.size = Vector2(260, maxf(120.0, viewport_size.y * 0.42))
+	var side_panel_height := maxf(120.0, viewport_size.y * 0.42)
+	left_scroll.position = Vector2(26, 120)
+	left_scroll.size = Vector2(232, side_panel_height - 38.0)
 	left_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	hud.add_child(left_scroll)
 	var left := VBoxContainer.new()
-	left.custom_minimum_size.x = 240
+	left.custom_minimum_size.x = 220
 	left_scroll.add_child(left)
 	left.add_child(_label("LOG", 18, Color("e9c891")))
 	var log_slice: Array = event_history.slice(max(0, event_history.size() - 12))
 	for entry in log_slice:
 		var line := _label(str(entry), 13, Color("d5deea"))
 		line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		line.custom_minimum_size.x = 230
+		line.custom_minimum_size.x = 218
 		left.add_child(line)
 	if extra != "":
 		left.add_child(_label(extra, 13, Color("e9c891")))
-	_chrome(Vector2(12, 100), Vector2(260, maxf(120.0, viewport_size.y * 0.42)), "res://assets/ui/panel.png")
+	_chrome(Vector2(12, 90), Vector2(260, side_panel_height), "res://assets/ui/panel.png")
 	# Right tools: objective + environment only
 	var right_scroll := ScrollContainer.new()
 	right_scroll.name = "RightPanel"
-	right_scroll.position = Vector2(viewport_size.x - 280, 100)
-	right_scroll.size = Vector2(260, maxf(100.0, viewport_size.y * 0.30))
+	var right_panel_height := maxf(100.0, viewport_size.y * 0.30)
+	right_scroll.position = Vector2(viewport_size.x - 266, 120)
+	right_scroll.size = Vector2(232, right_panel_height - 38.0)
 	right_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	hud.add_child(right_scroll)
 	var right := VBoxContainer.new()
-	right.custom_minimum_size.x = 240
+	right.custom_minimum_size.x = 220
 	right_scroll.add_child(right)
 	var objective := _label("OBJETIVO: %s" % Content.CAMPAIGN[mission_id]["goal"], 15, Color("e9c891"))
 	objective.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	objective.custom_minimum_size.x = 230
+	objective.custom_minimum_size.x = 218
 	right.add_child(objective)
 	right.add_child(_label("CENÁRIO", 18))
 	for index in range(battle.mission.get("environment", []).size()):
 		var object: Dictionary = battle.mission["environment"][index]
 		var env_btn := _button("%s · %d Ini" % [object["name"], object["cost"]], func(): battle.use_environment(index))
-		env_btn.custom_minimum_size = Vector2(230, 36)
+		env_btn.custom_minimum_size = Vector2(218, 36)
 		right.add_child(env_btn)
-	_chrome(Vector2(viewport_size.x - 280, 100), Vector2(260, maxf(100.0, viewport_size.y * 0.30)), "res://assets/ui/panel.png")
+	_chrome(Vector2(viewport_size.x - 280, 90), Vector2(260, right_panel_height), "res://assets/ui/panel.png")
 	# 3D hand arc (kept)
 	for index in range(battle.hand.size()):
 		var card: Dictionary = battle.hand[index]
@@ -1120,6 +987,7 @@ func _render_battle() -> void:
 	hover_hint.visible = false
 	hud.add_child(hover_hint)
 	if selected_card >= 0 and selected_card < battle.hand.size() and battle.phase == "PLAYER" and not card_confirmed and not inspect_open:
+		_add_selected_card_overlay(selected_card, viewport_size)
 		_add_selected_card_actions(selected_card, viewport_size)
 	if recover_pick_active and not battle.pending_recover.is_empty():
 		_build_recover_pick_panel(viewport_size)
@@ -1134,8 +1002,8 @@ func _render_battle() -> void:
 func _build_hero_hud(viewport_size: Vector2) -> void:
 	hero_hud = Control.new()
 	hero_hud.name = "HeroHud"
-	hero_hud.position = Vector2(18, viewport_size.y - 168)
-	hero_hud.size = Vector2(420, 140)
+	hero_hud.position = Vector2(18, viewport_size.y - 196)
+	hero_hud.size = Vector2(420, 168)
 	hero_hud.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hud.add_child(hero_hud)
 	_chrome(hero_hud.position, hero_hud.size, "res://assets/ui/panel.png")
@@ -1401,40 +1269,38 @@ func _build_economy_hud(viewport_size: Vector2) -> void:
 	var moves_left: int = battle.moves
 	var ini_now: int = battle.impulse
 	var ini_max: int = int(battle.rules["impulse_max"])
-	var lines: Array = [
-		["INICIATIVA %d/%d" % [ini_now, ini_max], ini_now, ini_max, Color("e9c891")],
-		["%d JOGADAS DE CARTA" % plays, plays, int(battle.rules["card_plays"]), Color("6eb6ff")],
-		["%d RECOMPRAS" % redraws_left, redraws_left, int(battle.rules["redraws"]), Color("6eb6ff")],
-		["%d MOVIMENTOS" % moves_left, moves_left, int(battle.rules["moves"]), Color("6eb6ff")],
-	]
-	var y := 8.0
-	for entry in lines:
-		var lbl := _label(str(entry[0]), 15, Color("f4f1ea"))
-		lbl.position = Vector2(16, y)
-		lbl.size = Vector2(250, 20)
-		economy_hud.add_child(lbl)
-		var track := ColorRect.new()
-		track.color = Color(0.08, 0.1, 0.14, 0.9)
-		track.position = Vector2(16, y + 20)
-		track.size = Vector2(200, 6)
-		economy_hud.add_child(track)
-		var max_v := maxi(1, int(entry[2]))
-		var fill := ColorRect.new()
-		fill.color = entry[3]
-		fill.position = track.position
-		fill.size = Vector2(200.0 * clampf(float(entry[1]) / float(max_v), 0.0, 1.0), 6)
-		economy_hud.add_child(fill)
-		y += 32.0
+	var y := 14.0
+	# Iniciativa: barra segmentada em 10 partes
+	var ini_lbl := _label("INICIATIVA %d/%d" % [ini_now, ini_max], 15, Color("f4f1ea"))
+	ini_lbl.position = Vector2(16, y)
+	ini_lbl.size = Vector2(250, 18)
+	economy_hud.add_child(ini_lbl)
+	y += 20.0
+	var seg_n := 10
+	var seg_w := 200.0
+	var gap := 2.0
+	var cell := (seg_w - gap * float(seg_n - 1)) / float(seg_n)
+	var filled := int(round(clampf(float(ini_now) / float(maxi(1, ini_max)), 0.0, 1.0) * float(seg_n)))
+	for i in range(seg_n):
+		var cell_r := ColorRect.new()
+		cell_r.position = Vector2(16.0 + float(i) * (cell + gap), y)
+		cell_r.size = Vector2(cell, 10)
+		cell_r.color = Color("e9c891") if i < filled else Color(0.08, 0.1, 0.14, 0.9)
+		economy_hud.add_child(cell_r)
+	y += 18.0
+	y = _economy_icon_row(y, "Ações:", plays, int(battle.rules["card_plays"]), Color("6eb6ff"), "⚔")
+	y = _economy_icon_row(y, "Recompras:", redraws_left, int(battle.rules["redraws"]), Color("7ad0ff"), "↺")
+	y = _economy_icon_row(y, "Movimentos:", moves_left, int(battle.rules["moves"]), Color("9dffb0"), "⇢")
 	var move_btn := _button("MOVER (%d)" % moves_left, func(): _start_move_action())
 	move_btn.disabled = battle.phase != "PLAYER" or enemy_presenting or (moves_left <= 0 and not _any_ally_has_momentum())
-	move_btn.position = Vector2(16, 148)
+	move_btn.position = Vector2(16, 154)
 	move_btn.custom_minimum_size = Vector2(258, 40)
 	if selected_action == "move":
 		move_btn.modulate = Color("6eb6ff")
 	economy_hud.add_child(move_btn)
 	var vista_label := "Lateral" if battle_view_mode == "lateral" else "Normal"
 	var view_btn := _button("Vista: %s" % vista_label, _toggle_battle_view)
-	view_btn.position = Vector2(16, 196)
+	view_btn.position = Vector2(16, 202)
 	view_btn.custom_minimum_size = Vector2(258, 36)
 	view_btn.tooltip_text = "Alterna vista Normal (atual) e Lateral (aliados à esquerda)."
 	economy_hud.add_child(view_btn)
@@ -1452,10 +1318,34 @@ func _build_economy_hud(viewport_size: Vector2) -> void:
 		end_btn.tooltip_text = "Há Instantâneo na mão: jogue essas cartas antes de encerrar o turno."
 	else:
 		end_btn.tooltip_text = "Encerrar o turno do jogador."
-	end_btn.position = Vector2(16, 240)
+	end_btn.position = Vector2(16, 246)
 	end_btn.custom_minimum_size = Vector2(258, 40)
 	economy_hud.add_child(end_btn)
 	
+func _economy_icon_row(y: float, title: String, left: int, maximum: int, color: Color, glyph: String) -> float:
+	var lbl := _label(title, 14, Color("f4f1ea"))
+	lbl.position = Vector2(16, y)
+	lbl.size = Vector2(110, 18)
+	economy_hud.add_child(lbl)
+	var max_v := maxi(1, maximum)
+	var x := 120.0
+	for i in range(max_v):
+		var icon := Label.new()
+		icon.text = glyph
+		icon.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		icon.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		icon.position = Vector2(x, y - 2)
+		icon.size = Vector2(22, 22)
+		icon.add_theme_font_size_override("font_size", 16)
+		icon.add_theme_color_override("font_color", color)
+		# Gastos: esconde/esmaece ícones da direita para a esquerda
+		var spent := i >= left
+		icon.modulate = Color(1, 1, 1, 0.22) if spent else Color.WHITE
+		icon.visible = true
+		economy_hud.add_child(icon)
+		x += 24.0
+	return y + 26.0
+
 func _any_ally_has_momentum() -> bool:
 	if battle == null:
 		return false
@@ -1510,6 +1400,8 @@ func _select_card(index: int) -> void:
 	card_confirmed = false
 	chain_targets.clear()
 	damage_preview_by_actor.clear()
+	if index >= 0 and index < battle.hand.size():
+		_show_actor_portrait(int(battle.hand[index].get("owner", -1)), true)
 	_render_battle()
 
 func _choose_target(actor_id: int) -> void:
@@ -1534,6 +1426,7 @@ func _choose_target(actor_id: int) -> void:
 			_render_battle()
 			return
 	var card_id: String = str(battle.hand[selected_card].get("id", ""))
+	var caster_id: int = int(battle.hand[selected_card].get("owner", -1))
 	var successful: bool = false
 	if packs.is_pack_card(card_id) or pack_mode != "default":
 		_animate_card_depart(selected_card)
@@ -1549,11 +1442,15 @@ func _choose_target(actor_id: int) -> void:
 		successful = battle.play(selected_card, actor_id, chain_targets)
 	chain_targets.clear()
 	if successful:
+		if presentation != null:
+			presentation.play_card_fx(definition, caster_id, actor_id)
 		selected_card = -1
 		card_confirmed = false
 		inspected_card = -1
 		inspect_open = false
 		selected_action = ""
+		portrait_sticky_until = 0
+		_hide_idle_portraits()
 		_after_card_resolved()
 	else:
 		var why := _card_unusable_reason(selected_card, actor_id)
@@ -1580,6 +1477,16 @@ func _render_actors() -> void:
 					if other["id"] == actor["id"]: row_index = row_count
 					row_count += 1
 			var location := _actor_world_pos(side, row, row_index, row_count)
+			var expected_sprite := _sensitive_path(str(actor.get("sprite", "")), "sprite")
+			if actor_nodes.has(id):
+				var existing: Node3D = actor_nodes[id]
+				if str(existing.get_meta("sprite_resource", "")) != expected_sprite:
+					if presentation != null:
+						presentation.forget_actor(id)
+					actor_nodes.erase(id)
+					if is_instance_valid(existing):
+						units.remove_child(existing)
+						existing.queue_free()
 			if not actor_nodes.has(id):
 				actor_nodes[id] = _create_actor_visual(actor)
 				actor_nodes[id].position = location
@@ -1621,6 +1528,7 @@ func _actor_world_pos(side: String, row: String, row_index: int, row_count: int)
 
 func _create_actor_visual(actor: Dictionary) -> Node3D:
 	var body := Node3D.new()
+	body.set_meta("sprite_resource", _sensitive_path(str(actor.get("sprite", "")), "sprite"))
 	units.add_child(body)
 	var ring := MeshInstance3D.new()
 	ring.name = "FloorRing"
@@ -1834,7 +1742,7 @@ func _make_3d_card(index: int, card: Dictionary, definition: Dictionary) -> void
 	view.add_child(face)
 	var mesh := MeshInstance3D.new()
 	var plane := QuadMesh.new()
-	plane.size = Vector2(0.525, 0.81)
+	plane.size = Vector2(0.45, 0.70)
 	mesh.mesh = plane
 	var shader: Shader = load("res://game/card_round.gdshader")
 	var material := ShaderMaterial.new()
@@ -1870,7 +1778,7 @@ func _make_3d_card(index: int, card: Dictionary, definition: Dictionary) -> void
 	area.set_meta("card_index", index)
 	var shape := CollisionShape3D.new()
 	var box := BoxShape3D.new()
-	box.size = Vector3(0.52, 0.78, 0.12)
+	box.size = Vector3(0.45, 0.69, 0.12)
 	shape.shape = box
 	area.add_child(shape)
 	mesh.add_child(area)
@@ -1878,7 +1786,7 @@ func _make_3d_card(index: int, card: Dictionary, definition: Dictionary) -> void
 	var glow_mesh := MeshInstance3D.new()
 	glow_mesh.name = "HoverGlow"
 	var glow_plane := QuadMesh.new()
-	glow_plane.size = Vector2(0.58, 0.88)
+	glow_plane.size = Vector2(0.51, 0.78)
 	glow_mesh.mesh = glow_plane
 	var glow_mat := _material(Color(0.45, 0.78, 1.0, 0.0), true)
 	glow_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
@@ -1987,8 +1895,8 @@ func _arc_pose(index: int, count: int) -> Dictionary:
 	elif n > 1:
 		half = max_half
 		ang = lerpf(-half, half, t)
-	var cy := -1.05 - radius
-	var pos := Vector3(sin(ang) * radius, cy + cos(ang) * radius, -2.55)
+	var cy := -0.62 - radius
+	var pos := Vector3(sin(ang) * radius, cy + cos(ang) * radius, -2.62)
 	var rot := Vector3(-0.05, 0.0, -ang)
 	return {"position": pos, "rotation": rot}
 
@@ -2284,23 +2192,77 @@ func _sprite_region(path: String, sheet: Texture2D) -> Rect2:
 	return Rect2(0, 0, sheet.get_width() / 9.0, sheet.get_height() / 6.0)
 
 func _sensitive_path(path: String, kind: String = "sprite") -> String:
-	if not sensitive_content or path == "":
+	# Sensível ON = arte original (cast/). OFF = alternativas únicas em cast_sensitive/.
+	# Nunca usa placeholders genéricos: cada personagem recebe um sprite distinto.
+	if sensitive_content or path == "":
 		return path
+	_ensure_sensitive_map()
 	var fname := path.get_file()
+	var key := "%s|%s" % [kind, fname]
+	if _sensitive_map.has(key):
+		var mapped := str(_sensitive_map[key])
+		if ResourceLoader.exists(mapped) or FileAccess.file_exists(mapped):
+			return mapped
 	var sens := "res://assets/cast_sensitive/" + fname
-	if ResourceLoader.exists(sens):
+	if ResourceLoader.exists(sens) or FileAccess.file_exists(sens):
 		return sens
-	match kind:
-		"portrait":
-			if ResourceLoader.exists("res://assets/cast_sensitive/generic_portrait.png"):
-				return "res://assets/cast_sensitive/generic_portrait.png"
-		"icon":
-			if ResourceLoader.exists("res://assets/cast_sensitive/generic_icon.png"):
-				return "res://assets/cast_sensitive/generic_icon.png"
-		_:
-			if ResourceLoader.exists("res://assets/cast_sensitive/generic_sprite.png"):
-				return "res://assets/cast_sensitive/generic_sprite.png"
 	return path
+
+func _ensure_sensitive_map() -> void:
+	if not _sensitive_map.is_empty():
+		return
+	var pool: Array[String] = []
+	var dir := DirAccess.open("res://assets/cast_sensitive/")
+	if dir != null:
+		dir.list_dir_begin()
+		var fname := dir.get_next()
+		while fname != "":
+			if fname.ends_with(".png") and not fname.begins_with("generic_"):
+				pool.append("res://assets/cast_sensitive/" + fname)
+			fname = dir.get_next()
+	pool.sort()
+	var keys: Array[String] = []
+	for hid in Content.HEROES.keys():
+		var h: Dictionary = Content.HEROES[hid]
+		var spr := str(h.get("sprite", "")).get_file()
+		var por := str(h.get("portrait", h.get("sprite", ""))).get_file()
+		if spr != "":
+			keys.append("sprite|%s" % spr)
+		if por != "" and por != spr:
+			keys.append("portrait|%s" % por)
+	var ent_path := "res://addons/hotn3_entities/entities.json"
+	if FileAccess.file_exists(ent_path):
+		var f := FileAccess.open(ent_path, FileAccess.READ)
+		if f != null:
+			var parsed = JSON.parse_string(f.get_as_text())
+			f.close()
+			if typeof(parsed) == TYPE_DICTIONARY:
+				var hh: Dictionary = parsed.get("heroes", {})
+				for hid in hh.keys():
+					var h2: Dictionary = hh[hid]
+					var spr2 := str(h2.get("sprite", "")).get_file()
+					var por2 := str(h2.get("portrait", "")).get_file()
+					var sk := "sprite|%s" % spr2
+					var pk := "portrait|%s" % por2
+					if spr2 != "" and not keys.has(sk):
+						keys.append(sk)
+					if por2 != "" and por2 != spr2 and not keys.has(pk):
+						keys.append(pk)
+	keys.sort()
+	if pool.is_empty():
+		return
+	var used: Dictionary = {}
+	for key in keys:
+		var hv := int(hash(str(key)))
+		if hv < 0:
+			hv = -hv
+		var idx := hv % pool.size()
+		var guard := 0
+		while used.has(idx) and guard < pool.size():
+			idx = (idx + 1) % pool.size()
+			guard += 1
+		used[idx] = true
+		_sensitive_map[key] = pool[idx]
 
 func _unit_portrait(actor: Dictionary) -> Texture2D:
 	var portrait_path := _sensitive_path(str(actor.get("portrait", "")), "portrait")
@@ -2349,6 +2311,8 @@ func _show_actor_portrait(actor_id: int, sticky: bool) -> void:
 func _hide_idle_portraits() -> void:
 	if Time.get_ticks_msec() < portrait_sticky_until: return
 	if hovered_card >= 0 or hovered_actor >= 0: return
+	# Retratos ficam visíveis enquanto houver carta selecionada (até resolver).
+	if selected_card >= 0: return
 	if portrait_left != null: portrait_left.hide()
 	if portrait_right != null: portrait_right.hide()
 
@@ -2636,34 +2600,109 @@ func _cancel_inspect() -> void:
 	inspected_card = -1
 	_render_battle()
 
+func _status_plain(id: String, stacks: int = 1) -> String:
+	var n := maxi(1, stacks)
+	match str(id).to_lower():
+		"slow", "lento":
+			return "Lento %d — a próxima Manobra deste personagem custa +1 de Iniciativa." % n
+		"weak", "fraco":
+			return "Fraco %d — causa menos dano com Impacto/Poder por %d turno(s)." % [n, n]
+		"vulnerable", "vulneravel", "vulnerável":
+			return "Vulnerável %d — sofre dano extra ao ser atingido." % n
+		"stun", "atordoado":
+			return "Atordoado — não pode jogar Manobras enquanto durar."
+		"bleed", "sangramento":
+			return "Sangramento %d — perde Vida no início do turno e o efeito reduz 1 pilha." % n
+		"poison", "veneno":
+			return "Veneno %d — dano contínuo de veneno a cada turno." % n
+		"burn", "queimadura":
+			return "Queimadura %d — dano de fogo no início do turno." % n
+		"blind", "cego":
+			return "Cego — erra ou reduz a precisão das próximas ações."
+		"marked", "marcado":
+			return "Marcado — inimigos priorizam este alvo / recebe efeitos extras."
+		"bind", "bound", "preso":
+			return "Preso — não pode se mover de fileira."
+		"atento":
+			return "Atento — reage melhor / bônus defensivo temporário."
+		"wounded", "ferido":
+			return "Ferido — marca de ferimento que potencializa certas Manobras."
+		"protecao", "protegido":
+			return "Proteção %d — funciona como Escudo: absorve dano de Impacto." % n
+		"barreira", "barrier":
+			return "Barreira %d — HP extra que absorve dano antes da Vida." % n
+		"resistente":
+			return "Resistente %d — reduz o dano recebido." % n
+		"fragil", "frágil":
+			return "Frágil — sofre mais dano até o efeito acabar."
+		"invulneravel", "invulnerável":
+			return "Invulnerável — ignora dano até jogar uma Manobra."
+		_:
+			return "%s %d" % [str(id).capitalize(), n]
+
 func _effect_glossary_lines(definition: Dictionary, card: Dictionary = {}) -> PackedStringArray:
 	var lines: PackedStringArray = []
-	var text := str(definition.get("text", ""))
-	if text != "":
-		lines.append(text)
+	var seen: Dictionary = {}
+	var blurb := str(definition.get("text", ""))
+	if blurb != "":
+		lines.append(blurb)
+		seen[blurb] = true
 	for effect in definition.get("effects", []):
 		var kind := str(effect.get("kind", ""))
+		var line := ""
 		match kind:
-			"DAMAGE": lines.append("Dano %s (%s)" % [effect.get("amount", "?"), effect.get("stat", "attack")])
-			"STATUS": lines.append("Status %s ×%s" % [effect.get("id", "?"), effect.get("stacks", 1)])
-			"HEAL": lines.append("Cura %s" % effect.get("amount", "?"))
-			"PUSH": lines.append("Empurrão %s" % effect.get("force", 1))
-			"PULL": lines.append("Puxão")
+			"DAMAGE":
+				var stat := str(effect.get("stat", "attack"))
+				var stat_pt := "Poder" if stat == "power" else "Impacto"
+				line = "Causa %s de dano (%s − defesa do alvo)." % [effect.get("amount", "?"), stat_pt]
+			"STATUS":
+				line = _status_plain(str(effect.get("id", "?")), int(effect.get("stacks", 1)))
+			"HEAL":
+				line = "Recupera %s de Vida." % effect.get("amount", "?")
+			"PUSH":
+				line = "Empurra o alvo %s fileira(s) para trás." % effect.get("force", 1)
+			"PULL":
+				line = "Puxa o alvo para a fileira da frente."
 			_:
-				if kind != "": lines.append(kind)
+				if kind != "":
+					line = kind
+		if line != "" and not seen.has(line):
+			lines.append(line)
+			seen[line] = true
 	for action in definition.get("actions", []):
-		if typeof(action) != TYPE_ARRAY or action.is_empty(): continue
+		if typeof(action) != TYPE_ARRAY or action.is_empty():
+			continue
 		var op := str(action[0])
+		var line2 := ""
 		match op:
-			"hit": lines.append("Impacto %s" % (action[1] if action.size() > 1 else "0"))
-			"status": lines.append("Aplica %s" % (action[1] if action.size() > 1 else "?"))
-			"protecao": lines.append("Proteção %s" % (action[1] if action.size() > 1 else "1"))
-			"barreira", "barrier": lines.append("Barreira %s" % (action[1] if action.size() > 1 else "1"))
-			"resistente": lines.append("Resistente %s" % (action[1] if action.size() > 1 else "1"))
-			"heal": lines.append("Cura %s" % (action[1] if action.size() > 1 else "?"))
-			"push": lines.append("Empurrão %s" % (action[1] if action.size() > 1 else "1"))
-			"draw", "draw_items": lines.append("Compra cartas")
-			_: lines.append(op)
+			"hit":
+				var bonus = action[1] if action.size() > 1 else "0"
+				line2 = "Golpe de Impacto (modificador %s sobre o Impacto do herói)." % bonus
+			"hit_power", "power_hit":
+				line2 = "Golpe de Poder (modificador %s)." % (action[1] if action.size() > 1 else "0")
+			"status":
+				var sid := str(action[1]) if action.size() > 1 else "?"
+				var stacks := int(action[2]) if action.size() > 2 else 1
+				line2 = _status_plain(sid, stacks)
+			"protecao":
+				line2 = _status_plain("protecao", int(action[1]) if action.size() > 1 else 1)
+			"barreira", "barrier":
+				line2 = _status_plain("barreira", int(action[1]) if action.size() > 1 else 1)
+			"resistente":
+				line2 = _status_plain("resistente", int(action[1]) if action.size() > 1 else 1)
+			"heal":
+				line2 = "Recupera %s de Vida." % (action[1] if action.size() > 1 else "?")
+			"push":
+				line2 = "Empurra o alvo %s fileira(s)." % (action[1] if action.size() > 1 else "1")
+			"draw", "draw_items":
+				line2 = "Compra carta(s) para a mão."
+			"slow", "lento":
+				line2 = _status_plain("slow", int(action[1]) if action.size() > 1 else 1)
+			_:
+				line2 = op
+		if line2 != "" and not seen.has(line2):
+			lines.append(line2)
+			seen[line2] = true
 	if lines.is_empty():
 		lines.append(_card_description(definition, card))
 	return lines
@@ -2715,12 +2754,18 @@ func _add_inspect_overlay(index: int, viewport_size: Vector2) -> void:
 		lab.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		lab.custom_minimum_size.x = panel.custom_minimum_size.x - 28
 		col.add_child(lab)
-	var btn_row := HBoxContainer.new()
-	btn_row.add_theme_constant_override("separation", 8)
-	col.add_child(btn_row)
-	var cancel := _button("Voltar", Callable(), "Fecha a inspeção e volta à carta selecionada")
-	cancel.pressed.connect(func() -> void: _cancel_inspect())
-	btn_row.add_child(cancel)
+	var btn_col := VBoxContainer.new()
+	btn_col.add_theme_constant_override("separation", 8)
+	col.add_child(btn_col)
+	var back := _button("Voltar", Callable(), "Fecha a inspeção e volta à carta selecionada")
+	back.pressed.connect(func() -> void: _close_inspect_keep_selection())
+	btn_col.add_child(back)
+	var cancel2 := _button("Cancelar", Callable(), "Desmarca a carta")
+	cancel2.pressed.connect(func() -> void:
+		_cancel_inspect()
+		_deselect_card()
+	)
+	btn_col.add_child(cancel2)
 	hud.add_child(panel)
 
 func _after_card_resolved() -> void:
@@ -2874,6 +2919,22 @@ func _show_enemy_card_overlay(card: Dictionary, definition: Dictionary, owner: D
 	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	host.setup(_card_spec(card, definition, owner))
 	fx_overlay.add_child(host)
+
+func _add_selected_card_overlay(index: int, viewport_size: Vector2) -> void:
+	var card: Dictionary = battle.hand[index]
+	var definition: Dictionary = _card_def(str(card["id"]))
+	var owner: Dictionary = battle.actor_by_id(int(card.get("owner", 0)))
+	var host = CardFace.new()
+	host.name = "SelectedCardOverlay"
+	var height := viewport_size.y * 0.60
+	var width := height * 0.66
+	host.size = Vector2(width, height)
+	host.position = Vector2((viewport_size.x - width) * 0.5, (viewport_size.y - height) * 0.5)
+	host.z_index = 12
+	host.setup(_card_spec(card, definition, owner))
+	host.mouse_filter = Control.MOUSE_FILTER_STOP
+	host.gui_input.connect(func(event: InputEvent) -> void: _on_card_gui(event, index))
+	hud.add_child(host)
 
 func _clear_enemy_card_overlay() -> void:
 	if fx_overlay == null:
@@ -3120,51 +3181,93 @@ func _process(delta: float) -> void:
 		if avatar == null: continue
 		var hot := int(id) == hovered_actor
 		avatar.modulate = Color("ffe1a8") if hot else Color.WHITE
-	for mesh_index in range(card_meshes.size()):
-		var card_mesh: MeshInstance3D = card_meshes[mesh_index]
-		if not is_instance_valid(card_mesh): continue
-		var raised := mesh_index == hovered_card or mesh_index == inspected_card
-		var target_scale := Vector3(1.42, 1.42, 1.42) if raised else Vector3.ONE
-		card_mesh.scale = card_mesh.scale.lerp(target_scale, 0.35)
-		var base_pos: Vector3 = card_mesh.get_meta("base_pos", card_mesh.position)
-		var lift := Vector3(0, 0.12, 0.42) if raised else Vector3.ZERO
-		var want_pos := base_pos + lift
-		# Preserve deal-in animation until near the slot
-		if card_mesh.position.distance_to(base_pos) < 1.25 or raised:
-			card_mesh.position = card_mesh.position.lerp(want_pos, 0.35)
-		card_mesh.sorting_offset = 24.0 if raised else float(mesh_index) * 0.01
-		var glow_node: MeshInstance3D = card_mesh.get_node_or_null("HoverGlow")
-		if glow_node != null and glow_node.material_override != null:
-			var gmat: StandardMaterial3D = glow_node.material_override
-			var glow_on := mesh_index == hovered_card or mesh_index == inspected_card or mesh_index == selected_card
-			var target_a := 0.55 if glow_on else 0.0
-			var target_e := 3.2 if glow_on else 0.0
-			gmat.albedo_color.a = lerpf(gmat.albedo_color.a, target_a, 0.35)
-			gmat.emission_energy_multiplier = lerpf(gmat.emission_energy_multiplier, target_e, 0.35)
+	_update_hand_card_visuals()
 	if presentation != null and battle != null and battle.phase == "PLAYER":
+		# Foco: sprite sob o mouse, senão dono da carta sob hover (se vivo), senão dono da selecionada.
+		var focus_id := hovered_actor
+		if focus_id < 0 and hovered_card >= 0 and hovered_card < battle.hand.size():
+			focus_id = int(battle.hand[hovered_card].get("owner", -1))
+		if focus_id < 0 and selected_card >= 0 and selected_card < battle.hand.size():
+			focus_id = int(battle.hand[selected_card].get("owner", -1))
+		if focus_id >= 0:
+			var focus_actor: Dictionary = battle.actor_by_id(focus_id)
+			if focus_actor.is_empty() or int(focus_actor.get("hp", 0)) <= 0:
+				focus_id = -1
 		if battle_view_mode == "lateral":
-			# Lateral: sem rotação de órbita; hover centra + zoom no sprite (aliado ou inimigo).
 			var want_focus := Vector3.ZERO
 			var want_zoom := 1.0
-			if hovered_actor >= 0 and actor_nodes.has(hovered_actor):
-				var body: Node3D = actor_nodes[hovered_actor]
+			if focus_id >= 0 and actor_nodes.has(focus_id):
+				var body: Node3D = actor_nodes[focus_id]
 				if is_instance_valid(body):
 					want_focus = body.position
 					want_zoom = 1.55
+					_maybe_center_mouse_on_sprite(focus_id, body)
 			presentation.focus_target = presentation.focus_target.lerp(want_focus, 1.0 - exp(-delta * 5.0))
 			presentation.zoom = lerpf(presentation.zoom, want_zoom, 1.0 - exp(-delta * 5.0))
 			presentation.orbit = 0.0
 		else:
 			var focus := Vector3.ZERO
-			if hovered_actor >= 0 and actor_nodes.has(hovered_actor):
-				var actor: Dictionary = battle.actor_by_id(hovered_actor)
+			if focus_id >= 0 and actor_nodes.has(focus_id):
+				var actor: Dictionary = battle.actor_by_id(focus_id)
 				if str(actor.get("side", "")) == "ALLY":
-					var body: Node3D = actor_nodes[hovered_actor]
+					var body: Node3D = actor_nodes[focus_id]
 					focus = Vector3(body.position.x * 0.34, 0.18, 0.0)
+					_maybe_center_mouse_on_sprite(focus_id, body)
 			presentation.ally_focus = presentation.ally_focus.lerp(focus, 1.0 - exp(-delta * 5.0))
 	if portrait_sticky_until > 0 and Time.get_ticks_msec() >= portrait_sticky_until:
 		portrait_sticky_until = 0
 		_hide_idle_portraits()
+
+func _maybe_center_mouse_on_sprite(actor_id: int, body: Node3D) -> void:
+	# Quebra o loop zoom↔hover: ao tocar o sprite, captura o mouse no centro projetado
+	# para que, após o zoom, o cursor continue sobre o personagem.
+	if camera == null or body == null or not is_instance_valid(body):
+		return
+	if hovered_actor != actor_id:
+		return
+	var now := Time.get_ticks_msec()
+	if actor_id == _sprite_mouse_lock_id and now < _sprite_mouse_lock_until:
+		return
+	var screen: Vector2 = camera.unproject_position(body.position + Vector3(0, 1.1, 0))
+	var vp := get_viewport()
+	if vp == null:
+		return
+	var cur := vp.get_mouse_position()
+	if cur.distance_to(screen) < 36.0:
+		_sprite_mouse_lock_id = actor_id
+		_sprite_mouse_lock_until = now + 450
+		return
+	vp.warp_mouse(screen)
+	_sprite_mouse_lock_id = actor_id
+	_sprite_mouse_lock_until = now + 450
+
+func _update_hand_card_visuals() -> void:
+	for mesh_index in range(card_meshes.size()):
+		var card_mesh: MeshInstance3D = card_meshes[mesh_index]
+		if not is_instance_valid(card_mesh): continue
+		var raised := mesh_index == hovered_card and mesh_index != selected_card or mesh_index == inspected_card
+		var target_scale := Vector3(1.14, 1.14, 1.14) if raised else Vector3.ONE
+		card_mesh.scale = card_mesh.scale.lerp(target_scale, 0.35)
+		var base_pos: Vector3 = card_mesh.get_meta("base_pos", card_mesh.position)
+		var lift := Vector3(0, 0.24, 0.30) if raised else Vector3.ZERO
+		var want_pos := base_pos + lift
+		var base_rot: Vector3 = card_mesh.get_meta("base_rot", card_mesh.rotation)
+		var want_rot := Vector3(-0.02, 0.0, 0.0) if raised else base_rot
+		# Preserve deal-in animation until near the slot
+		if card_mesh.position.distance_to(base_pos) < 1.25 or raised:
+			card_mesh.position = card_mesh.position.lerp(want_pos, 0.35)
+		card_mesh.rotation = card_mesh.rotation.lerp(want_rot, 0.35)
+		card_mesh.sorting_offset = 100.0 if raised else float(mesh_index) * 0.01
+		if card_mesh.material_override != null:
+			card_mesh.material_override.render_priority = 20 if raised else 0
+		var glow_node: MeshInstance3D = card_mesh.get_node_or_null("HoverGlow")
+		if glow_node != null and glow_node.material_override != null:
+			var gmat: StandardMaterial3D = glow_node.material_override
+			var glow_on := mesh_index == hovered_card or mesh_index == inspected_card or mesh_index == selected_card
+			var target_a := 0.22 if glow_on else 0.0
+			var target_e := 4.0 if glow_on else 0.0
+			gmat.albedo_color.a = lerpf(gmat.albedo_color.a, target_a, 0.35)
+			gmat.emission_energy_multiplier = lerpf(gmat.emission_energy_multiplier, target_e, 0.35)
 
 
 func _phase_prompt_text() -> String:
@@ -3216,19 +3319,34 @@ func _add_phase_prompt(viewport_size: Vector2) -> void:
 	hud.add_child(box)
 
 func _add_selected_card_actions(index: int, viewport_size: Vector2) -> void:
-	# Botão Inspecionar ao lado da carta selecionada (centro inferior).
-	var row := HBoxContainer.new()
-	row.name = "SelectedCardActions"
-	row.add_theme_constant_override("separation", 10)
-	row.position = Vector2(viewport_size.x * 0.5 - 140.0, viewport_size.y - 220.0)
-	row.z_index = 6
+	# A carta central confirma no segundo clique; Inspecionar + Cancelar ao lado.
+	var col := VBoxContainer.new()
+	col.name = "SelectedCardActions"
+	col.add_theme_constant_override("separation", 8)
+	var card_height := viewport_size.y * 0.60
+	var card_width := card_height * 0.66
+	col.position = Vector2(viewport_size.x * 0.5 + card_width * 0.5 + 18.0, viewport_size.y * 0.5 - 40.0)
+	col.z_index = 13
 	var inspect_btn := _button("Inspecionar", Callable(), "Abre o glossário da Manobra selecionada")
 	inspect_btn.custom_minimum_size = Vector2(160, 40)
 	inspect_btn.pressed.connect(func() -> void: _open_inspect(index))
-	row.add_child(inspect_btn)
-	var hint := _label("Clique de novo na carta para confirmar", 13, Color("aab2c0"))
-	row.add_child(hint)
-	hud.add_child(row)
+	col.add_child(inspect_btn)
+	var cancel_btn := _button("Cancelar", Callable(), "Desmarca a carta selecionada")
+	cancel_btn.custom_minimum_size = Vector2(160, 40)
+	cancel_btn.pressed.connect(func() -> void: _deselect_card())
+	col.add_child(cancel_btn)
+	hud.add_child(col)
+
+func _deselect_card() -> void:
+	selected_card = -1
+	card_confirmed = false
+	inspected_card = -1
+	inspect_open = false
+	chain_targets.clear()
+	damage_preview_by_actor.clear()
+	portrait_sticky_until = 0
+	_hide_idle_portraits()
+	_render_battle()
 
 func _show_block_popup(message: String) -> void:
 	# Popup modal curto explicando por que a Manobra não pode ser usada.
@@ -3323,7 +3441,6 @@ func _card_unusable_reason(hand_index: int, target_id: int = -1) -> String:
 func _save_config() -> void:
 	var config := ConfigFile.new()
 	config.set_value("game", "team", team)
-	config.set_value("game", "equipped", equipped)
 	config.set_value("game", "owned_cards", owned_cards)
 	config.set_value("game", "improvements", improvements)
 	config.set_value("game", "best_stars", best_stars)
@@ -3336,6 +3453,7 @@ func _save_config() -> void:
 	config.set_value("settings", "animation_speed", animation_speed)
 	config.set_value("settings", "battle_view_mode", battle_view_mode)
 	config.set_value("settings", "sensitive_content", sensitive_content)
+	config.set_value("settings", "bgm_track", bgm_track)
 	config.save("user://hotn3.cfg")
 
 func _load_config() -> void:
@@ -3347,9 +3465,7 @@ func _load_config() -> void:
 		if saved_team.size() == int(Content.RULES["team_size"]) and seen_heroes.size() == saved_team.size() and saved_team.all(func(id): return Content.HEROES.has(id) and Content.HEROES[id].get("playable", true)):
 			team.clear()
 			for id in saved_team: team.append(id)
-		equipped = config.get_value("game", "equipped", {})
 		owned_cards = config.get_value("game", "owned_cards", {})
-		_sanitize_decks()
 		_ensure_owned_cards()
 		improvements = config.get_value("game", "improvements", {})
 		var stored_stars: Dictionary = config.get_value("game", "best_stars", {})
@@ -3370,4 +3486,5 @@ func _load_config() -> void:
 		if battle_view_mode not in ["normal", "lateral"]:
 			battle_view_mode = "normal"
 		sensitive_content = bool(config.get_value("settings", "sensitive_content", sensitive_content))
+		bgm_track = str(config.get_value("settings", "bgm_track", bgm_track))
 		animation_speed = clampf(float(config.get_value("settings", "animation_speed", animation_speed)), 0.5, 2.0)

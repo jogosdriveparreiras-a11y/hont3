@@ -82,3 +82,23 @@ Cartas/heróis `ent_*` em `addons/hotn3_entities/entities.json`; `PackBridge` in
 - Toggle **Melhorada (+)**: tier=melhorada, nome com +, campo melhorada_de, chrome 3D na previa.
 - Personagem: campo **Aprimoramento** (alias passiva), **Grupos**, **Biografia**.
 - Ver `docs/NOMENCLATURA.md`.
+
+
+## Animações (FX)
+
+Campos por carta:
+
+| Campo | Tipo | Descrição |
+|---|---|---|
+| `anim_self` | string[] | FX no conjurador (aliases em `assets/fx/presets.json` ou basename `.efkefc`) |
+| `anim_target` | string[] | FX no alvo |
+| `anim_timing` | `parallel` \| `wait_last` | Simultâneo ou espera a última |
+
+Runtime: `FxPlayer.gd` + `CombatPresentation.play_card_fx` no resolve da carta. Stub usa GPUParticles2D/CPUParticles3D com texturas de `assets/fx/particles2d/`; `.efkefc` indexados para plugin Effekseer futuro.
+
+## Tabela de atributos
+
+Aba **Tabela de atributos**: lista todos os personagens com Vida/Impacto/Poder/Armadura/Escudo.
+- Clique no cabeçalho para ordenar.
+- Edite células e use **Salvar atributos** para aplicar no catálogo em memória.
+- Em seguida **Exportar entities.json completo** para baixar o arquivo atualizado.

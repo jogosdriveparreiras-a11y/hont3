@@ -22,11 +22,12 @@ def run(*command, timeout=240, capture_godot=False):
                 command, cwd=ROOT, check=False, timeout=timeout,
                 stdout=log, stderr=subprocess.STDOUT,
             )
-        if completed.returncode != 0:
-            print(log_path.read_text(encoding="utf-8", errors="replace")[-4000:], flush=True)
+        log_text = log_path.read_text(encoding="utf-8", errors="replace")
+        if completed.returncode != 0 or "CrashHandlerException" in log_text:
+            print(log_text[-4000:], flush=True)
             raise subprocess.CalledProcessError(completed.returncode, command)
         # Surface OK lines for the suite summary.
-        for line in log_path.read_text(encoding="utf-8", errors="replace").splitlines():
+        for line in log_text.splitlines():
             if line.startswith("OK:") or line.startswith("MERGE ") or line.startswith("PENDENTE"):
                 print(line, flush=True)
     else:
@@ -45,7 +46,8 @@ version = subprocess.run([engine, "--version"], cwd=ROOT, check=True, capture_ou
 if not re.match(r"^4\.6(?:\.|\D|$)", version):
     sys.exit(f"Godot 4.6 é necessário; executável encontrado: {version}")
 
-run(engine, "--headless", "--path", str(ROOT), "--editor", "--import", "--quit", capture_godot=True)
-for script in ("StatusSmoke.gd", "CampaignSmoke.gd", "SceneSmoke.gd", "MergeSmoke.gd"):
-    run(engine, "--headless", "--path", str(ROOT), "-s", f"res://tools/{script}", capture_godot=True)
+godot_base = (engine, "--headless", "--accessibility", "disabled", "--path", str(ROOT))
+run(*godot_base, "--editor", "--import", "--quit", capture_godot=True)
+for script in ("EngineSmoke.gd", "StatusSmoke.gd", "CampaignSmoke.gd", "SceneSmoke.gd", "MergeSmoke.gd"):
+    run(*godot_base, "-s", f"res://tools/{script}", capture_godot=True)
 print("OK: verificações estáticas, importação e testes de combate/cena")

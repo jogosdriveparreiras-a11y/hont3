@@ -71,7 +71,7 @@ vulnerable weak webbed_up wounded invulneravel
 
 for hero_id, hero in heroes.items():
     assert hero_id in hero_lore and all(hero_lore[hero_id].get(k) for k in ("role", "trait", "history")), hero_id
-    assert len(hero["cards"]) == rules["deck_size"], hero_id
+    assert hero["cards"], hero_id
     assert len(set(hero["pool"])) >= 8, hero_id
     assert hero.get("passive") in {"vanguarda", "canalizar", "oportunista", "devocao", "baluarte", "rastreador"}, hero_id
     assert (ROOT / hero["sprite"].removeprefix("res://")).is_file(), hero_id
@@ -82,17 +82,27 @@ for hero_id, hero in heroes.items():
         assert card_id in cards, (hero_id, card_id)
     for card_id in hero["cards"]:
         assert card_id in cards, (hero_id, card_id)
-        assert hero["cards"].count(card_id) <= cards[card_id].get("copy_limit", rules["copy_limit"]), (hero_id, card_id)
 
 playable = {hero_id: hero for hero_id, hero in heroes.items() if hero.get("playable", True)}
 legacy = ["guerreiro", "mago", "ladino", "clerigo", "paladino", "patrulheiro"]
 for legacy_id in legacy:
     assert heroes[legacy_id].get("playable") is False, legacy_id
 import json
-entity_pack = json.loads((ROOT / "addons/hotn3_entities/entities.json").read_text(encoding="utf-8"))["heroes"]
+entity_data = json.loads((ROOT / "addons/hotn3_entities/entities.json").read_text(encoding="utf-8"))
+entity_pack = entity_data["heroes"]
+entity_cards = entity_data["cards"]
+external_cards = json.loads((ROOT / "addons/hotn3_external_cards/cards.json").read_text(encoding="utf-8"))["cards"]
 assert len(entity_pack) == 27
+assert len(entity_cards) == 277
+assert len(external_cards) == 194
+merged_card_ids = set(cards) | set(entity_cards) | set(external_cards)
+assert len(merged_card_ids) == 553
 for hero_id, hero in entity_pack.items():
     assert hero_id.startswith("ent_"), hero_id
+    assert len(hero.get("iniciais", [])) == rules["manobras_iniciais"], hero_id
+    assert len(set(hero["iniciais"])) == rules["manobras_iniciais"], hero_id
+    for card_id in hero.get("pool", []):
+        assert card_id in entity_cards, (hero_id, card_id)
     for key in ("sprite", "portrait", "signature_icon"):
         art = str(hero.get(key, ""))
         assert art.startswith("res://assets/cast/"), (hero_id, key)
@@ -110,8 +120,6 @@ for name, definition in {**cards, **enemy_cards}.items():
         "SELF", "ALLY", "ALL_ALLIES", "ENEMY", "SINGLE", "ROW", "ENEMY_ROW",
         "ALL_ENEMIES", "ADJACENT", "RANDOM", "CHAIN", "ANY_UNIT", "FRONT_ROW", "BACK_ROW"
     }, name
-    if "copy_limit" in definition:
-        assert 1 <= definition["copy_limit"] <= rules["deck_size"], name
     all_effects = (definition.get("effects", []) + definition.get("on_redraw", [])
                    + definition.get("full_combo", []) + definition.get("roulette", []))
     for effect in list(all_effects):
@@ -170,5 +178,6 @@ audit_rows = [line for line in (ROOT / "EFFECTS_AUDIT.md").read_text().splitline
               if line.startswith("| ") and not line.startswith("| Efeito")]
 assert len(audit_rows) == 77, len(audit_rows)
 assert len({line.split("|")[1].strip() for line in audit_rows}) == 77
-print(f"OK: {len(heroes)} heroes, {len(cards)} player cards, "
-      f"{len(enemies)} enemy types, {len(missions)} missions, {len(audit_rows)} audited effects")
+print(f"OK: {len(heroes)} base heroes, {len(entity_pack)} playable heroes, "
+      f"{len(merged_card_ids)} merged cards, {len(enemies)} enemy types, "
+      f"{len(missions)} missions, {len(audit_rows)} audited effects")
