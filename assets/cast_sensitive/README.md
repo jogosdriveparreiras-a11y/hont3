@@ -1,10 +1,16 @@
-﻿# Conteúdo sensível
+# Conteúdo sensível
 
-Quando **Conteúdo sensível** estiver ativo nas Configurações, o jogo tenta
-`assets/cast_sensitive/` com o mesmo nome de `assets/cast/`
+Quando **Conteúdo sensível** estiver **desligado (Não)** nas Configurações, o jogo
+usa `assets/cast_sensitive/` no lugar de `assets/cast/`
 (ex.: `ent_alyssa_wine_sprite.png`).
 
-Fallbacks: `generic_sprite.png`, `generic_portrait.png`, `generic_icon.png`.
+Se não houver arquivo `ent_*` correspondente, usa os placeholders genéricos:
+- `generic_sprite.png`
+- `generic_portrait.png`
+- `generic_icon.png`
+
+Quando **Conteúdo sensível** estiver **ligado (Sim)**, o jogo usa a arte original
+em `assets/cast/`.
 
 ## Pacote BasicResources (MZ DLC)
 

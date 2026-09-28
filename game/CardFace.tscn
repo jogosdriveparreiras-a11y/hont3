@@ -26,24 +26,25 @@ clip_text = true
 
 [node name="ChipBox" type="ColorRect" parent="."]
 layout_mode = 0
-offset_left = 50.0
-offset_top = 62.0
-offset_right = 230.0
-offset_bottom = 86.0
+offset_left = 16.8
+offset_top = 56.0
+offset_right = 55.2
+offset_bottom = 71.2
 color = Color(0, 0, 0, 0.490196)
 mouse_filter = 2
 
 [node name="Chip" type="Label" parent="."]
 layout_mode = 0
-offset_left = 50.0
-offset_top = 62.0
-offset_right = 230.0
-offset_bottom = 86.0
+offset_left = 16.8
+offset_top = 56.0
+offset_right = 55.2
+offset_bottom = 71.2
 theme_override_colors/font_color = Color(0.85098, 0.827451, 0.776471, 1)
-theme_override_font_sizes/font_size = 12
-text = "Personagem"
+theme_override_font_sizes/font_size = 10
+text = "Nome"
 horizontal_alignment = 1
 vertical_alignment = 1
+clip_text = true
 
 [node name="DamageBlock" type="Control" parent="."]
 layout_mode = 0
@@ -66,21 +67,22 @@ vertical_alignment = 1
 
 [node name="StatLabel" type="Label" parent="DamageBlock"]
 layout_mode = 0
-offset_left = 100.0
-offset_top = 40.0
-offset_right = 180.0
-offset_bottom = 70.0
+offset_left = 14.0
+offset_top = 8.0
+offset_right = 126.0
+offset_bottom = 28.0
 theme_override_colors/font_color = Color(0.956863, 0.945098, 0.917647, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 12
 text = "IMPACTO"
+horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="RulesBox" type="ColorRect" parent="."]
 layout_mode = 0
 offset_left = 14.0
-offset_top = 232.0
+offset_top = 240.0
 offset_right = 266.0
-offset_bottom = 348.0
+offset_bottom = 344.0
 color = Color(0, 0, 0, 0.490196)
 mouse_filter = 2
 
@@ -88,9 +90,9 @@ mouse_filter = 2
 visible = false
 layout_mode = 0
 offset_left = 20.0
-offset_top = 236.0
+offset_top = 244.0
 offset_right = 260.0
-offset_bottom = 256.0
+offset_bottom = 264.0
 theme_override_colors/font_color = Color(0.941176, 0.760784, 0.478431, 1)
 theme_override_font_sizes/font_size = 12
 text = "Desvantagem"
@@ -100,9 +102,9 @@ vertical_alignment = 1
 [node name="Rules" type="RichTextLabel" parent="."]
 layout_mode = 0
 offset_left = 20.0
-offset_top = 248.0
+offset_top = 250.0
 offset_right = 260.0
-offset_bottom = 342.0
+offset_bottom = 338.0
 mouse_filter = 2
 theme_override_colors/default_color = Color(0.905882, 0.964706, 0.972549, 1)
 theme_override_font_sizes/normal_font_size = 13
@@ -114,10 +116,10 @@ text = "Efeitos"
 [node name="Footer" type="Label" parent="."]
 layout_mode = 0
 offset_left = 16.0
-offset_top = 356.0
-offset_right = 200.0
-offset_bottom = 384.0
+offset_top = 354.0
+offset_right = 140.0
+offset_bottom = 374.0
 theme_override_colors/font_color = Color(0.85098, 0.827451, 0.776471, 1)
 theme_override_font_sizes/font_size = 12
-text = "◆ INICIATIVA"
+text = "INICIATIVA"
 vertical_alignment = 1

@@ -65,13 +65,12 @@ var reduce_motion := false
 var animation_speed := 1.0
 ## Vista de combate: "normal" (padrão) | "lateral" (aliados à esquerda).
 var battle_view_mode := "normal"
-## Conteúdo sensível: quando desativado, usa as alternativas seguras em assets/cast_sensitive/.
+## Conteúdo sensível: ON=cast/ original; OFF=cast_sensitive/ (generics se não houver ent_*).
 var sensitive_content := false
 var bgm_track := "Battle1"
 var fx_player = null
 var _sprite_mouse_lock_id := -1
 var _sprite_mouse_lock_until := 0
-var _sensitive_map: Dictionary = {}
 ## Cartas possuídas por herói (deck = todas; Melhoradas substituem a base).
 var owned_cards: Dictionary = {}
 ## Overlay Inspecionar só abre pelo botão (não no clique da carta).
@@ -2126,12 +2125,12 @@ func _rules_bbcode(definition: Dictionary, card: Dictionary) -> String:
 func _card_spec(card: Dictionary, definition: Dictionary, owner: Dictionary) -> Dictionary:
 	var item := bool(definition.get("item", false))
 	var art_path := str(definition.get("art", ""))
-	var art: Texture2D = _load_tex(art_path)
+	var art: Texture2D = _load_tex(_sensitive_path(art_path, "portrait") if art_path != "" else "")
 	if art == null:
-		art = _load_tex(str(owner.get("portrait", "")))
+		art = _load_tex(_sensitive_path(str(owner.get("portrait", "")), "portrait"))
 	if art == null:
 		art = _unit_portrait(owner)
-	var icon: Texture2D = _load_tex("res://assets/items/item_icon.png") if item else _load_tex(str(owner.get("signature_icon", "")))
+	var icon: Texture2D = _load_tex("res://assets/items/item_icon.png") if item else _load_tex(_sensitive_path(str(owner.get("signature_icon", "")), "icon"))
 	var readout: Dictionary = _stat_readout(owner, definition)
 	var border := Color("8d929a") if item else _type_color(str(owner.get("type", "")))
 	var show_damage := (not item) and _card_has_damage(definition)
@@ -2192,77 +2191,25 @@ func _sprite_region(path: String, sheet: Texture2D) -> Rect2:
 	return Rect2(0, 0, sheet.get_width() / 9.0, sheet.get_height() / 6.0)
 
 func _sensitive_path(path: String, kind: String = "sprite") -> String:
-	# Sensível ON = arte original (cast/). OFF = alternativas únicas em cast_sensitive/.
-	# Nunca usa placeholders genéricos: cada personagem recebe um sprite distinto.
+	# Sensível ON (Sim) = arte original em assets/cast/.
+	# OFF (Não) = assets/cast_sensitive/; se não houver ent_* correspondente, usa generics.
 	if sensitive_content or path == "":
 		return path
-	_ensure_sensitive_map()
 	var fname := path.get_file()
-	var key := "%s|%s" % [kind, fname]
-	if _sensitive_map.has(key):
-		var mapped := str(_sensitive_map[key])
-		if ResourceLoader.exists(mapped) or FileAccess.file_exists(mapped):
-			return mapped
 	var sens := "res://assets/cast_sensitive/" + fname
 	if ResourceLoader.exists(sens) or FileAccess.file_exists(sens):
 		return sens
+	match kind:
+		"portrait":
+			if ResourceLoader.exists("res://assets/cast_sensitive/generic_portrait.png"):
+				return "res://assets/cast_sensitive/generic_portrait.png"
+		"icon":
+			if ResourceLoader.exists("res://assets/cast_sensitive/generic_icon.png"):
+				return "res://assets/cast_sensitive/generic_icon.png"
+		_:
+			if ResourceLoader.exists("res://assets/cast_sensitive/generic_sprite.png"):
+				return "res://assets/cast_sensitive/generic_sprite.png"
 	return path
-
-func _ensure_sensitive_map() -> void:
-	if not _sensitive_map.is_empty():
-		return
-	var pool: Array[String] = []
-	var dir := DirAccess.open("res://assets/cast_sensitive/")
-	if dir != null:
-		dir.list_dir_begin()
-		var fname := dir.get_next()
-		while fname != "":
-			if fname.ends_with(".png") and not fname.begins_with("generic_"):
-				pool.append("res://assets/cast_sensitive/" + fname)
-			fname = dir.get_next()
-	pool.sort()
-	var keys: Array[String] = []
-	for hid in Content.HEROES.keys():
-		var h: Dictionary = Content.HEROES[hid]
-		var spr := str(h.get("sprite", "")).get_file()
-		var por := str(h.get("portrait", h.get("sprite", ""))).get_file()
-		if spr != "":
-			keys.append("sprite|%s" % spr)
-		if por != "" and por != spr:
-			keys.append("portrait|%s" % por)
-	var ent_path := "res://addons/hotn3_entities/entities.json"
-	if FileAccess.file_exists(ent_path):
-		var f := FileAccess.open(ent_path, FileAccess.READ)
-		if f != null:
-			var parsed = JSON.parse_string(f.get_as_text())
-			f.close()
-			if typeof(parsed) == TYPE_DICTIONARY:
-				var hh: Dictionary = parsed.get("heroes", {})
-				for hid in hh.keys():
-					var h2: Dictionary = hh[hid]
-					var spr2 := str(h2.get("sprite", "")).get_file()
-					var por2 := str(h2.get("portrait", "")).get_file()
-					var sk := "sprite|%s" % spr2
-					var pk := "portrait|%s" % por2
-					if spr2 != "" and not keys.has(sk):
-						keys.append(sk)
-					if por2 != "" and por2 != spr2 and not keys.has(pk):
-						keys.append(pk)
-	keys.sort()
-	if pool.is_empty():
-		return
-	var used: Dictionary = {}
-	for key in keys:
-		var hv := int(hash(str(key)))
-		if hv < 0:
-			hv = -hv
-		var idx := hv % pool.size()
-		var guard := 0
-		while used.has(idx) and guard < pool.size():
-			idx = (idx + 1) % pool.size()
-			guard += 1
-		used[idx] = true
-		_sensitive_map[key] = pool[idx]
 
 func _unit_portrait(actor: Dictionary) -> Texture2D:
 	var portrait_path := _sensitive_path(str(actor.get("portrait", "")), "portrait")

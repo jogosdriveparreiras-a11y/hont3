@@ -12,6 +12,7 @@ Padrão: **Normal** (vista atual top-down/overhead). Lateral é opt-in.
 
 - Mapa conceptualmente “de lado”: **aliados à esquerda**, inimigos à direita.
 - Ordem esquerda → direita: retaguarda aliada → frente aliada → frente inimiga → retaguarda inimiga.
+- Câmera na vista lateral fica no eixo **+Z** (olhando o campo), **não** em −X — as quatro fileiras no eixo X aparecem como colunas; três divisórias amarelas (ArenaBuilder) separam as colunas.
 - Sem rotação de órbita 180° na fase inimiga; em vez disso, a câmera **foca/dá zoom** no inimigo que está jogando a carta.
 - Hover (aliado ou inimigo): centra a câmera no sprite e aumenta o zoom.
 - A vista Normal permanece intacta e continua o comportamento antigo (órbita na fase inimiga, leve foco em aliados).

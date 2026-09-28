@@ -170,13 +170,14 @@ func _process(delta: float) -> void:
 		if shake_enabled and shake_time > 0.0:
 			offset = Vector3(randf_range(-shake_strength, shake_strength), randf_range(-shake_strength, shake_strength), 0)
 		if view_mode == "lateral":
-			# Vista lateral verdadeira (câmera em -X): fileiras em X ficam esquerda→direita;
-			# linhas amarelas longas em Z permanecem horizontais na tela.
+			# Vista lateral: câmera em +Z (NÃO -X). Fileiras no eixo X ficam
+			# esquerda→direita: retaguarda aliada > frente aliada > frente inimiga > retaguarda inimiga.
+			# Divisórias amarelas em Z (ArenaBuilder) separam as quatro colunas.
 			var z := clampf(zoom, 1.0, 2.4)
-			var dist := 16.0 / z
-			var height := 7.6 / sqrt(z)
-			var look := Vector3(focus_target.x * 0.35, 1.05, focus_target.z * 0.25)
-			var base := Vector3(-dist, height, focus_target.z * 0.2)
+			var dist := 15.2 / z
+			var height := 8.4 / sqrt(z)
+			var look := Vector3(focus_target.x, 1.05, focus_target.z * 0.35)
+			var base := Vector3(focus_target.x * 0.22, height, dist)
 			camera.position = base + punch + offset
 			camera.look_at(look, Vector3.UP)
 			camera.fov = lerpf(camera.fov, 42.0 / (0.55 + 0.45 * z), 1.0 - exp(-delta * 6.0))
