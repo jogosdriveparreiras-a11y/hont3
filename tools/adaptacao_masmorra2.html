@@ -63,7 +63,7 @@ nav.toc {
   border-radius: 14px;
   padding: 16px 20px;
   margin-bottom: 28px;
-  /* TOC stays in normal flow so it never overlays scrolled content. */
+  /* TOC stays in normal flow so it never overlays scrolled content. (não sticky / não contenteditable) */
   backdrop-filter: blur(8px);
 }
 nav.toc h2 { margin: 0 0 10px; font-size: .95rem; color: var(--accent); }
@@ -272,7 +272,8 @@ ul.compact li { margin: 4px 0; }
   <p class="sub" contenteditable="true">Documento <b>editável</b> em pt-BR · união das fichas já presentes no HotN3 com personagens ausentes encontrados na planilha e nos DOCX. Todas as propostas, lacunas e fontes ficam no mesmo arquivo.</p>
   <div class="badge-row">
     <span class="badge"><b>Comum</b> 8 personagens já no HotN3</span>
-    <span class="badge"><b>Ausentes</b> 33 personagens planilha + DOCX</span>
+    <span class="badge"><b>Inventário</b> 141 entidades / 5 fontes</span>
+    <span class="badge"><b>Ausentes</b> 34 personagens planilha + DOCX (+Isabella)</span>
     <span class="badge"><b>Apêndice</b> inimigos / lacaios tabulados</span>
     <span class="badge"><b>UX</b> filtro · salvar local · exportar MD/JSON</span>
     <span class="badge"><b>Idioma</b> pt-BR · offline</span>
@@ -301,6 +302,7 @@ ul.compact li { margin: 4px 0; }
     <li><a href="#hazel">Hazel</a></li>
     <li><a href="#hibiki">Hibiki</a></li>
     <li><a href="#isabel">Isabel</a></li>
+    <li><a href="#isabella-lancaster">Isabella Lancaster</a></li>
     <li><a href="#jun-genesis">Jun Genesis</a></li>
     <li><a href="#kalel">Kalel</a></li>
     <li><a href="#marshmallow">Marshmallow</a></li>
@@ -367,6 +369,18 @@ ul.compact li { margin: 4px 0; }
     <b>Ambíguo:</b> no DOCX H4, <b>Methos</b> tem codinome <b>Paladino</b>, enquanto a planilha lista Methos e Paladino como entradas distintas — mantidos separados; ver seções.
     Novos blocos DOCX (Martha, Jakub, Babli, Irwin, Nikki, Scypha, Delia, Chase, Nixie, Basil, Mahina, Alduin, etc.) acrescentados abaixo.
   </div>
+
+  <div class="note docx-enrich" id="fontes-5">
+    <b>Atualização 2026-09-29 (rebuild completo · 5 fontes):</b>
+    <ol class="compact">
+      <li contenteditable="true"><b>1. masmorra2.xlsx</b> — Lista de Personagens (21), Fichas 3 (8 blocos), FICHAS - Manobras (16 rótulos), Inimigos e Ajudantes (46).</li>
+      <li contenteditable="true"><b>2. HERORGASM 4</b> — tabela de raças (29 nomes), alunos (22), vilões (6).</li>
+      <li contenteditable="true"><b>3–4. HotN Godot / Mecânicas</b> — cast com <b>Isabella Lancaster</b> (ficha completa; ≠ Isabel/Impura) + Yuina / Gakko Chikara.</li>
+      <li contenteditable="true"><b>5. HERORGASM 5</b> — Impura kit, fichas do grupo, inimigos tabela (6), elites narrativos (Bola de Ferro, Samael, Haru, Kevin, Madame Cascos, Bruxa, Mika Yamamoto).</li>
+    </ol>
+    <p contenteditable="true">Inventário máquina: <code>tools/adaptacao_masmorra2_inventory.json</code> · total entidades unificadas: <b>141</b>
+    (playable 48 · elite 14 · enemy 48 · npc 31).</p>
+  </div>
 </section>
 <section class="method" id="nomenclatura">
   <h2 class="sec" contenteditable="true">Nomenclatura oficial HotN3</h2>
@@ -387,14 +401,15 @@ ul.compact li { margin: 4px 0; }
 <section class="summary" id="resumo-contagem">
   <h2 class="sec" contenteditable="true">Resumo / contagens</h2>
   <div class="summary-grid">
-    <div class="stat"><div class="n">41</div><div class="l">Personagens documentados (8 comuns + 33 ausentes)</div></div>
-    <div class="stat"><div class="n">8</div><div class="l">Já no HotN3 (excluídos do corpo)</div></div>
-    <div class="stat"><div class="n">33</div><div class="l">Ausentes (seções · +DOCX)</div></div>
-    <div class="stat"><div class="n">27</div><div class="l">Heróis HotN3 (exclusão)</div></div>
-    <div class="stat"><div class="n">46</div><div class="l">Inimigos tabulados</div></div>
-    <div class="stat"><div class="n">38</div><div class="l">Inimigos sem par HotN3</div></div>
+    <div class="stat"><div class="n">141</div><div class="l">Entidades no inventário (5 fontes unificadas)</div></div>
+    <div class="stat"><div class="n">42</div><div class="l">Seções de personagem no HTML (8 comuns + 34 ausentes · +Isabella)</div></div>
+    <div class="stat"><div class="n">13</div><div class="l">Playable com par HotN3 (in_hotn3)</div></div>
+    <div class="stat"><div class="n">35</div><div class="l">Playable ausentes HotN3</div></div>
+    <div class="stat"><div class="n">62</div><div class="l">Inimigos + elites (planilha/DOCX/narrativa)</div></div>
+    <div class="stat"><div class="n">1</div><div class="l">Isabella Lancaster (nova · ≠ Isabel)</div></div>
   </div>
-  <p class="muted" contenteditable="true">União das fontes: 8 personagens já no HotN3 + 33 ausentes (planilha/DOCX). Lista de Personagens e Fichas 3 adicionam <b>Isabel</b> e <b>Madelyn</b> (Madelyn já no HotN3) · Manobras nomeia os ausentes com kits parciais.</p>
+  <p class="muted" contenteditable="true">Fontes: masmorra2.xlsx + HERORGASM 4 + HotN Godot (2) + HERORGASM 5.
+  <b>Isabel (Impura)</b> e <b>Isabella Lancaster</b> são personagens distintos. Inventário JSON espelha todas as entidades.</p>
 </section>
 <section class="method" id="ja-hotn3-comum">
   <h2 class="sec" contenteditable="true">Já no HotN3 (comum)</h2>
@@ -2173,7 +2188,7 @@ Eu Escolho Você! (Estado, Singular): Hibiki invoca um dos seus monstros. Enquan
   <div class="char-head">
     <div class="identity">
       <h2 contenteditable="true">Isabel</h2>
-      <div class="alter" contenteditable="true">Alterego: Impura · Raça: Meio-Sangue</div>
+      <div class="alter" contenteditable="true">Alterego: Impura · Raça: Meio-Sangue · <b>≠ Isabella Lancaster</b></div>
       <dl>
         <dt>Vida (ficha)</dt><dd contenteditable="true">d8 +1</dd>
         <dt>Velocidade</dt><dd contenteditable="true">7 passos +1</dd>
@@ -2187,6 +2202,7 @@ Eu Escolho Você! (Estado, Singular): Hibiki invoca um dos seus monstros. Enquan
       <p contenteditable="true"><b>Munição</b> — Todas as Manobras da Techna ganham Exaustão.</p>
     </div>
   </div>
+  <div class="note"><b>Separação:</b> Isabel/Impura (Culto, Fichas 3 + H5) é personagem distinta de <a href="#isabella-lancaster">Isabella Lancaster</a> (Aluna de Magia, DOCX Godot).</div>
   <div class="note"><b>Aprimoramento (proposta):</b> <b>Impura / Atavus</b> — Kit paralelo a Evelyn (stun → letárgico) com tema sangue/pântano; Desvantagem na F3 é paste Munição — inventar temática. <span class="chip gap">proposta</span></div>
   <h3 contenteditable="true">Manobra planilha → carta HotN3 (proposta)</h3>
   <table class="map">
@@ -2413,6 +2429,136 @@ Eu Escolho Você! (Estado, Singular): Hibiki invoca um dos seus monstros. Enquan
   <ul class="compact"><li contenteditable="true">Meio-Sangue, Neutra e Maligna</li><li contenteditable="true">Vida: 8 | Passos: 6</li><li contenteditable="true">Garras de Atavus: Impacto, Ferido</li><li contenteditable="true">Garras de Atavus+: Penetrante</li><li contenteditable="true">Chuva de Sangue: Poder, Área</li><li contenteditable="true">Invocar a Tormenta+: Seletivo</li><li contenteditable="true">Arm?</li><li contenteditable="true">Esc?</li><li contenteditable="true">Intimidação</li><li contenteditable="true">ERP?</li><li contenteditable="true">Monstro do Pântano</li><li contenteditable="true">Grito: Quando aliado morre</li><li contenteditable="true">Quando aliado é ferido</li><li contenteditable="true">Aniquilação: Lacaio e Elite (metade da vida)</li><li contenteditable="true">Aniquilação+: Chefe</li><li contenteditable="true">Vínculo</li><li contenteditable="true">Reflexo, Prioridade</li><li contenteditable="true">Caldo Negro: Forte, Resistente, Rápido, 3 rodadas</li><li contenteditable="true">Caldo Negro+: 5 rodadas</li><li contenteditable="true">Tormento</li></ul>
 </div>
 </section>
+
+<section class="char" id="isabella-lancaster" data-char="Isabella Lancaster">
+  <div class="char-toolbar-mini">
+    <button type="button" class="btn-collapse" title="Recolher/expandir">▾</button>
+    <span class="cat-badge">DOCX Godot · ausente HotN3 · ≠ Isabel/Impura</span>
+  </div>
+  <div class="char-body">
+  <div class="char-head">
+    <div class="identity">
+      <h2 contenteditable="true">Isabella Lancaster</h2>
+      <div class="alter" contenteditable="true">Alterego: Aluna de Magia · Raça: Meio-Sangue</div>
+      <dl>
+        <dt>Nível (DOCX)</dt><dd contenteditable="true">10</dd>
+        <dt>Papel</dt><dd contenteditable="true">Aluna de Magia (cast HotN Godot)</dd>
+        <dt>Atributos (%)</dt><dd contenteditable="true"><code>VID 75 · VIG 125 · IMP 75 · ARM 75 · POD 125 · ESC 125 · VEL 100 · PRE 125</code></dd>
+        <dt>Fontes</dt><dd contenteditable="true">HotN Godot Edition (DOCX aa573632…) · HotN Mecânicas (DOCX 964fd7ef…) · <b>não</b> é Isabel/Impura</dd>
+        <dt>Cartas (propostas)</dt><dd contenteditable="true">7</dd>
+      </dl>
+    </div>
+    <div class="desv-box">
+      <div class="label">Desvantagem (proposta)</div>
+      <p contenteditable="true"><b>Sede de Sangue</b> — Após jogar <i>A Magia de Sangue</i>, recebe Frágil 1 ou perde 1 Escudo até o próximo turno.</p>
+    </div>
+  </div>
+  <div class="note"><b>Separação obrigatória:</b> <b>Isabella Lancaster</b> ≠ <b>Isabel (Impura)</b>. Isabella é aluna de magia do cast Godot (magia de sangue / oral). Isabel/Impura é a líder do Culto (Fichas 3 + HERORGASM 5), irmã de Danilo/Maldito. <span class="chip gap">proposta</span></div>
+  <div class="note"><b>Aprimoramento (proposta):</b> <b>Magia de Sangue</b> — buff de parâmetros em <i>Fase Adulta</i>; debuff em <i>Primeiro Ano</i>. Passiva: manobras Orals aplicam Atordoado com mais facilidade. <span class="chip gap">proposta</span></div>
+  <h3 contenteditable="true">Manobra DOCX → carta HotN3 (proposta)</h3>
+  <table class="map">
+    <thead>
+      <tr><th>Manobra (DOCX)</th><th>Tipo</th><th>Carta sugerida</th><th>Classe</th><th>Efeitos mapeados</th><th>Flags</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="manobra" contenteditable="true">Oral Irresistível</td>
+        <td contenteditable="true">1-Inicial</td>
+        <td contenteditable="true">Oral Irresistível</td>
+        <td contenteditable="true"><span class="chip est">ESTADO</span></td>
+        <td contenteditable="true">status stun (Atordoado)</td>
+        <td contenteditable="true">—</td>
+        <td contenteditable="true"><span class="chip gap">proposta</span></td>
+      </tr>
+      <tr>
+        <td class="manobra" contenteditable="true">A Magia de Sangue</td>
+        <td contenteditable="true">1-Inicial</td>
+        <td contenteditable="true">A Magia de Sangue</td>
+        <td contenteditable="true"><span class="chip atk">ATTACK</span></td>
+        <td contenteditable="true">Crash + Difícil (acerto/custo)</td>
+        <td contenteditable="true"><code>difficult</code></td>
+        <td contenteditable="true"><span class="chip gap">proposta</span></td>
+      </tr>
+      <tr>
+        <td class="manobra" contenteditable="true">Oral Especialista</td>
+        <td contenteditable="true">2-Evoluída</td>
+        <td contenteditable="true">Oral Especialista</td>
+        <td contenteditable="true"><span class="chip est">ESTADO</span></td>
+        <td contenteditable="true">reduz / ajusta custo INI</td>
+        <td contenteditable="true"><code>ini</code></td>
+        <td contenteditable="true"><span class="chip gap">proposta</span></td>
+      </tr>
+      <tr>
+        <td class="manobra" contenteditable="true">Oral Arrebatador</td>
+        <td contenteditable="true">2-Evoluída</td>
+        <td contenteditable="true">Oral Arrebatador</td>
+        <td contenteditable="true"><span class="chip est">ESTADO</span></td>
+        <td contenteditable="true">+rounds de Atordoado <b>ou</b> área</td>
+        <td contenteditable="true"><code>area</code></td>
+        <td contenteditable="true"><span class="chip gap">proposta</span></td>
+      </tr>
+      <tr>
+        <td class="manobra" contenteditable="true">Oral Irresistível+</td>
+        <td contenteditable="true">3-Melhoria</td>
+        <td contenteditable="true">Oral Irresistível+</td>
+        <td contenteditable="true"><span class="chip est">ESTADO</span></td>
+        <td contenteditable="true">stun + alcance/área</td>
+        <td contenteditable="true"><code>reach</code></td>
+        <td contenteditable="true"><span class="chip gap">proposta</span></td>
+      </tr>
+      <tr>
+        <td class="manobra" contenteditable="true">A Magia de Sangue+</td>
+        <td contenteditable="true">3-Melhoria</td>
+        <td contenteditable="true">A Magia de Sangue+</td>
+        <td contenteditable="true"><span class="chip atk">ATTACK</span></td>
+        <td contenteditable="true">Crash/Difícil reforçado</td>
+        <td contenteditable="true"><code>difficult</code></td>
+        <td contenteditable="true"><span class="chip gap">proposta</span></td>
+      </tr>
+      <tr>
+        <td class="manobra" contenteditable="true">Fase Adulta</td>
+        <td contenteditable="true">Postura / Skin</td>
+        <td contenteditable="true">Fase Adulta</td>
+        <td contenteditable="true"><span class="chip est">ESTADO</span></td>
+        <td contenteditable="true">Buff maior de parâmetros; remove Oral Irresistível da lista ativa (regra DOCX)</td>
+        <td contenteditable="true"><code>postura</code></td>
+        <td contenteditable="true"><span class="chip gap">proposta</span></td>
+      </tr>
+      <tr>
+        <td class="manobra" contenteditable="true">Primeiro Ano</td>
+        <td contenteditable="true">Postura / Skin</td>
+        <td contenteditable="true">Primeiro Ano</td>
+        <td contenteditable="true"><span class="chip est">ESTADO</span></td>
+        <td contenteditable="true">Debuff de parâmetros (skin inicial)</td>
+        <td contenteditable="true"><code>postura</code></td>
+        <td contenteditable="true"><span class="chip gap">proposta</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="note docx-enrich" data-source="HotN Godot DOCX">
+  <b>Fonte — HotN Godot (2 DOCX idênticos no bloco):</b> única ficha detalhada na seção Personagens desses anexos.
+  <dl class="docx-dl">
+    <dt>Nome</dt><dd contenteditable="true">Isabella Lancaster</dd>
+    <dt>Papel</dt><dd contenteditable="true">Aluna de Magia</dd>
+    <dt>Nível</dt><dd contenteditable="true">10</dd>
+    <dt>Raça</dt><dd contenteditable="true">Meio-Sangue</dd>
+    <dt>Atributos</dt><dd contenteditable="true"><code>VID 75 VIG 125 IMP 75 ARM 75 POD 125 ESC 125 VEL 100 PRE 125</code></dd>
+    <dt>Cast relacionado</dt><dd contenteditable="true">Sombria (Ajudante listado) · Yuina · Gakko Chikara</dd>
+  </dl>
+  <div><b>Poderes (DOCX):</b>
+    <ul class="compact">
+      <li contenteditable="true">Oral Irresistível: Atordoado</li>
+      <li contenteditable="true">A Magia de Sangue: Crash e Difícil</li>
+      <li contenteditable="true">Oral Especialista: custo INI</li>
+      <li contenteditable="true">Oral Arrebatador: +rounds ou área</li>
+      <li contenteditable="true">Fase Adulta — Buff maior (− Oral Irresistível)</li>
+      <li contenteditable="true">Primeiro Ano — Debuff Parâmetros</li>
+    </ul>
+  </div>
+  </div>
+  </div>
+</section>
+
 <section class="char" id="jun-genesis">
   <div class="char-head">
     <div class="identity">
@@ -4940,6 +5086,22 @@ Chutes de Coelho: habilidade de desferir chu</p>
 <tr><td contenteditable="true">Subchefe</td><td contenteditable="true">Mika Yamamoto</td><td contenteditable="true">8</td><td contenteditable="true">10</td><td contenteditable="true">Garras (Impacto, Dano 2, Repulsão 2)
 Servos (Alcance 2, Guardião, Combo 1)</td></tr>
 </tbody>
+  </table>
+
+
+  <h3 contenteditable="true">Elites narrativos (HERORGASM 5 + vilões)</h3>
+  <div class="note">Elites citados em combate nas aventuras H5 / H4 — propostas de cartas. <span class="chip gap">proposta</span></div>
+  <table class="map">
+    <thead><tr><th>Nome</th><th>Papel</th><th>Notas</th><th>Cartas sugeridas</th></tr></thead>
+    <tbody>
+      <tr><td contenteditable="true">Bola de Ferro</td><td contenteditable="true">Elite</td><td contenteditable="true">Gangue vs Culto; tortura</td><td contenteditable="true">Golpe de Ferro · Tortura</td></tr>
+      <tr><td contenteditable="true">Samael</td><td contenteditable="true">Elite</td><td contenteditable="true">Meio-Sangue serpente; Brom Stikk</td><td contenteditable="true">Forma Serpente · Investida</td></tr>
+      <tr><td contenteditable="true">Haru</td><td contenteditable="true">Elite</td><td contenteditable="true">Caldo-Gama (monstro)</td><td contenteditable="true">Caldo-Gama</td></tr>
+      <tr><td contenteditable="true">Kevin</td><td contenteditable="true">Elite</td><td contenteditable="true">Líder gangue / Caldo-Gama</td><td contenteditable="true">(kit incompleto)</td></tr>
+      <tr><td contenteditable="true">Madame Cascos</td><td contenteditable="true">Elite/Vilã</td><td contenteditable="true">Anéis / Caos</td><td contenteditable="true">Arremesso</td></tr>
+      <tr><td contenteditable="true">Bruxa (docas)</td><td contenteditable="true">Elite narrativa</td><td contenteditable="true">Vampira; distinta do lacaio “Bruxa” da planilha</td><td contenteditable="true">Pedras · Pele Vampírica</td></tr>
+      <tr><td contenteditable="true">Mika Yamamoto</td><td contenteditable="true">Subchefe</td><td contenteditable="true">Tabela H5</td><td contenteditable="true">Garras · Servos</td></tr>
+    </tbody>
   </table>
 
 </section>
