@@ -1,5 +1,26 @@
 # Changelog
 
+## 2026-09-29 — Report rico, Vítima no kit, purge/draw mortos, Instantâneo Desvantagem, cast/minions
+
+### Relatório de sessão
+- `SessionReport`: `seq`, snapshots de mão/atores/pilhas, `emit_structured`.
+- `BattleState.report_cb` → GameRoot: draw, draw_skip_dead_owner, draw_batch, reshuffle, purge, death, redraw, phase, posture_trigger, status_add.
+- Snapshot de baralho/mão/atores no início da missão.
+
+### Bugs
+- **Eu Sou a Vítima!** (Dominika): estava só em `evoluidas` e `kit_manobras` cortava em 5 manobras (POSTURA ficava de fora). Agora na lista `iniciais`; `kit_manobras` inclui todas as POSTURA do kit; `ensure_owned` remescla iniciais faltantes.
+- **Nero/Naomi pós-morte**: `_purge_dead_cards` agora também limpa a **mão aliada** (cartas de morto ocupavam slots); `_draw_side` **não gasta cota** ao puxar carta de dono morto (vai para exhausted e tenta de novo). Time vivo volta a comprar normalmente.
+
+### Regras
+- Toda carta `DESVANTAGEM` é **Instantâneo** (Tormenta, Derretimento, Solidão/Deixe-me Viver).
+
+### Arte
+- Cast Edited: atualizados Nero, Kabuki, Techna, Pietro/Chaos; Naomi → `transform_*` do Nero.
+- Novos (kit genérico): Dr. Espantalho, Patrulheiro Rosa, Pauline, Siren, Delírio.
+- Lacaios Nero/Naomi: sprites RPG Maker MZ (`enemies`) em `assets/cast/ent_minion_*`.
+- Assunção: `8zFgG.jpg` sem nome — não criou personagem.
+
+
 ## 2026-09-29 — Posturas
 
 - Sistema de **Postura** (status exclusivo + classe `POSTURA`): 14 posturas com ganho de Iniciativa (1 ativação/postura/rodada).

@@ -208,19 +208,27 @@ func apply_melhorada_replace(card_ids: Array) -> Array:
 	return out
 
 func kit_manobras(entity_id: String) -> Array:
-	# 5 Iniciais do personagem (sem duplicatas).
+	# Até 5 manobras iniciais (não DESVANTAGEM/POSTURA) + todas POSTURA das iniciais.
+	# Posturas do kit (ex.: Eu Sou a Vítima!) devem entrar no baralho mesmo além das 5.
 	var hero: Dictionary = catalog.hero(entity_id)
 	var out: Array = []
+	var postures: Array = []
 	var src: Array = hero.get("iniciais", [])
 	if src.is_empty():
 		src = hero.get("cards", [])
 	for card_id in src:
 		var cid := str(card_id)
-		if cid in out: continue
+		if cid in out or cid in postures: continue
 		var def: Dictionary = catalog.definition(cid)
-		if str(def.get("class", "")) == "DESVANTAGEM": continue
+		var cls := str(def.get("class", ""))
+		if cls == "DESVANTAGEM": continue
+		if cls == "POSTURA":
+			postures.append(cid)
+			continue
+		if out.size() >= 5: continue
 		out.append(cid)
-		if out.size() >= 5: break
+	for pid in postures:
+		out.append(pid)
 	return out
 
 func kit_desvantagem(entity_id: String) -> String:
@@ -359,7 +367,11 @@ func install(battle: Variant, owner_map: Dictionary, selected: Dictionary = {}) 
 		for id in entries:
 			if catalog.definition(str(id)).is_empty(): continue
 			battle.next_card_id += 1
-			battle.deck.append({"uid": battle.next_card_id, "id": str(id), "owner": actor_id, "class": catalog.definition(str(id))["class"], "upgrade": 0, "external_pack": true})
+			var cdef: Dictionary = catalog.definition(str(id))
+			var row := {"uid": battle.next_card_id, "id": str(id), "owner": actor_id, "class": cdef.get("class", ""), "upgrade": 0, "external_pack": true}
+			if str(cdef.get("class", "")) == "DESVANTAGEM" or bool(cdef.get("instant", false)):
+				row["instant"] = true
+			battle.deck.append(row)
 			installed += 1
 	battle._shuffle(battle.deck)
 	return installed

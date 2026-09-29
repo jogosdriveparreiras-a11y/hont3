@@ -1881,7 +1881,30 @@ func _start_mission() -> void:
 		battle.begin(mission_id, team, equipped, 0, improvements, loadout)
 	_apply_accessibility()
 	_ensure_bgm_for("battle")
+	_log_mission_deck_snapshot()
 	_render_battle()
+
+
+func _log_mission_deck_snapshot() -> void:
+	if session_report == null or battle == null:
+		return
+	var deck_by_owner: Dictionary = {}
+	for c in battle.deck:
+		var oid := int(c.get("owner", -1))
+		var arr: Array = deck_by_owner.get(oid, [])
+		arr.append(str(c.get("id", "")))
+		deck_by_owner[oid] = arr
+	session_report.log_battle("deck_snapshot", {
+		"mission": mission_id,
+		"team": team.duplicate(),
+		"equipped": equipped.duplicate(true),
+		"deck_by_owner": deck_by_owner,
+		"deck_total": battle.deck.size(),
+		"hand_total": battle.hand.size(),
+	})
+	session_report.snapshot_hand("ALLY", battle.hand, "opening")
+	session_report.snapshot_actors(battle.actors, "mission_start")
+	session_report.snapshot_piles("ALLY", battle.deck.size(), battle.discard.size(), battle.exhausted.size(), battle.hand.size(), "mission_start")
 
 func _begin_battle_session() -> void:
 	# IDs de atores e cartas reiniciam em cada missão; descarte os nós ligados à
@@ -1906,6 +1929,9 @@ func _begin_battle_session() -> void:
 	battle.visual.connect(_on_visual)
 	battle.changed.connect(_render_battle)
 	battle.finished.connect(_on_finished)
+	battle.report_cb = func(category: String, action: String, detail: Dictionary = {}) -> void:
+		if session_report != null:
+			session_report.emit_structured(category, action, detail)
 
 
 
@@ -1936,7 +1962,7 @@ func _on_event(message: String) -> void:
 		session_report.log_battle("log", {"text": message})
 
 func _on_visual(kind: String, source_id: int, target_id: int, amount: int) -> void:
-	if session_report != null and kind in ["cast", "hit", "heal", "death", "status", "block", "guard", "immune", "resist", "transform", "ini_gain"]:
+	if session_report != null and kind in ["cast", "hit", "heal", "death", "status", "block", "guard", "immune", "resist", "transform", "ini_gain", "draw", "redraw", "move", "counter"]:
 		session_report.log_battle("visual", {"kind": kind, "source": source_id, "target": target_id, "amount": amount})
 	if presentation != null: presentation.show_action(kind, source_id, target_id, amount)
 	if kind == "transform":

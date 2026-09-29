@@ -7,11 +7,19 @@ func _initialize() -> void:
 	var packs = PackBridge.new()
 	var fails: Array[String] = []
 
-	# --- Derretimento: hand card with empty actions + passive flag (not play effect) ---
+	# --- Derretimento: passive_like + Instantâneo (só ["instant"], efeito passivo no ator) ---
 	var der = packs.definition("ent_dominika_seur_desvantagem_derretimento")
 	if der.is_empty(): fails.append("der_missing")
 	if not bool(der.get("passive_like", false)): fails.append("der_not_passive_like")
-	if not der.get("actions", ["x"]).is_empty(): fails.append("der_has_actions")
+	if not bool(der.get("instant", false)): fails.append("der_not_instant")
+	var der_ops: Array = []
+	for a in der.get("actions", []):
+		if typeof(a) == TYPE_ARRAY and not a.is_empty():
+			der_ops.append(str(a[0]))
+	if "instant" not in der_ops: fails.append("der_actions_no_instant")
+	for op in der_ops:
+		if op != "instant":
+			fails.append("der_unexpected_action_%s" % op)
 	if str(der.get("class", "")) != "DESVANTAGEM": fails.append("der_class")
 
 	# --- Solidão / Deixe-me Viver redraw + alone ---
@@ -74,11 +82,11 @@ func _initialize() -> void:
 	if not bool(nero.get("transformed", false)): fails.append("no_transform")
 	if str(nero.get("name", "")) != "Naomi": fails.append("name_%s" % nero.get("name", ""))
 	if int(transform_count[0]) < 1: fails.append("no_transform_visual")
-	# Arte Naomi reutiliza Nero
-	if str(nero.get("sprite", "")) != "res://assets/cast/ent_nero_sprite.png":
-		fails.append("unexpected_sprite")
-	if str(nero.get("portrait", "")) != "res://assets/cast/ent_nero_portrait.png":
-		fails.append("unexpected_portrait")
+	# Arte Naomi dedicada (Cast Edited)
+	if str(nero.get("sprite", "")) != "res://assets/cast/ent_naomi_sprite.png":
+		fails.append("unexpected_sprite_%s" % nero.get("sprite", ""))
+	if str(nero.get("portrait", "")) != "res://assets/cast/ent_naomi_portrait.png":
+		fails.append("unexpected_portrait_%s" % nero.get("portrait", ""))
 
 	# Summon two minions then kill Nero → both die + cards purged
 	rt._summon(b, nero, "ent_minion_zumbi", 99)

@@ -129,6 +129,52 @@ func _initialize() -> void:
 	if b4._instant_card_playable(fake_t, tor, "ALLY"):
 		fails.append("tormenta_playable_without_E")
 
+	# Eu Sou a Vítima! no kit inicial + POSTURA no baralho de combate
+	var kit_dom: Array = packs2.entities.kit_manobras("ent_dominika_seur")
+	if "ent_dominika_seur_eu_sou_a_vitima" not in kit_dom:
+		fails.append("vitima_not_in_kit_manobras")
+	var vit_def = packs2.definition("ent_dominika_seur_eu_sou_a_vitima")
+	if str(vit_def.get("class", "")) != "POSTURA": fails.append("vitima_not_postura")
+	if "ent_dominika_seur_eu_sou_a_vitima" not in fixed.get("ent_dominika_seur", []):
+		fails.append("vitima_not_in_ensure_owned")
+
+	# Derretimento Instantâneo
+	var der = packs2.definition("ent_dominika_seur_desvantagem_derretimento")
+	if not bool(der.get("instant", false)): fails.append("derretimento_not_instant")
+	if not b4.is_instant_card({"id": "ent_dominika_seur_desvantagem_derretimento", "class": "DESVANTAGEM"}, der):
+		fails.append("derretimento_is_instant_card")
+
+	# Purge mão de herói morto + draw não desperdiça cota
+	var b5 = Battle.new()
+	b5.begin("road", ["guerreiro", "mago", "clerigo"], {}, 77)
+	var victim: Dictionary = b5.living("ALLY")[0]
+	var mate: Dictionary = b5.living("ALLY")[1]
+	var victim_id: int = int(victim["id"])
+	# injeta carta do victim na mão e no deck
+	b5.next_card_id += 1
+	b5.hand.append({"uid": b5.next_card_id, "id": "guarda", "owner": victim_id, "class": "SKILL"})
+	b5.next_card_id += 1
+	b5.deck.append({"uid": b5.next_card_id, "id": "golpe", "owner": victim_id, "class": "ATTACK"})
+	b5.next_card_id += 1
+	var living_card_uid: int = b5.next_card_id
+	b5.deck.append({"uid": living_card_uid, "id": "cura", "owner": int(mate["id"]), "class": "SKILL"})
+	victim["hp"] = 0
+	b5._purge_dead_cards()
+	var hand_has_dead: bool = false
+	for c in b5.hand:
+		if int(c.get("owner", -1)) == victim_id:
+			hand_has_dead = true
+	if hand_has_dead: fails.append("dead_owner_still_in_hand")
+	var before_hand: int = b5.hand.size()
+	# deck top after purge should be living card; draw 1 must succeed
+	b5._draw_side("ALLY", 1)
+	var drew_living: bool = false
+	for c in b5.hand:
+		if int(c.get("uid", -1)) == living_card_uid:
+			drew_living = true
+	if not drew_living and b5.hand.size() <= before_hand:
+		fails.append("draw_failed_after_dead_purge")
+
 	if fails.is_empty():
 		print("InstantDominikaNeroSmoke OK")
 	else:

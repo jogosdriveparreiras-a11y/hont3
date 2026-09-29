@@ -56,6 +56,15 @@ static func ensure_owned(heroes: Dictionary, definitions: Dictionary, current: D
 			if cleaned.is_empty():
 				result[hero_id] = default_owned(hero)
 			else:
+				# Garante Iniciais (incl. POSTURA do kit) + Desvantagem mesmo em saves antigos.
+				for entry in hero.get("iniciais", hero.get("cards", [])):
+					var card_id := str(entry)
+					if seen.has(card_id):
+						continue
+					if not definitions.has(card_id):
+						continue
+					seen[card_id] = true
+					cleaned.append(card_id)
 				var desv := str(hero.get("desvantagem", ""))
 				if desv != "" and definitions.has(desv) and not seen.has(desv):
 					cleaned.append(desv)

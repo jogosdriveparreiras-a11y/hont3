@@ -18,6 +18,8 @@ var discard: Array[Dictionary] = []
 var exhausted: Array[Dictionary] = []
 var card_plays := 0
 var redraws := 0
+## Callback opcional: Callable(category, action, detail_dict) → SessionReport.
+var report_cb: Callable
 var moves := 0
 var item_uses := 0
 var impulse := 0
@@ -62,6 +64,26 @@ const POSTURES := {
 	"intocavel": {"gain": 2, "label": "Intocável"},
 	"preparo": {"gain": 3, "label": "Preparo"},
 }
+
+
+func _rpt(category: String, action: String, detail: Dictionary = {}) -> void:
+	if report_cb.is_valid():
+		report_cb.call(category, action, detail)
+
+func _card_brief(card: Dictionary) -> Dictionary:
+	return {
+		"uid": int(card.get("uid", -1)),
+		"id": str(card.get("id", "")),
+		"owner": int(card.get("owner", -1)),
+		"class": str(card.get("class", "")),
+		"instant": bool(card.get("instant", false)),
+	}
+
+func _hand_briefs(side: String) -> Array:
+	var rows: Array = []
+	for c in _hand_of(side):
+		rows.append(_card_brief(c))
+	return rows
 
 func _acting() -> String:
 	return "ENEMY" if phase == "ENEMY" else "ALLY"
@@ -197,11 +219,16 @@ func _create_card(card_id: String, owner_id: int, changes: Dictionary = {}) -> D
 
 func purge_owner_cards(owner_id: int) -> void:
 	# Remove cartas deste dono de mão/baralho/descarte (ambos os lados).
+	var removed := 0
+	var ids: Array = []
 	for pile in [hand, deck, discard, enemy_hand, enemy_deck, enemy_discard]:
 		for i in range(pile.size() - 1, -1, -1):
 			var card: Dictionary = pile[i]
 			if int(card.get("owner", -1)) == owner_id:
+				ids.append(str(card.get("id", "")))
 				pile.remove_at(i)
+				removed += 1
+	_rpt("battle", "purge_owner_cards", {"owner_id": owner_id, "removed": removed, "ids": ids})
 
 func purge_summons_of(summoner_id: int) -> void:
 	# Lacaios convocados pelo conjurador morrem e perdem cartas de mão/pilhas.
@@ -284,12 +311,18 @@ func _draw_side(side: String, amount: int) -> void:
 	var pile_hand := _hand_of(side)
 	var pile_deck := _deck_of(side)
 	var pile_discard := _discard_of(side)
-	for i in range(amount):
+	var drawn := 0
+	var skipped_dead := 0
+	var guard := 0
+	# Compra `amount` cartas de donos VIVOS. Cartas de mortos vão para exhausted
+	# sem consumir a cota (evita baralho travado pós-morte do Nero/Naomi).
+	while drawn < amount and guard < 64:
+		guard += 1
 		if pile_hand.size() >= int(rules["hand_max"]):
-			return
+			break
 		if pile_deck.is_empty():
 			if pile_discard.is_empty():
-				return
+				break
 			for used_card in pile_discard:
 				pile_deck.append(used_card)
 			pile_discard.clear()
@@ -297,6 +330,9 @@ func _draw_side(side: String, amount: int) -> void:
 			# Fadiga: reshuffle do time aliado aplica Lento 1 em todos os aliados vivos.
 			if side == "ALLY":
 				_apply_reshuffle_fatigue()
+			_rpt("battle", "reshuffle", {"side": side, "deck": pile_deck.size()})
+		if pile_deck.is_empty():
+			break
 		var card: Dictionary = pile_deck.pop_back()
 		var owner := actor_by_id(card["owner"])
 		if owner.get("hp", 0) > 0:
@@ -308,11 +344,32 @@ func _draw_side(side: String, amount: int) -> void:
 			var cdef: Dictionary = Content.CARDS.get(str(card.get("id", "")), {})
 			if bool(cdef.get("ephemeral", false)): card["ephemeral"] = true
 			if bool(cdef.get("instant", false)): card["instant"] = true
+			# Desvantagem SEMPRE Instantâneo (regra de kit).
+			if str(cdef.get("class", card.get("class", ""))) == "DESVANTAGEM":
+				card["instant"] = true
 			if int(cdef.get("warmup", 0)) > 0: card["warmup"] = int(cdef["warmup"])
 			pile_hand.append(card)
+			drawn += 1
 			visual.emit("draw", int(owner["id"]), int(owner["id"]), 1)
+			_rpt("card", "draw", {
+				"side": side, "card": _card_brief(card),
+				"owner_name": str(owner.get("name", "")),
+				"hand_size": pile_hand.size(),
+				"deck_left": pile_deck.size(),
+			})
 		else:
 			_exhausted_of(side).append(card)
+			skipped_dead += 1
+			_rpt("card", "draw_skip_dead_owner", {
+				"side": side, "card": _card_brief(card),
+				"owner": int(card.get("owner", -1)),
+			})
+	if skipped_dead > 0 or drawn > 0:
+		_rpt("battle", "draw_batch", {
+			"side": side, "requested": amount, "drawn": drawn,
+			"skipped_dead": skipped_dead, "hand": pile_hand.size(),
+			"deck": pile_deck.size(), "discard": pile_discard.size(),
+		})
 
 func start_turn() -> void:
 	if phase == "FINISHED":
@@ -337,6 +394,12 @@ func start_turn() -> void:
 	combo_zero_owners.clear()
 	card_plays = int(rules["card_plays"])
 	redraws = int(rules["redraws"])
+	_rpt("battle", "phase", {
+		"phase": "PLAYER", "turn": turn,
+		"impulse": impulse, "plays": card_plays, "redraws": redraws,
+		"hand": _hand_briefs("ALLY"),
+		"deck": deck.size(), "discard": discard.size(), "exhausted": exhausted.size(),
+	})
 	moves = int(rules["moves"])
 	item_uses = int(rules["item_uses"])
 	for ally in living("ALLY"):
@@ -384,6 +447,9 @@ func card_warmup_ready(card: Dictionary, definition: Dictionary = {}) -> bool:
 
 func is_instant_card(card: Dictionary, definition: Dictionary = {}) -> bool:
 	if bool(card.get("instant", false)) or bool(definition.get("instant", false)):
+		return true
+	# Regra: toda DESVANTAGEM é Instantâneo (a menos que o designer diga o contrário).
+	if str(definition.get("class", card.get("class", ""))) == "DESVANTAGEM":
 		return true
 	for action in definition.get("actions", []):
 		if typeof(action) == TYPE_ARRAY and not action.is_empty() and str(action[0]) == "instant":
@@ -787,6 +853,10 @@ func try_posture_trigger(actor: Dictionary, posture_id: String) -> bool:
 	var label := str(POSTURES[posture_id].get("label", posture_id))
 	_log("%s (%s): +%d Iniciativa." % [actor.get("name", "?"), label, gain])
 	visual.emit("ini_gain", int(actor["id"]), int(actor["id"]), gain)
+	_rpt("battle", "posture_trigger", {
+		"actor_id": int(actor["id"]), "name": str(actor.get("name", "")),
+		"posture": posture_id, "label": label, "gain": gain, "impulse": _get_impulse(side),
+	})
 	return true
 
 func _posture_end_of_side(side: String) -> void:
@@ -907,6 +977,12 @@ func _add_status(actor: Dictionary, id: String, duration: int, stacks: int, sour
 	if id == "summoning": state["armed"] = false
 	statuses[id] = state
 	_log("%s: %s (%d)." % [actor["name"], id, state["stacks"]])
+	_rpt("battle", "status_add", {
+		"actor_id": int(actor.get("id", -1)), "name": str(actor.get("name", "")),
+		"status": id, "duration": int(state.get("duration", 0)),
+		"stacks": int(state.get("stacks", 0)), "source": source,
+		"is_posture": is_posture_id(id),
+	})
 	# Postura Controlador / Garra: status negativo inimigo↔alvo.
 	if id in NEGATIVE:
 		var applier := actor_by_id(source)
@@ -1226,6 +1302,16 @@ func _take_damage(source: Dictionary, target: Dictionary, amount: int, pierce: b
 	var died: bool = target["hp"] <= 0
 	if died:
 		_log("%s caiu." % target["name"])
+		_rpt("battle", "death", {
+			"actor_id": int(target.get("id", -1)),
+			"name": str(target.get("name", "")),
+			"archetype": str(target.get("archetype", "")),
+			"side": str(target.get("side", "")),
+			"is_summon": bool(target.get("is_summon", false)),
+			"minion": bool(target.get("minion", false)),
+			"summoner_id": int(target.get("summoner_id", -1)),
+			"killer_id": int(source.get("id", -1)),
+		})
 		# Posturas: Executor (matou inimigo) / Vingador (aliado morreu).
 		if int(source.get("id", -1)) != int(target.get("id", -2)) and str(source.get("side", "")) != str(target.get("side", "")):
 			try_posture_trigger(source, "executor")
@@ -1267,14 +1353,24 @@ func _take_damage(source: Dictionary, target: Dictionary, amount: int, pierce: b
 	return died
 
 func _purge_dead_cards() -> void:
-	# Deck/discard: remove dead owners (unless soulbound).
-	# Mão do jogador: mantém cartas de herói morto para hover/inspecionar (play() rejeita).
-	# Mão inimiga: remove — cartas de morto travam a IA (plays_left > 0 sem jogada legal).
-	for pile in [deck, discard, enemy_deck, enemy_discard, enemy_hand]:
+	# Remove cartas de donos mortos (exceto soulbound) de TODAS as pilhas,
+	# inclusive mão aliada — cartas mortas ocupavam slots e bloqueavam compras
+	# do time vivo (ex.: pós-morte Nero/Naomi). Mão inimiga também (IA).
+	var removed := 0
+	var by_owner: Dictionary = {}
+	for pile in [hand, deck, discard, enemy_hand, enemy_deck, enemy_discard]:
 		for index in range(pile.size() - 1, -1, -1):
-			var owner := actor_by_id(pile[index]["owner"])
-			if owner.get("hp", 0) <= 0 and not owner.get("statuses", {}).has("soulbound"):
+			var card: Dictionary = pile[index]
+			var owner := actor_by_id(int(card.get("owner", -1)))
+			if owner.is_empty():
+				continue
+			if int(owner.get("hp", 0)) <= 0 and not owner.get("statuses", {}).has("soulbound"):
+				var oid := int(owner.get("id", -1))
+				by_owner[oid] = int(by_owner.get(oid, 0)) + 1
 				pile.remove_at(index)
+				removed += 1
+	if removed > 0:
+		_rpt("battle", "purge_dead_cards", {"removed": removed, "by_owner": by_owner})
 
 func _resolve(source: Dictionary, targets: Array[Dictionary], card: Dictionary, card_data: Dictionary) -> Array[int]:
 	var fallen: Array[int] = []
@@ -1595,6 +1691,12 @@ func _redraw_side(side: String, hand_index: int) -> bool:
 		_discard_of(side).append(card)
 	_draw_side(side, 1)
 	_log("Carta redesenhada.")
+	_rpt("card", "redraw", {
+		"side": side,
+		"discarded": _card_brief(card),
+		"redraws_left": (enemy_redraws if side == "ENEMY" else redraws),
+		"hand": _hand_briefs(side),
+	})
 	visual.emit("redraw", int(source["id"]), int(source["id"]), 0)
 	changed.emit()
 	return true

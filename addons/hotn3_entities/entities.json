@@ -803,7 +803,8 @@
         "ent_dominika_seur_barrigada",
         "ent_dominika_seur_corpo_de_manteiga",
         "ent_dominika_seur_cair_por_cima",
-        "ent_dominika_seur_rolar"
+        "ent_dominika_seur_rolar",
+        "ent_dominika_seur_eu_sou_a_vitima"
       ],
       "signature": {
         "name": "Recuperação de massa",
@@ -856,11 +857,11 @@
         "ent_dominika_seur_barrigada",
         "ent_dominika_seur_corpo_de_manteiga",
         "ent_dominika_seur_cair_por_cima",
-        "ent_dominika_seur_rolar"
+        "ent_dominika_seur_rolar",
+        "ent_dominika_seur_eu_sou_a_vitima"
       ],
       "evoluidas": [
         "ent_dominika_seur_sentar_em_cima",
-        "ent_dominika_seur_eu_sou_a_vitima",
         "ent_dominika_seur_abalo_sismico",
         "ent_dominika_seur_presenca"
       ],
@@ -1976,8 +1977,8 @@
       ],
       "desvantagem": "ent_nero_desvantagem_solidao",
       "transform_name": "Naomi",
-      "transform_sprite": "res://assets/cast/ent_nero_sprite.png",
-      "transform_portrait": "res://assets/cast/ent_nero_portrait.png"
+      "transform_sprite": "res://assets/cast/ent_naomi_sprite.png",
+      "transform_portrait": "res://assets/cast/ent_naomi_portrait.png"
     },
     "ent_niu_valdtagen": {
       "id": "ent_niu_valdtagen",
@@ -2554,7 +2555,7 @@
       "minion": true,
       "playable": false,
       "passive": "oportunista",
-      "sprite": "res://en_dog.png",
+      "sprite": "res://assets/cast/ent_minion_zumbi_sprite.png",
       "cards": [
         "ent_minion_zumbi_golpe"
       ],
@@ -2563,7 +2564,9 @@
       ],
       "iniciais": [
         "ent_minion_zumbi_golpe"
-      ]
+      ],
+      "portrait": "res://assets/cast/ent_minion_zumbi_portrait.png",
+      "signature_icon": "res://assets/cast/ent_minion_zumbi_icon.png"
     },
     "ent_minion_fantasma": {
       "id": "ent_minion_fantasma",
@@ -2578,7 +2581,7 @@
       "minion": true,
       "playable": false,
       "passive": "oportunista",
-      "sprite": "res://en_sniper.png",
+      "sprite": "res://assets/cast/ent_minion_fantasma_sprite.png",
       "cards": [
         "ent_minion_fantasma_golpe"
       ],
@@ -2587,7 +2590,9 @@
       ],
       "iniciais": [
         "ent_minion_fantasma_golpe"
-      ]
+      ],
+      "portrait": "res://assets/cast/ent_minion_fantasma_portrait.png",
+      "signature_icon": "res://assets/cast/ent_minion_fantasma_icon.png"
     },
     "ent_minion_esqueleto": {
       "id": "ent_minion_esqueleto",
@@ -2602,7 +2607,7 @@
       "minion": true,
       "playable": false,
       "passive": "oportunista",
-      "sprite": "res://en_sniper.png",
+      "sprite": "res://assets/cast/ent_minion_esqueleto_sprite.png",
       "cards": [
         "ent_minion_esqueleto_golpe"
       ],
@@ -2611,7 +2616,9 @@
       ],
       "iniciais": [
         "ent_minion_esqueleto_golpe"
-      ]
+      ],
+      "portrait": "res://assets/cast/ent_minion_esqueleto_portrait.png",
+      "signature_icon": "res://assets/cast/ent_minion_esqueleto_icon.png"
     },
     "ent_minion_vampiro": {
       "id": "ent_minion_vampiro",
@@ -2626,7 +2633,7 @@
       "minion": true,
       "playable": false,
       "passive": "oportunista",
-      "sprite": "res://en_elite.png",
+      "sprite": "res://assets/cast/ent_minion_vampiro_sprite.png",
       "cards": [
         "ent_minion_vampiro_golpe"
       ],
@@ -2635,7 +2642,9 @@
       ],
       "iniciais": [
         "ent_minion_vampiro_golpe"
-      ]
+      ],
+      "portrait": "res://assets/cast/ent_minion_vampiro_portrait.png",
+      "signature_icon": "res://assets/cast/ent_minion_vampiro_icon.png"
     },
     "ent_minion_mumia": {
       "id": "ent_minion_mumia",
@@ -2650,7 +2659,7 @@
       "minion": true,
       "playable": false,
       "passive": "oportunista",
-      "sprite": "res://en_elite.png",
+      "sprite": "res://assets/cast/ent_minion_mumia_sprite.png",
       "cards": [
         "ent_minion_mumia_golpe"
       ],
@@ -2659,7 +2668,9 @@
       ],
       "iniciais": [
         "ent_minion_mumia_golpe"
-      ]
+      ],
+      "portrait": "res://assets/cast/ent_minion_mumia_portrait.png",
+      "signature_icon": "res://assets/cast/ent_minion_mumia_icon.png"
     },
     "ent_minion_ghoul": {
       "id": "ent_minion_ghoul",
@@ -2674,7 +2685,7 @@
       "minion": true,
       "playable": false,
       "passive": "oportunista",
-      "sprite": "res://en_dog.png",
+      "sprite": "res://assets/cast/ent_minion_ghoul_sprite.png",
       "cards": [
         "ent_minion_ghoul_golpe_a",
         "ent_minion_ghoul_golpe_b"
@@ -2686,7 +2697,9 @@
       "iniciais": [
         "ent_minion_ghoul_golpe_a",
         "ent_minion_ghoul_golpe_b"
-      ]
+      ],
+      "portrait": "res://assets/cast/ent_minion_ghoul_portrait.png",
+      "signature_icon": "res://assets/cast/ent_minion_ghoul_icon.png"
     },
     "ent_minion_banshee": {
       "id": "ent_minion_banshee",
@@ -2701,7 +2714,7 @@
       "minion": true,
       "playable": false,
       "passive": "oportunista",
-      "sprite": "res://en_sniper.png",
+      "sprite": "res://assets/cast/ent_minion_banshee_sprite.png",
       "cards": [
         "ent_minion_banshee_grito_a",
         "ent_minion_banshee_grito_b"
@@ -2713,7 +2726,9 @@
       "iniciais": [
         "ent_minion_banshee_grito_a",
         "ent_minion_banshee_grito_b"
-      ]
+      ],
+      "portrait": "res://assets/cast/ent_minion_banshee_portrait.png",
+      "signature_icon": "res://assets/cast/ent_minion_banshee_icon.png"
     },
     "ent_minion_strigoi": {
       "id": "ent_minion_strigoi",
@@ -2728,7 +2743,7 @@
       "minion": true,
       "playable": false,
       "passive": "oportunista",
-      "sprite": "res://en_elite.png",
+      "sprite": "res://assets/cast/ent_minion_strigoi_sprite.png",
       "cards": [
         "ent_minion_strigoi_golpe_a",
         "ent_minion_strigoi_golpe_b"
@@ -2740,7 +2755,9 @@
       "iniciais": [
         "ent_minion_strigoi_golpe_a",
         "ent_minion_strigoi_golpe_b"
-      ]
+      ],
+      "portrait": "res://assets/cast/ent_minion_strigoi_portrait.png",
+      "signature_icon": "res://assets/cast/ent_minion_strigoi_icon.png"
     },
     "ent_minion_golem": {
       "id": "ent_minion_golem",
@@ -2755,7 +2772,7 @@
       "minion": true,
       "playable": false,
       "passive": "oportunista",
-      "sprite": "res://en_elite.png",
+      "sprite": "res://assets/cast/ent_minion_golem_sprite.png",
       "cards": [
         "ent_minion_golem_golpe_a",
         "ent_minion_golem_golpe_b"
@@ -2767,7 +2784,9 @@
       "iniciais": [
         "ent_minion_golem_golpe_a",
         "ent_minion_golem_golpe_b"
-      ]
+      ],
+      "portrait": "res://assets/cast/ent_minion_golem_portrait.png",
+      "signature_icon": "res://assets/cast/ent_minion_golem_icon.png"
     },
     "ent_minion_lich": {
       "id": "ent_minion_lich",
@@ -2782,7 +2801,7 @@
       "minion": true,
       "playable": false,
       "passive": "oportunista",
-      "sprite": "res://en_elite.png",
+      "sprite": "res://assets/cast/ent_minion_lich_sprite.png",
       "cards": [
         "ent_minion_lich_golpe_a",
         "ent_minion_lich_golpe_b"
@@ -2794,7 +2813,399 @@
       "iniciais": [
         "ent_minion_lich_golpe_a",
         "ent_minion_lich_golpe_b"
-      ]
+      ],
+      "portrait": "res://assets/cast/ent_minion_lich_portrait.png",
+      "signature_icon": "res://assets/cast/ent_minion_lich_icon.png"
+    },
+    "ent_dr_espantalho": {
+      "id": "ent_dr_espantalho",
+      "name": "Dr. Espantalho",
+      "archetype": "Poder",
+      "species": "Humano",
+      "level_reference": 3,
+      "power_reference": 80,
+      "hp": 80,
+      "attack": 28,
+      "power": 34,
+      "armor": 18,
+      "type": "PSICOLOGICO",
+      "row": "back",
+      "sprite": "res://assets/cast/ent_dr_espantalho_sprite.png",
+      "portrait": "res://assets/cast/ent_dr_espantalho_portrait.png",
+      "signature_icon": "res://assets/cast/ent_dr_espantalho_icon.png",
+      "passive": "",
+      "pool": [
+        "ent_dr_espantalho_golpe",
+        "ent_dr_espantalho_guarda",
+        "ent_dr_espantalho_foco",
+        "ent_dr_espantalho_rajada",
+        "ent_dr_espantalho_cura_rapida",
+        "ent_dr_espantalho_impacto",
+        "ent_dr_espantalho_barreira",
+        "ent_dr_espantalho_onda",
+        "ent_dr_espantalho_inspirar",
+        "ent_dr_espantalho_finisher"
+      ],
+      "cards": [
+        "ent_dr_espantalho_golpe",
+        "ent_dr_espantalho_guarda",
+        "ent_dr_espantalho_foco",
+        "ent_dr_espantalho_rajada",
+        "ent_dr_espantalho_cura_rapida"
+      ],
+      "iniciais": [
+        "ent_dr_espantalho_golpe",
+        "ent_dr_espantalho_guarda",
+        "ent_dr_espantalho_foco",
+        "ent_dr_espantalho_rajada",
+        "ent_dr_espantalho_cura_rapida"
+      ],
+      "evoluidas": [
+        "ent_dr_espantalho_impacto",
+        "ent_dr_espantalho_barreira",
+        "ent_dr_espantalho_onda",
+        "ent_dr_espantalho_inspirar",
+        "ent_dr_espantalho_finisher"
+      ],
+      "desvantagem": "",
+      "signature": {
+        "name": "Reserva",
+        "target": "SELF",
+        "action": [
+          "BLOCK",
+          "2"
+        ]
+      },
+      "tags": [
+        {
+          "name": "Genérico",
+          "level": 1
+        }
+      ],
+      "escudo": 16,
+      "aprimoramento": {
+        "id": "generico",
+        "name": "Kit Genérico",
+        "text": "Baralho genérico provisório — a refinar."
+      },
+      "grupos": [
+        "Genérico"
+      ],
+      "biografia": "Dr. Espantalho — personagem novo importado do Cast Edited (kit genérico).",
+      "playable": true,
+      "source_sheet": "edited_cast"
+    },
+    "ent_patrulheiro_rosa": {
+      "id": "ent_patrulheiro_rosa",
+      "name": "Patrulheiro Rosa",
+      "archetype": "Poder",
+      "species": "Humano",
+      "level_reference": 3,
+      "power_reference": 80,
+      "hp": 74,
+      "attack": 30,
+      "power": 30,
+      "armor": 19,
+      "type": "PROJETIVO",
+      "row": "back",
+      "sprite": "res://assets/cast/ent_patrulheiro_rosa_sprite.png",
+      "portrait": "res://assets/cast/ent_patrulheiro_rosa_portrait.png",
+      "signature_icon": "res://assets/cast/ent_patrulheiro_rosa_icon.png",
+      "passive": "",
+      "pool": [
+        "ent_patrulheiro_rosa_golpe",
+        "ent_patrulheiro_rosa_guarda",
+        "ent_patrulheiro_rosa_foco",
+        "ent_patrulheiro_rosa_rajada",
+        "ent_patrulheiro_rosa_cura_rapida",
+        "ent_patrulheiro_rosa_impacto",
+        "ent_patrulheiro_rosa_barreira",
+        "ent_patrulheiro_rosa_onda",
+        "ent_patrulheiro_rosa_inspirar",
+        "ent_patrulheiro_rosa_finisher"
+      ],
+      "cards": [
+        "ent_patrulheiro_rosa_golpe",
+        "ent_patrulheiro_rosa_guarda",
+        "ent_patrulheiro_rosa_foco",
+        "ent_patrulheiro_rosa_rajada",
+        "ent_patrulheiro_rosa_cura_rapida"
+      ],
+      "iniciais": [
+        "ent_patrulheiro_rosa_golpe",
+        "ent_patrulheiro_rosa_guarda",
+        "ent_patrulheiro_rosa_foco",
+        "ent_patrulheiro_rosa_rajada",
+        "ent_patrulheiro_rosa_cura_rapida"
+      ],
+      "evoluidas": [
+        "ent_patrulheiro_rosa_impacto",
+        "ent_patrulheiro_rosa_barreira",
+        "ent_patrulheiro_rosa_onda",
+        "ent_patrulheiro_rosa_inspirar",
+        "ent_patrulheiro_rosa_finisher"
+      ],
+      "desvantagem": "",
+      "signature": {
+        "name": "Reserva",
+        "target": "SELF",
+        "action": [
+          "BLOCK",
+          "2"
+        ]
+      },
+      "tags": [
+        {
+          "name": "Genérico",
+          "level": 1
+        }
+      ],
+      "escudo": 17,
+      "aprimoramento": {
+        "id": "generico",
+        "name": "Kit Genérico",
+        "text": "Baralho genérico provisório — a refinar."
+      },
+      "grupos": [
+        "Genérico"
+      ],
+      "biografia": "Patrulheiro Rosa — personagem novo importado do Cast Edited (kit genérico).",
+      "playable": true,
+      "source_sheet": "edited_cast"
+    },
+    "ent_pauline": {
+      "id": "ent_pauline",
+      "name": "Pauline",
+      "archetype": "Poder",
+      "species": "Humano",
+      "level_reference": 3,
+      "power_reference": 80,
+      "hp": 72,
+      "attack": 27,
+      "power": 33,
+      "armor": 18,
+      "type": "MENTAL",
+      "row": "back",
+      "sprite": "res://assets/cast/ent_pauline_sprite.png",
+      "portrait": "res://assets/cast/ent_pauline_portrait.png",
+      "signature_icon": "res://assets/cast/ent_pauline_icon.png",
+      "passive": "",
+      "pool": [
+        "ent_pauline_golpe",
+        "ent_pauline_guarda",
+        "ent_pauline_foco",
+        "ent_pauline_rajada",
+        "ent_pauline_cura_rapida",
+        "ent_pauline_impacto",
+        "ent_pauline_barreira",
+        "ent_pauline_onda",
+        "ent_pauline_inspirar",
+        "ent_pauline_finisher"
+      ],
+      "cards": [
+        "ent_pauline_golpe",
+        "ent_pauline_guarda",
+        "ent_pauline_foco",
+        "ent_pauline_rajada",
+        "ent_pauline_cura_rapida"
+      ],
+      "iniciais": [
+        "ent_pauline_golpe",
+        "ent_pauline_guarda",
+        "ent_pauline_foco",
+        "ent_pauline_rajada",
+        "ent_pauline_cura_rapida"
+      ],
+      "evoluidas": [
+        "ent_pauline_impacto",
+        "ent_pauline_barreira",
+        "ent_pauline_onda",
+        "ent_pauline_inspirar",
+        "ent_pauline_finisher"
+      ],
+      "desvantagem": "",
+      "signature": {
+        "name": "Reserva",
+        "target": "SELF",
+        "action": [
+          "BLOCK",
+          "2"
+        ]
+      },
+      "tags": [
+        {
+          "name": "Genérico",
+          "level": 1
+        }
+      ],
+      "escudo": 16,
+      "aprimoramento": {
+        "id": "generico",
+        "name": "Kit Genérico",
+        "text": "Baralho genérico provisório — a refinar."
+      },
+      "grupos": [
+        "Genérico"
+      ],
+      "biografia": "Pauline — personagem novo importado do Cast Edited (kit genérico).",
+      "playable": true,
+      "source_sheet": "edited_cast"
+    },
+    "ent_siren": {
+      "id": "ent_siren",
+      "name": "Siren",
+      "archetype": "Poder",
+      "species": "Humano",
+      "level_reference": 3,
+      "power_reference": 80,
+      "hp": 78,
+      "attack": 29,
+      "power": 31,
+      "armor": 20,
+      "type": "QUIMICO",
+      "row": "front",
+      "sprite": "res://assets/cast/ent_siren_sprite.png",
+      "portrait": "res://assets/cast/ent_siren_portrait.png",
+      "signature_icon": "res://assets/cast/ent_siren_icon.png",
+      "passive": "",
+      "pool": [
+        "ent_siren_golpe",
+        "ent_siren_guarda",
+        "ent_siren_foco",
+        "ent_siren_rajada",
+        "ent_siren_cura_rapida",
+        "ent_siren_impacto",
+        "ent_siren_barreira",
+        "ent_siren_onda",
+        "ent_siren_inspirar",
+        "ent_siren_finisher"
+      ],
+      "cards": [
+        "ent_siren_golpe",
+        "ent_siren_guarda",
+        "ent_siren_foco",
+        "ent_siren_rajada",
+        "ent_siren_cura_rapida"
+      ],
+      "iniciais": [
+        "ent_siren_golpe",
+        "ent_siren_guarda",
+        "ent_siren_foco",
+        "ent_siren_rajada",
+        "ent_siren_cura_rapida"
+      ],
+      "evoluidas": [
+        "ent_siren_impacto",
+        "ent_siren_barreira",
+        "ent_siren_onda",
+        "ent_siren_inspirar",
+        "ent_siren_finisher"
+      ],
+      "desvantagem": "",
+      "signature": {
+        "name": "Reserva",
+        "target": "SELF",
+        "action": [
+          "BLOCK",
+          "2"
+        ]
+      },
+      "tags": [
+        {
+          "name": "Genérico",
+          "level": 1
+        }
+      ],
+      "escudo": 18,
+      "aprimoramento": {
+        "id": "generico",
+        "name": "Kit Genérico",
+        "text": "Baralho genérico provisório — a refinar."
+      },
+      "grupos": [
+        "Genérico"
+      ],
+      "biografia": "Siren — personagem novo importado do Cast Edited (kit genérico).",
+      "playable": true,
+      "source_sheet": "edited_cast"
+    },
+    "ent_delirio": {
+      "id": "ent_delirio",
+      "name": "Delírio",
+      "archetype": "Poder",
+      "species": "Humano",
+      "level_reference": 3,
+      "power_reference": 80,
+      "hp": 70,
+      "attack": 26,
+      "power": 35,
+      "armor": 17,
+      "type": "PSICOLOGICO",
+      "row": "back",
+      "sprite": "res://assets/cast/ent_delirio_sprite.png",
+      "portrait": "res://assets/cast/ent_delirio_portrait.png",
+      "signature_icon": "res://assets/cast/ent_delirio_icon.png",
+      "passive": "",
+      "pool": [
+        "ent_delirio_golpe",
+        "ent_delirio_guarda",
+        "ent_delirio_foco",
+        "ent_delirio_rajada",
+        "ent_delirio_cura_rapida",
+        "ent_delirio_impacto",
+        "ent_delirio_barreira",
+        "ent_delirio_onda",
+        "ent_delirio_inspirar",
+        "ent_delirio_finisher"
+      ],
+      "cards": [
+        "ent_delirio_golpe",
+        "ent_delirio_guarda",
+        "ent_delirio_foco",
+        "ent_delirio_rajada",
+        "ent_delirio_cura_rapida"
+      ],
+      "iniciais": [
+        "ent_delirio_golpe",
+        "ent_delirio_guarda",
+        "ent_delirio_foco",
+        "ent_delirio_rajada",
+        "ent_delirio_cura_rapida"
+      ],
+      "evoluidas": [
+        "ent_delirio_impacto",
+        "ent_delirio_barreira",
+        "ent_delirio_onda",
+        "ent_delirio_inspirar",
+        "ent_delirio_finisher"
+      ],
+      "desvantagem": "",
+      "signature": {
+        "name": "Reserva",
+        "target": "SELF",
+        "action": [
+          "BLOCK",
+          "2"
+        ]
+      },
+      "tags": [
+        {
+          "name": "Genérico",
+          "level": 1
+        }
+      ],
+      "escudo": 15,
+      "aprimoramento": {
+        "id": "generico",
+        "name": "Kit Genérico",
+        "text": "Baralho genérico provisório — a refinar."
+      },
+      "grupos": [
+        "Genérico"
+      ],
+      "biografia": "Delirio — personagem novo importado do Cast Edited (kit genérico).",
+      "playable": true,
+      "source_sheet": "edited_cast"
     }
   },
   "cards": {
@@ -11113,7 +11524,11 @@
       "owner": "ent_dominika_seur",
       "class": "DESVANTAGEM",
       "target": "SELF",
-      "actions": [],
+      "actions": [
+        [
+          "instant"
+        ]
+      ],
       "reach": false,
       "stat": "attack",
       "rarity": "COMMON",
@@ -11129,7 +11544,9 @@
       ],
       "anim_timing": "parallel",
       "passive_like": true,
-      "text": "Desvantagem: ao ser atingido por ataque PROJETIVO ou QUÍMICO, recebe Atordoado 1."
+      "text": "Instantâneo. Desvantagem: ao ser atingido por ataque PROJETIVO ou QUÍMICO, recebe Atordoado 1.",
+      "instant": true,
+      "cost": 0
     },
     "ent_minion_zumbi_golpe": {
       "id": "ent_minion_zumbi_golpe",
@@ -12071,6 +12488,1436 @@
         ]
       ],
       "cost": 0
+    },
+    "ent_dr_espantalho_golpe": {
+      "id": "ent_dr_espantalho_golpe",
+      "name": "Golpe",
+      "owner": "ent_dr_espantalho",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ]
+      ],
+      "reach": true,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Slash1"
+      ],
+      "anim_target": [
+        "Hit1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_dr_espantalho_guarda": {
+      "id": "ent_dr_espantalho_guarda",
+      "name": "Guarda",
+      "owner": "ent_dr_espantalho",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "barrier",
+          "2"
+        ],
+        [
+          "block_hp",
+          "6"
+        ]
+      ],
+      "reach": false,
+      "stat": "armor",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Shield"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_dr_espantalho_foco": {
+      "id": "ent_dr_espantalho_foco",
+      "name": "Foco",
+      "owner": "ent_dr_espantalho",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "strengthened",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_dr_espantalho_rajada": {
+      "id": "ent_dr_espantalho_rajada",
+      "name": "Rajada",
+      "owner": "ent_dr_espantalho",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ]
+      ],
+      "reach": true,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Special2"
+      ],
+      "anim_target": [
+        "HitSP2"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_dr_espantalho_cura_rapida": {
+      "id": "ent_dr_espantalho_cura_rapida",
+      "name": "Cura Rapida",
+      "owner": "ent_dr_espantalho",
+      "class": "ESTADO",
+      "target": "ALLY",
+      "actions": [
+        [
+          "heal",
+          "0"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Recovery1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_dr_espantalho_impacto": {
+      "id": "ent_dr_espantalho_impacto",
+      "name": "Impacto",
+      "owner": "ent_dr_espantalho",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 2,
+      "tier": "evoluida",
+      "anim_self": [
+        "Slash2"
+      ],
+      "anim_target": [
+        "Hit2"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_dr_espantalho_barreira": {
+      "id": "ent_dr_espantalho_barreira",
+      "name": "Barreira",
+      "owner": "ent_dr_espantalho",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "barrier",
+          "3"
+        ],
+        [
+          "block_hp",
+          "10"
+        ]
+      ],
+      "reach": false,
+      "stat": "armor",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "evoluida",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Shield"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_dr_espantalho_onda": {
+      "id": "ent_dr_espantalho_onda",
+      "name": "Onda",
+      "owner": "ent_dr_espantalho",
+      "class": "ATTACK",
+      "target": "ALL_ENEMIES",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ]
+      ],
+      "reach": true,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "evoluida",
+      "anim_self": [
+        "Special1"
+      ],
+      "anim_target": [
+        "Explosion1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_dr_espantalho_inspirar": {
+      "id": "ent_dr_espantalho_inspirar",
+      "name": "Inspirar",
+      "owner": "ent_dr_espantalho",
+      "class": "ESTADO",
+      "target": "ALL_ALLIES",
+      "actions": [
+        [
+          "heal",
+          "0"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "evoluida",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Recovery2"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_dr_espantalho_finisher": {
+      "id": "ent_dr_espantalho_finisher",
+      "name": "Finisher",
+      "owner": "ent_dr_espantalho",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "2"
+        ],
+        [
+          "self_status",
+          "strengthened",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 2,
+      "tier": "evoluida",
+      "anim_self": [
+        "Slash3"
+      ],
+      "anim_target": [
+        "Blow1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_patrulheiro_rosa_golpe": {
+      "id": "ent_patrulheiro_rosa_golpe",
+      "name": "Golpe",
+      "owner": "ent_patrulheiro_rosa",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ]
+      ],
+      "reach": true,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Slash1"
+      ],
+      "anim_target": [
+        "Hit1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_patrulheiro_rosa_guarda": {
+      "id": "ent_patrulheiro_rosa_guarda",
+      "name": "Guarda",
+      "owner": "ent_patrulheiro_rosa",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "barrier",
+          "2"
+        ],
+        [
+          "block_hp",
+          "6"
+        ]
+      ],
+      "reach": false,
+      "stat": "armor",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Shield"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_patrulheiro_rosa_foco": {
+      "id": "ent_patrulheiro_rosa_foco",
+      "name": "Foco",
+      "owner": "ent_patrulheiro_rosa",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "strengthened",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_patrulheiro_rosa_rajada": {
+      "id": "ent_patrulheiro_rosa_rajada",
+      "name": "Rajada",
+      "owner": "ent_patrulheiro_rosa",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ]
+      ],
+      "reach": true,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Special2"
+      ],
+      "anim_target": [
+        "HitSP2"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_patrulheiro_rosa_cura_rapida": {
+      "id": "ent_patrulheiro_rosa_cura_rapida",
+      "name": "Cura Rapida",
+      "owner": "ent_patrulheiro_rosa",
+      "class": "ESTADO",
+      "target": "ALLY",
+      "actions": [
+        [
+          "heal",
+          "0"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Recovery1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_patrulheiro_rosa_impacto": {
+      "id": "ent_patrulheiro_rosa_impacto",
+      "name": "Impacto",
+      "owner": "ent_patrulheiro_rosa",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 2,
+      "tier": "evoluida",
+      "anim_self": [
+        "Slash2"
+      ],
+      "anim_target": [
+        "Hit2"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_patrulheiro_rosa_barreira": {
+      "id": "ent_patrulheiro_rosa_barreira",
+      "name": "Barreira",
+      "owner": "ent_patrulheiro_rosa",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "barrier",
+          "3"
+        ],
+        [
+          "block_hp",
+          "10"
+        ]
+      ],
+      "reach": false,
+      "stat": "armor",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "evoluida",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Shield"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_patrulheiro_rosa_onda": {
+      "id": "ent_patrulheiro_rosa_onda",
+      "name": "Onda",
+      "owner": "ent_patrulheiro_rosa",
+      "class": "ATTACK",
+      "target": "ALL_ENEMIES",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ]
+      ],
+      "reach": true,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "evoluida",
+      "anim_self": [
+        "Special1"
+      ],
+      "anim_target": [
+        "Explosion1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_patrulheiro_rosa_inspirar": {
+      "id": "ent_patrulheiro_rosa_inspirar",
+      "name": "Inspirar",
+      "owner": "ent_patrulheiro_rosa",
+      "class": "ESTADO",
+      "target": "ALL_ALLIES",
+      "actions": [
+        [
+          "heal",
+          "0"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "evoluida",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Recovery2"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_patrulheiro_rosa_finisher": {
+      "id": "ent_patrulheiro_rosa_finisher",
+      "name": "Finisher",
+      "owner": "ent_patrulheiro_rosa",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "2"
+        ],
+        [
+          "self_status",
+          "strengthened",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 2,
+      "tier": "evoluida",
+      "anim_self": [
+        "Slash3"
+      ],
+      "anim_target": [
+        "Blow1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_pauline_golpe": {
+      "id": "ent_pauline_golpe",
+      "name": "Golpe",
+      "owner": "ent_pauline",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ]
+      ],
+      "reach": true,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Slash1"
+      ],
+      "anim_target": [
+        "Hit1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_pauline_guarda": {
+      "id": "ent_pauline_guarda",
+      "name": "Guarda",
+      "owner": "ent_pauline",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "barrier",
+          "2"
+        ],
+        [
+          "block_hp",
+          "6"
+        ]
+      ],
+      "reach": false,
+      "stat": "armor",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Shield"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_pauline_foco": {
+      "id": "ent_pauline_foco",
+      "name": "Foco",
+      "owner": "ent_pauline",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "strengthened",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_pauline_rajada": {
+      "id": "ent_pauline_rajada",
+      "name": "Rajada",
+      "owner": "ent_pauline",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ]
+      ],
+      "reach": true,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Special2"
+      ],
+      "anim_target": [
+        "HitSP2"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_pauline_cura_rapida": {
+      "id": "ent_pauline_cura_rapida",
+      "name": "Cura Rapida",
+      "owner": "ent_pauline",
+      "class": "ESTADO",
+      "target": "ALLY",
+      "actions": [
+        [
+          "heal",
+          "0"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Recovery1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_pauline_impacto": {
+      "id": "ent_pauline_impacto",
+      "name": "Impacto",
+      "owner": "ent_pauline",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 2,
+      "tier": "evoluida",
+      "anim_self": [
+        "Slash2"
+      ],
+      "anim_target": [
+        "Hit2"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_pauline_barreira": {
+      "id": "ent_pauline_barreira",
+      "name": "Barreira",
+      "owner": "ent_pauline",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "barrier",
+          "3"
+        ],
+        [
+          "block_hp",
+          "10"
+        ]
+      ],
+      "reach": false,
+      "stat": "armor",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "evoluida",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Shield"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_pauline_onda": {
+      "id": "ent_pauline_onda",
+      "name": "Onda",
+      "owner": "ent_pauline",
+      "class": "ATTACK",
+      "target": "ALL_ENEMIES",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ]
+      ],
+      "reach": true,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "evoluida",
+      "anim_self": [
+        "Special1"
+      ],
+      "anim_target": [
+        "Explosion1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_pauline_inspirar": {
+      "id": "ent_pauline_inspirar",
+      "name": "Inspirar",
+      "owner": "ent_pauline",
+      "class": "ESTADO",
+      "target": "ALL_ALLIES",
+      "actions": [
+        [
+          "heal",
+          "0"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "evoluida",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Recovery2"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_pauline_finisher": {
+      "id": "ent_pauline_finisher",
+      "name": "Finisher",
+      "owner": "ent_pauline",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "2"
+        ],
+        [
+          "self_status",
+          "strengthened",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 2,
+      "tier": "evoluida",
+      "anim_self": [
+        "Slash3"
+      ],
+      "anim_target": [
+        "Blow1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_siren_golpe": {
+      "id": "ent_siren_golpe",
+      "name": "Golpe",
+      "owner": "ent_siren",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ]
+      ],
+      "reach": true,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Slash1"
+      ],
+      "anim_target": [
+        "Hit1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_siren_guarda": {
+      "id": "ent_siren_guarda",
+      "name": "Guarda",
+      "owner": "ent_siren",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "barrier",
+          "2"
+        ],
+        [
+          "block_hp",
+          "6"
+        ]
+      ],
+      "reach": false,
+      "stat": "armor",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Shield"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_siren_foco": {
+      "id": "ent_siren_foco",
+      "name": "Foco",
+      "owner": "ent_siren",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "strengthened",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_siren_rajada": {
+      "id": "ent_siren_rajada",
+      "name": "Rajada",
+      "owner": "ent_siren",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ]
+      ],
+      "reach": true,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Special2"
+      ],
+      "anim_target": [
+        "HitSP2"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_siren_cura_rapida": {
+      "id": "ent_siren_cura_rapida",
+      "name": "Cura Rapida",
+      "owner": "ent_siren",
+      "class": "ESTADO",
+      "target": "ALLY",
+      "actions": [
+        [
+          "heal",
+          "0"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Recovery1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_siren_impacto": {
+      "id": "ent_siren_impacto",
+      "name": "Impacto",
+      "owner": "ent_siren",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 2,
+      "tier": "evoluida",
+      "anim_self": [
+        "Slash2"
+      ],
+      "anim_target": [
+        "Hit2"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_siren_barreira": {
+      "id": "ent_siren_barreira",
+      "name": "Barreira",
+      "owner": "ent_siren",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "barrier",
+          "3"
+        ],
+        [
+          "block_hp",
+          "10"
+        ]
+      ],
+      "reach": false,
+      "stat": "armor",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "evoluida",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Shield"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_siren_onda": {
+      "id": "ent_siren_onda",
+      "name": "Onda",
+      "owner": "ent_siren",
+      "class": "ATTACK",
+      "target": "ALL_ENEMIES",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ]
+      ],
+      "reach": true,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "evoluida",
+      "anim_self": [
+        "Special1"
+      ],
+      "anim_target": [
+        "Explosion1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_siren_inspirar": {
+      "id": "ent_siren_inspirar",
+      "name": "Inspirar",
+      "owner": "ent_siren",
+      "class": "ESTADO",
+      "target": "ALL_ALLIES",
+      "actions": [
+        [
+          "heal",
+          "0"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "evoluida",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Recovery2"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_siren_finisher": {
+      "id": "ent_siren_finisher",
+      "name": "Finisher",
+      "owner": "ent_siren",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "2"
+        ],
+        [
+          "self_status",
+          "strengthened",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 2,
+      "tier": "evoluida",
+      "anim_self": [
+        "Slash3"
+      ],
+      "anim_target": [
+        "Blow1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_delirio_golpe": {
+      "id": "ent_delirio_golpe",
+      "name": "Golpe",
+      "owner": "ent_delirio",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ]
+      ],
+      "reach": true,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Slash1"
+      ],
+      "anim_target": [
+        "Hit1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_delirio_guarda": {
+      "id": "ent_delirio_guarda",
+      "name": "Guarda",
+      "owner": "ent_delirio",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "barrier",
+          "2"
+        ],
+        [
+          "block_hp",
+          "6"
+        ]
+      ],
+      "reach": false,
+      "stat": "armor",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Shield"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_delirio_foco": {
+      "id": "ent_delirio_foco",
+      "name": "Foco",
+      "owner": "ent_delirio",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "strengthened",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_delirio_rajada": {
+      "id": "ent_delirio_rajada",
+      "name": "Rajada",
+      "owner": "ent_delirio",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ]
+      ],
+      "reach": true,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Special2"
+      ],
+      "anim_target": [
+        "HitSP2"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_delirio_cura_rapida": {
+      "id": "ent_delirio_cura_rapida",
+      "name": "Cura Rapida",
+      "owner": "ent_delirio",
+      "class": "ESTADO",
+      "target": "ALLY",
+      "actions": [
+        [
+          "heal",
+          "0"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Recovery1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_delirio_impacto": {
+      "id": "ent_delirio_impacto",
+      "name": "Impacto",
+      "owner": "ent_delirio",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 2,
+      "tier": "evoluida",
+      "anim_self": [
+        "Slash2"
+      ],
+      "anim_target": [
+        "Hit2"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_delirio_barreira": {
+      "id": "ent_delirio_barreira",
+      "name": "Barreira",
+      "owner": "ent_delirio",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "barrier",
+          "3"
+        ],
+        [
+          "block_hp",
+          "10"
+        ]
+      ],
+      "reach": false,
+      "stat": "armor",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "evoluida",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Shield"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_delirio_onda": {
+      "id": "ent_delirio_onda",
+      "name": "Onda",
+      "owner": "ent_delirio",
+      "class": "ATTACK",
+      "target": "ALL_ENEMIES",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ]
+      ],
+      "reach": true,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "evoluida",
+      "anim_self": [
+        "Special1"
+      ],
+      "anim_target": [
+        "Explosion1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_delirio_inspirar": {
+      "id": "ent_delirio_inspirar",
+      "name": "Inspirar",
+      "owner": "ent_delirio",
+      "class": "ESTADO",
+      "target": "ALL_ALLIES",
+      "actions": [
+        [
+          "heal",
+          "0"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "evoluida",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Recovery2"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_delirio_finisher": {
+      "id": "ent_delirio_finisher",
+      "name": "Finisher",
+      "owner": "ent_delirio",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "2"
+        ],
+        [
+          "self_status",
+          "strengthened",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 2,
+      "tier": "evoluida",
+      "anim_self": [
+        "Slash3"
+      ],
+      "anim_target": [
+        "Blow1"
+      ],
+      "anim_timing": "parallel"
     }
   }
 }
