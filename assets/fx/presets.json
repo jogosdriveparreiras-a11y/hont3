@@ -127,6 +127,378 @@
       "tex": "particle3.png",
       "tint": "#c04040",
       "kind": "burst"
+    },
+    "Neutral1": {
+      "efk": "Neutral1",
+      "tex": "particle1.png",
+      "tint": "#e1d2ff",
+      "kind": "rise"
+    },
+    "Neutral2": {
+      "efk": "Neutral2",
+      "tex": "circle2.png",
+      "tint": "#d4c4ff",
+      "kind": "rise"
+    },
+    "Special1": {
+      "efk": "Neutral1",
+      "tex": "shine1.png",
+      "tint": "#f0e08a",
+      "kind": "burst"
+    },
+    "Special2": {
+      "efk": "Neutral2",
+      "tex": "flare.png",
+      "tint": "#ffd49b",
+      "kind": "burst"
+    },
+    "Special3": {
+      "efk": "StarsHit",
+      "tex": "star1.png",
+      "tint": "#fff4c8",
+      "kind": "burst"
+    },
+    "BreathFire": {
+      "efk": "BreathFire",
+      "tex": "flame1.png",
+      "tint": "#ff8a4a",
+      "kind": "rise"
+    },
+    "BreathDarkness": {
+      "efk": "BreathDarkness",
+      "tex": "smog1.png",
+      "tint": "#6a4a8a",
+      "kind": "rise"
+    },
+    "BreathLight": {
+      "efk": "BreathLight",
+      "tex": "shine2.png",
+      "tint": "#fff4c8",
+      "kind": "rise"
+    },
+    "BreathThunder": {
+      "efk": "BreathThunder",
+      "tex": "thunder1.png",
+      "tint": "#a9d5f4",
+      "kind": "burst"
+    },
+    "Song1": {
+      "efk": "Song1",
+      "tex": "bubble1.png",
+      "tint": "#e1d2ff",
+      "kind": "rise"
+    },
+    "Smokescreen": {
+      "efk": "Smokescreen",
+      "tex": "smog2.png",
+      "tint": "#8a8a9a",
+      "kind": "rise"
+    },
+    "HeartMark1": {
+      "efk": "HeartMark1",
+      "tex": "shine1.png",
+      "tint": "#ff8ab0",
+      "kind": "burst"
+    },
+    "HitSP1": {
+      "efk": "HitSP1",
+      "tex": "flare.png",
+      "tint": "#ec755c",
+      "kind": "burst"
+    },
+    "HitSP2": {
+      "efk": "HitSP2",
+      "tex": "flare2.png",
+      "tint": "#ff6b3d",
+      "kind": "burst"
+    },
+    "SlashSP1": {
+      "efk": "SlashSP1",
+      "tex": "line_ray1.png",
+      "tint": "#ffd49b",
+      "kind": "slash"
+    },
+    "SlashSP2": {
+      "efk": "SlashSP2",
+      "tex": "line_ray1f.png",
+      "tint": "#ffe0a8",
+      "kind": "slash"
+    },
+    "SlashSP3": {
+      "efk": "SlashSP3",
+      "tex": "line1.png",
+      "tint": "#fff0c8",
+      "kind": "slash"
+    },
+    "ClawSP1": {
+      "efk": "ClawSP1",
+      "tex": "asterisk1.png",
+      "tint": "#cf6b5a",
+      "kind": "slash"
+    },
+    "ClawSP2": {
+      "efk": "ClawSP2",
+      "tex": "asterisk_thick1.png",
+      "tint": "#e07a5a",
+      "kind": "slash"
+    },
+    "CrossSlash": {
+      "efk": "CrossSlash",
+      "tex": "line2.png",
+      "tint": "#ffd49b",
+      "kind": "slash"
+    },
+    "CrossHit": {
+      "efk": "CrossHit",
+      "tex": "flare.png",
+      "tint": "#ec755c",
+      "kind": "burst"
+    },
+    "CrossClaw": {
+      "efk": "CrossClaw",
+      "tex": "asterisk1.png",
+      "tint": "#cf6b5a",
+      "kind": "slash"
+    },
+    "PierceSP1": {
+      "efk": "PierceSP1",
+      "tex": "line_ray1.png",
+      "tint": "#d5deea",
+      "kind": "slash"
+    },
+    "PierceSP2": {
+      "efk": "PierceSP2",
+      "tex": "line_ray1f.png",
+      "tint": "#c9d1dd",
+      "kind": "slash"
+    },
+    "Arrow": {
+      "efk": "Arrow",
+      "tex": "line_ray1.png",
+      "tint": "#d5deea",
+      "kind": "slash"
+    },
+    "Shoot1": {
+      "efk": "Shoot1",
+      "tex": "flare2.png",
+      "tint": "#ffd49b",
+      "kind": "burst"
+    },
+    "Explosion1": {
+      "efk": "Explosion1",
+      "tex": "flare2.png",
+      "tint": "#ff6b3d",
+      "kind": "burst"
+    },
+    "Explosion2": {
+      "efk": "Explosion2",
+      "tex": "flare.png",
+      "tint": "#ff8a4a",
+      "kind": "burst"
+    },
+    "Light1": {
+      "efk": "Light1",
+      "tex": "shine2.png",
+      "tint": "#fff4c8",
+      "kind": "rise"
+    },
+    "Light2": {
+      "efk": "Light2",
+      "tex": "shine1.png",
+      "tint": "#82d9af",
+      "kind": "rise"
+    },
+    "Light3": {
+      "efk": "Light3",
+      "tex": "circle.png",
+      "tint": "#a3eec4",
+      "kind": "rise"
+    },
+    "Light4": {
+      "efk": "Light4",
+      "tex": "circle2.png",
+      "tint": "#c8ffe0",
+      "kind": "rise"
+    },
+    "Protection": {
+      "efk": "Protection",
+      "tex": "hexagon_line1.png",
+      "tint": "#a9d5f4",
+      "kind": "ring"
+    },
+    "Shield": {
+      "efk": "Shield",
+      "tex": "ring1.png",
+      "tint": "#8ab4e8",
+      "kind": "ring"
+    },
+    "Reflection": {
+      "efk": "Reflection",
+      "tex": "hexagon_line2.png",
+      "tint": "#b8e4ff",
+      "kind": "ring"
+    },
+    "StarsHit": {
+      "efk": "StarsHit",
+      "tex": "star1.png",
+      "tint": "#f0e08a",
+      "kind": "burst"
+    },
+    "PoisonAll": {
+      "efk": "PoisonAll",
+      "tex": "bubble1.png",
+      "tint": "#7dcf6a",
+      "kind": "rise"
+    },
+    "Fire1": {
+      "efk": "Fire1",
+      "tex": "flame1.png",
+      "tint": "#ff8a4a",
+      "kind": "rise"
+    },
+    "Fire2": {
+      "efk": "Fire2",
+      "tex": "flame1g.png",
+      "tint": "#ff6b3d",
+      "kind": "rise"
+    },
+    "Ice1": {
+      "efk": "Ice1",
+      "tex": "snow1.png",
+      "tint": "#b8e4ff",
+      "kind": "burst"
+    },
+    "Ice2": {
+      "efk": "Ice2",
+      "tex": "snow2.png",
+      "tint": "#d0f0ff",
+      "kind": "burst"
+    },
+    "Thunder1": {
+      "efk": "Thunder1",
+      "tex": "thunder1.png",
+      "tint": "#a9d5f4",
+      "kind": "burst"
+    },
+    "Thunder2": {
+      "efk": "Thunder2",
+      "tex": "thunder2.png",
+      "tint": "#9ec8ff",
+      "kind": "burst"
+    },
+    "Thunder3": {
+      "efk": "Thunder3",
+      "tex": "thunder1.png",
+      "tint": "#c8e0ff",
+      "kind": "burst"
+    },
+    "Thunder4": {
+      "efk": "Thunder4",
+      "tex": "thunder2.png",
+      "tint": "#b0d4ff",
+      "kind": "burst"
+    },
+    "Darkness1": {
+      "efk": "Darkness1",
+      "tex": "smog1.png",
+      "tint": "#6a4a8a",
+      "kind": "rise"
+    },
+    "Darkness2": {
+      "efk": "Darkness2",
+      "tex": "smog2.png",
+      "tint": "#5a3a7a",
+      "kind": "rise"
+    },
+    "Darkness3": {
+      "efk": "Darkness3",
+      "tex": "circle3.png",
+      "tint": "#4a2a6a",
+      "kind": "rise"
+    },
+    "Darkness4": {
+      "efk": "Darkness4",
+      "tex": "smog1.png",
+      "tint": "#3a1a5a",
+      "kind": "rise"
+    },
+    "Wind1": {
+      "efk": "Wind1",
+      "tex": "line_ray1f.png",
+      "tint": "#c8e8d8",
+      "kind": "slash"
+    },
+    "Wind2": {
+      "efk": "Wind2",
+      "tex": "line_ray1.png",
+      "tint": "#a8d8c8",
+      "kind": "slash"
+    },
+    "buff": {
+      "efk": "Light3",
+      "tex": "shine1.png",
+      "tint": "#82d9af",
+      "kind": "rise"
+    },
+    "debuff": {
+      "efk": "Darkness2",
+      "tex": "smog2.png",
+      "tint": "#ba9dea",
+      "kind": "rise"
+    },
+    "blow": {
+      "efk": "HitSP2",
+      "tex": "flare2.png",
+      "tint": "#ec755c",
+      "kind": "burst"
+    },
+    "bind": {
+      "efk": "PoisonAll",
+      "tex": "hexagon_line2.png",
+      "tint": "#ba9dea",
+      "kind": "ring"
+    },
+    "slow": {
+      "efk": "Ice1",
+      "tex": "smog1.png",
+      "tint": "#9aa6bf",
+      "kind": "rise"
+    },
+    "confusion": {
+      "efk": "StarsHit",
+      "tex": "star1.png",
+      "tint": "#e1d2ff",
+      "kind": "burst"
+    },
+    "pull": {
+      "efk": "Neutral2",
+      "tex": "line_ray1f.png",
+      "tint": "#c9d1dd",
+      "kind": "slash"
+    },
+    "push": {
+      "efk": "Wind1",
+      "tex": "line_ray1.png",
+      "tint": "#ffd49b",
+      "kind": "slash"
+    },
+    "absorb": {
+      "efk": "Light2",
+      "tex": "shine1.png",
+      "tint": "#82d9af",
+      "kind": "rise"
+    },
+    "banish": {
+      "efk": "Darkness4",
+      "tex": "smog2.png",
+      "tint": "#4a2a6a",
+      "kind": "rise"
+    },
+    "summon": {
+      "efk": "Light1",
+      "tex": "shine2.png",
+      "tint": "#fff4c8",
+      "kind": "rise"
     }
   },
   "efk_dir": "res://assets/fx/effekseer/",

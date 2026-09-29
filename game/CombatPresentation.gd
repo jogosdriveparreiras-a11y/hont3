@@ -79,11 +79,14 @@ func show_action(kind: String, source_id: int, target_id: int, amount: int) -> v
 		_focus(target_id)
 	elif kind == "hit":
 		_animate_sprite(target_id, "hit")
+		# Flash branco pela duração típica da anim de alvo (~0,45s); play_card_fx pode estender.
+		flash_white(target_id, 0.45 / animation_speed)
 		if sprites.has(target_id):
 			var target_sprite: Sprite3D = sprites[target_id]
 			if is_instance_valid(target_sprite) and motion_scale > 0.2:
 				target_sprite.set_meta("freeze_until", Time.get_ticks_msec() + int(65.0 / animation_speed))
-		_float_text(target_id, "−%d" % amount, Color("ffd49b"))
+		if amount > 0:
+			_float_damage(target_id, amount)
 		_burst(target_id, Color("ec755c"))
 		if shake_enabled:
 			shake_strength = minf(0.55, 0.10 + float(amount) * 0.014) * shake_scale
@@ -91,7 +94,8 @@ func show_action(kind: String, source_id: int, target_id: int, amount: int) -> v
 	elif kind == "death":
 		_float_text(target_id, "CAIU", Color("cfb4ab"))
 	elif kind == "heal":
-		if amount > 0: _float_text(target_id, "+%d" % amount, Color("a3eec4"))
+		if amount > 0:
+			_float_heal(target_id, amount)
 		_burst(target_id, Color("82d9af"))
 		_animate_sprite(target_id, "heal")
 	elif kind in ["block", "guard", "immune", "resist"]:
@@ -118,14 +122,21 @@ func _animate_sprite(id: int, kind: String) -> void:
 	sprite.set_meta("action_row", action_rows.get(kind, 0))
 	sprite.set_meta("action_until", Time.get_ticks_msec() + int(250.0 / animation_speed))
 	if not flash_enabled: return
-	sprite.modulate = Color("ffdddd") if kind == "hit" else Color("e1d2ff") if kind == "status" else Color("ffffff")
-	var tween := sprite.create_tween()
-	tween.tween_property(sprite, "modulate", Color.WHITE, 0.22 / animation_speed)
+	if kind == "hit":
+		# Flash branco pleno — duração controlada por flash_white / play_card_fx.
+		sprite.modulate = Color(1.35, 1.35, 1.35, 1.0)
+	elif kind == "status":
+		sprite.modulate = Color("e1d2ff")
+		var tween := sprite.create_tween()
+		tween.tween_property(sprite, "modulate", Color.WHITE, 0.22 / animation_speed)
+	else:
+		sprite.modulate = Color.WHITE
 	if kind == "cast":
 		var base_s := float(sprite.get_meta("sprite_scale", 1.0))
 		var base := Vector3(base_s, base_s, 1.0)
 		sprite.scale = base * 1.12
-		tween.parallel().tween_property(sprite, "scale", base, 0.22 / animation_speed)
+		var tween2 := sprite.create_tween()
+		tween2.tween_property(sprite, "scale", base, 0.22 / animation_speed)
 
 func _actor_world_pos(id: int) -> Vector3:
 	if sprites.has(id) and is_instance_valid(sprites[id]):
@@ -133,22 +144,62 @@ func _actor_world_pos(id: int) -> Vector3:
 	return positions.get(id, Vector3.ZERO)
 
 func _float_text(id: int, value: String, tint: Color) -> void:
+	_spawn_float(id, value, tint, 30, false)
+
+func _float_damage(id: int, amount: int) -> void:
+	# Número de dano vermelho flutuante (sombra + outline).
+	_spawn_float(id, "−%d" % amount, Color("ff3b3b"), 38, true)
+
+func _float_heal(id: int, amount: int) -> void:
+	_spawn_float(id, "+%d" % amount, Color("3dff8a"), 36, true)
+
+func _spawn_float(id: int, value: String, tint: Color, font_size: int, pretty: bool) -> void:
 	if (not positions.has(id) and not sprites.has(id)) or overlay == null or camera == null: return
 	var label := Label.new()
 	label.text = value
-	label.add_theme_font_size_override("font_size", 29)
+	label.add_theme_font_size_override("font_size", font_size)
 	label.add_theme_color_override("font_color", tint)
+	label.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.85))
+	label.add_theme_constant_override("shadow_offset_x", 2)
+	label.add_theme_constant_override("shadow_offset_y", 2)
+	if pretty:
+		label.add_theme_color_override("font_outline_color", Color(0.05, 0.02, 0.02, 0.95))
+		label.add_theme_constant_override("outline_size", 8)
+		if ResourceLoader.exists("res://assets/fonts/CardTitle.ttf"):
+			label.add_theme_font_override("font", load("res://assets/fonts/CardTitle.ttf"))
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	label.position = camera.unproject_position(_actor_world_pos(id) + Vector3(0, 2.35, 0))
+	var base_pos := camera.unproject_position(_actor_world_pos(id) + Vector3(0, 2.35, 0))
+	# leve jitter horizontal para empilhar hits
+	base_pos += Vector2(randf_range(-18.0, 18.0), randf_range(-6.0, 6.0))
+	label.position = base_pos
+	label.pivot_offset = Vector2(40, 16)
+	label.scale = Vector2(0.55, 0.55) if pretty else Vector2.ONE
 	overlay.add_child(label)
 	var tween := label.create_tween()
 	tween.set_parallel(true)
-	tween.tween_property(label, "position", label.position + Vector2(0, -55 * motion_scale), 0.55 / animation_speed)
-	tween.tween_property(label, "modulate:a", 0.0, 0.55 / animation_speed)
+	if pretty:
+		tween.tween_property(label, "scale", Vector2(1.15, 1.15), 0.12 / animation_speed).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(label, "position", label.position + Vector2(0, -72 * motion_scale), 0.85 / animation_speed).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.tween_property(label, "modulate:a", 0.0, 0.85 / animation_speed).set_delay(0.25 / animation_speed)
 	tween.chain().tween_callback(func() -> void:
 		if is_instance_valid(label):
 			label.queue_free()
 	)
+
+## Flash branco no sprite do alvo pela duração da anim de hit/alvo.
+func flash_white(id: int, duration: float) -> void:
+	if not flash_enabled or not sprites.has(id):
+		return
+	var sprite: Sprite3D = sprites[id]
+	if not is_instance_valid(sprite):
+		return
+	var dur := maxf(0.12, duration)
+	sprite.set_meta("flash_until", Time.get_ticks_msec() + int(dur * 1000.0))
+	sprite.modulate = Color(1.4, 1.4, 1.4, 1.0)
+	var tween := sprite.create_tween()
+	# Mantém branco ~80% do tempo, depois volta.
+	tween.tween_interval(dur * 0.72)
+	tween.tween_property(sprite, "modulate", Color.WHITE, dur * 0.28)
 
 func _burst(id: int, tint: Color) -> void:
 	if (not positions.has(id) and not sprites.has(id)) or not flash_enabled: return
@@ -247,4 +298,8 @@ func play_card_fx(definition: Dictionary, source_id: int, target_id: int) -> flo
 	fx_player.flash_enabled = flash_enabled
 	var self_pos: Vector3 = _actor_world_pos(source_id)
 	var target_pos: Vector3 = _actor_world_pos(target_id)
-	return float(fx_player.play_card_anims(definition, self_pos, target_pos))
+	var dur := float(fx_player.play_card_anims(definition, self_pos, target_pos))
+	# Flash branco no alvo pela duração da anim_target / hit.
+	if target_id != source_id or str(definition.get("target", "")) in ["SELF", "ALLY", "ALL_ALLIES"]:
+		flash_white(target_id, maxf(dur, 0.35 / animation_speed))
+	return dur

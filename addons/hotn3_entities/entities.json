@@ -2550,10 +2550,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Neutral2"
       ],
       "anim_target": [
-        "hit"
+        "HitSP1"
       ],
       "anim_timing": "parallel"
     },
@@ -2578,10 +2578,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "guard"
+        "buff"
       ],
       "anim_target": [
-        "shield"
+        "Protection"
       ],
       "anim_timing": "parallel"
     },
@@ -2605,10 +2605,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Neutral1"
       ],
       "anim_target": [
-        "hit"
+        "status"
       ],
       "anim_timing": "parallel"
     },
@@ -2636,10 +2636,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special2"
       ],
       "anim_target": [
-        "hit"
+        "push"
       ],
       "anim_timing": "parallel"
     },
@@ -2694,7 +2694,7 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "light"
       ],
       "anim_target": [
         "heal"
@@ -2762,7 +2762,7 @@
         "guard"
       ],
       "anim_target": [
-        "shield"
+        "Shield"
       ],
       "anim_timing": "parallel"
     },
@@ -2791,10 +2791,10 @@
       "gain": 2,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "Special1"
       ],
       "anim_target": [
-        "status"
+        "debuff"
       ],
       "anim_timing": "parallel"
     },
@@ -2823,10 +2823,10 @@
       "cost": 3,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "Special3"
       ],
       "anim_target": [
-        "hit"
+        "stun"
       ],
       "anim_timing": "parallel"
     },
@@ -2855,10 +2855,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "fire"
       ],
       "anim_target": [
-        "hit"
+        "bind"
       ],
       "anim_timing": "parallel"
     },
@@ -2883,10 +2883,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "guard"
+        "BreathFire"
       ],
       "anim_target": [
-        "shield"
+        "Reflection"
       ],
       "anim_timing": "parallel"
     },
@@ -2915,10 +2915,10 @@
       "cost": 3,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special3"
       ],
       "anim_target": [
-        "hit"
+        "slash"
       ],
       "anim_timing": "parallel"
     },
@@ -2943,7 +2943,7 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Neutral1"
       ],
       "anim_target": [
         "status"
@@ -2975,10 +2975,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "BreathLight"
       ],
       "anim_target": [
-        "hit"
+        "slow"
       ],
       "anim_timing": "parallel"
     },
@@ -3007,10 +3007,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "buff"
       ],
       "anim_target": [
-        "status"
+        "debuff"
       ],
       "anim_timing": "parallel"
     },
@@ -3042,7 +3042,7 @@
         "cast"
       ],
       "anim_target": [
-        "status"
+        "StarsHit"
       ],
       "anim_timing": "parallel"
     },
@@ -3071,10 +3071,10 @@
       "cost": 4,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Neutral2"
       ],
       "anim_target": [
-        "hit"
+        "blow"
       ],
       "anim_timing": "parallel"
     },
@@ -3102,10 +3102,10 @@
       "gain": 1,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "lightning"
       ],
       "anim_target": [
-        "hit"
+        "HitSP2"
       ],
       "anim_timing": "parallel"
     },
@@ -3137,10 +3137,10 @@
       "cost": 5,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "Special2"
       ],
       "anim_target": [
-        "hit"
+        "CrossHit"
       ],
       "anim_timing": "parallel"
     },
@@ -3165,10 +3165,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Song1"
       ],
       "anim_target": [
-        "status"
+        "stun"
       ],
       "anim_timing": "parallel"
     },
@@ -3192,10 +3192,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "lightning"
       ],
       "anim_target": [
-        "hit"
+        "HitSP1"
       ],
       "anim_timing": "parallel"
     },
@@ -3224,10 +3224,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Neutral2"
       ],
       "anim_target": [
-        "hit"
+        "slow"
       ],
       "anim_timing": "parallel"
     },
@@ -3251,10 +3251,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Neutral1"
       ],
       "anim_target": [
-        "hit"
+        "bind"
       ],
       "anim_timing": "parallel"
     },
@@ -3282,7 +3282,7 @@
         "cast"
       ],
       "anim_target": [
-        "status"
+        "Protection"
       ],
       "anim_timing": "parallel"
     },
@@ -3306,10 +3306,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "light"
       ],
       "anim_target": [
-        "heal"
+        "Light1"
       ],
       "anim_timing": "parallel"
     },
@@ -3334,10 +3334,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special1"
       ],
       "anim_target": [
-        "status"
+        "StarsHit"
       ],
       "anim_timing": "parallel"
     },
@@ -3370,7 +3370,7 @@
         "guard"
       ],
       "anim_target": [
-        "shield"
+        "Shield"
       ],
       "anim_timing": "parallel"
     },
@@ -3431,7 +3431,7 @@
       "cost": 3,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "fire"
       ],
       "anim_target": [
         "hit"
@@ -3464,7 +3464,7 @@
         "cast"
       ],
       "anim_target": [
-        "hit"
+        "slash"
       ],
       "anim_timing": "parallel"
     },
@@ -3493,10 +3493,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "guard"
+        "buff"
       ],
       "anim_target": [
-        "shield"
+        "Reflection"
       ],
       "anim_timing": "parallel"
     },
@@ -3525,10 +3525,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "HeartMark1"
       ],
       "anim_target": [
-        "hit"
+        "HitSP2"
       ],
       "anim_timing": "parallel"
     },
@@ -3556,7 +3556,7 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "guard"
+        "buff"
       ],
       "anim_target": [
         "shield"
@@ -3588,10 +3588,10 @@
       "cost": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special3"
       ],
       "anim_target": [
-        "hit"
+        "blow"
       ],
       "anim_timing": "parallel"
     },
@@ -3620,7 +3620,7 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special1"
       ],
       "anim_target": [
         "status"
@@ -3651,10 +3651,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special2"
       ],
       "anim_target": [
-        "hit"
+        "Explosion1"
       ],
       "anim_timing": "parallel"
     },
@@ -3682,7 +3682,7 @@
         "guard"
       ],
       "anim_target": [
-        "shield"
+        "Protection"
       ],
       "anim_timing": "parallel"
     },
@@ -3711,10 +3711,10 @@
       "cost": 3,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "fire"
       ],
       "anim_target": [
-        "hit"
+        "CrossHit"
       ],
       "anim_timing": "parallel"
     },
@@ -3747,10 +3747,10 @@
       "cost": 5,
       "tier": "evoluida",
       "anim_self": [
-        "guard"
+        "buff"
       ],
       "anim_target": [
-        "shield"
+        "Shield"
       ],
       "anim_timing": "parallel"
     },
@@ -3779,10 +3779,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "fire"
       ],
       "anim_target": [
-        "hit"
+        "CrossHit"
       ],
       "anim_timing": "parallel"
     },
@@ -3811,7 +3811,7 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special1"
       ],
       "anim_target": [
         "status"
@@ -3839,10 +3839,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "buff"
       ],
       "anim_target": [
-        "status"
+        "bind"
       ],
       "anim_timing": "parallel"
     },
@@ -3869,10 +3869,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "light"
       ],
       "anim_target": [
-        "heal"
+        "Light4"
       ],
       "anim_timing": "parallel"
     },
@@ -3900,10 +3900,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "lightning"
       ],
       "anim_target": [
-        "hit"
+        "push"
       ],
       "anim_timing": "parallel"
     },
@@ -3931,7 +3931,7 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Neutral2"
       ],
       "anim_target": [
         "hit"
@@ -3964,10 +3964,10 @@
       "cost": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Neutral1"
       ],
       "anim_target": [
-        "status"
+        "StarsHit"
       ],
       "anim_timing": "parallel"
     },
@@ -4028,7 +4028,7 @@
         "cast"
       ],
       "anim_target": [
-        "status"
+        "stun"
       ],
       "anim_timing": "parallel"
     },
@@ -4060,10 +4060,10 @@
       "cost": 4,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "Special2"
       ],
       "anim_target": [
-        "hit"
+        "slow"
       ],
       "anim_timing": "parallel"
     },
@@ -4092,10 +4092,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special3"
       ],
       "anim_target": [
-        "hit"
+        "pierce"
       ],
       "anim_timing": "parallel"
     },
@@ -4119,7 +4119,7 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special1"
       ],
       "anim_target": [
         "hit"
@@ -4147,10 +4147,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Neutral2"
       ],
       "anim_target": [
-        "status"
+        "StarsHit"
       ],
       "anim_timing": "parallel"
     },
@@ -4175,10 +4175,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "buff"
       ],
       "anim_target": [
-        "status"
+        "bind"
       ],
       "anim_timing": "parallel"
     },
@@ -4206,10 +4206,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "guard"
       ],
       "anim_target": [
-        "hit"
+        "Explosion1"
       ],
       "anim_timing": "parallel"
     },
@@ -4237,7 +4237,7 @@
         "cast"
       ],
       "anim_target": [
-        "status"
+        "debuff"
       ],
       "anim_timing": "parallel"
     },
@@ -4267,10 +4267,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Neutral1"
       ],
       "anim_target": [
-        "status"
+        "stun"
       ],
       "anim_timing": "parallel"
     },
@@ -4299,10 +4299,10 @@
       "cost": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "light"
       ],
       "anim_target": [
-        "heal"
+        "absorb"
       ],
       "anim_timing": "parallel"
     },
@@ -4334,7 +4334,7 @@
         "cast"
       ],
       "anim_target": [
-        "status"
+        "slow"
       ],
       "anim_timing": "parallel"
     },
@@ -4367,7 +4367,7 @@
         "guard"
       ],
       "anim_target": [
-        "shield"
+        "Protection"
       ],
       "anim_timing": "parallel"
     },
@@ -4392,7 +4392,7 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Neutral1"
       ],
       "anim_target": [
         "status"
@@ -4424,10 +4424,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "fire"
       ],
       "anim_target": [
-        "hit"
+        "HitSP1"
       ],
       "anim_timing": "parallel"
     },
@@ -4451,7 +4451,7 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Neutral2"
       ],
       "anim_target": [
         "hit"
@@ -4483,7 +4483,7 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "light"
       ],
       "anim_target": [
         "heal"
@@ -4516,10 +4516,10 @@
       "cost": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special1"
       ],
       "anim_target": [
-        "status"
+        "stun"
       ],
       "anim_timing": "parallel"
     },
@@ -4547,7 +4547,7 @@
         "guard"
       ],
       "anim_target": [
-        "shield"
+        "Shield"
       ],
       "anim_timing": "parallel"
     },
@@ -4576,10 +4576,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "lightning"
       ],
       "anim_target": [
-        "hit"
+        "HitSP2"
       ],
       "anim_timing": "parallel"
     },
@@ -4608,10 +4608,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "buff"
       ],
       "anim_target": [
-        "status"
+        "debuff"
       ],
       "anim_timing": "parallel"
     },
@@ -4640,10 +4640,10 @@
       "cost": 3,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "Special3"
       ],
       "anim_target": [
-        "hit"
+        "CrossHit"
       ],
       "anim_timing": "parallel"
     },
@@ -4675,10 +4675,10 @@
       "cost": 5,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "Special2"
       ],
       "anim_target": [
-        "hit"
+        "blow"
       ],
       "anim_timing": "parallel"
     },
@@ -4706,11 +4706,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special3"
       ],
       "anim_target": [
-        "blow",
-        "push"
+        "Explosion1"
       ],
       "anim_timing": "parallel"
     },
@@ -4767,11 +4766,10 @@
       "cost": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "lightning"
       ],
       "anim_target": [
-        "bind",
-        "hit"
+        "slash"
       ],
       "anim_timing": "parallel"
     },
@@ -4795,10 +4793,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "BreathLight"
       ],
       "anim_target": [
-        "heal"
+        "Light2"
       ],
       "anim_timing": "parallel"
     },
@@ -4828,10 +4826,9 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "guard"
+        "cast"
       ],
       "anim_target": [
-        "buff",
         "shield"
       ],
       "anim_timing": "parallel"
@@ -4861,11 +4858,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special2"
       ],
       "anim_target": [
-        "blow",
-        "slow"
+        "blow"
       ],
       "anim_timing": "parallel"
     },
@@ -4893,8 +4889,7 @@
         "guard"
       ],
       "anim_target": [
-        "shield",
-        "buff"
+        "Reflection"
       ],
       "anim_timing": "parallel"
     },
@@ -4922,10 +4917,9 @@
       "cost": 3,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "fire"
       ],
       "anim_target": [
-        "blow",
         "push"
       ],
       "anim_timing": "parallel"
@@ -4955,11 +4949,10 @@
       "gain": 2,
       "tier": "evoluida",
       "anim_self": [
-        "guard"
+        "light"
       ],
       "anim_target": [
-        "heal",
-        "shield"
+        "Light1"
       ],
       "anim_timing": "parallel"
     },
@@ -4991,12 +4984,10 @@
       "cost": 5,
       "tier": "evoluida",
       "anim_self": [
-        "cast",
-        "darkness"
+        "wind"
       ],
       "anim_target": [
-        "blow",
-        "bind"
+        "HitSP1"
       ],
       "anim_timing": "parallel"
     },
@@ -5021,10 +5012,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Neutral1"
       ],
       "anim_target": [
-        "status"
+        "StarsHit"
       ],
       "anim_timing": "parallel"
     },
@@ -5048,10 +5039,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "lightning"
       ],
       "anim_target": [
-        "hit"
+        "CrossHit"
       ],
       "anim_timing": "parallel"
     },
@@ -5078,10 +5069,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "light"
       ],
       "anim_target": [
-        "heal"
+        "Light4"
       ],
       "anim_timing": "parallel"
     },
@@ -5138,10 +5129,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "fire"
       ],
       "anim_target": [
-        "hit"
+        "HitSP2"
       ],
       "anim_timing": "parallel"
     },
@@ -5166,10 +5157,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special1"
       ],
       "anim_target": [
-        "status"
+        "slow"
       ],
       "anim_timing": "parallel"
     },
@@ -5193,10 +5184,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Neutral2"
       ],
       "anim_target": [
-        "hit"
+        "bind"
       ],
       "anim_timing": "parallel"
     },
@@ -5229,7 +5220,7 @@
         "guard"
       ],
       "anim_target": [
-        "shield"
+        "Protection"
       ],
       "anim_timing": "parallel"
     },
@@ -5254,10 +5245,10 @@
       "gain": 2,
       "tier": "evoluida",
       "anim_self": [
-        "guard"
+        "buff"
       ],
       "anim_target": [
-        "shield"
+        "Shield"
       ],
       "anim_timing": "parallel"
     },
@@ -5286,10 +5277,10 @@
       "cost": 3,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "light"
       ],
       "anim_target": [
-        "heal"
+        "Light3"
       ],
       "anim_timing": "parallel"
     },
@@ -5316,12 +5307,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "darkness",
-        "cast"
+        "Smokescreen"
       ],
       "anim_target": [
-        "pull",
-        "hit"
+        "pull"
       ],
       "anim_timing": "parallel"
     },
@@ -5346,11 +5335,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Song1"
       ],
       "anim_target": [
-        "confusion",
-        "debuff"
+        "confusion"
       ],
       "anim_timing": "parallel"
     },
@@ -5375,10 +5363,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "darkness"
+        "Smokescreen"
       ],
       "anim_target": [
-        "buff"
+        "Darkness1"
       ],
       "anim_timing": "parallel"
     },
@@ -5407,11 +5395,10 @@
       "cost": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "summon"
       ],
       "anim_target": [
-        "summon",
-        "light"
+        "Light2"
       ],
       "anim_timing": "parallel"
     },
@@ -5440,12 +5427,10 @@
       "cost": 2,
       "tier": "inicial",
       "anim_self": [
-        "darkness",
-        "cast"
+        "darkness"
       ],
       "anim_target": [
-        "bind",
-        "hit"
+        "slash"
       ],
       "anim_timing": "parallel"
     },
@@ -5470,12 +5455,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "darkness",
-        "cast"
+        "BreathDarkness"
       ],
       "anim_target": [
-        "banish",
-        "debuff"
+        "banish"
       ],
       "anim_timing": "parallel"
     },
@@ -5504,11 +5487,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special2"
       ],
       "anim_target": [
-        "hit",
-        "debuff"
+        "HitSP1"
       ],
       "anim_timing": "parallel"
     },
@@ -5537,12 +5519,10 @@
       "cost": 3,
       "tier": "inicial",
       "anim_self": [
-        "cast",
-        "darkness"
+        "Special3"
       ],
       "anim_target": [
-        "blow",
-        "debuff"
+        "blow"
       ],
       "anim_timing": "parallel"
     },
@@ -5567,12 +5547,10 @@
       "gain": 2,
       "tier": "evoluida",
       "anim_self": [
-        "cast",
-        "darkness"
+        "Song1"
       ],
       "anim_target": [
-        "confusion",
-        "status"
+        "confusion"
       ],
       "anim_timing": "parallel"
     },
@@ -5604,12 +5582,10 @@
       "cost": 5,
       "tier": "evoluida",
       "anim_self": [
-        "darkness",
-        "cast"
+        "BreathDarkness"
       ],
       "anim_target": [
-        "banish",
-        "blow"
+        "banish"
       ],
       "anim_timing": "parallel"
     },
@@ -5637,10 +5613,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "fire"
       ],
       "anim_target": [
-        "hit"
+        "push"
       ],
       "anim_timing": "parallel"
     },
@@ -5670,10 +5646,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "guard"
+        "buff"
       ],
       "anim_target": [
-        "shield"
+        "Reflection"
       ],
       "anim_timing": "parallel"
     },
@@ -5701,10 +5677,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "fire"
       ],
       "anim_target": [
-        "hit"
+        "SlashSP1"
       ],
       "anim_timing": "parallel"
     },
@@ -5732,10 +5708,10 @@
       "quick": true,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "lightning"
       ],
       "anim_target": [
-        "hit"
+        "slash"
       ],
       "anim_timing": "parallel"
     },
@@ -5786,10 +5762,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Neutral1"
       ],
       "anim_target": [
-        "status"
+        "debuff"
       ],
       "anim_timing": "parallel"
     },
@@ -5814,10 +5790,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Neutral2"
       ],
       "anim_target": [
-        "status"
+        "stun"
       ],
       "anim_timing": "parallel"
     },
@@ -5846,10 +5822,10 @@
       "cost": 3,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special2"
       ],
       "anim_target": [
-        "hit"
+        "HitSP2"
       ],
       "anim_timing": "parallel"
     },
@@ -5877,10 +5853,10 @@
       "cost": 3,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "lightning"
       ],
       "anim_target": [
-        "hit"
+        "Explosion1"
       ],
       "anim_timing": "parallel"
     },
@@ -5912,10 +5888,10 @@
       "cost": 5,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "Special3"
       ],
       "anim_target": [
-        "hit"
+        "CrossHit"
       ],
       "anim_timing": "parallel"
     },
@@ -5939,10 +5915,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "fire"
       ],
       "anim_target": [
-        "hit"
+        "HitSP2"
       ],
       "anim_timing": "parallel"
     },
@@ -5969,10 +5945,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "light"
       ],
       "anim_target": [
-        "heal"
+        "absorb"
       ],
       "anim_timing": "parallel"
     },
@@ -6001,10 +5977,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "summon"
       ],
       "anim_target": [
-        "status"
+        "slow"
       ],
       "anim_timing": "parallel"
     },
@@ -6028,10 +6004,10 @@
       "cost": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special2"
       ],
       "anim_target": [
-        "hit"
+        "HitSP1"
       ],
       "anim_timing": "parallel"
     },
@@ -6061,10 +6037,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special1"
       ],
       "anim_target": [
-        "status"
+        "bind"
       ],
       "anim_timing": "parallel"
     },
@@ -6093,7 +6069,7 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Neutral1"
       ],
       "anim_target": [
         "status"
@@ -6124,10 +6100,10 @@
       "cost": 3,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Neutral2"
       ],
       "anim_target": [
-        "hit"
+        "push"
       ],
       "anim_timing": "parallel"
     },
@@ -6153,7 +6129,7 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "light"
       ],
       "anim_target": [
         "heal"
@@ -6185,10 +6161,10 @@
       "cost": 3,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "Special3"
       ],
       "anim_target": [
-        "hit"
+        "StarsHit"
       ],
       "anim_timing": "parallel"
     },
@@ -6219,10 +6195,10 @@
       "final": true,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "lightning"
       ],
       "anim_target": [
-        "hit"
+        "blow"
       ],
       "anim_timing": "parallel"
     },
@@ -6250,10 +6226,10 @@
       "quick": true,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special3"
       ],
       "anim_target": [
-        "hit"
+        "slash"
       ],
       "anim_timing": "parallel"
     },
@@ -6287,10 +6263,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "guard"
+        "buff"
       ],
       "anim_target": [
-        "shield"
+        "Protection"
       ],
       "anim_timing": "parallel"
     },
@@ -6322,7 +6298,7 @@
         "cast"
       ],
       "anim_target": [
-        "hit"
+        "StarsHit"
       ],
       "anim_timing": "parallel"
     },
@@ -6351,10 +6327,10 @@
       "cost": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Neutral2"
       ],
       "anim_target": [
-        "hit"
+        "bind"
       ],
       "anim_timing": "parallel"
     },
@@ -6383,10 +6359,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special1"
       ],
       "anim_target": [
-        "status"
+        "debuff"
       ],
       "anim_timing": "parallel"
     },
@@ -6416,10 +6392,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Neutral1"
       ],
       "anim_target": [
-        "status"
+        "slow"
       ],
       "anim_timing": "parallel"
     },
@@ -6448,7 +6424,7 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "fire"
       ],
       "anim_target": [
         "hit"
@@ -6476,10 +6452,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "darkness"
+        "BreathDarkness"
       ],
       "anim_target": [
-        "status"
+        "Darkness2"
       ],
       "anim_timing": "parallel"
     },
@@ -6508,10 +6484,10 @@
       "chain": 3,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "Special2"
       ],
       "anim_target": [
-        "hit"
+        "CrossHit"
       ],
       "anim_timing": "parallel"
     },
@@ -6543,10 +6519,10 @@
       "cost": 5,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "lightning"
       ],
       "anim_target": [
-        "hit"
+        "stun"
       ],
       "anim_timing": "parallel"
     },
@@ -6575,10 +6551,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "lightning"
       ],
       "anim_target": [
-        "hit"
+        "HitSP2"
       ],
       "anim_timing": "parallel"
     },
@@ -6603,10 +6579,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "guard"
+        "buff"
       ],
       "anim_target": [
-        "shield"
+        "Reflection"
       ],
       "anim_timing": "parallel"
     },
@@ -6634,7 +6610,7 @@
         "cast"
       ],
       "anim_target": [
-        "status"
+        "stun"
       ],
       "anim_timing": "parallel"
     },
@@ -6663,10 +6639,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "fire"
       ],
       "anim_target": [
-        "hit"
+        "HitSP1"
       ],
       "anim_timing": "parallel"
     },
@@ -6694,7 +6670,7 @@
         "guard"
       ],
       "anim_target": [
-        "shield"
+        "Shield"
       ],
       "anim_timing": "parallel"
     },
@@ -6724,7 +6700,7 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "buff"
       ],
       "anim_target": [
         "status"
@@ -6755,10 +6731,10 @@
       "quick": true,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "ice"
       ],
       "anim_target": [
-        "hit"
+        "Ice1"
       ],
       "anim_timing": "parallel"
     },
@@ -6785,7 +6761,7 @@
       "cost": 3,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special3"
       ],
       "anim_target": [
         "bleed"
@@ -6818,10 +6794,10 @@
       "gain": 2,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "Special1"
       ],
       "anim_target": [
-        "status"
+        "debuff"
       ],
       "anim_timing": "parallel"
     },
@@ -6853,10 +6829,10 @@
       "cost": 5,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "Special2"
       ],
       "anim_target": [
-        "slash"
+        "SlashSP2"
       ],
       "anim_timing": "parallel"
     },
@@ -6883,10 +6859,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "lightning"
       ],
       "anim_target": [
-        "hit"
+        "bleed"
       ],
       "anim_timing": "parallel"
     },
@@ -6914,7 +6890,7 @@
         "cast"
       ],
       "anim_target": [
-        "status"
+        "slow"
       ],
       "anim_timing": "parallel"
     },
@@ -6943,10 +6919,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "fire"
       ],
       "anim_target": [
-        "hit"
+        "blow"
       ],
       "anim_timing": "parallel"
     },
@@ -6973,10 +6949,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "HeartMark1"
       ],
       "anim_target": [
-        "heal"
+        "Light1"
       ],
       "anim_timing": "parallel"
     },
@@ -7006,10 +6982,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Neutral1"
       ],
       "anim_target": [
-        "status"
+        "StarsHit"
       ],
       "anim_timing": "parallel"
     },
@@ -7069,10 +7045,10 @@
       "cost": 3,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special3"
       ],
       "anim_target": [
-        "hit"
+        "absorb"
       ],
       "anim_timing": "parallel"
     },
@@ -7097,10 +7073,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special1"
       ],
       "anim_target": [
-        "status"
+        "bind"
       ],
       "anim_timing": "parallel"
     },
@@ -7132,10 +7108,10 @@
       "chain": 3,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "Special2"
       ],
       "anim_target": [
-        "hit"
+        "bleed"
       ],
       "anim_timing": "parallel"
     },
@@ -7165,10 +7141,10 @@
       "cost": 5,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "Neutral2"
       ],
       "anim_target": [
-        "hit"
+        "absorb"
       ],
       "anim_timing": "parallel"
     },
@@ -7197,10 +7173,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "light"
       ],
       "anim_target": [
-        "heal"
+        "Light3"
       ],
       "anim_timing": "parallel"
     },
@@ -7225,10 +7201,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special1"
       ],
       "anim_target": [
-        "status"
+        "stun"
       ],
       "anim_timing": "parallel"
     },
@@ -7253,10 +7229,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "buff"
       ],
       "anim_target": [
-        "status"
+        "debuff"
       ],
       "anim_timing": "parallel"
     },
@@ -7280,7 +7256,7 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special3"
       ],
       "anim_target": [
         "hit"
@@ -7308,10 +7284,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Neutral1"
       ],
       "anim_target": [
-        "status"
+        "bind"
       ],
       "anim_timing": "parallel"
     },
@@ -7340,10 +7316,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Neutral2"
       ],
       "anim_target": [
-        "hit"
+        "CrossHit"
       ],
       "anim_timing": "parallel"
     },
@@ -7376,7 +7352,7 @@
         "guard"
       ],
       "anim_target": [
-        "shield"
+        "Protection"
       ],
       "anim_timing": "parallel"
     },
@@ -7405,10 +7381,10 @@
       "cost": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special2"
       ],
       "anim_target": [
-        "hit"
+        "slash"
       ],
       "anim_timing": "parallel"
     },
@@ -7433,7 +7409,7 @@
       "gain": 2,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "Neutral1"
       ],
       "anim_target": [
         "status"
@@ -7472,7 +7448,7 @@
         "cast"
       ],
       "anim_target": [
-        "status"
+        "StarsHit"
       ],
       "anim_timing": "parallel"
     },
@@ -7500,10 +7476,10 @@
       "quick": true,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "fire"
       ],
       "anim_target": [
-        "hit"
+        "HitSP1"
       ],
       "anim_timing": "parallel"
     },
@@ -7528,10 +7504,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special1"
       ],
       "anim_target": [
-        "status"
+        "confusion"
       ],
       "anim_timing": "parallel"
     },
@@ -7560,10 +7536,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "lightning"
       ],
       "anim_target": [
-        "hit"
+        "HitSP2"
       ],
       "anim_timing": "parallel"
     },
@@ -7592,7 +7568,7 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "buff"
       ],
       "anim_target": [
         "status"
@@ -7620,10 +7596,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "darkness"
+        "Smokescreen"
       ],
       "anim_target": [
-        "status"
+        "PierceSP1"
       ],
       "anim_timing": "parallel"
     },
@@ -7652,10 +7628,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Song1"
       ],
       "anim_target": [
-        "hit"
+        "CrossHit"
       ],
       "anim_timing": "parallel"
     },
@@ -7682,10 +7658,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "light"
       ],
       "anim_target": [
-        "heal"
+        "Light4"
       ],
       "anim_timing": "parallel"
     },
@@ -7709,10 +7685,10 @@
       "cost": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special2"
       ],
       "anim_target": [
-        "hit"
+        "blow"
       ],
       "anim_timing": "parallel"
     },
@@ -7737,10 +7713,10 @@
       "gain": 2,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "Neutral2"
       ],
       "anim_target": [
-        "status"
+        "slow"
       ],
       "anim_timing": "parallel"
     },
@@ -7772,10 +7748,10 @@
       "chain": 4,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "Special3"
       ],
       "anim_target": [
-        "hit"
+        "slash"
       ],
       "anim_timing": "parallel"
     },
@@ -7804,7 +7780,7 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "fire"
       ],
       "anim_target": [
         "hit"
@@ -7832,10 +7808,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "buff"
       ],
       "anim_target": [
-        "status"
+        "bind"
       ],
       "anim_timing": "parallel"
     },
@@ -7865,10 +7841,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Neutral1"
       ],
       "anim_target": [
-        "status"
+        "stun"
       ],
       "anim_timing": "parallel"
     },
@@ -7896,7 +7872,7 @@
         "cast"
       ],
       "anim_target": [
-        "status"
+        "debuff"
       ],
       "anim_timing": "parallel"
     },
@@ -7924,10 +7900,10 @@
       "quick": true,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special2"
       ],
       "anim_target": [
-        "hit"
+        "HitSP2"
       ],
       "anim_timing": "parallel"
     },
@@ -7956,10 +7932,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special3"
       ],
       "anim_target": [
-        "hit"
+        "blow"
       ],
       "anim_timing": "parallel"
     },
@@ -7988,10 +7964,10 @@
       "cost": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Song1"
       ],
       "anim_target": [
-        "status"
+        "confusion"
       ],
       "anim_timing": "parallel"
     },
@@ -8016,10 +7992,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Neutral2"
       ],
       "anim_target": [
-        "status"
+        "StarsHit"
       ],
       "anim_timing": "parallel"
     },
@@ -8053,10 +8029,10 @@
       "chain": 3,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "fire"
       ],
       "anim_target": [
-        "hit"
+        "CrossHit"
       ],
       "anim_timing": "parallel"
     },
@@ -8088,10 +8064,10 @@
       "cost": 5,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "lightning"
       ],
       "anim_target": [
-        "hit"
+        "HitSP1"
       ],
       "anim_timing": "parallel"
     },
@@ -8115,10 +8091,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special2"
       ],
       "anim_target": [
-        "hit"
+        "HitSP2"
       ],
       "anim_timing": "parallel"
     },
@@ -8174,10 +8150,10 @@
       "cost": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "wind"
       ],
       "anim_target": [
-        "hit"
+        "Explosion1"
       ],
       "anim_timing": "parallel"
     },
@@ -8206,10 +8182,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "lightning"
       ],
       "anim_target": [
-        "hit"
+        "slash"
       ],
       "anim_timing": "parallel"
     },
@@ -8237,7 +8213,7 @@
         "guard"
       ],
       "anim_target": [
-        "shield"
+        "Shield"
       ],
       "anim_timing": "parallel"
     },
@@ -8261,7 +8237,7 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special1"
       ],
       "anim_target": [
         "hit"
@@ -8293,10 +8269,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Neutral2"
       ],
       "anim_target": [
-        "hit"
+        "slow"
       ],
       "anim_timing": "parallel"
     },
@@ -8325,10 +8301,10 @@
       "cost": 3,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special3"
       ],
       "anim_target": [
-        "hit"
+        "blow"
       ],
       "anim_timing": "parallel"
     },
@@ -8356,7 +8332,7 @@
         "guard"
       ],
       "anim_target": [
-        "shield"
+        "Reflection"
       ],
       "anim_timing": "parallel"
     },
@@ -8386,7 +8362,7 @@
         "cast"
       ],
       "anim_target": [
-        "hit"
+        "HitSP1"
       ],
       "anim_timing": "parallel"
     },
@@ -8415,10 +8391,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "ice"
       ],
       "anim_target": [
-        "hit"
+        "ClawSP1"
       ],
       "anim_timing": "parallel"
     },
@@ -8443,10 +8419,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "guard"
+        "buff"
       ],
       "anim_target": [
-        "shield"
+        "Shield"
       ],
       "anim_timing": "parallel"
     },
@@ -8475,10 +8451,10 @@
       "cost": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "summon"
       ],
       "anim_target": [
-        "hit"
+        "Light2"
       ],
       "anim_timing": "parallel"
     },
@@ -8503,10 +8479,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special1"
       ],
       "anim_target": [
-        "status"
+        "debuff"
       ],
       "anim_timing": "parallel"
     },
@@ -8535,10 +8511,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "light"
       ],
       "anim_target": [
-        "heal"
+        "claw"
       ],
       "anim_timing": "parallel"
     },
@@ -8567,10 +8543,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "fire"
       ],
       "anim_target": [
-        "hit"
+        "CrossHit"
       ],
       "anim_timing": "parallel"
     },
@@ -8594,10 +8570,10 @@
       "cost": 3,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "lightning"
       ],
       "anim_target": [
-        "hit"
+        "slash"
       ],
       "anim_timing": "parallel"
     },
@@ -8624,7 +8600,7 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Neutral1"
       ],
       "anim_target": [
         "hit"
@@ -8660,7 +8636,7 @@
         "guard"
       ],
       "anim_target": [
-        "shield"
+        "Protection"
       ],
       "anim_timing": "parallel"
     },
@@ -8695,7 +8671,7 @@
         "cast"
       ],
       "anim_target": [
-        "hit"
+        "status"
       ],
       "anim_timing": "parallel"
     },
@@ -8720,10 +8696,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special1"
       ],
       "anim_target": [
-        "status"
+        "slow"
       ],
       "anim_timing": "parallel"
     },
@@ -8747,10 +8723,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special3"
       ],
       "anim_target": [
-        "hit"
+        "HitSP1"
       ],
       "anim_timing": "parallel"
     },
@@ -8802,7 +8778,7 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Neutral1"
       ],
       "anim_target": [
         "status"
@@ -8833,10 +8809,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special2"
       ],
       "anim_target": [
-        "hit"
+        "push"
       ],
       "anim_timing": "parallel"
     },
@@ -8861,10 +8837,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Neutral1"
       ],
       "anim_target": [
-        "status"
+        "stun"
       ],
       "anim_timing": "parallel"
     },
@@ -8893,10 +8869,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "fire"
       ],
       "anim_target": [
-        "hit"
+        "HitSP2"
       ],
       "anim_timing": "parallel"
     },
@@ -8928,7 +8904,7 @@
         "guard"
       ],
       "anim_target": [
-        "shield"
+        "Reflection"
       ],
       "anim_timing": "parallel"
     },
@@ -8953,10 +8929,10 @@
       "gain": 2,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "buff"
       ],
       "anim_target": [
-        "status"
+        "bind"
       ],
       "anim_timing": "parallel"
     },
@@ -8985,10 +8961,10 @@
       "cost": 3,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "Neutral2"
       ],
       "anim_target": [
-        "hit"
+        "StarsHit"
       ],
       "anim_timing": "parallel"
     },
@@ -9016,10 +8992,10 @@
       "quick": true,
       "tier": "inicial",
       "anim_self": [
-        "darkness"
+        "Smokescreen"
       ],
       "anim_target": [
-        "status"
+        "HitSP1"
       ],
       "anim_timing": "parallel"
     },
@@ -9044,10 +9020,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "buff"
       ],
       "anim_target": [
-        "status"
+        "stun"
       ],
       "anim_timing": "parallel"
     },
@@ -9072,10 +9048,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Neutral2"
       ],
       "anim_target": [
-        "status"
+        "debuff"
       ],
       "anim_timing": "parallel"
     },
@@ -9104,10 +9080,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special2"
       ],
       "anim_target": [
-        "hit"
+        "slash"
       ],
       "anim_timing": "parallel"
     },
@@ -9136,10 +9112,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "summon"
       ],
       "anim_target": [
-        "hit"
+        "blow"
       ],
       "anim_timing": "parallel"
     },
@@ -9168,10 +9144,10 @@
       "cost": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "darkness"
       ],
       "anim_target": [
-        "hit"
+        "slow"
       ],
       "anim_timing": "parallel"
     },
@@ -9196,10 +9172,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special1"
       ],
       "anim_target": [
-        "status"
+        "StarsHit"
       ],
       "anim_timing": "parallel"
     },
@@ -9224,10 +9200,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "darkness"
+        "BreathDarkness"
       ],
       "anim_target": [
-        "status"
+        "Darkness1"
       ],
       "anim_timing": "parallel"
     },
@@ -9256,10 +9232,10 @@
       "cost": 3,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "lightning"
       ],
       "anim_target": [
-        "hit"
+        "CrossHit"
       ],
       "anim_timing": "parallel"
     },
@@ -9291,10 +9267,10 @@
       "cost": 5,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "Special3"
       ],
       "anim_target": [
-        "hit"
+        "bind"
       ],
       "anim_timing": "parallel"
     },
@@ -9321,10 +9297,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Neutral2"
       ],
       "anim_target": [
-        "hit"
+        "pull"
       ],
       "anim_timing": "parallel"
     },
@@ -9348,7 +9324,7 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "summon"
       ],
       "anim_target": [
         "heal"
@@ -9376,10 +9352,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Song1"
       ],
       "anim_target": [
-        "status"
+        "debuff"
       ],
       "anim_timing": "parallel"
     },
@@ -9408,10 +9384,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special3"
       ],
       "anim_target": [
-        "claw"
+        "ClawSP2"
       ],
       "anim_timing": "parallel"
     },
@@ -9436,10 +9412,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Neutral1"
       ],
       "anim_target": [
-        "status"
+        "stun"
       ],
       "anim_timing": "parallel"
     },
@@ -9471,10 +9447,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special2"
       ],
       "anim_target": [
-        "hit"
+        "absorb"
       ],
       "anim_timing": "parallel"
     },
@@ -9529,10 +9505,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "BreathLight"
       ],
       "anim_target": [
-        "heal"
+        "Light1"
       ],
       "anim_timing": "parallel"
     },
@@ -9560,10 +9536,10 @@
       "cost": 3,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "fire"
       ],
       "anim_target": [
-        "hit"
+        "Explosion1"
       ],
       "anim_timing": "parallel"
     },
@@ -9595,10 +9571,10 @@
       "cost": 5,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "lightning"
       ],
       "anim_target": [
-        "hit"
+        "HitSP2"
       ],
       "anim_timing": "parallel"
     },
@@ -9629,7 +9605,7 @@
         "cast"
       ],
       "anim_target": [
-        "hit"
+        "CrossHit"
       ],
       "anim_timing": "parallel"
     },
@@ -9654,10 +9630,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special1"
       ],
       "anim_target": [
-        "status"
+        "StarsHit"
       ],
       "anim_timing": "parallel"
     },
@@ -9685,10 +9661,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special2"
       ],
       "anim_target": [
-        "hit"
+        "Explosion1"
       ],
       "anim_timing": "parallel"
     },
@@ -9716,10 +9692,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Song1"
       ],
       "anim_target": [
-        "status"
+        "bind"
       ],
       "anim_timing": "parallel"
     },
@@ -9748,10 +9724,9 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "thunder"
       ],
       "anim_target": [
-        "lightning",
         "Thunder1"
       ],
       "anim_timing": "parallel"
@@ -9781,10 +9756,10 @@
       "chain": 3,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Neutral2"
       ],
       "anim_target": [
-        "hit"
+        "slash"
       ],
       "anim_timing": "parallel"
     },
@@ -9811,10 +9786,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "light"
       ],
       "anim_target": [
-        "heal"
+        "Light3"
       ],
       "anim_timing": "parallel"
     },
@@ -9843,10 +9818,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "fire"
       ],
       "anim_target": [
-        "hit"
+        "blow"
       ],
       "anim_timing": "parallel"
     },
@@ -9873,7 +9848,7 @@
       "cost": 3,
       "tier": "evoluida",
       "anim_self": [
-        "guard"
+        "buff"
       ],
       "anim_target": [
         "shield"
@@ -9907,10 +9882,10 @@
       "cost": 5,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "lightning"
       ],
       "anim_target": [
-        "hit"
+        "push"
       ],
       "anim_timing": "parallel"
     },
@@ -9934,10 +9909,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "lightning"
       ],
       "anim_target": [
-        "hit"
+        "HitSP1"
       ],
       "anim_timing": "parallel"
     },
@@ -9970,7 +9945,7 @@
         "guard"
       ],
       "anim_target": [
-        "shield"
+        "Protection"
       ],
       "anim_timing": "parallel"
     },
@@ -9995,10 +9970,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Song1"
       ],
       "anim_target": [
-        "status"
+        "confusion"
       ],
       "anim_timing": "parallel"
     },
@@ -10023,10 +9998,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Neutral1"
       ],
       "anim_target": [
-        "status"
+        "slow"
       ],
       "anim_timing": "parallel"
     },
@@ -10054,10 +10029,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "fire"
       ],
       "anim_target": [
-        "hit"
+        "SlashSP3"
       ],
       "anim_timing": "parallel"
     },
@@ -10085,7 +10060,7 @@
         "guard"
       ],
       "anim_target": [
-        "shield"
+        "confusion"
       ],
       "anim_timing": "parallel"
     },
@@ -10114,7 +10089,7 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "buff"
       ],
       "anim_target": [
         "status"
@@ -10148,7 +10123,7 @@
         "cast"
       ],
       "anim_target": [
-        "hit"
+        "shield"
       ],
       "anim_timing": "parallel"
     },
@@ -10177,7 +10152,7 @@
       "cost": 3,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "Special3"
       ],
       "anim_target": [
         "hit"
@@ -10216,7 +10191,7 @@
         "guard"
       ],
       "anim_target": [
-        "shield"
+        "Shield"
       ],
       "anim_timing": "parallel"
     },
@@ -10245,10 +10220,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special3"
       ],
       "anim_target": [
-        "hit"
+        "CrossHit"
       ],
       "anim_timing": "parallel"
     },
@@ -10276,7 +10251,7 @@
         "guard"
       ],
       "anim_target": [
-        "shield"
+        "Shield"
       ],
       "anim_timing": "parallel"
     },
@@ -10301,10 +10276,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special1"
       ],
       "anim_target": [
-        "status"
+        "bind"
       ],
       "anim_timing": "parallel"
     },
@@ -10333,10 +10308,10 @@
       "gain": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Neutral1"
       ],
       "anim_target": [
-        "status"
+        "debuff"
       ],
       "anim_timing": "parallel"
     },
@@ -10365,7 +10340,7 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "lightning"
       ],
       "anim_target": [
         "hit"
@@ -10401,7 +10376,7 @@
         "guard"
       ],
       "anim_target": [
-        "shield"
+        "Protection"
       ],
       "anim_timing": "parallel"
     },
@@ -10430,10 +10405,10 @@
       "cost": 2,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Neutral2"
       ],
       "anim_target": [
-        "hit"
+        "HitSP2"
       ],
       "anim_timing": "parallel"
     },
@@ -10462,10 +10437,10 @@
       "gain": 1,
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "Special2"
       ],
       "anim_target": [
-        "hit"
+        "blow"
       ],
       "anim_timing": "parallel"
     },
@@ -10494,10 +10469,10 @@
       "gain": 2,
       "tier": "evoluida",
       "anim_self": [
-        "guard"
+        "buff"
       ],
       "anim_target": [
-        "shield"
+        "Reflection"
       ],
       "anim_timing": "parallel"
     },
@@ -10529,10 +10504,10 @@
       "cost": 5,
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "fire"
       ],
       "anim_target": [
-        "hit"
+        "slash"
       ],
       "anim_timing": "parallel"
     },
@@ -10571,7 +10546,7 @@
       "text": "Impacto 1+E. Escuridão 1+: Chain 1 (alvo extra). Escuridão 2+: Empurra.",
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "lightning"
       ],
       "anim_target": [
         "slash"
@@ -10614,12 +10589,10 @@
       "text": "Requer Escuridão 1+. Impacto 2×E. Bleed E. Ferido E.",
       "tier": "inicial",
       "anim_self": [
-        "cast",
-        "darkness"
+        "Special2"
       ],
       "anim_target": [
-        "claw",
-        "bleed"
+        "claw"
       ],
       "anim_timing": "parallel"
     },
@@ -10648,10 +10621,10 @@
       "text": "Proteção 1. Resistente 1.",
       "tier": "inicial",
       "anim_self": [
-        "guard"
+        "cast"
       ],
       "anim_target": [
-        "shield"
+        "Reflection"
       ],
       "anim_timing": "parallel"
     },
@@ -10677,12 +10650,10 @@
       "text": "Lento 1 em toda a equipe inimiga.",
       "tier": "inicial",
       "anim_self": [
-        "darkness",
-        "cast"
+        "darkness"
       ],
       "anim_target": [
-        "slow",
-        "debuff"
+        "slow"
       ],
       "anim_timing": "wait_last"
     },
@@ -10716,10 +10687,10 @@
       "text": "Requer Escuridão 2+. Cura 2×E. Resistente 2×E.",
       "tier": "inicial",
       "anim_self": [
-        "cast"
+        "BreathLight"
       ],
       "anim_target": [
-        "heal"
+        "Light2"
       ],
       "anim_timing": "parallel"
     },
@@ -10766,11 +10737,10 @@
       "text": "Requer Escuridão 4+. Poder 2×E. Fileira inimiga + Alcance. E5: todos os inimigos. E6+: todos os outros (exceto ela).",
       "tier": "evoluida",
       "anim_self": [
-        "cast",
-        "darkness"
+        "thunder"
       ],
       "anim_target": [
-        "lightning"
+        "HitSP1"
       ],
       "anim_timing": "wait_last"
     },
@@ -10798,10 +10768,10 @@
       "text": "Compra todas as cartas de item do baralho. Ao recomprar esta carta: +1 Ação (funciona mesmo sem itens).",
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "Neutral1"
       ],
       "anim_target": [
-        "buff"
+        "stun"
       ],
       "anim_timing": "parallel"
     },
@@ -10827,10 +10797,10 @@
       "text": "Atento 2: ignora desvantagem de arquétipo/tipo e pode ferir Invulnerável.",
       "tier": "evoluida",
       "anim_self": [
-        "cast"
+        "Neutral2"
       ],
       "anim_target": [
-        "buff"
+        "status"
       ],
       "anim_timing": "parallel"
     },
@@ -10851,10 +10821,10 @@
       "text": "Desvantagem — Tormenta: se Escuridão ≥ 4, no fim do turno todos os outros (aliados e inimigos) sofrem 1 de dano (penetrante).",
       "tier": "desvantagem",
       "anim_self": [
-        "darkness"
+        "ice"
       ],
       "anim_target": [
-        "debuff"
+        "blow"
       ],
       "anim_timing": "parallel"
     },
@@ -10895,11 +10865,10 @@
       "melhorada_de": "ent_alyssa_wine_bastao_retratil",
       "chrome_3d": true,
       "anim_self": [
-        "cast"
+        "Neutral2"
       ],
       "anim_target": [
-        "slash",
-        "blow"
+        "hit"
       ],
       "anim_timing": "parallel"
     },
@@ -10941,11 +10910,9 @@
       "melhorada_de": "ent_alyssa_wine_garras_e_presas",
       "chrome_3d": true,
       "anim_self": [
-        "cast",
-        "darkness"
+        "Special3"
       ],
       "anim_target": [
-        "claw",
         "bleed"
       ],
       "anim_timing": "parallel"
@@ -10977,11 +10944,10 @@
       "melhorada_de": "ent_alyssa_wine_premonicao",
       "chrome_3d": true,
       "anim_self": [
-        "guard"
+        "Neutral1"
       ],
       "anim_target": [
-        "shield",
-        "buff"
+        "bind"
       ],
       "anim_timing": "parallel"
     },
@@ -11009,11 +10975,9 @@
       "melhorada_de": "ent_alyssa_wine_a_filha_dele",
       "chrome_3d": true,
       "anim_self": [
-        "darkness",
-        "cast"
+        "darkness"
       ],
       "anim_target": [
-        "slow",
         "debuff"
       ],
       "anim_timing": "wait_last"
@@ -11050,11 +11014,10 @@
       "melhorada_de": "ent_alyssa_wine_regeneracao",
       "chrome_3d": true,
       "anim_self": [
-        "cast"
+        "HeartMark1"
       ],
       "anim_target": [
-        "heal",
-        "light"
+        "Light3"
       ],
       "anim_timing": "parallel"
     },
@@ -11103,12 +11066,10 @@
       "melhorada_de": "ent_alyssa_wine_relampago",
       "chrome_3d": true,
       "anim_self": [
-        "cast",
-        "darkness"
+        "BreathThunder"
       ],
       "anim_target": [
-        "lightning",
-        "thunder"
+        "HitSP2"
       ],
       "anim_timing": "wait_last"
     },
@@ -11138,11 +11099,10 @@
       "melhorada_de": "ent_alyssa_wine_intelecto",
       "chrome_3d": true,
       "anim_self": [
-        "cast"
+        "Special1"
       ],
       "anim_target": [
-        "buff",
-        "light"
+        "StarsHit"
       ],
       "anim_timing": "parallel"
     },
@@ -11170,11 +11130,10 @@
       "melhorada_de": "ent_alyssa_wine_super_sentidos",
       "chrome_3d": true,
       "anim_self": [
-        "cast"
+        "Special1"
       ],
       "anim_target": [
-        "buff",
-        "light"
+        "debuff"
       ],
       "anim_timing": "parallel"
     }

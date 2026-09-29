@@ -22,7 +22,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": false,
       "gain": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "Explosion1"
+      ]
     },
     "ms_hunter_holy_flame": {
       "id": "ms_hunter_holy_flame",
@@ -44,7 +50,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": false,
       "gain": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "BreathFire"
+      ],
+      "anim_target": [
+        "Fire1"
+      ]
     },
     "ms_hunter_holy_spark": {
       "id": "ms_hunter_holy_spark",
@@ -69,7 +81,13 @@
       "reach": false,
       "gain": 1,
       "quick": true,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "thunder"
+      ],
+      "anim_target": [
+        "Thunder3"
+      ]
     },
     "ms_hunter_last_sight": {
       "id": "ms_hunter_last_sight",
@@ -92,7 +110,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": false,
       "gain": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "fire"
+      ],
+      "anim_target": [
+        "HitSP2"
+      ]
     },
     "ms_hunter_merciless": {
       "id": "ms_hunter_merciless",
@@ -116,7 +140,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": false,
       "gain": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "lightning"
+      ],
+      "anim_target": [
+        "bind"
+      ]
     },
     "ms_hunter_morning_star": {
       "id": "ms_hunter_morning_star",
@@ -141,7 +171,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": false,
       "gain": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Neutral2"
+      ],
+      "anim_target": [
+        "blow"
+      ]
     },
     "ms_hunter_quick_slash": {
       "id": "ms_hunter_quick_slash",
@@ -164,7 +200,13 @@
       "reach": false,
       "gain": 1,
       "quick": true,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "CrossSlash"
+      ]
     },
     "ms_hunter_slash": {
       "id": "ms_hunter_slash",
@@ -187,7 +229,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": false,
       "gain": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "fire"
+      ],
+      "anim_target": [
+        "SlashSP1"
+      ]
     },
     "ms_hunter_wild_strike": {
       "id": "ms_hunter_wild_strike",
@@ -211,7 +259,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": false,
       "gain": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "debuff"
+      ]
     },
     "ms_hunter_all_out": {
       "id": "ms_hunter_all_out",
@@ -237,7 +291,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "slash"
+      ]
     },
     "ms_hunter_annihilation": {
       "id": "ms_hunter_annihilation",
@@ -264,7 +324,13 @@
       "cost": 0,
       "variable_cost": true,
       "exhaust": true,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Neutral2"
+      ],
+      "anim_target": [
+        "hit"
+      ]
     },
     "ms_hunter_bands_of_fire": {
       "id": "ms_hunter_bands_of_fire",
@@ -287,7 +353,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "BreathFire"
+      ],
+      "anim_target": [
+        "Fire2"
+      ]
     },
     "ms_hunter_bladestorm": {
       "id": "ms_hunter_bladestorm",
@@ -310,7 +382,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 4,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Special2"
+      ],
+      "anim_target": [
+        "push"
+      ]
     },
     "ms_hunter_fury": {
       "id": "ms_hunter_fury",
@@ -338,7 +416,13 @@
       "reach": true,
       "cost": 2,
       "final": true,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "wind"
+      ],
+      "anim_target": [
+        "debuff"
+      ]
     },
     "ms_hunter_guarding_strike": {
       "id": "ms_hunter_guarding_strike",
@@ -361,7 +445,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 2,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "HitSP1"
+      ]
     },
     "ms_hunter_holy_burst": {
       "id": "ms_hunter_holy_burst",
@@ -384,7 +474,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 4,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "HeartMark1"
+      ],
+      "anim_target": [
+        "Light1"
+      ]
     },
     "ms_hunter_mindbreaker": {
       "id": "ms_hunter_mindbreaker",
@@ -403,7 +499,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "cost": 2
+      "cost": 2,
+      "anim_self": [
+        "Neutral1"
+      ],
+      "anim_target": [
+        "status"
+      ]
     },
     "ms_hunter_patience": {
       "id": "ms_hunter_patience",
@@ -429,7 +531,13 @@
       "reach": true,
       "cost": 6,
       "exhaust": true,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Special2"
+      ],
+      "anim_target": [
+        "CrossHit"
+      ]
     },
     "ms_hunter_summon_charlie": {
       "id": "ms_hunter_summon_charlie",
@@ -456,7 +564,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 4,
-      "exhaust": true
+      "exhaust": true,
+      "anim_self": [
+        "summon"
+      ],
+      "anim_target": [
+        "Light2"
+      ]
     },
     "ms_hunter_whip": {
       "id": "ms_hunter_whip",
@@ -482,7 +596,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "lightning"
+      ],
+      "anim_target": [
+        "push"
+      ]
     },
     "ms_hunter_call_to_arms": {
       "id": "ms_hunter_call_to_arms",
@@ -501,7 +621,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "Neutral1"
+      ],
+      "anim_target": [
+        "slow"
+      ]
     },
     "ms_hunter_dark_blessing": {
       "id": "ms_hunter_dark_blessing",
@@ -522,7 +648,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "BreathLight"
+      ],
+      "anim_target": [
+        "Darkness2"
+      ]
     },
     "ms_hunter_dark_heal": {
       "id": "ms_hunter_dark_heal",
@@ -546,7 +678,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "HeartMark1"
+      ],
+      "anim_target": [
+        "Darkness1"
+      ]
     },
     "ms_hunter_deadly_ground": {
       "id": "ms_hunter_deadly_ground",
@@ -568,7 +706,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "status"
+      ]
     },
     "ms_hunter_fortify": {
       "id": "ms_hunter_fortify",
@@ -592,7 +736,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "Shield"
+      ]
     },
     "ms_hunter_heal": {
       "id": "ms_hunter_heal",
@@ -610,7 +760,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "BreathLight"
+      ],
+      "anim_target": [
+        "heal"
+      ]
     },
     "ms_hunter_holy_gift": {
       "id": "ms_hunter_holy_gift",
@@ -633,7 +789,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "gain": 2,
-      "exhaust": true
+      "exhaust": true,
+      "anim_self": [
+        "BreathLight"
+      ],
+      "anim_target": [
+        "stun"
+      ]
     },
     "ms_hunter_inspire": {
       "id": "ms_hunter_inspire",
@@ -650,7 +812,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "Special1"
+      ],
+      "anim_target": [
+        "StarsHit"
+      ]
     },
     "ms_hunter_mindbender": {
       "id": "ms_hunter_mindbender",
@@ -672,7 +840,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "gain": 2,
-      "exhaust": true
+      "exhaust": true,
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "slow"
+      ]
     },
     "ms_hunter_wrath": {
       "id": "ms_hunter_wrath",
@@ -694,7 +868,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "Special1"
+      ],
+      "anim_target": [
+        "stun"
+      ]
     },
     "ms_blade_quick_strike": {
       "id": "ms_blade_quick_strike",
@@ -717,7 +897,13 @@
       "reach": false,
       "gain": 1,
       "quick": true,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Special2"
+      ],
+      "anim_target": [
+        "HitSP2"
+      ]
     },
     "ms_blade_strike": {
       "id": "ms_blade_strike",
@@ -741,7 +927,13 @@
       "reach": false,
       "gain": 1,
       "chain": 3,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Neutral2"
+      ],
+      "anim_target": [
+        "hit"
+      ]
     },
     "ms_blade_make_em_bleed": {
       "id": "ms_blade_make_em_bleed",
@@ -764,7 +956,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "Special1"
+      ],
+      "anim_target": [
+        "ClawSP1"
+      ]
     },
     "ms_blade_relentless": {
       "id": "ms_blade_relentless",
@@ -787,7 +985,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": false,
       "gain": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "fire"
+      ],
+      "anim_target": [
+        "CrossHit"
+      ]
     },
     "ms_blade_reaper": {
       "id": "ms_blade_reaper",
@@ -813,7 +1017,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": false,
       "gain": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "blow"
+      ]
     },
     "ms_blade_the_hunger": {
       "id": "ms_blade_the_hunger",
@@ -835,7 +1045,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "Neutral1"
+      ],
+      "anim_target": [
+        "StarsHit"
+      ]
     },
     "ms_blade_savage": {
       "id": "ms_blade_savage",
@@ -858,7 +1074,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 2,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "lightning"
+      ],
+      "anim_target": [
+        "slash"
+      ]
     },
     "ms_blade_stake": {
       "id": "ms_blade_stake",
@@ -880,7 +1102,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 3,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "bleed"
+      ]
     },
     "ms_blade_daywalker": {
       "id": "ms_blade_daywalker",
@@ -904,7 +1132,13 @@
       "reach": true,
       "cost": 3,
       "chain": 4,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "HitSP1"
+      ]
     },
     "ms_blade_glaive": {
       "id": "ms_blade_glaive",
@@ -932,7 +1166,13 @@
       "reach": true,
       "cost": 4,
       "exhaust": true,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Neutral2"
+      ],
+      "anim_target": [
+        "stun"
+      ]
     },
     "ms_captain_america_brooklyn_handshake": {
       "id": "ms_captain_america_brooklyn_handshake",
@@ -958,7 +1198,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": false,
       "gain": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Special2"
+      ],
+      "anim_target": [
+        "push"
+      ]
     },
     "ms_captain_america_punch": {
       "id": "ms_captain_america_punch",
@@ -984,7 +1230,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": false,
       "gain": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "Explosion1"
+      ]
     },
     "ms_captain_america_quick_punch": {
       "id": "ms_captain_america_quick_punch",
@@ -1014,7 +1266,13 @@
       "reach": false,
       "gain": 1,
       "quick": true,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "HitSP1"
+      ]
     },
     "ms_captain_america_dig_in": {
       "id": "ms_captain_america_dig_in",
@@ -1035,7 +1293,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Reflection"
+      ]
     },
     "ms_captain_america_tactician": {
       "id": "ms_captain_america_tactician",
@@ -1057,7 +1321,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "Special1"
+      ],
+      "anim_target": [
+        "Reflection"
+      ]
     },
     "ms_captain_america_the_best_defense": {
       "id": "ms_captain_america_the_best_defense",
@@ -1076,7 +1346,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "Neutral1"
+      ],
+      "anim_target": [
+        "slow"
+      ]
     },
     "ms_captain_america_shield_bash": {
       "id": "ms_captain_america_shield_bash",
@@ -1099,7 +1375,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": false,
       "gain": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "shield"
+      ]
     },
     "ms_captain_america_sprang": {
       "id": "ms_captain_america_sprang",
@@ -1126,7 +1408,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "HitSP2"
+      ]
     },
     "ms_captain_america_shield_bounce": {
       "id": "ms_captain_america_shield_bounce",
@@ -1153,7 +1441,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 2,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Protection"
+      ]
     },
     "ms_captain_america_shield_charge": {
       "id": "ms_captain_america_shield_charge",
@@ -1175,7 +1469,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 6,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Shield"
+      ]
     },
     "ms_captain_marvel_knee_strike": {
       "id": "ms_captain_marvel_knee_strike",
@@ -1200,7 +1500,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": false,
       "gain": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "slash"
+      ]
     },
     "ms_captain_marvel_quick_jab": {
       "id": "ms_captain_marvel_quick_jab",
@@ -1226,7 +1532,13 @@
       "reach": false,
       "gain": 1,
       "quick": true,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "HitSP1"
+      ]
     },
     "ms_captain_marvel_one_step_ahead": {
       "id": "ms_captain_marvel_one_step_ahead",
@@ -1244,7 +1556,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "Special1"
+      ],
+      "anim_target": [
+        "debuff"
+      ]
     },
     "ms_captain_marvel_regroup": {
       "id": "ms_captain_marvel_regroup",
@@ -1267,7 +1585,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "light"
+      ],
+      "anim_target": [
+        "Light4"
+      ]
     },
     "ms_captain_marvel_bring_it_on": {
       "id": "ms_captain_marvel_bring_it_on",
@@ -1289,7 +1613,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "status"
+      ]
     },
     "ms_captain_marvel_rain_of_blows": {
       "id": "ms_captain_marvel_rain_of_blows",
@@ -1315,7 +1645,13 @@
       "reach": true,
       "cost": 0,
       "variable_cost": true,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Neutral2"
+      ],
+      "anim_target": [
+        "HitSP2"
+      ]
     },
     "ms_captain_marvel_fists_of_radiance": {
       "id": "ms_captain_marvel_fists_of_radiance",
@@ -1338,7 +1674,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 2,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "lightning"
+      ],
+      "anim_target": [
+        "push"
+      ]
     },
     "ms_captain_marvel_cosmic_ray": {
       "id": "ms_captain_marvel_cosmic_ray",
@@ -1361,7 +1703,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": false,
       "gain": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "fire"
+      ],
+      "anim_target": [
+        "blow"
+      ]
     },
     "ms_captain_marvel_jab": {
       "id": "ms_captain_marvel_jab",
@@ -1381,7 +1729,13 @@
       "special_card": true,
       "reach": false,
       "gain": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "CrossHit"
+      ]
     },
     "ms_captain_marvel_photon_beam": {
       "id": "ms_captain_marvel_photon_beam",
@@ -1403,7 +1757,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 3,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "hit"
+      ]
     },
     "ms_captain_marvel_go_binary": {
       "id": "ms_captain_marvel_go_binary",
@@ -1432,7 +1792,13 @@
       "special_card": true,
       "reach": true,
       "cost": 0,
-      "free": true
+      "free": true,
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "shield"
+      ]
     },
     "ms_captain_marvel_supernova": {
       "id": "ms_captain_marvel_supernova",
@@ -1451,7 +1817,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 2,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Special2"
+      ],
+      "anim_target": [
+        "blow"
+      ]
     },
     "ms_doctor_strange_winds_of_watoomb": {
       "id": "ms_doctor_strange_winds_of_watoomb",
@@ -1478,7 +1850,13 @@
       "reach": true,
       "gain": 1,
       "quick": true,
-      "stat": "power"
+      "stat": "power",
+      "anim_self": [
+        "wind"
+      ],
+      "anim_target": [
+        "Wind1"
+      ]
     },
     "ms_doctor_strange_bolt_of_balthakk": {
       "id": "ms_doctor_strange_bolt_of_balthakk",
@@ -1502,7 +1880,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "gain": 1,
-      "stat": "power"
+      "stat": "power",
+      "anim_self": [
+        "lightning"
+      ],
+      "anim_target": [
+        "HitSP2"
+      ]
     },
     "ms_doctor_strange_agamotto_s_gaze": {
       "id": "ms_doctor_strange_agamotto_s_gaze",
@@ -1529,7 +1913,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "Special1"
+      ],
+      "anim_target": [
+        "bind"
+      ]
     },
     "ms_doctor_strange_blessing_of_vishanti": {
       "id": "ms_doctor_strange_blessing_of_vishanti",
@@ -1547,7 +1937,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "HeartMark1"
+      ],
+      "anim_target": [
+        "debuff"
+      ]
     },
     "ms_doctor_strange_vapors_of_valtorr": {
       "id": "ms_doctor_strange_vapors_of_valtorr",
@@ -1566,7 +1962,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "Neutral1"
+      ],
+      "anim_target": [
+        "StarsHit"
+      ]
     },
     "ms_doctor_strange_astral_meditation": {
       "id": "ms_doctor_strange_astral_meditation",
@@ -1592,7 +1994,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "gain": 2,
-      "exhaust": true
+      "exhaust": true,
+      "anim_self": [
+        "Neutral1"
+      ],
+      "anim_target": [
+        "slow"
+      ]
     },
     "ms_doctor_strange_axe_of_angarruumus": {
       "id": "ms_doctor_strange_axe_of_angarruumus",
@@ -1621,7 +2029,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 2,
-      "stat": "power"
+      "stat": "power",
+      "anim_self": [
+        "fire"
+      ],
+      "anim_target": [
+        "status"
+      ]
     },
     "ms_doctor_strange_seven_suns_of_cinnibus": {
       "id": "ms_doctor_strange_seven_suns_of_cinnibus",
@@ -1655,7 +2069,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 3,
-      "stat": "power"
+      "stat": "power",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "blow"
+      ]
     },
     "ms_doctor_strange_shield_of_seraphim": {
       "id": "ms_doctor_strange_shield_of_seraphim",
@@ -1678,7 +2098,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "cost": 3
+      "cost": 3,
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Protection"
+      ]
     },
     "ms_doctor_strange_crimson_bands_of_cyttorak": {
       "id": "ms_doctor_strange_crimson_bands_of_cyttorak",
@@ -1697,7 +2123,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "cost": 2
+      "cost": 2,
+      "anim_self": [
+        "Special1"
+      ],
+      "anim_target": [
+        "stun"
+      ]
     },
     "ms_ghost_rider_lash": {
       "id": "ms_ghost_rider_lash",
@@ -1720,7 +2152,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": false,
       "gain": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "fire"
+      ],
+      "anim_target": [
+        "push"
+      ]
     },
     "ms_ghost_rider_retribution": {
       "id": "ms_ghost_rider_retribution",
@@ -1742,7 +2180,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": false,
       "gain": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Neutral2"
+      ],
+      "anim_target": [
+        "HitSP2"
+      ]
     },
     "ms_ghost_rider_hellmouth": {
       "id": "ms_ghost_rider_hellmouth",
@@ -1761,7 +2205,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "Special1"
+      ],
+      "anim_target": [
+        "bind"
+      ]
     },
     "ms_ghost_rider_immolate": {
       "id": "ms_ghost_rider_immolate",
@@ -1780,7 +2230,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "slow"
+      ]
     },
     "ms_ghost_rider_drain_soul": {
       "id": "ms_ghost_rider_drain_soul",
@@ -1811,7 +2267,13 @@
       "reach": true,
       "cost": 1,
       "chain": 2,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Neutral2"
+      ],
+      "anim_target": [
+        "absorb"
+      ]
     },
     "ms_ghost_rider_judgment": {
       "id": "ms_ghost_rider_judgment",
@@ -1834,7 +2296,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "hit"
+      ]
     },
     "ms_ghost_rider_penance_stare": {
       "id": "ms_ghost_rider_penance_stare",
@@ -1857,7 +2325,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 4,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "lightning"
+      ],
+      "anim_target": [
+        "HitSP1"
+      ]
     },
     "ms_ghost_rider_hellride": {
       "id": "ms_ghost_rider_hellride",
@@ -1879,7 +2353,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 3,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Special2"
+      ],
+      "anim_target": [
+        "slash"
+      ]
     },
     "ms_ghost_rider_hell_s_fury": {
       "id": "ms_ghost_rider_hell_s_fury",
@@ -1901,7 +2381,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "wind"
+      ],
+      "anim_target": [
+        "CrossHit"
+      ]
     },
     "ms_ghost_rider_straight_to_hell": {
       "id": "ms_ghost_rider_straight_to_hell",
@@ -1925,7 +2411,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "Neutral1"
+      ],
+      "anim_target": [
+        "status"
+      ]
     },
     "ms_iron_man_quick_blast": {
       "id": "ms_iron_man_quick_blast",
@@ -1948,7 +2440,13 @@
       "reach": true,
       "gain": 1,
       "quick": true,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "Explosion2"
+      ]
     },
     "ms_iron_man_blast": {
       "id": "ms_iron_man_blast",
@@ -1974,7 +2472,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "gain": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Special2"
+      ],
+      "anim_target": [
+        "explosion"
+      ]
     },
     "ms_iron_man_leave_it_to_me": {
       "id": "ms_iron_man_leave_it_to_me",
@@ -2001,7 +2505,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "Neutral1"
+      ],
+      "anim_target": [
+        "StarsHit"
+      ]
     },
     "ms_iron_man_new_plan": {
       "id": "ms_iron_man_new_plan",
@@ -2018,7 +2528,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "Special1"
+      ],
+      "anim_target": [
+        "slow"
+      ]
     },
     "ms_iron_man_mark_target": {
       "id": "ms_iron_man_mark_target",
@@ -2042,7 +2558,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "bind"
+      ]
     },
     "ms_iron_man_precision": {
       "id": "ms_iron_man_precision",
@@ -2065,7 +2587,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 2,
-      "free": true
+      "free": true,
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ]
     },
     "ms_iron_man_surgical_strike": {
       "id": "ms_iron_man_surgical_strike",
@@ -2087,7 +2615,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 3,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "fire"
+      ],
+      "anim_target": [
+        "hit"
+      ]
     },
     "ms_iron_man_air_superiority": {
       "id": "ms_iron_man_air_superiority",
@@ -2110,7 +2644,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 4,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Neutral2"
+      ],
+      "anim_target": [
+        "slash"
+      ]
     },
     "ms_iron_man_hellfire_beam": {
       "id": "ms_iron_man_hellfire_beam",
@@ -2133,7 +2673,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 3,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "BreathFire"
+      ],
+      "anim_target": [
+        "Fire2"
+      ]
     },
     "ms_iron_man_heads_up": {
       "id": "ms_iron_man_heads_up",
@@ -2152,7 +2698,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "Reflection"
+      ]
     },
     "ms_magik_quick_soulslash": {
       "id": "ms_magik_quick_soulslash",
@@ -2179,7 +2731,13 @@
       "reach": false,
       "gain": 1,
       "quick": true,
-      "stat": "power"
+      "stat": "power",
+      "anim_self": [
+        "Special2"
+      ],
+      "anim_target": [
+        "SlashSP2"
+      ]
     },
     "ms_magik_soul_blast": {
       "id": "ms_magik_soul_blast",
@@ -2202,7 +2760,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": false,
       "gain": 1,
-      "stat": "power"
+      "stat": "power",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "explosion"
+      ]
     },
     "ms_magik_kick": {
       "id": "ms_magik_kick",
@@ -2225,7 +2789,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": false,
       "gain": 1,
-      "stat": "power"
+      "stat": "power",
+      "anim_self": [
+        "Neutral2"
+      ],
+      "anim_target": [
+        "Explosion1"
+      ]
     },
     "ms_magik_trap_door": {
       "id": "ms_magik_trap_door",
@@ -2242,7 +2812,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "Special1"
+      ],
+      "anim_target": [
+        "bind"
+      ]
     },
     "ms_magik_limbo_portal": {
       "id": "ms_magik_limbo_portal",
@@ -2265,7 +2841,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "gain": 2,
-      "free": true
+      "free": true,
+      "anim_self": [
+        "summon"
+      ],
+      "anim_target": [
+        "stun"
+      ]
     },
     "ms_magik_limbo_s_grasp": {
       "id": "ms_magik_limbo_s_grasp",
@@ -2284,7 +2866,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "StarsHit"
+      ]
     },
     "ms_magik_gather": {
       "id": "ms_magik_gather",
@@ -2306,7 +2894,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 2,
-      "stat": "power"
+      "stat": "power",
+      "anim_self": [
+        "lightning"
+      ],
+      "anim_target": [
+        "pull"
+      ]
     },
     "ms_magik_banish": {
       "id": "ms_magik_banish",
@@ -2330,7 +2924,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "cost": 3
+      "cost": 3,
+      "anim_self": [
+        "Neutral1"
+      ],
+      "anim_target": [
+        "debuff"
+      ]
     },
     "ms_magik_reinforcement": {
       "id": "ms_magik_reinforcement",
@@ -2353,7 +2953,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "cost": 4
+      "cost": 4,
+      "anim_self": [
+        "summon"
+      ],
+      "anim_target": [
+        "Light2"
+      ]
     },
     "ms_magik_darkchylde": {
       "id": "ms_magik_darkchylde",
@@ -2375,7 +2981,13 @@
       "rarity": "LEGENDARY",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "cost": 4
+      "cost": 4,
+      "anim_self": [
+        "darkness"
+      ],
+      "anim_target": [
+        "Darkness2"
+      ]
     },
     "ms_nico_blood_for_blood": {
       "id": "ms_nico_blood_for_blood",
@@ -2398,7 +3010,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "gain": 1,
-      "stat": "power"
+      "stat": "power",
+      "anim_self": [
+        "fire"
+      ],
+      "anim_target": [
+        "CrossHit"
+      ]
     },
     "ms_nico_curse": {
       "id": "ms_nico_curse",
@@ -2424,7 +3042,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "gain": 1,
-      "stat": "power"
+      "stat": "power",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ]
     },
     "ms_nico_witchfire": {
       "id": "ms_nico_witchfire",
@@ -2447,7 +3071,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "gain": 1,
-      "stat": "power"
+      "stat": "power",
+      "anim_self": [
+        "BreathFire"
+      ],
+      "anim_target": [
+        "Fire1"
+      ]
     },
     "ms_nico_restore": {
       "id": "ms_nico_restore",
@@ -2464,7 +3094,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "light"
+      ],
+      "anim_target": [
+        "Light3"
+      ]
     },
     "ms_nico_empower": {
       "id": "ms_nico_empower",
@@ -2485,7 +3121,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "Neutral2"
+      ],
+      "anim_target": [
+        "StarsHit"
+      ]
     },
     "ms_nico_double_up": {
       "id": "ms_nico_double_up",
@@ -2502,7 +3144,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "Neutral1"
+      ],
+      "anim_target": [
+        "stun"
+      ]
     },
     "ms_nico_blood_magic": {
       "id": "ms_nico_blood_magic",
@@ -2523,7 +3171,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "Special1"
+      ],
+      "anim_target": [
+        "ClawSP1"
+      ]
     },
     "ms_nico_swarm": {
       "id": "ms_nico_swarm",
@@ -2545,7 +3199,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 1,
-      "stat": "power"
+      "stat": "power",
+      "anim_self": [
+        "Special2"
+      ],
+      "anim_target": [
+        "HitSP1"
+      ]
     },
     "ms_nico_witchstorm": {
       "id": "ms_nico_witchstorm",
@@ -2572,7 +3232,13 @@
       "reach": true,
       "cost": 3,
       "chain": 4,
-      "stat": "power"
+      "stat": "power",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "HitSP2"
+      ]
     },
     "ms_nico_crack_the_sky": {
       "id": "ms_nico_crack_the_sky",
@@ -2599,7 +3265,13 @@
       "reach": true,
       "cost": 0,
       "variable_cost": true,
-      "stat": "power"
+      "stat": "power",
+      "anim_self": [
+        "lightning"
+      ],
+      "anim_target": [
+        "slash"
+      ]
     },
     "ms_scarlet_witch_hex_bolt": {
       "id": "ms_scarlet_witch_hex_bolt",
@@ -2627,7 +3299,13 @@
       "reach": true,
       "gain": 1,
       "chain": 1,
-      "stat": "power"
+      "stat": "power",
+      "anim_self": [
+        "fire"
+      ],
+      "anim_target": [
+        "blow"
+      ]
     },
     "ms_scarlet_witch_hex_field": {
       "id": "ms_scarlet_witch_hex_field",
@@ -2646,7 +3324,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "gain": 1,
-      "stat": "power"
+      "stat": "power",
+      "anim_self": [
+        "lightning"
+      ],
+      "anim_target": [
+        "CrossHit"
+      ]
     },
     "ms_scarlet_witch_quick_toss": {
       "id": "ms_scarlet_witch_quick_toss",
@@ -2673,7 +3357,13 @@
       "reach": true,
       "gain": 1,
       "quick": true,
-      "stat": "power"
+      "stat": "power",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "Explosion1"
+      ]
     },
     "ms_scarlet_witch_chaos_reigns": {
       "id": "ms_scarlet_witch_chaos_reigns",
@@ -2690,7 +3380,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "cost": 3
+      "cost": 3,
+      "anim_self": [
+        "Special1"
+      ],
+      "anim_target": [
+        "confusion"
+      ]
     },
     "ms_scarlet_witch_chaos_field": {
       "id": "ms_scarlet_witch_chaos_field",
@@ -2709,7 +3405,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "confusion"
+      ]
     },
     "ms_scarlet_witch_unleashed": {
       "id": "ms_scarlet_witch_unleashed",
@@ -2728,7 +3430,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "status"
+      ]
     },
     "ms_scarlet_witch_hex_mark": {
       "id": "ms_scarlet_witch_hex_mark",
@@ -2747,7 +3455,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "Neutral2"
+      ],
+      "anim_target": [
+        "slow"
+      ]
     },
     "ms_scarlet_witch_detonate": {
       "id": "ms_scarlet_witch_detonate",
@@ -2765,7 +3479,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "cost": 2
+      "cost": 2,
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "Explosion2"
+      ]
     },
     "ms_scarlet_witch_hex_charge": {
       "id": "ms_scarlet_witch_hex_charge",
@@ -2784,7 +3504,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "cost": 3
+      "cost": 3,
+      "anim_self": [
+        "Neutral1"
+      ],
+      "anim_target": [
+        "bind"
+      ]
     },
     "ms_scarlet_witch_no_more": {
       "id": "ms_scarlet_witch_no_more",
@@ -2807,7 +3533,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 6,
-      "stat": "power"
+      "stat": "power",
+      "anim_self": [
+        "Special2"
+      ],
+      "anim_target": [
+        "slash"
+      ]
     },
     "ms_spider_man_infernal_spider": {
       "id": "ms_spider_man_infernal_spider",
@@ -2826,7 +3558,13 @@
       "rarity": "LEGENDARY",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "cost": 3
+      "cost": 3,
+      "anim_self": [
+        "Special1"
+      ],
+      "anim_target": [
+        "debuff"
+      ]
     },
     "ms_spider_man_quick_kick": {
       "id": "ms_spider_man_quick_kick",
@@ -2853,7 +3591,13 @@
       "reach": true,
       "gain": 1,
       "quick": true,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "lightning"
+      ],
+      "anim_target": [
+        "push"
+      ]
     },
     "ms_spider_man_chain_strike": {
       "id": "ms_spider_man_chain_strike",
@@ -2876,7 +3620,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "gain": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "fire"
+      ],
+      "anim_target": [
+        "hit"
+      ]
     },
     "ms_spider_man_special_delivery": {
       "id": "ms_spider_man_special_delivery",
@@ -2902,7 +3652,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "gain": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Neutral2"
+      ],
+      "anim_target": [
+        "pull"
+      ]
     },
     "ms_spider_man_spider_sense": {
       "id": "ms_spider_man_spider_sense",
@@ -2930,7 +3686,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "Neutral1"
+      ],
+      "anim_target": [
+        "StarsHit"
+      ]
     },
     "ms_spider_man_webslinger": {
       "id": "ms_spider_man_webslinger",
@@ -2949,7 +3711,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "Special1"
+      ],
+      "anim_target": [
+        "status"
+      ]
     },
     "ms_spider_man_opportunist": {
       "id": "ms_spider_man_opportunist",
@@ -2972,7 +3740,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "stun"
+      ]
     },
     "ms_spider_man_web_throw": {
       "id": "ms_spider_man_web_throw",
@@ -2999,7 +3773,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 3,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "Explosion1"
+      ]
     },
     "ms_spider_man_thwip": {
       "id": "ms_spider_man_thwip",
@@ -3018,7 +3798,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "cost": 2
+      "cost": 2,
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "bind"
+      ]
     },
     "ms_spider_man_up_here": {
       "id": "ms_spider_man_up_here",
@@ -3042,7 +3828,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 2,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Special2"
+      ],
+      "anim_target": [
+        "slow"
+      ]
     },
     "ms_wolverine_chain_swipes": {
       "id": "ms_wolverine_chain_swipes",
@@ -3069,7 +3861,13 @@
       "reach": false,
       "gain": 1,
       "chain": 3,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "blow"
+      ]
     },
     "ms_wolverine_lethal_pounce": {
       "id": "ms_wolverine_lethal_pounce",
@@ -3097,7 +3895,13 @@
       "reach": false,
       "gain": 1,
       "chain": 2,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "lightning"
+      ],
+      "anim_target": [
+        "slash"
+      ]
     },
     "ms_wolverine_power_slash": {
       "id": "ms_wolverine_power_slash",
@@ -3125,7 +3929,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": false,
       "gain": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Special2"
+      ],
+      "anim_target": [
+        "CrossSlash"
+      ]
     },
     "ms_wolverine_quick_swipe": {
       "id": "ms_wolverine_quick_swipe",
@@ -3151,7 +3961,13 @@
       "reach": false,
       "gain": 1,
       "quick": true,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "HitSP1"
+      ]
     },
     "ms_wolverine_berserk": {
       "id": "ms_wolverine_berserk",
@@ -3174,7 +3990,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "Special1"
+      ],
+      "anim_target": [
+        "debuff"
+      ]
     },
     "ms_wolverine_rapid_healing": {
       "id": "ms_wolverine_rapid_healing",
@@ -3199,7 +4021,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "gain": 2,
-      "play_while_disabled": true
+      "play_while_disabled": true,
+      "anim_self": [
+        "BreathLight"
+      ],
+      "anim_target": [
+        "Light4"
+      ]
     },
     "ms_wolverine_rapid_regeneration": {
       "id": "ms_wolverine_rapid_regeneration",
@@ -3222,7 +4050,13 @@
       "special_card": true,
       "reach": true,
       "cost": 2,
-      "free": true
+      "free": true,
+      "anim_self": [
+        "HeartMark1"
+      ],
+      "anim_target": [
+        "heal"
+      ]
     },
     "ms_wolverine_stink_of_fear": {
       "id": "ms_wolverine_stink_of_fear",
@@ -3244,7 +4078,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "stun"
+      ]
     },
     "ms_wolverine_eviscerate": {
       "id": "ms_wolverine_eviscerate",
@@ -3271,7 +4111,13 @@
       "reach": true,
       "cost": 2,
       "chain": 4,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "CrossHit"
+      ]
     },
     "ms_wolverine_piercing_slash": {
       "id": "ms_wolverine_piercing_slash",
@@ -3294,7 +4140,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Neutral2"
+      ],
+      "anim_target": [
+        "SlashSP3"
+      ]
     },
     "ms_wolverine_midnight_special": {
       "id": "ms_wolverine_midnight_special",
@@ -3317,7 +4169,13 @@
       "reach": true,
       "cost": 0,
       "variable_cost": true,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "hit"
+      ]
     },
     "ms_hulk_smash": {
       "id": "ms_hulk_smash",
@@ -3345,7 +4203,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": false,
       "gain": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "fire"
+      ],
+      "anim_target": [
+        "bind"
+      ]
     },
     "ms_hulk_gamma_kick": {
       "id": "ms_hulk_gamma_kick",
@@ -3371,7 +4235,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": false,
       "gain": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "Explosion1"
+      ]
     },
     "ms_hulk_challenging_roar": {
       "id": "ms_hulk_challenging_roar",
@@ -3388,7 +4258,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "Special1"
+      ],
+      "anim_target": [
+        "stun"
+      ]
     },
     "ms_hulk_always_angry": {
       "id": "ms_hulk_always_angry",
@@ -3412,7 +4288,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "gain": 2,
-      "exhaust": true
+      "exhaust": true,
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "debuff"
+      ]
     },
     "ms_hulk_crush": {
       "id": "ms_hulk_crush",
@@ -3436,7 +4318,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": false,
       "gain": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Special2"
+      ],
+      "anim_target": [
+        "StarsHit"
+      ]
     },
     "ms_hulk_mighty_blow": {
       "id": "ms_hulk_mighty_blow",
@@ -3459,7 +4347,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 3,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "push"
+      ]
     },
     "ms_hulk_rampage": {
       "id": "ms_hulk_rampage",
@@ -3486,7 +4380,13 @@
       "reach": true,
       "cost": 3,
       "chain": 3,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "blow"
+      ]
     },
     "ms_hulk_thunderclap": {
       "id": "ms_hulk_thunderclap",
@@ -3514,7 +4414,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 4,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "BreathThunder"
+      ],
+      "anim_target": [
+        "Thunder2"
+      ]
     },
     "ms_hulk_seismic_slam": {
       "id": "ms_hulk_seismic_slam",
@@ -3536,7 +4442,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 4,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "CrossHit"
+      ]
     },
     "ms_hulk_worldbreaker": {
       "id": "ms_hulk_worldbreaker",
@@ -3559,7 +4471,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 6,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "lightning"
+      ],
+      "anim_target": [
+        "Explosion1"
+      ]
     },
     "ms_deadpool_all_together_now": {
       "id": "ms_deadpool_all_together_now",
@@ -3586,7 +4504,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "Neutral1"
+      ],
+      "anim_target": [
+        "stun"
+      ]
     },
     "ms_deadpool_boom_headshot": {
       "id": "ms_deadpool_boom_headshot",
@@ -3609,7 +4533,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 0,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "PierceSP2"
+      ]
     },
     "ms_deadpool_burning_sensation": {
       "id": "ms_deadpool_burning_sensation",
@@ -3636,7 +4566,13 @@
       "reach": true,
       "cost": 2,
       "exhaust": true,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "BreathFire"
+      ],
+      "anim_target": [
+        "Fire1"
+      ]
     },
     "ms_deadpool_death_from_above": {
       "id": "ms_deadpool_death_from_above",
@@ -3659,7 +4595,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "gain": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "fire"
+      ],
+      "anim_target": [
+        "CrossHit"
+      ]
     },
     "ms_deadpool_hey_face": {
       "id": "ms_deadpool_hey_face",
@@ -3684,7 +4626,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "gain": 2,
-      "exhaust": true
+      "exhaust": true,
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "StarsHit"
+      ]
     },
     "ms_deadpool_mag_dump": {
       "id": "ms_deadpool_mag_dump",
@@ -3706,7 +4654,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 4,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "lightning"
+      ],
+      "anim_target": [
+        "slash"
+      ]
     },
     "ms_deadpool_overpowered": {
       "id": "ms_deadpool_overpowered",
@@ -3733,7 +4687,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "gain": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "Explosion1"
+      ]
     },
     "ms_deadpool_pain_pinata": {
       "id": "ms_deadpool_pain_pinata",
@@ -3755,7 +4715,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 2,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Neutral2"
+      ],
+      "anim_target": [
+        "hit"
+      ]
     },
     "ms_deadpool_quick_shot": {
       "id": "ms_deadpool_quick_shot",
@@ -3782,7 +4748,13 @@
       "reach": true,
       "gain": 1,
       "quick": true,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Special2"
+      ],
+      "anim_target": [
+        "arrow"
+      ]
     },
     "ms_deadpool_spread_the_love": {
       "id": "ms_deadpool_spread_the_love",
@@ -3806,7 +4778,13 @@
       "reach": true,
       "gain": 1,
       "chain": 2,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "HitSP1"
+      ]
     },
     "ms_morbius_bloodlust": {
       "id": "ms_morbius_bloodlust",
@@ -3835,7 +4813,13 @@
       "special_card": true,
       "reach": true,
       "cost": 1,
-      "free": true
+      "free": true,
+      "anim_self": [
+        "guard"
+      ],
+      "anim_target": [
+        "claw"
+      ]
     },
     "ms_morbius_charm": {
       "id": "ms_morbius_charm",
@@ -3853,7 +4837,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "slow"
+      ]
     },
     "ms_morbius_claw": {
       "id": "ms_morbius_claw",
@@ -3877,7 +4867,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": false,
       "gain": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "fire"
+      ],
+      "anim_target": [
+        "CrossClaw"
+      ]
     },
     "ms_morbius_cornered": {
       "id": "ms_morbius_cornered",
@@ -3901,7 +4897,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "Neutral1"
+      ],
+      "anim_target": [
+        "status"
+      ]
     },
     "ms_morbius_echolocate": {
       "id": "ms_morbius_echolocate",
@@ -3930,7 +4932,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "lightning"
+      ],
+      "anim_target": [
+        "HitSP1"
+      ]
     },
     "ms_morbius_feeding_frenzy": {
       "id": "ms_morbius_feeding_frenzy",
@@ -3955,7 +4963,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 2,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Neutral2"
+      ],
+      "anim_target": [
+        "bleed"
+      ]
     },
     "ms_morbius_mist_form": {
       "id": "ms_morbius_mist_form",
@@ -3983,7 +4997,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "gain": 2,
-      "exhaust": true
+      "exhaust": true,
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "debuff"
+      ]
     },
     "ms_morbius_quick_claw": {
       "id": "ms_morbius_quick_claw",
@@ -4009,7 +5029,13 @@
       "reach": false,
       "gain": 1,
       "quick": true,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Special2"
+      ],
+      "anim_target": [
+        "ClawSP2"
+      ]
     },
     "ms_morbius_savage_swipe": {
       "id": "ms_morbius_savage_swipe",
@@ -4032,7 +5058,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": false,
       "gain": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "push"
+      ]
     },
     "ms_morbius_shadow_strike": {
       "id": "ms_morbius_shadow_strike",
@@ -4056,7 +5088,13 @@
       "reach": true,
       "cost": 2,
       "chain": 3,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "BreathDarkness"
+      ],
+      "anim_target": [
+        "HitSP2"
+      ]
     },
     "ms_morbius_undying_fury": {
       "id": "ms_morbius_undying_fury",
@@ -4083,7 +5121,13 @@
       "reach": true,
       "cost": 3,
       "exhaust": true,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "wind"
+      ],
+      "anim_target": [
+        "blow"
+      ]
     },
     "ms_venom_assimilation": {
       "id": "ms_venom_assimilation",
@@ -4106,7 +5150,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "gain": 2,
-      "exhaust": true
+      "exhaust": true,
+      "anim_self": [
+        "Special1"
+      ],
+      "anim_target": [
+        "StarsHit"
+      ]
     },
     "ms_venom_devouring_strike": {
       "id": "ms_venom_devouring_strike",
@@ -4130,7 +5180,13 @@
       "reach": true,
       "cost": 3,
       "chain": 4,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "fire"
+      ],
+      "anim_target": [
+        "slash"
+      ]
     },
     "ms_venom_insatiable_hunger": {
       "id": "ms_venom_insatiable_hunger",
@@ -4152,7 +5208,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "bind"
+      ]
     },
     "ms_venom_lethal_embrace": {
       "id": "ms_venom_lethal_embrace",
@@ -4175,7 +5237,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": false,
       "gain": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "lightning"
+      ],
+      "anim_target": [
+        "hit"
+      ]
     },
     "ms_venom_spike_burst": {
       "id": "ms_venom_spike_burst",
@@ -4199,7 +5267,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 3,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Neutral2"
+      ],
+      "anim_target": [
+        "HitSP1"
+      ]
     },
     "ms_venom_symbiote_bind": {
       "id": "ms_venom_symbiote_bind",
@@ -4218,7 +5292,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "cost": 2
+      "cost": 2,
+      "anim_self": [
+        "Neutral1"
+      ],
+      "anim_target": [
+        "slow"
+      ]
     },
     "ms_venom_symbiotic_senses": {
       "id": "ms_venom_symbiotic_senses",
@@ -4241,7 +5321,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "status"
+      ]
     },
     "ms_venom_tasty_brains": {
       "id": "ms_venom_tasty_brains",
@@ -4263,7 +5349,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 3,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Special2"
+      ],
+      "anim_target": [
+        "absorb"
+      ]
     },
     "ms_venom_tendril_strike": {
       "id": "ms_venom_tendril_strike",
@@ -4287,7 +5379,13 @@
       "reach": false,
       "gain": 1,
       "chain": 2,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "HitSP2"
+      ]
     },
     "ms_venom_web_toss": {
       "id": "ms_venom_web_toss",
@@ -4310,7 +5408,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": false,
       "gain": 1,
-      "stat": "attack"
+      "stat": "attack",
+      "anim_self": [
+        "fire"
+      ],
+      "anim_target": [
+        "push"
+      ]
     },
     "ms_storm_arc": {
       "id": "ms_storm_arc",
@@ -4338,7 +5442,13 @@
       "reach": true,
       "gain": 1,
       "chain": 1,
-      "stat": "power"
+      "stat": "power",
+      "anim_self": [
+        "fire"
+      ],
+      "anim_target": [
+        "HitSP1"
+      ]
     },
     "ms_storm_call_the_lightning": {
       "id": "ms_storm_call_the_lightning",
@@ -4361,7 +5471,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 3,
-      "stat": "power"
+      "stat": "power",
+      "anim_self": [
+        "BreathThunder"
+      ],
+      "anim_target": [
+        "Thunder1"
+      ]
     },
     "ms_storm_crushing_blow": {
       "id": "ms_storm_crushing_blow",
@@ -4388,7 +5504,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 2,
-      "stat": "power"
+      "stat": "power",
+      "anim_self": [
+        "lightning"
+      ],
+      "anim_target": [
+        "HitSP2"
+      ]
     },
     "ms_storm_gale_force": {
       "id": "ms_storm_gale_force",
@@ -4414,7 +5536,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "gain": 1,
-      "stat": "power"
+      "stat": "power",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "push"
+      ]
     },
     "ms_storm_hellstorm": {
       "id": "ms_storm_hellstorm",
@@ -4441,7 +5569,13 @@
       "reach": true,
       "cost": 4,
       "exhaust": true,
-      "stat": "power"
+      "stat": "power",
+      "anim_self": [
+        "Neutral2"
+      ],
+      "anim_target": [
+        "blow"
+      ]
     },
     "ms_storm_live_wire": {
       "id": "ms_storm_live_wire",
@@ -4465,7 +5599,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "cost": 2,
-      "stat": "power"
+      "stat": "power",
+      "anim_self": [
+        "Special2"
+      ],
+      "anim_target": [
+        "CrossHit"
+      ]
     },
     "ms_storm_goddess_blessing": {
       "id": "ms_storm_goddess_blessing",
@@ -4486,7 +5626,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "HeartMark1"
+      ],
+      "anim_target": [
+        "debuff"
+      ]
     },
     "ms_storm_overload": {
       "id": "ms_storm_overload",
@@ -4508,7 +5654,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "Neutral1"
+      ],
+      "anim_target": [
+        "stun"
+      ]
     },
     "ms_storm_stormshield": {
       "id": "ms_storm_stormshield",
@@ -4530,7 +5682,13 @@
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
-      "gain": 2
+      "gain": 2,
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "shield"
+      ]
     },
     "ms_storm_vortex": {
       "id": "ms_storm_vortex",
@@ -4553,7 +5711,13 @@
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
       "gain": 1,
-      "stat": "power"
+      "stat": "power",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "Explosion1"
+      ]
     }
   }
 }

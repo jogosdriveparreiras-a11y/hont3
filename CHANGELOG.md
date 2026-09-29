@@ -1,3 +1,11 @@
+## 2026-09-28 — Título 3D, menu trancado, anims, hit feedback, clima
+
+- **Menu título 3D**: vídeo `assets/video/Title.mp4` (+ `.ogv`) em loop de fundo; painel flutuante com fonte CardTitle.
+- **Árvore trancada**: Jogar (Campanha / Missões / Arena / Escolher equipe / Escolher itens) · Testes (Copiar caminho do report / Coleção de cartas / Testar Animações) · Configurações.
+- **Anims**: toda carta com exatamente 1 `anim_self` + 1 `anim_target` (RM + Effekseer); tabela em `docs/CARD_ANIM_MAPPING.md`.
+- **Hit**: flash branco no sprite pela duração da anim de alvo; dano vermelho / cura verde flutuantes.
+- **Clima**: chuva/neve/folhas/névoa/calor/noite com texturas RPG Maker (`particles2d`).
+
 ## 2026-09-28 — Recompra, seleção bloqueada, mão e Teste de Animação
 
 - **Recompra**: hold-to-redraw em **1,0s** (metade); medidor circular épico (halo, ticks, ponta brilhante, painel dourado) — não ProgressBar.

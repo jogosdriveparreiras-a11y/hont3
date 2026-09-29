@@ -92,7 +92,7 @@ var status_hover_actor := -1
 var arena_allies: Array[String] = []
 var arena_enemies: Array[String] = []
 var battle_menu_open := false
-var weather_mode := "none"  # none | rain | fog | heat | night
+var weather_mode := "none"  # none | rain | fog | heat | night | leaves | snow
 var free_camera := false
 var free_cam_yaw := 0.0
 var free_cam_pitch := 0.0
@@ -107,6 +107,11 @@ var anim_test_filter_owner := ""
 var anim_test_filter_class := ""
 var anim_test_filter_name := ""
 var anim_test_playing := false
+var title_root: Node3D = null
+var title_video_player: VideoStreamPlayer = null
+var title_menu_section := ""  # "" | "jogar" | "testes"
+var title_float_t := 0.0
+var title_menu_host: Control = null
 
 func _ready() -> void:
 	_register_inputs()
@@ -281,6 +286,7 @@ func _button(text_value: String, on_click: Callable = Callable(), hint: String =
 	return button
 
 func _center_panel(title: String) -> VBoxContainer:
+	_teardown_title_screen()
 	_clear_ui()
 	_clear_combat_visuals()
 	var frame := CenterContainer.new()
@@ -309,25 +315,238 @@ func _show_menu() -> void:
 		presentation.clear_actors()
 	_reset_menu_camera()
 	_ensure_bgm_for("menu")
-	var menu := _center_panel("HEROES OF THE NIGHTMARE 3")
-	menu.add_child(_label("Três heróis. Duas linhas. Um deck compartilhado.", 20))
-	menu.add_child(_label("Missões concluídas: %d/%d · Essência: %d" % [best_stars.size(), Content.MISSIONS.size(), essence], 19))
-	_add_campaign_menu_button(menu)
-	menu.add_child(_button("Selecionar missão", _show_missions))
-	menu.add_child(_button("Arena", _show_arena, "Escolha 3 aliados e 3 inimigos para um combate livre"))
-	menu.add_child(_button("Copiar caminho do report", _copy_session_report_path, "Relatório JSONL desta sessão (para enviar no debug)"))
-	menu.add_child(_button("Escolher equipe", _show_team))
-	menu.add_child(_button("Coleção de cartas", _show_collection))
-	menu.add_child(_button("Preparar itens", _show_items))
-	menu.add_child(_button("Teste de Animação", _show_anim_test, "Pré-visualiza RM/FX de qualquer carta (sem combate)"))
-	menu.add_child(_button("Configurações", _show_settings))
-
-func _add_campaign_menu_button(menu: VBoxContainer) -> void:
-	if ResourceLoader.exists("res://addons/hotn3_campaign/CampaignRoot.tscn"):
-		menu.add_child(_button("Campanha", _launch_campaign_module, "A Fenda das Três Vigílias · três capítulos"))
+	_clear_ui()
+	_clear_combat_visuals()
+	_ensure_title_screen()
+	_populate_title_menu()
 
 func _launch_campaign_module() -> void:
+	_teardown_title_screen()
 	get_tree().change_scene_to_file("res://addons/hotn3_campaign/CampaignRoot.tscn")
+
+func _ensure_title_screen() -> void:
+	if title_root != null and is_instance_valid(title_root):
+		title_root.visible = true
+		if title_video_player != null and is_instance_valid(title_video_player) and not title_video_player.is_playing():
+			title_video_player.play()
+		return
+	title_root = Node3D.new()
+	title_root.name = "TitleScreen3D"
+	add_child(title_root)
+	# Backdrop: vídeo em loop num plano 3D.
+	var vp := SubViewport.new()
+	vp.name = "TitleVideoVP"
+	vp.size = Vector2i(1280, 720)
+	vp.transparent_bg = false
+	vp.handle_input_locally = false
+	vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	title_root.add_child(vp)
+	var vplayer := VideoStreamPlayer.new()
+	vplayer.name = "TitleVideo"
+	vplayer.expand = true
+	vplayer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var stream_path := ""
+	if ResourceLoader.exists("res://assets/video/Title.ogv") or FileAccess.file_exists("res://assets/video/Title.ogv"):
+		stream_path = "res://assets/video/Title.ogv"
+	elif ResourceLoader.exists("res://assets/video/Title.mp4") or FileAccess.file_exists("res://assets/video/Title.mp4"):
+		stream_path = "res://assets/video/Title.mp4"
+	if stream_path != "":
+		var stream = load(stream_path)
+		if stream != null:
+			vplayer.stream = stream
+	vplayer.finished.connect(func() -> void:
+		if is_instance_valid(vplayer):
+			vplayer.play()
+	)
+	vp.add_child(vplayer)
+	title_video_player = vplayer
+	var plane := MeshInstance3D.new()
+	plane.name = "TitleVideoPlane"
+	var quad := QuadMesh.new()
+	quad.size = Vector2(28.0, 15.75)
+	plane.mesh = quad
+	var mat := StandardMaterial3D.new()
+	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	mat.albedo_texture = vp.get_texture()
+	mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR
+	plane.material_override = mat
+	plane.position = Vector3(0, 4.2, -6.5)
+	title_root.add_child(plane)
+	# Título 3D flutuante
+	var title_3d := Label3D.new()
+	title_3d.name = "TitleLabel3D"
+	title_3d.text = "HEROES OF THE NIGHTMARE 3"
+	title_3d.font_size = 64
+	title_3d.modulate = Color("f0c27a")
+	title_3d.outline_size = 12
+	title_3d.outline_modulate = Color(0.05, 0.02, 0.08, 0.95)
+	title_3d.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	title_3d.position = Vector3(0, 9.2, 2.0)
+	if ResourceLoader.exists("res://assets/fonts/CardTitle.ttf"):
+		title_3d.font = load("res://assets/fonts/CardTitle.ttf")
+	title_root.add_child(title_3d)
+	var sub := Label3D.new()
+	sub.text = "Três heróis · Duas linhas · Um deck"
+	sub.font_size = 28
+	sub.modulate = Color("c9d1dd")
+	sub.outline_size = 6
+	sub.outline_modulate = Color(0, 0, 0, 0.8)
+	sub.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	sub.position = Vector3(0, 8.35, 2.2)
+	title_root.add_child(sub)
+	# Moldura 3D do menu (painel flutuante)
+	var frame := MeshInstance3D.new()
+	frame.name = "MenuFrame3D"
+	var frame_mesh := BoxMesh.new()
+	frame_mesh.size = Vector3(7.2, 8.4, 0.12)
+	frame.mesh = frame_mesh
+	var frame_mat := StandardMaterial3D.new()
+	frame_mat.albedo_color = Color(0.06, 0.08, 0.14, 0.82)
+	frame_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	frame_mat.emission_enabled = true
+	frame_mat.emission = Color(0.45, 0.32, 0.12)
+	frame_mat.emission_energy_multiplier = 0.35
+	frame.material_override = frame_mat
+	frame.position = Vector3(0, 3.6, 4.8)
+	title_root.add_child(frame)
+	if stream_path != "" and title_video_player != null:
+		title_video_player.play()
+
+func _teardown_title_screen() -> void:
+	if title_video_player != null and is_instance_valid(title_video_player):
+		title_video_player.stop()
+	title_video_player = null
+	if title_root != null and is_instance_valid(title_root):
+		title_root.queue_free()
+	title_root = null
+	title_menu_host = null
+
+func _title_menu_font() -> Font:
+	if ResourceLoader.exists("res://assets/fonts/CardTitle.ttf"):
+		return load("res://assets/fonts/CardTitle.ttf")
+	return null
+
+func _title_button(text_value: String, on_click: Callable = Callable(), hint: String = "", big: bool = false) -> Button:
+	var b := _button(text_value, on_click, hint)
+	b.custom_minimum_size = Vector2(420 if big else 380, 52 if big else 44)
+	b.add_theme_font_size_override("font_size", 22 if big else 18)
+	var f := _title_menu_font()
+	if f != null:
+		b.add_theme_font_override("font", f)
+	b.add_theme_color_override("font_color", Color("f6edd8"))
+	b.add_theme_color_override("font_hover_color", Color("ffe6a0"))
+	return b
+
+func _populate_title_menu() -> void:
+	# Menu flutuante 2D alinhado sobre a moldura 3D (clicável) — árvore trancada.
+	var host := Control.new()
+	host.name = "TitleMenuHost"
+	host.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hud.add_child(host)
+	title_menu_host = host
+	var panel := PanelContainer.new()
+	panel.name = "TitleMenuPanel"
+	panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.05, 0.07, 0.12, 0.78)
+	style.set_border_width_all(2)
+	style.border_color = Color(0.85, 0.68, 0.35, 0.9)
+	style.set_corner_radius_all(16)
+	style.set_content_margin_all(18)
+	panel.add_theme_stylebox_override("panel", style)
+	panel.custom_minimum_size = Vector2(460, 0)
+	panel.set_anchors_preset(Control.PRESET_CENTER)
+	panel.position = Vector2(0, 40)
+	# Centraliza via offset no primeiro frame
+	host.add_child(panel)
+	panel.resized.connect(func() -> void:
+		if is_instance_valid(panel) and is_instance_valid(host):
+			var vs := get_viewport().get_visible_rect().size
+			panel.position = Vector2((vs.x - panel.size.x) * 0.5, (vs.y - panel.size.y) * 0.52 + sin(title_float_t) * 8.0)
+	)
+	var col := VBoxContainer.new()
+	col.add_theme_constant_override("separation", 10)
+	panel.add_child(col)
+	var head := _label("HEROES OF THE NIGHTMARE 3", 26, Color("f0c27a"))
+	var f := _title_menu_font()
+	if f != null:
+		head.add_theme_font_override("font", f)
+	col.add_child(head)
+	col.add_child(_label("Missões %d/%d · Essência %d" % [best_stars.size(), Content.MISSIONS.size(), essence], 15, Color("9aa6bf")))
+	if feedback != "":
+		col.add_child(_label(feedback, 14, Color("a3eec4")))
+		feedback = ""
+	match title_menu_section:
+		"jogar":
+			col.add_child(_label("JOGAR", 20, Color("dcc28b")))
+			if ResourceLoader.exists("res://addons/hotn3_campaign/CampaignRoot.tscn"):
+				col.add_child(_title_button("Campanha", _launch_campaign_module, "A Fenda das Três Vigílias · três capítulos", true))
+			else:
+				col.add_child(_label("(Campanha indisponível)", 14, Color("9aa6bf")))
+			col.add_child(_title_button("Missões", func() -> void:
+				_teardown_title_screen()
+				_show_missions()
+			, "Selecionar missão", true))
+			col.add_child(_title_button("Arena", func() -> void:
+				_teardown_title_screen()
+				_show_arena()
+			, "3 aliados + 3 inimigos", true))
+			col.add_child(_title_button("Escolher equipe", func() -> void:
+				_teardown_title_screen()
+				_show_team()
+			, "", true))
+			col.add_child(_title_button("Escolher itens", func() -> void:
+				_teardown_title_screen()
+				_show_items()
+			, "", true))
+			col.add_child(_title_button("← Voltar", func() -> void:
+				title_menu_section = ""
+				_show_menu()
+			))
+		"testes":
+			col.add_child(_label("TESTES", 20, Color("dcc28b")))
+			col.add_child(_title_button("Copiar caminho do report", func() -> void:
+				_copy_session_report_path()
+				_show_menu()
+			, "Relatório JSONL desta sessão", true))
+			col.add_child(_title_button("Coleção de cartas", func() -> void:
+				_teardown_title_screen()
+				_show_collection()
+			, "", true))
+			col.add_child(_title_button("Testar Animações", func() -> void:
+				_teardown_title_screen()
+				_show_anim_test()
+			, "Pré-visualiza RM/FX sem combate", true))
+			col.add_child(_title_button("← Voltar", func() -> void:
+				title_menu_section = ""
+				_show_menu()
+			))
+		_:
+			col.add_child(_title_button("Jogar", func() -> void:
+				title_menu_section = "jogar"
+				_show_menu()
+			, "Campanha, missões, arena, equipe e itens", true))
+			col.add_child(_title_button("Testes", func() -> void:
+				title_menu_section = "testes"
+				_show_menu()
+			, "Report, coleção e animações", true))
+			col.add_child(_title_button("Configurações", func() -> void:
+				_teardown_title_screen()
+				_show_settings()
+			, "", true))
+	# Posição inicial
+	await_title_layout(panel, host)
+
+func await_title_layout(panel: Control, host: Control) -> void:
+	# Deferred center (sem async/await em GDScript Callable aqui).
+	call_deferred("_center_title_panel", panel, host)
+
+func _center_title_panel(panel: Control, host: Control) -> void:
+	if not is_instance_valid(panel) or not is_instance_valid(host):
+		return
+	var vs := get_viewport().get_visible_rect().size
+	panel.position = Vector2((vs.x - maxf(panel.size.x, panel.custom_minimum_size.x)) * 0.5, vs.y * 0.28)
 
 
 func _show_anim_test() -> void:
@@ -1451,6 +1670,7 @@ func _start_mission() -> void:
 func _begin_battle_session() -> void:
 	# IDs de atores e cartas reiniciam em cada missão; descarte os nós ligados à
 	# sessão anterior para não reutilizar texturas de outro personagem.
+	_teardown_title_screen()
 	_clear_combat_visuals()
 	seen_hand.clear()
 	selected_card = -1
@@ -4089,6 +4309,20 @@ func _tick_recompra_hold(delta: float) -> void:
 		_try_recompra(idx)
 
 func _process(delta: float) -> void:
+	if title_root != null and is_instance_valid(title_root) and title_root.visible:
+		title_float_t += delta
+		var frame := title_root.get_node_or_null("MenuFrame3D")
+		if frame != null:
+			frame.position.y = 3.6 + sin(title_float_t * 1.15) * 0.18
+			frame.rotation_degrees.y = sin(title_float_t * 0.55) * 3.0
+		var lab := title_root.get_node_or_null("TitleLabel3D")
+		if lab != null:
+			lab.position.y = 9.2 + sin(title_float_t * 0.9) * 0.12
+		if title_menu_host != null and is_instance_valid(title_menu_host):
+			var panel := title_menu_host.get_node_or_null("TitleMenuPanel")
+			if panel != null and is_instance_valid(panel):
+				var vs := get_viewport().get_visible_rect().size
+				panel.position.y = vs.y * 0.28 + sin(title_float_t * 1.15) * 10.0
 	for i in range(unit_sprites.size()):
 		if not is_instance_valid(unit_sprites[i]):
 			continue
@@ -4542,6 +4776,46 @@ func _toggle_free_camera() -> void:
 	if battle_menu_open:
 		_render_battle()
 
+func _weather_tex(names: Array) -> Texture2D:
+	for n in names:
+		var path := "res://assets/fx/particles2d/%s" % str(n)
+		if ResourceLoader.exists(path):
+			return load(path) as Texture2D
+	return null
+
+func _make_weather_particles(amount: int, lifetime: float, box: Vector3, pos: Vector3, dir: Vector3, spread: float, vmin: float, vmax: float, grav: Vector3, tint: Color, tex: Texture2D, quad_size: float = 0.35) -> CPUParticles3D:
+	var particles := CPUParticles3D.new()
+	particles.amount = amount
+	particles.lifetime = lifetime
+	particles.emission_shape = CPUParticles3D.EMISSION_SHAPE_BOX
+	particles.emission_box_extents = box
+	particles.position = pos
+	particles.direction = dir
+	particles.spread = spread
+	particles.initial_velocity_min = vmin
+	particles.initial_velocity_max = vmax
+	particles.gravity = grav
+	particles.color = tint
+	if tex != null:
+		var mat := StandardMaterial3D.new()
+		mat.albedo_texture = tex
+		mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		mat.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
+		mat.vertex_color_use_as_albedo = true
+		mat.albedo_color = tint
+		var q := QuadMesh.new()
+		q.size = Vector2(quad_size, quad_size)
+		particles.mesh = q
+		particles.material_override = mat
+	else:
+		var mesh := SphereMesh.new()
+		mesh.radius = 0.04
+		mesh.height = 0.08
+		particles.mesh = mesh
+	particles.emitting = true
+	return particles
+
 func _apply_weather_fx() -> void:
 	if stage == null:
 		return
@@ -4554,40 +4828,34 @@ func _apply_weather_fx() -> void:
 	root.name = "WeatherFx"
 	stage.add_child(root)
 	weather_fx_root = root
-	var particles := CPUParticles3D.new()
-	particles.amount = 80 if weather_mode == "rain" else 40
-	particles.lifetime = 1.6
-	particles.emission_shape = CPUParticles3D.EMISSION_SHAPE_BOX
-	particles.emission_box_extents = Vector3(10, 0.2, 8)
-	particles.position = Vector3(0, 7.5, 0)
-	particles.direction = Vector3(0.15, -1, 0) if weather_mode == "rain" else Vector3(0, -0.2, 0.1)
-	particles.spread = 12.0 if weather_mode == "rain" else 40.0
-	particles.initial_velocity_min = 4.0 if weather_mode == "rain" else 0.4
-	particles.initial_velocity_max = 7.5 if weather_mode == "rain" else 1.2
-	particles.gravity = Vector3(0, -6, 0) if weather_mode == "rain" else Vector3(0, -0.4, 0)
-	var mesh := SphereMesh.new()
-	mesh.radius = 0.03 if weather_mode == "rain" else 0.06
-	mesh.height = 0.06 if weather_mode == "rain" else 0.12
-	particles.mesh = mesh
 	match weather_mode:
 		"rain":
-			particles.color = Color(0.65, 0.78, 1.0, 0.7)
+			var rain_tex := _weather_tex(["line_rain1.png", "line_rain2.png", "line_drop1.png"])
+			root.add_child(_make_weather_particles(140, 1.35, Vector3(12, 0.3, 10), Vector3(0, 9.0, 0), Vector3(0.2, -1, 0.05), 8.0, 7.0, 11.0, Vector3(0, -10, 0), Color(0.7, 0.82, 1.0, 0.75), rain_tex, 0.28))
+			var splash := _make_weather_particles(40, 0.55, Vector3(10, 0.05, 8), Vector3(0, 0.15, 0), Vector3(0, 1, 0), 180.0, 0.4, 1.2, Vector3(0, -2, 0), Color(0.75, 0.85, 1.0, 0.35), _weather_tex(["particle1.png", "circle.png"]), 0.18)
+			root.add_child(splash)
+		"snow":
+			var snow_tex := _weather_tex(["snow_particle1.png", "snow_particle2.png", "snow1.png", "snow2.png", "snow4.png"])
+			root.add_child(_make_weather_particles(90, 4.5, Vector3(12, 0.4, 10), Vector3(0, 9.5, 0), Vector3(0.08, -0.35, 0.05), 35.0, 0.35, 0.9, Vector3(0, -0.35, 0), Color(0.95, 0.97, 1.0, 0.85), snow_tex, 0.32))
+			root.add_child(_make_weather_particles(40, 5.5, Vector3(10, 0.3, 8), Vector3(0, 8.5, 0), Vector3(-0.05, -0.25, 0.08), 50.0, 0.2, 0.55, Vector3(0, -0.2, 0), Color(0.9, 0.94, 1.0, 0.55), _weather_tex(["snow3.png", "snow5.png", "snow1g.png"]), 0.22))
+		"leaves":
+			var leaf_tex := _weather_tex(["leaf1.png", "leaf1g.png"])
+			root.add_child(_make_weather_particles(55, 3.8, Vector3(11, 0.5, 9), Vector3(0, 8.0, 0), Vector3(0.55, -0.35, 0.1), 55.0, 0.8, 2.0, Vector3(0, -0.8, 0), Color(0.95, 0.72, 0.35, 0.9), leaf_tex, 0.42))
+			root.add_child(_make_weather_particles(25, 4.2, Vector3(9, 0.4, 7), Vector3(0, 7.2, 0), Vector3(0.35, -0.25, -0.1), 40.0, 0.5, 1.4, Vector3(0, -0.55, 0), Color(0.75, 0.45, 0.2, 0.75), leaf_tex, 0.35))
 		"fog":
-			particles.color = Color(0.75, 0.78, 0.85, 0.35)
+			var fog_tex := _weather_tex(["cloud1.png", "cloud2.png", "cloud3.png", "smog1.png", "smog2.png"])
+			root.add_child(_make_weather_particles(35, 6.0, Vector3(12, 1.2, 10), Vector3(0, 2.2, 0), Vector3(0.25, 0.02, 0.1), 20.0, 0.15, 0.45, Vector3(0, 0.02, 0), Color(0.78, 0.82, 0.9, 0.28), fog_tex, 1.4))
+			root.add_child(_make_weather_particles(20, 7.0, Vector3(10, 0.8, 8), Vector3(0, 1.4, 0), Vector3(-0.15, 0.0, 0.08), 25.0, 0.1, 0.3, Vector3(0, 0.01, 0), Color(0.7, 0.74, 0.82, 0.22), _weather_tex(["cloud1s.png", "cloud2s.png", "smog2.png"]), 1.1))
 		"heat":
-			particles.color = Color(1.0, 0.55, 0.25, 0.4)
+			var heat_tex := _weather_tex(["flame1.png", "flame1g.png", "particle2.png", "flare.png"])
+			root.add_child(_make_weather_particles(50, 2.2, Vector3(10, 0.2, 8), Vector3(0, 0.3, 0), Vector3(0.05, 1, 0.05), 30.0, 0.6, 1.8, Vector3(0, 1.2, 0), Color(1.0, 0.55, 0.22, 0.45), heat_tex, 0.4))
+			root.add_child(_make_weather_particles(30, 1.8, Vector3(8, 0.15, 6), Vector3(0, 0.2, 0), Vector3(0, 1, 0), 40.0, 0.4, 1.2, Vector3(0, 0.9, 0), Color(1.0, 0.75, 0.35, 0.3), _weather_tex(["particle3.png", "flare2.png"]), 0.28))
 		"night":
-			particles.color = Color(0.35, 0.4, 0.7, 0.45)
+			var star_tex := _weather_tex(["star1.png", "particle1.png", "shine1.png", "asterisk_thin1.png"])
+			root.add_child(_make_weather_particles(60, 3.5, Vector3(12, 2.0, 10), Vector3(0, 6.5, 0), Vector3(0, 0.05, 0), 180.0, 0.05, 0.2, Vector3(0, 0.02, 0), Color(0.55, 0.65, 1.0, 0.55), star_tex, 0.2))
+			root.add_child(_make_weather_particles(25, 4.0, Vector3(10, 1.5, 8), Vector3(0, 3.0, 0), Vector3(0.1, 0.02, 0.05), 40.0, 0.05, 0.15, Vector3(0, 0.01, 0), Color(0.35, 0.4, 0.7, 0.35), _weather_tex(["smog1.png", "cloud3s.png"]), 0.9))
 		_:
-			particles.color = Color(1, 1, 1, 0.3)
-	root.add_child(particles)
-	particles.emitting = true
-	if camera != null:
-		match weather_mode:
-			"heat":
-				pass
-			"night":
-				pass
+			root.add_child(_make_weather_particles(40, 1.6, Vector3(10, 0.2, 8), Vector3(0, 7.5, 0), Vector3(0, -0.2, 0.1), 40.0, 0.4, 1.2, Vector3(0, -0.4, 0), Color(1, 1, 1, 0.3), null))
 
 func _add_battle_menu_button(viewport_size: Vector2) -> void:
 	var btn := _button("Menu", Callable(), "Abre o menu de combate (ESC)")
@@ -4632,8 +4900,8 @@ func _add_battle_menu_overlay(viewport_size: Vector2) -> void:
 	col.add_child(_bgm_picker_row())
 	col.add_child(_button("Parar BGM", _stop_bgm_setting))
 	col.add_child(_label("Clima / efeitos", 16, Color("d5deea")))
-	var climate_ids := ["none", "rain", "fog", "heat", "night"]
-	var climate_names := ["Limpo", "Chuva", "Névoa", "Calor", "Noite"]
+	var climate_ids := ["none", "rain", "snow", "leaves", "fog", "heat", "night"]
+	var climate_names := ["Limpo", "Chuva", "Neve", "Folhas", "Névoa", "Calor", "Noite"]
 	for i in range(climate_ids.size()):
 		var mode: String = climate_ids[i]
 		var mark := "● " if weather_mode == mode else "○ "
@@ -4927,7 +5195,7 @@ func _load_config() -> void:
 		bgm_track = str(config.get_value("settings", "bgm_track", bgm_track))
 		_sync_bgm_pick_from_track()
 		weather_mode = str(config.get_value("settings", "weather_mode", weather_mode))
-		if weather_mode not in ["none", "rain", "fog", "heat", "night"]:
+		if weather_mode not in ["none", "rain", "snow", "leaves", "fog", "heat", "night"]:
 			weather_mode = "none"
 		free_camera = bool(config.get_value("settings", "free_camera", free_camera))
 		animation_speed = clampf(float(config.get_value("settings", "animation_speed", animation_speed)), 0.5, 2.0)
