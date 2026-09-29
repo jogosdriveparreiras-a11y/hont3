@@ -35,6 +35,7 @@ static func replace_base_with_upgrades(card_ids: Array, definitions: Dictionary)
 	return result
 
 static func ensure_owned(heroes: Dictionary, definitions: Dictionary, current: Dictionary) -> Dictionary:
+	# Descarta IDs obsoletos (kit redesenhado) e recompõe Iniciais+Desvantagem.
 	var result := current.duplicate(true)
 	for hero_id in heroes:
 		var hero: Dictionary = heroes[hero_id]
@@ -42,7 +43,23 @@ static func ensure_owned(heroes: Dictionary, definitions: Dictionary, current: D
 			continue
 		var saved = result.get(hero_id, [])
 		if saved is Array and not saved.is_empty():
-			result[hero_id] = replace_base_with_upgrades(saved, definitions)
+			var cleaned: Array = []
+			var seen: Dictionary = {}
+			for entry in saved:
+				var card_id := str(entry)
+				if seen.has(card_id):
+					continue
+				if not definitions.has(card_id):
+					continue
+				seen[card_id] = true
+				cleaned.append(card_id)
+			if cleaned.is_empty():
+				result[hero_id] = default_owned(hero)
+			else:
+				var desv := str(hero.get("desvantagem", ""))
+				if desv != "" and definitions.has(desv) and not seen.has(desv):
+					cleaned.append(desv)
+				result[hero_id] = replace_base_with_upgrades(cleaned, definitions)
 		else:
 			result[hero_id] = default_owned(hero)
 	return result

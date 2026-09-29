@@ -51,8 +51,7 @@ func merge_into_content() -> void:
 func _merge_entity_heroes() -> void:
 	for hero_id in entities.catalog.heroes:
 		var id := str(hero_id)
-		if Content.HEROES.has(id):
-			continue
+		# Sempre sobrescreve heróis ent_ para kits redesenhados chegarem ao Content.
 		var src: Dictionary = entities.catalog.heroes[id]
 		var pool: Array = []
 		for card_id in src.get("pool", []):
@@ -100,8 +99,7 @@ func _merge_entity_heroes() -> void:
 func _merge_entity_cards() -> void:
 	for card_id in entities.catalog.cards:
 		var id := str(card_id)
-		if Content.CARDS.has(id):
-			continue
+		# Sempre sobrescreve cartas ent_ (Tormenta/Dominika/Nero etc. após redesign).
 		Content.CARDS[id] = entities.catalog.cards[id].duplicate(true)
 
 func _merge_external_cards() -> void:

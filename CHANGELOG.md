@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-29 — Arena deck merge + Tormenta Instantâneo jogável
+
+- **Deck merge / owned stale**: após redesign Dominika/Nero, `owned_cards` no save ainda tinha IDs removidos (`engolfamento`, `foice_de_sangue`, …). `ensure_owned` descartava nada → `deploy` falhava `deck_valid` → fallback `begin` só enfileirava cartas presentes em `Content.CARDS` (só Alyssa). Correção: limpar IDs ausentes e resetar para Iniciais+Desvantagem; `deploy`/`build_combat_deck_ids` sanitizam kit inválido.
+- **Carta desconhecida**: com `pack_mode=entities` e fallback `begin`, itens/`item_*` passavam por `EntityRuntime.play_block_reason` (catálogo vazio). Agora só `ent_*` desconocido; itens usam Content.
+- **Tormenta Instantâneo**: custo/INI = 0. Gate Instantâneo só para *jogável*. `GameRoot` aplicava Slow mesmo com custo 0 (0→1 INI) enquanto `BattleState._cost` não — Tormenta bloqueava a mão e era injogável. Slow/Fast só com custo base > 0. Solidão também `cost: 0`.
+- Smoke: `InstantDominikaNeroSmoke` cobre owned stale, deploy 3 donos, Tormenta jogável com Slow a 0 INI.
+
 ## 2026-09-29 — Tormenta Instantânea, Dominika/Nero redesign, Counter, Alcance, score
 
 - **Tormenta (Alyssa)**: agora Instantâneo; requer Escuridão ≥1; dano absoluto 10×E em ALL_OTHERS; não recomprável; removido tick passivo E≥4.

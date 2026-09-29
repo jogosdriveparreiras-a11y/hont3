@@ -5309,7 +5309,8 @@ func _card_unusable_reason(hand_index: int, target_id: int = -1) -> String:
 		return "Carta inválida."
 	var card: Dictionary = battle.hand[hand_index]
 	var card_id := str(card.get("id", ""))
-	if packs.is_pack_card(card_id) or pack_mode == "entities":
+	# Só roteia ent_ pelo EntityRuntime (itens/ms_/combo usam Content abaixo).
+	if card_id.begins_with("ent_"):
 		var reason: String = packs.entities.play_block_reason(battle, hand_index, target_id, chain_targets)
 		if reason != "":
 			return reason
@@ -5322,9 +5323,14 @@ func _card_unusable_reason(hand_index: int, target_id: int = -1) -> String:
 	for locked in ["stun", "bind", "bound", "banished", "finalized"]:
 		if battle._has_status(source, locked):
 			return "Você não pode usar Manobras enquanto estiver incapacitado."
-	var cost := int(definition.get("cost", 0))
-	if battle._has_status(source, "fast"): cost -= 1
-	if battle._has_status(source, "slow"): cost += 1
+	# Instantâneo jogável: alinha com BattleState (só bloqueia outras cartas).
+	if battle.has_method("must_play_instantaneo_first") and battle.must_play_instantaneo_first(card, definition, "ALLY"):
+		return "Há Instantâneo jogável — jogue um Instantâneo antes de outras cartas."
+	# Slow/Fast só modificam custo base > 0 (custo 0 / Instantâneo free permanece 0).
+	var cost := int(card.get("cost_override", definition.get("cost", 0)))
+	if cost > 0:
+		if battle._has_status(source, "fast"): cost -= 1
+		if battle._has_status(source, "slow"): cost += 1
 	cost = maxi(0, cost)
 	if int(battle.impulse) < cost:
 		return "Você precisa de %d Iniciativa para usar esta Manobra." % cost

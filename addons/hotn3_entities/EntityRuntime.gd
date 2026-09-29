@@ -79,8 +79,6 @@ func deploy(battle: Variant, mission_id: String, entity_ids: Array[String], chos
 		return false
 	for id in entity_ids:
 		if catalog.hero(id).is_empty(): return false
-		var proposed: Array = chosen_decks.get(id, catalog.hero(id)["cards"])
-		if not deck_valid(id, proposed): return false
 	# begin() creates legal actor slots, mission enemies and turn state. Reuse its
 	# three actor IDs, replacing only their runtime dictionaries.
 	var placeholders: Array[String] = ["guerreiro", "mago", "ladino"]
@@ -117,7 +115,8 @@ func deploy(battle: Variant, mission_id: String, entity_ids: Array[String], chos
 		target["phase"] = 1
 		owner_map[id] = original_id
 		var kit: Array = chosen_decks.get(id, [])
-		if kit.is_empty():
+		if kit.is_empty() or not deck_valid(id, kit):
+			# Kit salvo obsoleto (IDs removidos no redesign) → Iniciais + Desvantagem.
 			kit = kit_manobras(id)
 			var desv := kit_desvantagem(id)
 			if desv != "": kit.append(desv)
@@ -249,13 +248,17 @@ func shared_group(entity_ids: Array[String]) -> String:
 
 func build_combat_deck_ids(entity_ids: Array[String], owned: Dictionary = {}) -> Dictionary:
 	# Retorna {entity_id: [card_ids...]} = cartas possuídas (padrão: Iniciais + Desvantagem).
-	# Melhoradas substituem a versão base.
+	# Melhoradas substituem a versão base. IDs ausentes do catálogo são descartados.
 	var per: Dictionary = {}
 	for id in entity_ids:
 		var entries: Array = []
 		if owned.has(id) and owned[id] is Array and not owned[id].is_empty():
-			entries = owned[id].duplicate()
-		else:
+			for cid in owned[id]:
+				var sid := str(cid)
+				if catalog.definition(sid).is_empty():
+					continue
+				entries.append(sid)
+		if entries.is_empty() or not deck_valid(id, entries):
 			entries = kit_manobras(id)
 			var desv := kit_desvantagem(id)
 			if desv != "": entries.append(desv)
@@ -398,9 +401,13 @@ func play_block_reason(battle: Variant, hand_index: int, target_id: int = -1, ch
 	if battle == null or hand_index < 0 or hand_index >= battle.hand.size():
 		return "Carta inválida."
 	var card: Dictionary = battle.hand[hand_index]
-	var def: Dictionary = catalog.definition(str(card.get("id", "")))
+	var cid := str(card.get("id", ""))
+	var def: Dictionary = catalog.definition(cid)
 	if def.is_empty():
-		return "Carta desconhecida."
+		# Itens / ms_ / combo runtime não vivem no catálogo ent_.
+		if cid.begins_with("ent_"):
+			return "Carta desconhecida."
+		return ""
 	var source: Dictionary = battle.actor_by_id(int(card["owner"]))
 	if not source.is_empty():
 		def = _resolve_card_def(battle, source, def)
