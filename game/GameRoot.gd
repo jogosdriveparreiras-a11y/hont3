@@ -109,9 +109,12 @@ var anim_test_filter_name := ""
 var anim_test_playing := false
 var title_root: Node3D = null
 var title_video_player: VideoStreamPlayer = null
+var title_video_plane: MeshInstance3D = null
 var title_menu_section := ""  # "" | "jogar" | "testes"
 var title_float_t := 0.0
-var title_menu_host: Control = null
+var title_menu_3d: Node3D = null
+var title_menu_btn_nodes: Array = []  # Node3D buttons for bob/hover
+var title_hover_btn: Node3D = null
 
 func _ready() -> void:
 	_register_inputs()
@@ -210,6 +213,8 @@ func _make_world() -> void:
 	_apply_accessibility()
 
 func _on_viewport_resized() -> void:
+	if title_video_plane != null and is_instance_valid(title_video_plane):
+		_layout_title_video_plane()
 	if battle != null and battle.phase in ["PLAYER", "ENEMY"]: _render_battle()
 
 func _material(color: Color, unshaded: bool = false) -> StandardMaterial3D:
@@ -325,25 +330,40 @@ func _launch_campaign_module() -> void:
 	get_tree().change_scene_to_file("res://addons/hotn3_campaign/CampaignRoot.tscn")
 
 func _ensure_title_screen() -> void:
+	# Title = ONLY looping video backdrop + floating 3D menu. Hide arena/world.
+	if stage != null and is_instance_valid(stage):
+		stage.visible = false
+	if units != null and is_instance_valid(units):
+		units.visible = false
 	if title_root != null and is_instance_valid(title_root):
 		title_root.visible = true
+		if title_video_plane != null and is_instance_valid(title_video_plane):
+			title_video_plane.visible = true
+		if title_menu_3d != null and is_instance_valid(title_menu_3d):
+			title_menu_3d.visible = true
 		if title_video_player != null and is_instance_valid(title_video_player) and not title_video_player.is_playing():
 			title_video_player.play()
+		_layout_title_video_plane()
 		return
 	title_root = Node3D.new()
 	title_root.name = "TitleScreen3D"
 	add_child(title_root)
-	# Backdrop: vídeo em loop num plano 3D.
+	# Full-viewport video via SubViewport → camera-locked cover plane (not a tiny world quad).
 	var vp := SubViewport.new()
 	vp.name = "TitleVideoVP"
-	vp.size = Vector2i(1280, 720)
+	var vs := get_viewport().get_visible_rect().size
+	vp.size = Vector2i(maxi(int(vs.x), 1280), maxi(int(vs.y), 720))
 	vp.transparent_bg = false
 	vp.handle_input_locally = false
+	vp.disable_3d = true
+	vp.gui_disable_input = true
 	vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	title_root.add_child(vp)
 	var vplayer := VideoStreamPlayer.new()
 	vplayer.name = "TitleVideo"
 	vplayer.expand = true
+	vplayer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	vplayer.size = Vector2(vp.size)
 	vplayer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var stream_path := ""
 	if ResourceLoader.exists("res://assets/video/Title.ogv") or FileAccess.file_exists("res://assets/video/Title.ogv"):
@@ -363,63 +383,81 @@ func _ensure_title_screen() -> void:
 	var plane := MeshInstance3D.new()
 	plane.name = "TitleVideoPlane"
 	var quad := QuadMesh.new()
-	quad.size = Vector2(28.0, 15.75)
+	quad.size = Vector2(16.0, 9.0)
 	plane.mesh = quad
 	var mat := StandardMaterial3D.new()
 	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	mat.albedo_texture = vp.get_texture()
 	mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR
+	mat.cull_mode = BaseMaterial3D.CULL_DISABLED
 	plane.material_override = mat
-	plane.position = Vector3(0, 4.2, -6.5)
-	title_root.add_child(plane)
-	# Título 3D flutuante
-	var title_3d := Label3D.new()
-	title_3d.name = "TitleLabel3D"
-	title_3d.text = "HEROES OF THE NIGHTMARE 3"
-	title_3d.font_size = 64
-	title_3d.modulate = Color("f0c27a")
-	title_3d.outline_size = 12
-	title_3d.outline_modulate = Color(0.05, 0.02, 0.08, 0.95)
-	title_3d.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	title_3d.position = Vector3(0, 9.2, 2.0)
-	if ResourceLoader.exists("res://assets/fonts/CardTitle.ttf"):
-		title_3d.font = load("res://assets/fonts/CardTitle.ttf")
-	title_root.add_child(title_3d)
-	var sub := Label3D.new()
-	sub.text = "Três heróis · Duas linhas · Um deck"
-	sub.font_size = 28
-	sub.modulate = Color("c9d1dd")
-	sub.outline_size = 6
-	sub.outline_modulate = Color(0, 0, 0, 0.8)
-	sub.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	sub.position = Vector3(0, 8.35, 2.2)
-	title_root.add_child(sub)
-	# Moldura 3D do menu (painel flutuante)
-	var frame := MeshInstance3D.new()
-	frame.name = "MenuFrame3D"
-	var frame_mesh := BoxMesh.new()
-	frame_mesh.size = Vector3(7.2, 8.4, 0.12)
-	frame.mesh = frame_mesh
-	var frame_mat := StandardMaterial3D.new()
-	frame_mat.albedo_color = Color(0.06, 0.08, 0.14, 0.82)
-	frame_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	frame_mat.emission_enabled = true
-	frame_mat.emission = Color(0.45, 0.32, 0.12)
-	frame_mat.emission_energy_multiplier = 0.35
-	frame.material_override = frame_mat
-	frame.position = Vector3(0, 3.6, 4.8)
-	title_root.add_child(frame)
+	# Locked to camera: always fills the lens (cover), never a small world plane.
+	if camera != null:
+		camera.add_child(plane)
+	else:
+		title_root.add_child(plane)
+	title_video_plane = plane
+	_layout_title_video_plane()
+	# Floating 3D menu host (camera-local, in front of video).
+	var menu := Node3D.new()
+	menu.name = "TitleMenu3D"
+	menu.position = Vector3(0.0, 0.15, -4.2)
+	if camera != null:
+		camera.add_child(menu)
+	else:
+		title_root.add_child(menu)
+	title_menu_3d = menu
 	if stream_path != "" and title_video_player != null:
 		title_video_player.play()
+
+func _layout_title_video_plane() -> void:
+	if title_video_plane == null or not is_instance_valid(title_video_plane) or camera == null:
+		return
+	var dist := 14.0
+	title_video_plane.position = Vector3(0.0, 0.0, -dist)
+	title_video_plane.rotation = Vector3.ZERO
+	var aspect := 16.0 / 9.0
+	var vis := get_viewport().get_visible_rect().size
+	var view_aspect := vis.x / maxf(vis.y, 1.0)
+	var v_fov := deg_to_rad(camera.fov)
+	var view_h := 2.0 * dist * tan(v_fov * 0.5)
+	var view_w := view_h * view_aspect
+	# Cover: plane large enough to fill the entire lens (crop edges if needed).
+	var plane_h := maxf(view_h, view_w / aspect) * 1.02
+	var plane_w := plane_h * aspect
+	var quad: QuadMesh = title_video_plane.mesh as QuadMesh
+	if quad == null:
+		quad = QuadMesh.new()
+		title_video_plane.mesh = quad
+	quad.size = Vector2(plane_w, plane_h)
+	# Keep SubViewport resolution near screen for sharp video.
+	if title_root != null and is_instance_valid(title_root):
+		var vp := title_root.get_node_or_null("TitleVideoVP") as SubViewport
+		if vp != null:
+			vp.size = Vector2i(maxi(int(vis.x), 1280), maxi(int(vis.y), 720))
+			if title_video_player != null and is_instance_valid(title_video_player):
+				title_video_player.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+				title_video_player.size = Vector2(vp.size)
 
 func _teardown_title_screen() -> void:
 	if title_video_player != null and is_instance_valid(title_video_player):
 		title_video_player.stop()
 	title_video_player = null
+	title_menu_btn_nodes.clear()
+	title_hover_btn = null
+	if title_video_plane != null and is_instance_valid(title_video_plane):
+		title_video_plane.queue_free()
+	title_video_plane = null
+	if title_menu_3d != null and is_instance_valid(title_menu_3d):
+		title_menu_3d.queue_free()
+	title_menu_3d = null
 	if title_root != null and is_instance_valid(title_root):
 		title_root.queue_free()
 	title_root = null
-	title_menu_host = null
+	if stage != null and is_instance_valid(stage):
+		stage.visible = true
+	if units != null and is_instance_valid(units):
+		units.visible = true
 
 func _title_menu_font() -> Font:
 	if ResourceLoader.exists("res://assets/fonts/CardTitle.ttf"):
@@ -427,6 +465,7 @@ func _title_menu_font() -> Font:
 	return null
 
 func _title_button(text_value: String, on_click: Callable = Callable(), hint: String = "", big: bool = false) -> Button:
+	# Kept for non-title screens that may reuse styling helpers.
 	var b := _button(text_value, on_click, hint)
 	b.custom_minimum_size = Vector2(420 if big else 380, 52 if big else 44)
 	b.add_theme_font_size_override("font_size", 22 if big else 18)
@@ -437,117 +476,235 @@ func _title_button(text_value: String, on_click: Callable = Callable(), hint: St
 	b.add_theme_color_override("font_hover_color", Color("ffe6a0"))
 	return b
 
-func _populate_title_menu() -> void:
-	# Menu flutuante 2D alinhado sobre a moldura 3D (clicável) — árvore trancada.
-	var host := Control.new()
-	host.name = "TitleMenuHost"
-	host.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	hud.add_child(host)
-	title_menu_host = host
-	var panel := PanelContainer.new()
-	panel.name = "TitleMenuPanel"
-	panel.mouse_filter = Control.MOUSE_FILTER_STOP
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color(0.05, 0.07, 0.12, 0.78)
-	style.set_border_width_all(2)
-	style.border_color = Color(0.85, 0.68, 0.35, 0.9)
-	style.set_corner_radius_all(16)
-	style.set_content_margin_all(18)
-	panel.add_theme_stylebox_override("panel", style)
-	panel.custom_minimum_size = Vector2(460, 0)
-	panel.set_anchors_preset(Control.PRESET_CENTER)
-	panel.position = Vector2(0, 40)
-	# Centraliza via offset no primeiro frame
-	host.add_child(panel)
-	panel.resized.connect(func() -> void:
-		if is_instance_valid(panel) and is_instance_valid(host):
-			var vs := get_viewport().get_visible_rect().size
-			panel.position = Vector2((vs.x - panel.size.x) * 0.5, (vs.y - panel.size.y) * 0.52 + sin(title_float_t) * 8.0)
-	)
-	var col := VBoxContainer.new()
-	col.add_theme_constant_override("separation", 10)
-	panel.add_child(col)
-	var head := _label("HEROES OF THE NIGHTMARE 3", 26, Color("f0c27a"))
+func _make_title_menu_button_3d(text_value: String, on_click: Callable, hint: String = "", big: bool = true) -> Node3D:
+	var root := Node3D.new()
+	root.name = "TitleBtn_%s" % text_value.replace(" ", "_")
+	root.set_meta("title_label", text_value)
+	root.set_meta("title_hint", hint)
+	var plate := MeshInstance3D.new()
+	plate.name = "Plate"
+	var box := BoxMesh.new()
+	box.size = Vector3(3.6 if big else 3.0, 0.62 if big else 0.5, 0.12)
+	plate.mesh = box
+	var pmat := StandardMaterial3D.new()
+	pmat.albedo_color = Color(0.07, 0.09, 0.16, 0.82)
+	pmat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	pmat.emission_enabled = true
+	pmat.emission = Color(0.55, 0.38, 0.14)
+	pmat.emission_energy_multiplier = 0.4
+	pmat.cull_mode = BaseMaterial3D.CULL_DISABLED
+	plate.material_override = pmat
+	root.add_child(plate)
+	var lab := Label3D.new()
+	lab.name = "Label"
+	lab.text = text_value
+	lab.font_size = 42 if big else 32
+	lab.modulate = Color("f6edd8")
+	lab.outline_size = 10
+	lab.outline_modulate = Color(0.05, 0.02, 0.08, 0.95)
+	lab.billboard = BaseMaterial3D.BILLBOARD_DISABLED
+	lab.position = Vector3(0.0, 0.0, 0.09)
+	lab.rotation_degrees.y = 180.0
 	var f := _title_menu_font()
 	if f != null:
-		head.add_theme_font_override("font", f)
-	col.add_child(head)
-	col.add_child(_label("Missões %d/%d · Essência %d" % [best_stars.size(), Content.MISSIONS.size(), essence], 15, Color("9aa6bf")))
+		lab.font = f
+	root.add_child(lab)
+	var area := Area3D.new()
+	area.name = "Hit"
+	area.input_ray_pickable = true
+	area.collision_layer = 1
+	area.collision_mask = 0
+	area.set_meta("title_action", on_click)
+	area.set_meta("title_btn_root", root)
+	var col := CollisionShape3D.new()
+	var shape := BoxShape3D.new()
+	shape.size = Vector3(3.7 if big else 3.1, 0.7 if big else 0.55, 0.35)
+	col.shape = shape
+	area.add_child(col)
+	root.add_child(area)
+	return root
+
+func _make_title_menu_label_3d(text_value: String, font_size: int, color: Color) -> Label3D:
+	var lab := Label3D.new()
+	lab.text = text_value
+	lab.font_size = font_size
+	lab.modulate = color
+	lab.outline_size = 8
+	lab.outline_modulate = Color(0, 0, 0, 0.85)
+	lab.billboard = BaseMaterial3D.BILLBOARD_DISABLED
+	lab.rotation_degrees.y = 180.0
+	var f := _title_menu_font()
+	if f != null:
+		lab.font = f
+	return lab
+
+func _clear_title_menu_3d_children() -> void:
+	title_menu_btn_nodes.clear()
+	title_hover_btn = null
+	if title_menu_3d == null or not is_instance_valid(title_menu_3d):
+		return
+	for child in title_menu_3d.get_children():
+		title_menu_3d.remove_child(child)
+		child.queue_free()
+
+func _populate_title_menu() -> void:
+	# Floating 3D buttons (Mesh + Label3D) — árvore trancada. No flat Control list.
+	if title_menu_3d == null or not is_instance_valid(title_menu_3d):
+		return
+	_clear_title_menu_3d_children()
+	var rows: Array = []
+	rows.append({"kind": "title", "text": "HEROES OF THE NIGHTMARE 3", "size": 52, "color": Color("f0c27a")})
+	rows.append({"kind": "label", "text": "Missões %d/%d · Essência %d" % [best_stars.size(), Content.MISSIONS.size(), essence], "size": 22, "color": Color("9aa6bf")})
 	if feedback != "":
-		col.add_child(_label(feedback, 14, Color("a3eec4")))
+		rows.append({"kind": "label", "text": feedback, "size": 20, "color": Color("a3eec4")})
 		feedback = ""
 	match title_menu_section:
 		"jogar":
-			col.add_child(_label("JOGAR", 20, Color("dcc28b")))
+			rows.append({"kind": "label", "text": "JOGAR", "size": 28, "color": Color("dcc28b")})
 			if ResourceLoader.exists("res://addons/hotn3_campaign/CampaignRoot.tscn"):
-				col.add_child(_title_button("Campanha", _launch_campaign_module, "A Fenda das Três Vigílias · três capítulos", true))
+				rows.append({"kind": "btn", "text": "Campanha", "hint": "A Fenda das Três Vigílias · três capítulos", "cb": _launch_campaign_module})
 			else:
-				col.add_child(_label("(Campanha indisponível)", 14, Color("9aa6bf")))
-			col.add_child(_title_button("Missões", func() -> void:
+				rows.append({"kind": "label", "text": "(Campanha indisponível)", "size": 20, "color": Color("9aa6bf")})
+			rows.append({"kind": "btn", "text": "Missões", "hint": "Selecionar missão", "cb": func() -> void:
 				_teardown_title_screen()
 				_show_missions()
-			, "Selecionar missão", true))
-			col.add_child(_title_button("Arena", func() -> void:
+			})
+			rows.append({"kind": "btn", "text": "Arena", "hint": "3 aliados + 3 inimigos", "cb": func() -> void:
 				_teardown_title_screen()
 				_show_arena()
-			, "3 aliados + 3 inimigos", true))
-			col.add_child(_title_button("Escolher equipe", func() -> void:
+			})
+			rows.append({"kind": "btn", "text": "Escolher equipe", "hint": "", "cb": func() -> void:
 				_teardown_title_screen()
 				_show_team()
-			, "", true))
-			col.add_child(_title_button("Escolher itens", func() -> void:
+			})
+			rows.append({"kind": "btn", "text": "Escolher itens", "hint": "", "cb": func() -> void:
 				_teardown_title_screen()
 				_show_items()
-			, "", true))
-			col.add_child(_title_button("← Voltar", func() -> void:
+			})
+			rows.append({"kind": "btn", "text": "← Voltar", "hint": "", "big": false, "cb": func() -> void:
 				title_menu_section = ""
 				_show_menu()
-			))
+			})
 		"testes":
-			col.add_child(_label("TESTES", 20, Color("dcc28b")))
-			col.add_child(_title_button("Copiar caminho do report", func() -> void:
+			rows.append({"kind": "label", "text": "TESTES", "size": 28, "color": Color("dcc28b")})
+			rows.append({"kind": "btn", "text": "Copiar caminho do report", "hint": "Relatório JSONL desta sessão", "cb": func() -> void:
 				_copy_session_report_path()
 				_show_menu()
-			, "Relatório JSONL desta sessão", true))
-			col.add_child(_title_button("Coleção de cartas", func() -> void:
+			})
+			rows.append({"kind": "btn", "text": "Coleção de cartas", "hint": "", "cb": func() -> void:
 				_teardown_title_screen()
 				_show_collection()
-			, "", true))
-			col.add_child(_title_button("Testar Animações", func() -> void:
+			})
+			rows.append({"kind": "btn", "text": "Testar Animações", "hint": "Pré-visualiza RM/FX sem combate", "cb": func() -> void:
 				_teardown_title_screen()
 				_show_anim_test()
-			, "Pré-visualiza RM/FX sem combate", true))
-			col.add_child(_title_button("← Voltar", func() -> void:
+			})
+			rows.append({"kind": "btn", "text": "← Voltar", "hint": "", "big": false, "cb": func() -> void:
 				title_menu_section = ""
 				_show_menu()
-			))
+			})
 		_:
-			col.add_child(_title_button("Jogar", func() -> void:
+			rows.append({"kind": "btn", "text": "Jogar", "hint": "Campanha, missões, arena, equipe e itens", "cb": func() -> void:
 				title_menu_section = "jogar"
 				_show_menu()
-			, "Campanha, missões, arena, equipe e itens", true))
-			col.add_child(_title_button("Testes", func() -> void:
+			})
+			rows.append({"kind": "btn", "text": "Testes", "hint": "Report, coleção e animações", "cb": func() -> void:
 				title_menu_section = "testes"
 				_show_menu()
-			, "Report, coleção e animações", true))
-			col.add_child(_title_button("Configurações", func() -> void:
+			})
+			rows.append({"kind": "btn", "text": "Configurações", "hint": "", "cb": func() -> void:
 				_teardown_title_screen()
 				_show_settings()
-			, "", true))
-	# Posição inicial
-	await_title_layout(panel, host)
+			})
+	var y := 1.55
+	for row in rows:
+		var kind := str(row.get("kind", ""))
+		if kind == "title" or kind == "label":
+			var lab := _make_title_menu_label_3d(str(row["text"]), int(row.get("size", 22)), row.get("color", Color.WHITE))
+			lab.position = Vector3(0.0, y, 0.0)
+			title_menu_3d.add_child(lab)
+			y -= 0.42 if kind == "label" else 0.55
+		elif kind == "btn":
+			var big := bool(row.get("big", true))
+			var btn := _make_title_menu_button_3d(str(row["text"]), row["cb"], str(row.get("hint", "")), big)
+			btn.position = Vector3(0.0, y, 0.0)
+			title_menu_3d.add_child(btn)
+			title_menu_btn_nodes.append(btn)
+			y -= 0.78 if big else 0.64
 
-func await_title_layout(panel: Control, host: Control) -> void:
-	# Deferred center (sem async/await em GDScript Callable aqui).
-	call_deferred("_center_title_panel", panel, host)
+func _handle_title_menu_input(input: InputEvent) -> bool:
+	if title_menu_3d == null or not is_instance_valid(title_menu_3d):
+		return false
+	if battle != null:
+		return false
+	if not (input is InputEventMouseButton):
+		return false
+	var click := input as InputEventMouseButton
+	if click.button_index != MOUSE_BUTTON_LEFT or not click.pressed:
+		return false
+	if camera == null:
+		return false
+	var origin := camera.project_ray_origin(click.position)
+	var end := origin + camera.project_ray_normal(click.position) * 80.0
+	var query := PhysicsRayQueryParameters3D.create(origin, end)
+	query.collide_with_areas = true
+	query.collide_with_bodies = false
+	var hit := get_world_3d().direct_space_state.intersect_ray(query)
+	if not hit.has("collider"):
+		return false
+	var collider: Object = hit["collider"]
+	if not collider.has_meta("title_action"):
+		return false
+	var cb: Callable = collider.get_meta("title_action")
+	var label := ""
+	if collider.has_meta("title_btn_root"):
+		var br: Node = collider.get_meta("title_btn_root")
+		if br != null and is_instance_valid(br) and br.has_meta("title_label"):
+			label = str(br.get_meta("title_label"))
+	if session_report != null:
+		session_report.log_ui("title_button", {"label": label})
+	if sound != null:
+		sound.cue("confirm", "UI")
+	if cb.is_valid():
+		cb.call()
+	get_viewport().set_input_as_handled()
+	return true
 
-func _center_title_panel(panel: Control, host: Control) -> void:
-	if not is_instance_valid(panel) or not is_instance_valid(host):
+func _tick_title_menu_hover() -> void:
+	if title_menu_3d == null or not is_instance_valid(title_menu_3d) or camera == null or battle != null:
 		return
-	var vs := get_viewport().get_visible_rect().size
-	panel.position = Vector2((vs.x - maxf(panel.size.x, panel.custom_minimum_size.x)) * 0.5, vs.y * 0.28)
-
+	var pointer := get_viewport().get_mouse_position()
+	var origin := camera.project_ray_origin(pointer)
+	var query := PhysicsRayQueryParameters3D.create(origin, origin + camera.project_ray_normal(pointer) * 80.0)
+	query.collide_with_areas = true
+	query.collide_with_bodies = false
+	var hit := get_world_3d().direct_space_state.intersect_ray(query)
+	var new_hover: Node3D = null
+	if hit.has("collider") and hit["collider"].has_meta("title_btn_root"):
+		var br = hit["collider"].get_meta("title_btn_root")
+		if br is Node3D and is_instance_valid(br):
+			new_hover = br
+	if new_hover == title_hover_btn:
+		return
+	if title_hover_btn != null and is_instance_valid(title_hover_btn):
+		var old_lab: Label3D = title_hover_btn.get_node_or_null("Label")
+		var old_plate: MeshInstance3D = title_hover_btn.get_node_or_null("Plate")
+		if old_lab != null:
+			old_lab.modulate = Color("f6edd8")
+		if old_plate != null and old_plate.material_override != null:
+			old_plate.material_override.emission_energy_multiplier = 0.4
+			old_plate.material_override.albedo_color = Color(0.07, 0.09, 0.16, 0.82)
+		title_hover_btn.scale = Vector3.ONE
+	title_hover_btn = new_hover
+	if title_hover_btn != null:
+		var lab: Label3D = title_hover_btn.get_node_or_null("Label")
+		var plate: MeshInstance3D = title_hover_btn.get_node_or_null("Plate")
+		if lab != null:
+			lab.modulate = Color("ffe6a0")
+		if plate != null and plate.material_override != null:
+			plate.material_override.emission_energy_multiplier = 1.1
+			plate.material_override.albedo_color = Color(0.12, 0.14, 0.22, 0.9)
+		title_hover_btn.scale = Vector3(1.06, 1.06, 1.06)
 
 func _show_anim_test() -> void:
 	battle = null
@@ -4196,6 +4353,8 @@ func _activate_actor(actor_id: int) -> void:
 		return
 
 func _unhandled_input(input: InputEvent) -> void:
+	if _handle_title_menu_input(input):
+		return
 	if battle == null or battle.phase != "PLAYER" or enemy_presenting or not input is InputEventMouseButton:
 		return
 	var click := input as InputEventMouseButton
@@ -4309,20 +4468,18 @@ func _tick_recompra_hold(delta: float) -> void:
 		_try_recompra(idx)
 
 func _process(delta: float) -> void:
-	if title_root != null and is_instance_valid(title_root) and title_root.visible:
+	if title_menu_3d != null and is_instance_valid(title_menu_3d) and title_menu_3d.visible:
 		title_float_t += delta
-		var frame := title_root.get_node_or_null("MenuFrame3D")
-		if frame != null:
-			frame.position.y = 3.6 + sin(title_float_t * 1.15) * 0.18
-			frame.rotation_degrees.y = sin(title_float_t * 0.55) * 3.0
-		var lab := title_root.get_node_or_null("TitleLabel3D")
-		if lab != null:
-			lab.position.y = 9.2 + sin(title_float_t * 0.9) * 0.12
-		if title_menu_host != null and is_instance_valid(title_menu_host):
-			var panel := title_menu_host.get_node_or_null("TitleMenuPanel")
-			if panel != null and is_instance_valid(panel):
-				var vs := get_viewport().get_visible_rect().size
-				panel.position.y = vs.y * 0.28 + sin(title_float_t * 1.15) * 10.0
+		# Bob / gentle sway for the floating 3D menu cluster.
+		title_menu_3d.position.y = 0.15 + sin(title_float_t * 1.15) * 0.08
+		title_menu_3d.rotation_degrees.y = sin(title_float_t * 0.55) * 4.0
+		title_menu_3d.rotation_degrees.x = sin(title_float_t * 0.7) * 1.5
+		var bi := 0
+		for btn in title_menu_btn_nodes:
+			if btn != null and is_instance_valid(btn):
+				btn.position.z = sin(title_float_t * 1.4 + float(bi) * 0.7) * 0.04
+				bi += 1
+		_tick_title_menu_hover()
 	for i in range(unit_sprites.size()):
 		if not is_instance_valid(unit_sprites[i]):
 			continue

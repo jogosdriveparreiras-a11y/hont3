@@ -1,3 +1,9 @@
+## 2026-09-28 — Título: vídeo full-cover + menu 3D flutuante
+
+- **Backdrop**: `Title.ogv`/`Title.mp4` em loop, plano travado na câmera em modo **cover** (preenche o viewport; não é um quad pequeno no mundo).
+- **Sem arena no título**: `Arena3D` / `Personagens2D` ficam ocultos — só o vídeo + botões 3D.
+- **Menu**: botões Mesh+Label3D com bob/hover e árvore trancada (Jogar / Testes / Configurações); sem lista flat só-Control.
+
 ## 2026-09-28 — Título 3D, menu trancado, anims, hit feedback, clima
 
 - **Menu título 3D**: vídeo `assets/video/Title.mp4` (+ `.ogv`) em loop de fundo; painel flutuante com fonte CardTitle.
