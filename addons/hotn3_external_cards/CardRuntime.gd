@@ -215,9 +215,14 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 			"push", "pull", "move_target":
 				for victim in targets:
 					if battle._has_status(victim, "bound"): continue
-					victim["row"] = "front" if op == "pull" else ("back" if victim["row"] == "front" else "front")
-					if op == "push":
-						var force := int(a[1])
+					# push = frente→retaguarda (nunca puxa); pull = retaguarda→frente; move_target = alterna.
+					if op == "pull":
+						if victim["row"] == "back":
+							victim["row"] = "front"
+					elif op == "push":
+						if victim["row"] == "front":
+							victim["row"] = "back"
+						var force := int(a[1]) if a.size() > 1 else 1
 						if _has_action(def, "force_if_damaged") and int(victim["hp"]) < int(victim["max_hp"]): force *= 2
 						if battle._has_status(source, "portal"):
 							var portal_damage: int = roundi(float(source["attack"]) * (1.5 if battle._has_status(source, "limbos_grasp") else 0.5))
@@ -225,6 +230,8 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 							source["statuses"].erase("portal")
 						if force > 1:
 							if battle._take_damage(source, victim, 4 * force, false, false, true, false, false, false, true): kos.append(int(victim["id"]))
+					else:
+						victim["row"] = "back" if victim["row"] == "front" else "front"
 			"draw", "draw_owner", "draw_owner_to", "draw_heroic", "draw_attack_heroic":
 				_draw_filtered(battle, source, op, int(a[1]))
 			"draw_own":

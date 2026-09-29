@@ -50,8 +50,8 @@ Total: **553** cartas.
 | `CrossHit` | 26 |
 | `slash` | 26 |
 | `slow` | 24 |
-| `push` | 19 |
-| `Explosion1` | 18 |
+| `push` | 20 |
+| `Explosion1` | 17 |
 | `Protection` | 15 |
 | `Shield` | 15 |
 | `Reflection` | 15 |
@@ -245,7 +245,7 @@ Total: **553** cartas.
 | `ent_ashlee_quarentena_total` | Quarentena total | ATTACK | entities | `Special2` | `slow` |
 | `ent_ashlee_scanner_de_soma` | Scanner de Soma | ESTADO | entities | `Special1` | `status` |
 | `ent_daeva_aviso_por_radio` | Aviso por rádio | ESTADO | entities | `cast` | `debuff` |
-| `ent_daeva_cobertura_de_corredor` | Cobertura de corredor | ATTACK | entities | `guard` | `Explosion1` |
+| `ent_daeva_cobertura_de_corredor` | Cobertura de corredor | ATTACK | entities | `guard` | `push` |
 | `ent_daeva_distracao_arriscada` | Distração arriscada | ESTADO | entities | `Neutral1` | `stun` |
 | `ent_daeva_lealdade_teimosa` | Lealdade teimosa | ESTADO | entities | `light` | `absorb` |
 | `ent_daeva_moto_de_fuga` | Moto de fuga | ESTADO | entities | `Neutral2` | `StarsHit` |

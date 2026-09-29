@@ -1527,6 +1527,15 @@ func preview(hand_index: int, target_id: int, chain_ids: Array = []) -> Dictiona
 				if state3["row"] == "front":
 					state3["row"] = "back"
 					estimate4["row_after"] = "back"
+		elif op == "pull":
+			for victim in targets:
+				var state_p: Dictionary = defenses[victim["id"]]
+				var estimate_p: Dictionary = estimates[victim["id"]]
+				if state_p["hp"] <= 0 or _has_status(victim, "bound"):
+					continue
+				if state_p["row"] == "back":
+					state_p["row"] = "front"
+					estimate_p["row_after"] = "front"
 		elif op == "heal":
 			var heal_amt: int = int(round(resolve_amount(action[1] if action.size() > 1 else 0, source)))
 			for victim in targets:

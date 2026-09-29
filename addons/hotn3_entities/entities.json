@@ -4209,7 +4209,7 @@
         "guard"
       ],
       "anim_target": [
-        "Explosion1"
+        "push"
       ],
       "anim_timing": "parallel"
     },

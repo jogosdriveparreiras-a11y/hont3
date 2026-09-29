@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-29 — Push ≠ pull (Daeva Cobertura)
+
+- **Anim 1+1 audit**: 553/553 cartas com exatamente 1 `anim_self` + 1 `anim_target` (0 missing, 0 2+, 0 comma-lists).
+- **Bug**: `push` em `EntityRuntime`/`CardRuntime` alternava retaguarda→frente (puxava). Agora push só frente→retaguarda; pull só retaguarda→frente; `move_target` continua alternando.
+- **Daeva** `ent_daeva_cobertura_de_corredor` (texto UI “Empurra”): `anim_target` `Explosion1` → `push`; actions já eram `push`.
+- Prévia de pacote: estima `pull` (além de `push`). Smoke: `tools/PushPullSmoke.gd`, `tools/PushFxResolveSmoke.gd`.
+
+
 ## 2026-09-28 — Title orientation + Jogar fit
 
 - **Title video/UI orientation**: Label3D on the camera-local menu no longer uses Y=180 (that mirrored glyphs). Video cover plane keeps identity UV/scale/rotation so the backdrop matches `assets/video/Title.*` (verified L/R brightness vs source frame).

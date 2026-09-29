@@ -618,7 +618,7 @@
     "owner": "ent_daeva",
     "source": "entities",
     "anim_self": "guard",
-    "anim_target": "Explosion1"
+    "anim_target": "push"
   },
   {
     "id": "ent_daeva_distracao_arriscada",
