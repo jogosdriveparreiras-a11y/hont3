@@ -307,15 +307,99 @@ func _shuffle(pile: Array[Dictionary]) -> void:
 func _draw(amount: int) -> void:
 	_draw_side(_acting(), amount)
 
+func _summon_leaves_cycle(owner: Dictionary) -> bool:
+	# Só lacaio/invocação sai do ciclo (morte do lacaio ou do conjurador).
+	# Herói morto permanece em mão, baralho e descarte.
+	if owner.is_empty():
+		return false
+	return bool(owner.get("is_summon", false)) or bool(owner.get("minion", false))
+
+func units_on_field(side: String) -> Array[Dictionary]:
+	# Vivos e caídos (sprite permanece). Banido sai de cena.
+	var found: Array[Dictionary] = []
+	for actor in actors:
+		if str(actor.get("side", "")) != side:
+			continue
+		if _has_status(actor, "banished"):
+			continue
+		found.append(actor)
+	return found
+
+func dead_on_side(side: String) -> Array[Dictionary]:
+	var found: Array[Dictionary] = []
+	for actor in actors:
+		if str(actor.get("side", "")) != side:
+			continue
+		if int(actor.get("hp", 0)) > 0:
+			continue
+		if _has_status(actor, "banished"):
+			continue
+		# Lacaio dissipado não entra em Reanimar (cartas já saíram do ciclo).
+		if _summon_leaves_cycle(actor):
+			continue
+		found.append(actor)
+	return found
+
+func _reanimar_host(side: String) -> Dictionary:
+	var alive := living(side)
+	if alive.is_empty():
+		return {}
+	return alive[0]
+
+func _sync_reanimar(side: String) -> void:
+	# Uma cópia de Reanimar enquanto houver aliado caído neste lado.
+	# Some de mão, baralho, descarte e exhausted quando ninguém está morto.
+	var exhausted_pile := _exhausted_of(side)
+	for index in range(exhausted_pile.size() - 1, -1, -1):
+		if str(exhausted_pile[index].get("id", "")) == "reanimar":
+			exhausted_pile.remove_at(index)
+	var piles: Array = [_hand_of(side), _deck_of(side), _discard_of(side)]
+	var dead := dead_on_side(side)
+	var kept := false
+	var removed := 0
+	for pile in piles:
+		for index in range(pile.size() - 1, -1, -1):
+			var card: Dictionary = pile[index]
+			if str(card.get("id", "")) != "reanimar":
+				continue
+			if dead.is_empty() or kept:
+				pile.remove_at(index)
+				removed += 1
+				continue
+			kept = true
+			var owner := actor_by_id(int(card.get("owner", -1)))
+			if owner.is_empty() or int(owner.get("hp", 0)) <= 0 or str(owner.get("side", "")) != side:
+				var host := _reanimar_host(side)
+				if not host.is_empty():
+					card["owner"] = int(host["id"])
+					pile[index] = card
+	if dead.is_empty():
+		if removed > 0:
+			_rpt("card", "reanimar_remove", {"side": side, "removed": removed})
+		return
+	if kept:
+		return
+	var host := _reanimar_host(side)
+	if host.is_empty():
+		return
+	var fresh := _create_card("reanimar", int(host["id"]))
+	var pile_deck := _deck_of(side)
+	var at := 0
+	if not pile_deck.is_empty():
+		at = rng.randi_range(0, pile_deck.size())
+	pile_deck.insert(at, fresh)
+	_log("Reanimar entrou no baralho.")
+	_rpt("card", "reanimar_insert", {"side": side, "owner": int(host["id"]), "deck": pile_deck.size()})
+
 func _draw_side(side: String, amount: int) -> void:
 	var pile_hand := _hand_of(side)
 	var pile_deck := _deck_of(side)
 	var pile_discard := _discard_of(side)
 	var drawn := 0
-	var skipped_dead := 0
+	var skipped_summon := 0
 	var guard := 0
-	# Compra `amount` cartas de donos VIVOS. Cartas de mortos vão para exhausted
-	# sem consumir a cota (evita baralho travado pós-morte do Nero/Naomi).
+	# Compra `amount` cartas. Herói morto CONSOME a cota (carta fica na mão, injogável).
+	# Só carta de lacaio/invocação morta é descartada do ciclo sem contar.
 	while drawn < amount and guard < 64:
 		guard += 1
 		if pile_hand.size() >= int(rules["hand_max"]):
@@ -334,40 +418,43 @@ func _draw_side(side: String, amount: int) -> void:
 		if pile_deck.is_empty():
 			break
 		var card: Dictionary = pile_deck.pop_back()
-		var owner := actor_by_id(card["owner"])
-		if owner.get("hp", 0) > 0:
-			if Content.CARDS.get(card["id"], {}).has("roulette"):
-				var choices: Array = Content.CARDS[card["id"]]["roulette"]
-				if not choices.is_empty(): card["roulette_effect"] = choices[rng.randi_range(0, choices.size() - 1)]
-			card.erase("infected")
-			card["drawn_turn"] = int(turn)
-			var cdef: Dictionary = Content.CARDS.get(str(card.get("id", "")), {})
-			if bool(cdef.get("ephemeral", false)): card["ephemeral"] = true
-			if bool(cdef.get("instant", false)): card["instant"] = true
-			# Desvantagem SEMPRE Instantâneo (regra de kit).
-			if str(cdef.get("class", card.get("class", ""))) == "DESVANTAGEM":
-				card["instant"] = true
-			if int(cdef.get("warmup", 0)) > 0: card["warmup"] = int(cdef["warmup"])
-			pile_hand.append(card)
-			drawn += 1
-			visual.emit("draw", int(owner["id"]), int(owner["id"]), 1)
-			_rpt("card", "draw", {
-				"side": side, "card": _card_brief(card),
-				"owner_name": str(owner.get("name", "")),
-				"hand_size": pile_hand.size(),
-				"deck_left": pile_deck.size(),
-			})
-		else:
-			_exhausted_of(side).append(card)
-			skipped_dead += 1
-			_rpt("card", "draw_skip_dead_owner", {
+		var owner := actor_by_id(int(card.get("owner", -1)))
+		if _summon_leaves_cycle(owner) and int(owner.get("hp", 0)) <= 0:
+			skipped_summon += 1
+			_rpt("card", "draw_skip_dead_summon", {
 				"side": side, "card": _card_brief(card),
 				"owner": int(card.get("owner", -1)),
 			})
-	if skipped_dead > 0 or drawn > 0:
+			continue
+		if Content.CARDS.get(card["id"], {}).has("roulette"):
+			var choices: Array = Content.CARDS[card["id"]]["roulette"]
+			if not choices.is_empty(): card["roulette_effect"] = choices[rng.randi_range(0, choices.size() - 1)]
+		card.erase("infected")
+		card["drawn_turn"] = int(turn)
+		var cdef: Dictionary = Content.CARDS.get(str(card.get("id", "")), {})
+		if bool(cdef.get("ephemeral", false)): card["ephemeral"] = true
+		if bool(cdef.get("instant", false)): card["instant"] = true
+		# Desvantagem SEMPRE Instantâneo (regra de kit).
+		if str(cdef.get("class", card.get("class", ""))) == "DESVANTAGEM":
+			card["instant"] = true
+		if int(cdef.get("warmup", 0)) > 0: card["warmup"] = int(cdef["warmup"])
+		pile_hand.append(card)
+		drawn += 1
+		var owner_id := int(card.get("owner", -1))
+		if not owner.is_empty():
+			owner_id = int(owner["id"])
+		visual.emit("draw", owner_id, owner_id, 1)
+		_rpt("card", "draw", {
+			"side": side, "card": _card_brief(card),
+			"owner_name": str(owner.get("name", "")),
+			"owner_dead": int(owner.get("hp", 0)) <= 0 and not owner.is_empty(),
+			"hand_size": pile_hand.size(),
+			"deck_left": pile_deck.size(),
+		})
+	if skipped_summon > 0 or drawn > 0:
 		_rpt("battle", "draw_batch", {
 			"side": side, "requested": amount, "drawn": drawn,
-			"skipped_dead": skipped_dead, "hand": pile_hand.size(),
+			"skipped_summon": skipped_summon, "hand": pile_hand.size(),
 			"deck": pile_deck.size(), "discard": pile_discard.size(),
 		})
 
@@ -738,8 +825,7 @@ func draw_own(owner_id: int, amount: int) -> int:
 			break
 		var card: Dictionary = pile_deck.pop_at(found)
 		var owner := actor_by_id(int(card["owner"]))
-		if owner.get("hp", 0) <= 0:
-			_exhausted_of(side).append(card)
+		if _summon_leaves_cycle(owner) and int(owner.get("hp", 0)) <= 0:
 			continue
 		card["drawn_turn"] = int(turn)
 		var cdef: Dictionary = Content.CARDS.get(str(card.get("id", "")), {})
@@ -1060,6 +1146,9 @@ func _targets(source: Dictionary, primary: Dictionary, card: Dictionary, chain_i
 	elif target_kind == "ALLY":
 		if primary["side"] == source["side"] and primary["hp"] > 0:
 			result.append(primary)
+	elif target_kind == "DEAD_ALLY":
+		if primary["side"] == source["side"] and int(primary.get("hp", 0)) <= 0 and not _has_status(primary, "banished") and not _summon_leaves_cycle(primary):
+			result.append(primary)
 	elif target_kind == "ALL_ALLIES":
 		if primary["side"] == source["side"] and primary["hp"] > 0: result = living(source["side"])
 	elif target_kind == "ALL_ENEMIES":
@@ -1323,6 +1412,8 @@ func _take_damage(source: Dictionary, target: Dictionary, amount: int, pierce: b
 			_log("%s caiu — cartas removidas do baralho." % target.get("name", "?"))
 		# Conjurador (ex.: Nero/Naomi) cai → todos os lacaios invocados caem e perdem cartas.
 		purge_summons_of(int(target["id"]))
+		# Herói morto permanece no campo e no ciclo. Reanimar entra no baralho do lado.
+		_sync_reanimar(str(target.get("side", "")))
 		visual.emit("death", int(source["id"]), int(target["id"]), 0)
 		var ability_ko: bool = source["id"] != target["id"] and source["side"] != target["side"] and (not environmental or from_card)
 		if ability_ko and _has_status(source, "fury_totem"): _draw(1)
@@ -1353,9 +1444,7 @@ func _take_damage(source: Dictionary, target: Dictionary, amount: int, pierce: b
 	return died
 
 func _purge_dead_cards() -> void:
-	# Remove cartas de donos mortos (exceto soulbound) de TODAS as pilhas,
-	# inclusive mão aliada — cartas mortas ocupavam slots e bloqueavam compras
-	# do time vivo (ex.: pós-morte Nero/Naomi). Mão inimiga também (IA).
+	# Só lacaios/invocações mortos. Herói morto fica no ciclo (mão/baralho/descarte).
 	var removed := 0
 	var by_owner: Dictionary = {}
 	for pile in [hand, deck, discard, enemy_hand, enemy_deck, enemy_discard]:
@@ -1364,13 +1453,15 @@ func _purge_dead_cards() -> void:
 			var owner := actor_by_id(int(card.get("owner", -1)))
 			if owner.is_empty():
 				continue
+			if not _summon_leaves_cycle(owner):
+				continue
 			if int(owner.get("hp", 0)) <= 0 and not owner.get("statuses", {}).has("soulbound"):
 				var oid := int(owner.get("id", -1))
 				by_owner[oid] = int(by_owner.get(oid, 0)) + 1
 				pile.remove_at(index)
 				removed += 1
 	if removed > 0:
-		_rpt("battle", "purge_dead_cards", {"removed": removed, "by_owner": by_owner})
+		_rpt("battle", "purge_dead_summon_cards", {"removed": removed, "by_owner": by_owner})
 
 func _resolve(source: Dictionary, targets: Array[Dictionary], card: Dictionary, card_data: Dictionary) -> Array[int]:
 	var fallen: Array[int] = []
@@ -1411,6 +1502,9 @@ func _resolve(source: Dictionary, targets: Array[Dictionary], card: Dictionary, 
 			if not viable.is_empty(): viable[rng.randi_range(0, viable.size() - 1)]["infected"] = true
 		else:
 			for target in effect_targets:
+				if kind == "REVIVE":
+					_revive_unit(source, target, float(effect.get("fraction", 0.25)))
+					continue
 				if target["hp"] <= 0:
 					continue
 				match kind:
@@ -1487,6 +1581,26 @@ func _resolve(source: Dictionary, targets: Array[Dictionary], card: Dictionary, 
 		source["statuses"].erase("fatal_fury")
 		for victim in fatal_targets: _add_status(victim, "wounded", 2, 1, int(source["id"]))
 	return fallen
+
+func _revive_unit(source: Dictionary, target: Dictionary, fraction: float) -> void:
+	if target.is_empty() or int(target.get("hp", 0)) > 0:
+		return
+	if str(target.get("side", "")) != str(source.get("side", "")):
+		return
+	if _has_status(target, "banished"):
+		return
+	var max_hp := maxi(1, int(target.get("max_hp", 1)))
+	var healed := maxi(1, roundi(float(max_hp) * fraction))
+	target["hp"] = mini(max_hp, healed)
+	_log("%s foi reanimado com %d de Vida." % [target.get("name", "?"), int(target["hp"])])
+	visual.emit("heal", int(source.get("id", -1)), int(target["id"]), int(target["hp"]))
+	_rpt("battle", "revive", {
+		"actor_id": int(target["id"]),
+		"name": str(target.get("name", "")),
+		"hp": int(target["hp"]),
+		"max_hp": max_hp,
+		"side": str(target.get("side", "")),
+	})
 
 func _cost(source: Dictionary, definition: Dictionary) -> int:
 	# Único recurso de turno compartilhado: Iniciativa (impulse). Sem pool de "Poder".
@@ -1633,6 +1747,9 @@ func play(hand_index: int, target_id: int, chain_ids: Array = []) -> bool:
 		_log("%s perdeu Invulnerável ao jogar uma carta." % source["name"])
 	_after_card_play()
 	_check_combo()
+	# Reanimar jogada vai ao descarte aqui; se ninguém segue caído, some do ciclo.
+	if str(card.get("id", "")) == "reanimar" or dead_on_side(side).is_empty():
+		_sync_reanimar(side)
 	_check_end()
 	changed.emit()
 	return true
@@ -1865,6 +1982,13 @@ func preview(hand_index: int, target_id: int, chain_ids: Array = []) -> Dictiona
 			if effect.get("self", false) and victim["id"] != source["id"]: continue
 			var state: Dictionary = defenses[victim["id"]]
 			var estimate: Dictionary = estimates[victim["id"]]
+			if str(effect.get("kind", "")) == "REVIVE":
+				var back := maxi(1, roundi(float(victim.get("max_hp", 1)) * float(effect.get("fraction", 0.25))))
+				state["hp"] = back
+				estimate["hp_after"] = back
+				if not estimate["statuses"].has("wounded"):
+					estimate["statuses"].append("wounded")
+				continue
 			if state["hp"] <= 0: continue
 			match effect.get("kind", ""):
 				"DAMAGE":
@@ -2140,6 +2264,8 @@ func diagnose_enemy_hand() -> Array:
 				candidates = [source]
 			elif kind in ["ALLY", "ALL_ALLIES"]:
 				candidates = living("ENEMY")
+			elif kind == "DEAD_ALLY":
+				candidates = dead_on_side("ENEMY")
 			elif kind == "ANY_UNIT":
 				candidates = living("ALLY") + living("ENEMY")
 			else:
@@ -2187,6 +2313,7 @@ func _best_enemy_play() -> Dictionary:
 				if bool(ally.get("is_summon", false)) and int(ally.get("summoner_id", -1)) == int(source["id"]):
 					candidates.append(ally)
 		elif kind in ["ALLY", "ALL_ALLIES"]: candidates = living("ENEMY")
+		elif kind == "DEAD_ALLY": candidates = dead_on_side("ENEMY")
 		elif kind == "ANY_UNIT": candidates = living("ALLY") + living("ENEMY")
 		else: candidates = living("ALLY")
 		if kind not in ["SELF", "ALLY", "ALL_ALLIES"] and definition.get("class", "") == "ATTACK":
@@ -2224,6 +2351,7 @@ func _score_enemy_preview(source: Dictionary, definition: Dictionary, estimate: 
 	score += gain * 2.5 - cost * 1.5
 	if cost <= _get_impulse("ENEMY") and cost > 0:
 		score += 1.0
+	if str(definition.get("target", "")) == "DEAD_ALLY": score += 22.0
 	if definition.get("class", "") == "SKILL" and str(source.get("ai", "")) == "DEFENSIVO": score += 4.0
 	if definition.get("class", "") == "ATTACK" and str(source.get("ai", "")) == "ASSASSINO": score += 3.0
 	if definition.get("stat", "") == "power" and str(source.get("ai", "")) == "AGRESSIVO": score += 2.0

@@ -41,6 +41,7 @@ var collection_selected := ""
 var card_hit_areas: Array[Button] = []
 var card_meshes: Array[MeshInstance3D] = []
 var unit_sprites: Array[Sprite3D] = []
+var corpse_textures: Dictionary = {}
 var actor_nodes: Dictionary = {}
 var sound
 var presentation
@@ -2600,8 +2601,8 @@ func _choose_target(actor_id: int) -> void:
 func _render_actors() -> void:
 	unit_sprites.clear()
 	var present := {}
-	var allies: Array = battle.living("ALLY")
-	var enemies: Array = battle.living("ENEMY")
+	var allies: Array = battle.units_on_field("ALLY")
+	var enemies: Array = battle.units_on_field("ENEMY")
 	for group in [allies, enemies]:
 		for actor in group:
 			var id: int = actor["id"]
@@ -2634,6 +2635,7 @@ func _render_actors() -> void:
 					create_tween().tween_property(body, "position", location, 0.3 / animation_speed)
 			var avatar: Sprite3D = actor_nodes[id].get_node_or_null("Avatar")
 			if avatar != null:
+				avatar.set_meta("actor_id", id)
 				unit_sprites.append(avatar)
 				presentation.bind_actor(id, avatar, location)
 			var nameplate: Label3D = actor_nodes[id].get_node("Nameplate")
@@ -3033,9 +3035,24 @@ func _register_inputs() -> void:
 func _target_ids() -> Array[int]:
 	var ids: Array[int] = []
 	if battle == null: return ids
+	if _selected_targets_dead_allies():
+		var card: Dictionary = battle.hand[selected_card]
+		var owner: Dictionary = battle.actor_by_id(int(card.get("owner", -1)))
+		var side := str(owner.get("side", "ALLY"))
+		for actor in battle.dead_on_side(side):
+			ids.append(int(actor["id"]))
+		return ids
 	for actor in battle.living("ALLY") + battle.living("ENEMY"):
 		ids.append(actor["id"])
 	return ids
+
+func _selected_targets_dead_allies() -> bool:
+	if battle == null or not card_confirmed:
+		return false
+	if selected_card < 0 or selected_card >= battle.hand.size():
+		return false
+	var definition: Dictionary = _card_def(str(battle.hand[selected_card].get("id", "")))
+	return str(definition.get("target", "")) == "DEAD_ALLY"
 
 
 func _chrome(at: Vector2, box: Vector2, path: String) -> void:
@@ -3367,7 +3384,7 @@ func _effect_short_bbcode(definition: Dictionary, card: Dictionary = {}) -> Stri
 
 func _rules_bbcode(definition: Dictionary, card: Dictionary) -> String:
 	var lines: Array[String] = []
-	var target_names := {"SELF": "si mesmo", "ALLY": "aliado", "ALL_ALLIES": "todos os aliados", "ENEMY": "inimigo", "SINGLE": "inimigo", "ENEMY_ROW": "linha inimiga", "ROW": "linha inimiga", "FRONT_ROW": "frente inimiga", "BACK_ROW": "retaguarda inimiga", "ALL_ENEMIES": "todos os inimigos", "ALL_OTHERS": "todos os outros (exceto você)", "OWN_MINION": "seu lacaio", "ADJACENT": "alvo e adjacentes", "RANDOM": "inimigo aleatório", "CHAIN": "sequência", "ANY_UNIT": "qualquer unidade"}
+	var target_names := {"SELF": "si mesmo", "ALLY": "aliado", "DEAD_ALLY": "aliado caído", "ALL_ALLIES": "todos os aliados", "ENEMY": "inimigo", "SINGLE": "inimigo", "ENEMY_ROW": "linha inimiga", "ROW": "linha inimiga", "FRONT_ROW": "frente inimiga", "BACK_ROW": "retaguarda inimiga", "ALL_ENEMIES": "todos os inimigos", "ALL_OTHERS": "todos os outros (exceto você)", "OWN_MINION": "seu lacaio", "ADJACENT": "alvo e adjacentes", "RANDOM": "inimigo aleatório", "CHAIN": "sequência", "ANY_UNIT": "qualquer unidade"}
 	lines.append("[b]Alvo:[/b] %s" % target_names.get(str(definition.get("target", "ENEMY")), "inimigo"))
 	var keywords: Array[String] = []
 	if definition.get("quick", false): keywords.append("[b]Rápida[/b]")
@@ -4063,6 +4080,8 @@ func _effect_glossary_lines(definition: Dictionary, card: Dictionary = {}) -> Pa
 				line = _status_plain(str(effect.get("id", "?")), int(effect.get("stacks", 1)))
 			"HEAL":
 				line = "Recupera %s de Vida." % effect.get("amount", "?")
+			"REVIVE":
+				line = "Revive um aliado caído com 25% da Vida máxima."
 			"PUSH":
 				line = "Empurra o alvo %s fileira(s) para trás." % effect.get("force", 1)
 			"PULL":
@@ -4520,7 +4539,7 @@ func _unhandled_input(input: InputEvent) -> void:
 
 func _card_description(definition: Dictionary, card: Dictionary = {}) -> String:
 	var parts: Array[String] = []
-	var target_names := {"SELF": "em si", "ALLY": "aliado", "ALL_ALLIES": "todos os aliados", "ENEMY": "inimigo", "SINGLE": "inimigo", "ENEMY_ROW": "linha inimiga", "ROW": "linha inimiga", "FRONT_ROW": "frente inimiga", "BACK_ROW": "retaguarda inimiga", "ALL_ENEMIES": "todos os inimigos", "ALL_OTHERS": "todos os outros", "OWN_MINION": "seu lacaio", "ADJACENT": "alvo e adjacentes", "RANDOM": "inimigo aleatório", "CHAIN": "sequência", "ANY_UNIT": "qualquer unidade"}
+	var target_names := {"SELF": "em si", "ALLY": "aliado", "DEAD_ALLY": "aliado caído", "ALL_ALLIES": "todos os aliados", "ENEMY": "inimigo", "SINGLE": "inimigo", "ENEMY_ROW": "linha inimiga", "ROW": "linha inimiga", "FRONT_ROW": "frente inimiga", "BACK_ROW": "retaguarda inimiga", "ALL_ENEMIES": "todos os inimigos", "ALL_OTHERS": "todos os outros", "OWN_MINION": "seu lacaio", "ADJACENT": "alvo e adjacentes", "RANDOM": "inimigo aleatório", "CHAIN": "sequência", "ANY_UNIT": "qualquer unidade"}
 	parts.append("ALVO: " + target_names.get(definition.get("target", "ENEMY"), "inimigo"))
 	if definition.get("quick", false): parts.append("RÁPIDA: devolve ação no KO")
 	if definition.get("free", false): parts.append("LIVRE")
@@ -4561,6 +4580,62 @@ func _card_description(definition: Dictionary, card: Dictionary = {}) -> String:
 		parts.append("SORTEADO: %s %s" % [chosen.get("kind", ""), str(chosen.get("amount", chosen.get("id", "")))])
 	if card.get("infected", false): parts.append("INFECTADA: recebe 1 Sangramento ao jogar")
 	return " · ".join(PackedStringArray(parts))
+
+func _apply_corpse_look(sprite: Sprite3D, dead: bool) -> void:
+	if sprite == null or not is_instance_valid(sprite):
+		return
+	var already := bool(sprite.get_meta("corpse_gray", false))
+	if dead == already:
+		return
+	if dead:
+		var live: Texture2D = sprite.texture
+		if live != null:
+			sprite.set_meta("live_texture", live)
+			var gray := _grayscale_texture(live)
+			if gray != null and gray != live:
+				sprite.texture = gray
+				sprite.set_meta("corpse_tex", true)
+			else:
+				sprite.set_meta("corpse_tex", false)
+		sprite.set_meta("corpse_gray", true)
+	else:
+		if sprite.has_meta("live_texture"):
+			var restored: Texture2D = sprite.get_meta("live_texture")
+			if restored != null:
+				sprite.texture = restored
+			sprite.remove_meta("live_texture")
+		sprite.set_meta("corpse_gray", false)
+		sprite.set_meta("corpse_tex", false)
+
+func _grayscale_texture(tex: Texture2D) -> Texture2D:
+	if tex == null:
+		return null
+	var key := tex.resource_path
+	if tex is AtlasTexture:
+		var at := tex as AtlasTexture
+		var base := ""
+		if at.atlas != null:
+			base = str(at.atlas.resource_path)
+		key = "%s|%s" % [base, str(at.region)]
+	if key == "":
+		key = "id:%d" % tex.get_instance_id()
+	if corpse_textures.has(key):
+		return corpse_textures[key]
+	var img: Image = tex.get_image()
+	if img == null:
+		return tex
+	img = img.duplicate()
+	if img.is_compressed():
+		img.decompress()
+	img.convert(Image.FORMAT_RGBA8)
+	for y in range(img.get_height()):
+		for x in range(img.get_width()):
+			var px := img.get_pixel(x, y)
+			var g := px.r * 0.299 + px.g * 0.587 + px.b * 0.114
+			img.set_pixel(x, y, Color(g, g, g, px.a))
+	var gray := ImageTexture.create_from_image(img)
+	corpse_textures[key] = gray
+	return gray
 
 func _tick_recompra_hold(delta: float) -> void:
 	var focus := inspected_card if inspected_card >= 0 else hovered_card
@@ -4618,6 +4693,18 @@ func _process(delta: float) -> void:
 		var busy := Time.get_ticks_msec() < int(spr.get_meta("action_until", 0))
 		if busy:
 			continue
+		var aid := int(spr.get_meta("actor_id", -1))
+		var dead := false
+		if battle != null and aid >= 0:
+			var body_actor := battle.actor_by_id(aid)
+			dead = (not body_actor.is_empty()) and int(body_actor.get("hp", 0)) <= 0
+		if dead:
+			# Cadáver: sem respiração; sprite em escala de cinza.
+			spr.scale = Vector3(spr_s, spr_s, 1.0)
+			spr.position.y = 1.1
+			_apply_corpse_look(spr, true)
+			continue
+		_apply_corpse_look(spr, false)
 		# Idle breath: pin feet (bottom), stretch only the upper portion gently.
 		var wave := sin(Time.get_ticks_msec() * 0.0022 + float(i) * 1.7)
 		var sy := 1.0 + wave * 0.038
@@ -4682,7 +4769,15 @@ func _process(delta: float) -> void:
 		var avatar: Sprite3D = body.get_node_or_null("Avatar")
 		if avatar == null: continue
 		var hot := int(id) == hovered_actor or int(id) == pending_target_id
-		avatar.modulate = Color("ffe1a8") if hot else Color.WHITE
+		var actor_now: Dictionary = battle.actor_by_id(int(id)) if battle != null else {}
+		var is_dead := (not actor_now.is_empty()) and int(actor_now.get("hp", 0)) <= 0
+		if is_dead:
+			if bool(avatar.get_meta("corpse_tex", false)):
+				avatar.modulate = Color(1.12, 1.12, 1.12) if hot else Color.WHITE
+			else:
+				avatar.modulate = Color(0.45, 0.45, 0.48) if not hot else Color(0.62, 0.62, 0.66)
+		else:
+			avatar.modulate = Color("ffe1a8") if hot else Color.WHITE
 	_update_hand_card_visuals()
 	_compensate_hand_for_camera_fov()
 	if presentation != null and battle != null and battle.phase == "PLAYER" and not battle_menu_open:
@@ -4697,7 +4792,7 @@ func _process(delta: float) -> void:
 				focus_id = pending_target_id if pending_target_id >= 0 else -1
 		if focus_id >= 0:
 			var focus_actor: Dictionary = battle.actor_by_id(focus_id)
-			if focus_actor.is_empty() or int(focus_actor.get("hp", 0)) <= 0:
+			if focus_actor.is_empty():
 				focus_id = -1
 		if free_camera:
 			_tick_free_camera(delta)

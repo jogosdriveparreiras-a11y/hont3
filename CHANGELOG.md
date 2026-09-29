@@ -1,5 +1,22 @@
 # Changelog
 
+## 2026-09-29 — Herói morto no ciclo, Reanimar, cadáver, editor
+
+### Regras (reverte o purge agressivo de cartas de herói morto)
+- Cartas de **herói** morto permanecem na mão, no baralho e no descarte e **consomem a cota de compra**. Ficam injogáveis até o herói reviver.
+- Só saem do ciclo cartas de **lacaio/invocação** (morte do lacaio ou do conjurador) — purge já existente.
+- O corpo fica na arena: sem animação de respiração; sprite em escala de cinza (sprite de cadáver fica para depois).
+
+### Reanimar
+- Ao cair um herói, entra **uma** carta Reanimar no baralho daquele lado (custo 4 INI, alvo só aliado caído).
+- Efeito: revive com **25% da Vida máxima** e **Ferido 1**.
+- Se ninguém daquele lado segue caído, Reanimar sai da mão, do baralho e do descarte.
+- Dono: primeiro aliado vivo do lado. Se esse dono cair, a carta passa para outro vivo.
+
+### Editor
+- `tools/card_editor.html` ficava em "Carregando…": `blankCard()` lia `HEROES_FALLBACK` (inexistente) antes do `try` de boot. Depois disso, `wire()` quebrava em `TARGETS`/`STATUSES`/`UNLOCKS`/`STATS`/`SPECIES_LIST`/`PASSIVES` também removidos. Constantes restauradas (alvo `DEAD_ALLY` incluso). Prévia de deck local + `file://` usa a cópia embutida sem `await fetch`.
+
+
 ## 2026-09-29 — Report rico, Vítima no kit, purge/draw mortos, Instantâneo Desvantagem, cast/minions
 
 ### Relatório de sessão
