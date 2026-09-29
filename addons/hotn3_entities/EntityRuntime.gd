@@ -827,7 +827,8 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 			"consume_bleed":
 				for victim in targets:
 					if not battle._has_status(victim, "bleed"): continue
-					var s: Dictionary = victim["statuses"]["bleed"]
+					var s: Dictionary = victim.get("statuses", {}).get("bleed", {})
+					if s.is_empty(): continue
 					var amount: int = 3 * int(s.get("stacks", 1)) * int(s.get("duration", 1))
 					victim["statuses"].erase("bleed")
 					if battle._take_damage(source, victim, amount, true, false, false, false, false, false, true): kos.append(int(victim["id"]))
@@ -1127,9 +1128,15 @@ func on_turn_start(battle: Variant) -> void:
 		var key := "passive:%d" % int(ally["id"])
 		if int(memory.get(key, -1)) == int(battle.turn): continue
 		memory[key] = int(battle.turn)
-		var signature: Dictionary = hero["signature"]
+		# Minions / incomplete heroes may lack signature — never [] on missing key (GDScript 4).
+		var signature: Variant = hero.get("signature", {})
+		if typeof(signature) != TYPE_DICTIONARY or signature.is_empty():
+			continue
+		var sig_action: Variant = signature.get("action", [])
+		if typeof(sig_action) != TYPE_ARRAY or sig_action.is_empty():
+			continue
 		var receiver: Dictionary = ally
-		match signature["target"]:
+		match str(signature.get("target", "SELF")):
 			"LOWEST_ALLY":
 				var allies: Array[Dictionary] = battle.living("ALLY")
 				allies.sort_custom(func(a, b): return float(a["hp"]) / maxi(1, int(a["max_hp"])) < float(b["hp"]) / maxi(1, int(b["max_hp"])))
@@ -1138,8 +1145,8 @@ func on_turn_start(battle: Variant) -> void:
 				var foes: Array[Dictionary] = battle.living("ENEMY")
 				if foes.is_empty(): continue
 				receiver = foes[0]
-		var action: Array = signature["action"]
-		match action[0]:
+		var action: Array = sig_action
+		match str(action[0]):
 			"BLOCK": battle._add_status(receiver, "barrier", 1, maxi(1, int(action[1])), int(receiver.get("id", 0)))
 			"HEAL": receiver["hp"] = mini(int(receiver["max_hp"]), int(receiver["hp"]) + int(action[1]))
 			"IMPULSE": battle.impulse = mini(int(battle.rules["impulse_max"]), int(battle.impulse) + int(action[1]))
@@ -1291,17 +1298,35 @@ func _offense(actor: Dictionary, def: Dictionary) -> int:
 	return int(actor.get(str(def.get("stat", "attack")), actor.get("attack", 1)))
 
 func _counter(actor: Dictionary, name: String) -> int:
-	return int(actor.get("statuses", {}).get(name, {}).get("stacks", 0))
+	var statuses: Variant = actor.get("statuses", {})
+	if typeof(statuses) != TYPE_DICTIONARY:
+		return 0
+	var state: Variant = statuses.get(name, {})
+	if typeof(state) != TYPE_DICTIONARY:
+		return 0
+	return int(state.get("stacks", 0))
 
 func _stack(actor: Dictionary, name: String, count: int) -> void:
-	var prior: Dictionary = actor["statuses"].get(name, {"stacks": 0, "duration": 99, "source": actor["id"]})
+	if not actor.has("statuses") or typeof(actor["statuses"]) != TYPE_DICTIONARY:
+		actor["statuses"] = {}
+	var prior: Dictionary = actor["statuses"].get(name, {"stacks": 0, "duration": 99, "source": actor.get("id", 0)})
+	if typeof(prior) != TYPE_DICTIONARY:
+		prior = {"stacks": 0, "duration": 99, "source": actor.get("id", 0)}
 	prior["stacks"] = int(prior.get("stacks", 0)) + count
 	actor["statuses"][name] = prior
 
 func _consume(actor: Dictionary, name: String) -> void:
+	if not actor.has("statuses") or typeof(actor["statuses"]) != TYPE_DICTIONARY:
+		return
 	var stack := _counter(actor, name)
 	if stack <= 1: actor["statuses"].erase(name)
-	else: actor["statuses"][name]["stacks"] = stack - 1
+	else:
+		var st: Dictionary = actor["statuses"].get(name, {})
+		if st.is_empty():
+			actor["statuses"].erase(name)
+		else:
+			st["stacks"] = stack - 1
+			actor["statuses"][name] = st
 
 func _draw_filtered(battle: Variant, source: Dictionary, mode: String, amount: int) -> void:
 	var hand := _acting_hand(battle)

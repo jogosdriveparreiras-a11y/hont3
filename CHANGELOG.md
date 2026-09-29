@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-29 — Status Dictionary safe get (dazed / signature crashes)
+
+- **Cause (`dazed`)**: `_normalize_status_id("dazed")` → `stun`. `_has_status(..., "dazed")` succeeded, then `actor["statuses"]["dazed"]` threw *Invalid access* (GDScript 4). Hit on Puxão do Reino Quebrado / Peitada via `_after_card_play`.
+- **Cause (`signature`)**: `EntityRuntime.on_turn_start` did `hero["signature"]` on minions (Zumbi…Lich) that have no signature — crash after Dominika/Nero summons.
+- **Fix**: `_ensure_statuses` / `_status_state`; `_has_status` / `_status_stacks` use normalized safe get; `_after_card_play` no longer play-ticks alias `dazed`; leftover raw `resist` key checked without alias `[]`; EntityRuntime skips empty signature; safer `_counter`/`_stack`/`_consume` (Entity + CardRuntime).
+- Smoke: `tools/StatusAliasSafeSmoke.gd`.
+
 ## 2026-09-29 — Arena deck merge + Tormenta Instantâneo jogável
 
 - **Deck merge / owned stale**: após redesign Dominika/Nero, `owned_cards` no save ainda tinha IDs removidos (`engolfamento`, `foice_de_sangue`, …). `ensure_owned` descartava nada → `deploy` falhava `deck_valid` → fallback `begin` só enfileirava cartas presentes em `Content.CARDS` (só Alyssa). Correção: limpar IDs ausentes e resetar para Iniciais+Desvantagem; `deploy`/`build_combat_deck_ids` sanitizam kit inválido.

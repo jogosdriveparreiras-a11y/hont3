@@ -310,13 +310,13 @@ func start_turn() -> void:
 	item_uses = int(rules["item_uses"])
 	for ally in living("ALLY"):
 		if _has_status(ally, "next_turn_plays"):
-			var bonus_plays: int = maxi(1, int(ally["statuses"]["next_turn_plays"].get("stacks", 1)))
+			var bonus_plays: int = maxi(1, _status_stacks(ally, "next_turn_plays"))
 			card_plays += bonus_plays
-			ally["statuses"].erase("next_turn_plays")
+			_ensure_statuses(ally).erase("next_turn_plays")
 		if _has_status(ally, "neurally_enhanced"):
-			var neu_bonus: int = maxi(1, int(ally["statuses"]["neurally_enhanced"].get("stacks", 1)))
+			var neu_bonus: int = maxi(1, _status_stacks(ally, "neurally_enhanced"))
 			card_plays += neu_bonus
-			ally["statuses"].erase("neurally_enhanced")
+			_ensure_statuses(ally).erase("neurally_enhanced")
 		match ally.get("passive", ""):
 			"vanguarda":
 				if ally["row"] == "front": _add_status(ally, "barrier", 1, 2, int(ally["id"]))
@@ -459,6 +459,23 @@ func must_play_instantaneo_first(card: Dictionary, definition: Dictionary = {}, 
 	var def2: Dictionary = definition if not definition.is_empty() else Content.CARDS.get(str(card.get("id", "")), {})
 	return not is_instant_card(card, def2)
 
+func _ensure_statuses(actor: Dictionary) -> Dictionary:
+	## Guarantees actor["statuses"] is a Dictionary (GDScript 4 [] throws on missing keys).
+	if not actor.has("statuses") or typeof(actor["statuses"]) != TYPE_DICTIONARY:
+		actor["statuses"] = {}
+	return actor["statuses"]
+
+func _status_state(actor: Dictionary, id: String) -> Dictionary:
+	## Normalized, safe status entry. Empty dict if missing / wrong type.
+	id = _normalize_status_id(id)
+	var statuses: Variant = actor.get("statuses", {})
+	if typeof(statuses) != TYPE_DICTIONARY:
+		return {}
+	var state: Variant = statuses.get(id, {})
+	if typeof(state) != TYPE_DICTIONARY:
+		return {}
+	return state
+
 func _normalize_status_id(id: String) -> String:
 	var key := id.strip_edges().to_lower()
 	match key:
@@ -492,7 +509,7 @@ func _normalize_status_id(id: String) -> String:
 func _status_stacks(actor: Dictionary, id: String) -> int:
 	if not _has_status(actor, id):
 		return 0
-	return int(actor["statuses"][id].get("stacks", 0))
+	return int(_status_state(actor, id).get("stacks", 0))
 
 ## Shared formula map: status stacks + aliases (E / escuridao). Static ints still work via resolve_amount.
 func formula_vars(actor: Dictionary) -> Dictionary:
@@ -547,7 +564,7 @@ func resolve_amount(raw: Variant, actor: Dictionary) -> float:
 func _barrier_hp(actor: Dictionary) -> int:
 	if not _has_status(actor, "barrier"):
 		return 0
-	var state: Dictionary = actor["statuses"]["barrier"]
+	var state: Dictionary = _status_state(actor, "barrier")
 	return int(state.get("barrier_hp", state.get("stacks", 0)))
 
 func card_has_flag(definition: Dictionary, flag: String) -> bool:
@@ -679,8 +696,8 @@ func grant_next_turn_plays(actor: Dictionary, amount: int) -> void:
 	_add_status(actor, "next_turn_plays", 2, maxi(1, amount), int(actor.get("id", 0)))
 
 func _has_status(actor: Dictionary, id: String) -> bool:
-	id = _normalize_status_id(id)
-	return actor.get("statuses", {}).has(id) and actor["statuses"][id]["duration"] > 0
+	var state := _status_state(actor, id)
+	return not state.is_empty() and int(state.get("duration", 0)) > 0
 
 func _add_status(actor: Dictionary, id: String, duration: int, stacks: int, source: int) -> void:
 	# 100% Gordura: imune a Ferido, Sangrando, Preso.
@@ -697,37 +714,44 @@ func _add_status(actor: Dictionary, id: String, duration: int, stacks: int, sour
 	# protected/protecting removidos — Row cobre posicionamento; viram Proteção.
 	if id == "":
 		return
+	var statuses := _ensure_statuses(actor)
 	if id in ["stun", "bind", "bound"]:
-		actor["statuses"].erase("protecting")
-		actor["statuses"].erase("protected")
+		statuses.erase("protecting")
+		statuses.erase("protected")
 	# Resistente ↔ Frágil: cancelamento mútuo (só um permanece).
 	if id == "resistente":
 		if _has_status(actor, "fragil"):
-			var fragile: int = int(actor["statuses"]["fragil"].get("stacks", 0))
+			var fragile: int = _status_stacks(actor, "fragil")
 			var apply: int = stacks
 			if apply <= fragile:
-				actor["statuses"]["fragil"]["stacks"] = fragile - apply
-				if actor["statuses"]["fragil"]["stacks"] <= 0:
-					actor["statuses"].erase("fragil")
+				var fs: Dictionary = _status_state(actor, "fragil")
+				fs["stacks"] = fragile - apply
+				if int(fs["stacks"]) <= 0:
+					statuses.erase("fragil")
+				else:
+					statuses["fragil"] = fs
 				_log("%s: Frágil absorveu Resistente (%d)." % [actor["name"], apply])
 				return
 			stacks = apply - fragile
-			actor["statuses"].erase("fragil")
+			statuses.erase("fragil")
 		stacks = mini(5, stacks)
 	elif id == "fragil":
 		if _has_status(actor, "resistente"):
-			var hard: int = int(actor["statuses"]["resistente"].get("stacks", 0))
+			var hard: int = _status_stacks(actor, "resistente")
 			var apply2: int = stacks
 			if apply2 <= hard:
-				actor["statuses"]["resistente"]["stacks"] = hard - apply2
-				if actor["statuses"]["resistente"]["stacks"] <= 0:
-					actor["statuses"].erase("resistente")
+				var hs: Dictionary = _status_state(actor, "resistente")
+				hs["stacks"] = hard - apply2
+				if int(hs["stacks"]) <= 0:
+					statuses.erase("resistente")
+				else:
+					statuses["resistente"] = hs
 				_log("%s: Resistente absorveu Frágil (%d)." % [actor["name"], apply2])
 				return
 			stacks = apply2 - hard
-			actor["statuses"].erase("resistente")
+			statuses.erase("resistente")
 		stacks = mini(5, stacks)
-	var state: Dictionary = actor["statuses"].get(id, {"duration": 0, "stacks": 0, "source": source})
+	var state: Dictionary = statuses.get(id, {"duration": 0, "stacks": 0, "source": source})
 	if id == "barrier":
 		# duration = rodadas; stacks/barrier_hp = HP da barreira.
 		var add_hp: int = maxi(1, stacks)
@@ -760,7 +784,7 @@ func _add_status(actor: Dictionary, id: String, duration: int, stacks: int, sour
 	state["source"] = source
 	state["play_stamp"] = played_cards if phase == "PLAYER" else -1
 	if id == "summoning": state["armed"] = false
-	actor["statuses"][id] = state
+	statuses[id] = state
 	_log("%s: %s (%d)." % [actor["name"], id, state["stacks"]])
 
 func _cleanse(actor: Dictionary) -> void:
@@ -895,8 +919,8 @@ func _damage_value(source: Dictionary, target: Dictionary, effect: Dictionary, c
 	if _has_status(source, "critical"): attack_bonus += 0.50
 	if _has_status(source, "binary") or _has_status(source, "overpowered") or _has_status(source, "strongest_there_is"): attack_bonus += 1.0
 	if _has_status(source, "offensive_rush"): attack_bonus += 0.25
-	if _has_status(source, "ravenous"): attack_bonus += 0.15 * int(source["statuses"]["ravenous"]["stacks"])
-	if _has_status(source, "en_fuego"): attack_bonus += 0.15 * int(source["statuses"]["en_fuego"]["stacks"])
+	if _has_status(source, "ravenous"): attack_bonus += 0.15 * float(_status_stacks(source, "ravenous"))
+	if _has_status(source, "en_fuego"): attack_bonus += 0.15 * float(_status_stacks(source, "en_fuego"))
 	if _has_status(source, "fatal_fury"): attack_bonus += 1.0
 	if (card.get("enhanced_triggered", false) or _has_status(source, "enhanced") and _get_impulse(str(source.get("side", "ALLY"))) >= 4) and (int(card.get("cost", 0)) > 0 or str(card.get("stat", "")) == "power" or str(effect.get("stat", "")) == "power"): attack_bonus += 0.25
 	base = roundi(base * maxf(0.0, 1.0 + attack_bonus))
@@ -986,24 +1010,25 @@ func _take_damage(source: Dictionary, target: Dictionary, amount: int, pierce: b
 		return false
 	# Proteção: ignora o ataque (cada hit de Chain conta). Penetrante ignora Proteção.
 	if amount > 0 and not pierce and _has_status(target, "protecao"):
-		var prot: Dictionary = target["statuses"]["protecao"]
+		var prot: Dictionary = _status_state(target, "protecao")
 		prot["stacks"] = int(prot.get("stacks", 1)) - 1
-		if prot["stacks"] <= 0:
-			target["statuses"].erase("protecao")
+		if int(prot.get("stacks", 0)) <= 0:
+			_ensure_statuses(target).erase("protecao")
 		else:
-			target["statuses"]["protecao"] = prot
+			_ensure_statuses(target)["protecao"] = prot
 		_log("%s: Proteção absorveu o ataque." % target["name"])
 		visual.emit("resist", int(source["id"]), int(target["id"]), 0)
 		return false
-	# Legacy resist → tratado como protecao via _normalize; se ainda existir, consome.
-	if amount > 0 and not pierce and _has_status(target, "resist"):
-		var layers: Dictionary = target["statuses"]["resist"]
-		layers["stacks"] -= 1
-		if layers["stacks"] <= 0: target["statuses"].erase("resist")
-		else: target["statuses"]["resist"] = layers
-		_log("%s resistiu ao ataque." % target["name"])
-		visual.emit("resist", int(source["id"]), int(target["id"]), 0)
-		return false
+	# Leftover raw "resist" key (pre-normalize). _has_status("resist") aliases to protecao — never [] on alias.
+	if amount > 0 and not pierce and _ensure_statuses(target).has("resist"):
+		var layers: Dictionary = target["statuses"].get("resist", {})
+		if not layers.is_empty():
+			layers["stacks"] = int(layers.get("stacks", 1)) - 1
+			if int(layers.get("stacks", 0)) <= 0: target["statuses"].erase("resist")
+			else: target["statuses"]["resist"] = layers
+			_log("%s resistiu ao ataque." % target["name"])
+			visual.emit("resist", int(source["id"]), int(target["id"]), 0)
+			return false
 	if environmental and _has_status(target, "webbed_up"):
 		amount = roundi(amount * 1.5)
 	if environmental and _has_status(source, "full_force"):
@@ -1014,7 +1039,7 @@ func _take_damage(source: Dictionary, target: Dictionary, amount: int, pierce: b
 	var remaining := amount
 	# Barreira (pool de HP próprio). Penetrante ignora por completo (não gasta HP da barreira).
 	if remaining > 0 and not pierce and _has_status(target, "barrier"):
-		var bar: Dictionary = target["statuses"]["barrier"]
+		var bar: Dictionary = _status_state(target, "barrier")
 		var bhp: int = int(bar.get("barrier_hp", bar.get("stacks", 0)))
 		var soaked: int = mini(remaining, bhp)
 		bhp -= soaked
@@ -1077,7 +1102,7 @@ func _take_damage(source: Dictionary, target: Dictionary, amount: int, pierce: b
 		if ability_ko and _has_status(source, "en_fuego"):
 			_add_status(source, "en_fuego", 99, 1, int(source["id"]))
 		if ability_ko and team_ko_charges > 0 and _has_status(source, "all_together_now"):
-			var helper := actor_by_id(int(source["statuses"]["all_together_now"]["source"]))
+			var helper := actor_by_id(int(_status_state(source, "all_together_now").get("source", -1)))
 			if helper.get("hp", 0) > 0 and helper["id"] != source["id"]: _add_status(helper, "en_fuego", 99, 1, int(helper["id"]))
 			team_ko_charges -= 1
 			if team_ko_charges <= 0:
@@ -1092,7 +1117,7 @@ func _take_damage(source: Dictionary, target: Dictionary, amount: int, pierce: b
 		if _counter_can_strike(target, source):
 			_log("%s contra-atacou." % target["name"])
 			visual.emit("counter", int(target["id"]), int(source["id"]), 0)
-			var cst: Dictionary = target["statuses"]["counter"]
+			var cst: Dictionary = _status_state(target, "counter")
 			var cfx: Array = cst.get("effects", [])
 			if typeof(cfx) == TYPE_ARRAY and not cfx.is_empty():
 				_resolve_counter_effects(target, source, cfx)
@@ -1233,30 +1258,35 @@ func _cost(source: Dictionary, definition: Dictionary) -> int:
 		if _has_status(source, "fast"): cost -= 1
 		if _has_status(source, "slow"): cost += 1
 		if _has_status(source, "enhanced") and _get_impulse(str(source.get("side", "ALLY"))) >= 4:
-			cost = max(0, cost - int(source["statuses"]["enhanced"]["stacks"]))
+			cost = max(0, cost - _status_stacks(source, "enhanced"))
 	return max(0, cost)
 
 func _after_card_play() -> void:
 	for actor in actors:
 		if actor["hp"] <= 0: continue
-		for id in ["dazed", "frenzy", "confused", "feeding_frenzy"]:
-			if not _has_status(actor, id): continue
-			var state: Dictionary = actor["statuses"][id]
+		# "dazed" aliases → stun (duration-ticked). Never play-tick under the alias key.
+		for id in ["frenzy", "confused", "feeding_frenzy"]:
+			var nid := _normalize_status_id(id)
+			if not _has_status(actor, nid): continue
+			var statuses := _ensure_statuses(actor)
+			var state: Dictionary = _status_state(actor, nid)
+			if state.is_empty():
+				continue
 			if id == "feeding_frenzy" and (_has_status(actor, "stun") or _has_status(actor, "bind") or _has_status(actor, "bound")):
-				actor["statuses"].erase(id)
+				statuses.erase(nid)
 				continue
 			if state.get("play_stamp", -1) == played_cards: continue
-			state["stacks"] -= 1
-			if id == "confused" and not _has_status(actor, "stun") and not _has_status(actor, "bind") and not _has_status(actor, "bound") and not _has_status(actor, "dazed"):
+			state["stacks"] = int(state.get("stacks", 1)) - 1
+			if id == "confused" and not _has_status(actor, "stun") and not _has_status(actor, "bind") and not _has_status(actor, "bound"):
 				var possible := living("ALLY") + living("ENEMY")
 				possible.erase(actor)
 				if not possible.is_empty():
 					var victim: Dictionary = possible[rng.randi_range(0, possible.size() - 1)]
 					_take_damage(actor, victim, max(1, int(actor["attack"])), false, false)
-			if state["stacks"] > 0:
-				actor["statuses"][id] = state
+			if int(state.get("stacks", 0)) > 0:
+				statuses[nid] = state
 				continue
-			actor["statuses"].erase(id)
+			statuses.erase(nid)
 			match id:
 				"frenzy":
 					pass
@@ -1304,17 +1334,17 @@ func play(hand_index: int, target_id: int, chain_ids: Array = []) -> bool:
 	played_cards += 1
 	if card.get("infected", false): _add_status(source, "bleed", 1, 1, int(source["id"]))
 	if _has_status(source, "wounded"):
-		_take_damage(source, source, 3 * int(source["statuses"]["wounded"]["stacks"]), true, false)
+		_take_damage(source, source, 3 * _status_stacks(source, "wounded"), true, false)
 	var fallen: Array[int] = []
 	if source["hp"] > 0:
 		var bleed_effects: Array = definition.get("effects", [])
 		var bleed_charge: bool = _has_status(source, "make_em_bleed") and bleed_effects.any(func(e): return e.get("kind", "") == "DAMAGE")
 		fallen = _resolve(source, targets, card, definition)
 		if bleed_charge and _has_status(source, "make_em_bleed"):
-			var charges: Dictionary = source["statuses"]["make_em_bleed"]
-			charges["stacks"] -= 1
-			if charges["stacks"] <= 0: source["statuses"].erase("make_em_bleed")
-			else: source["statuses"]["make_em_bleed"] = charges
+			var charges: Dictionary = _status_state(source, "make_em_bleed")
+			charges["stacks"] = int(charges.get("stacks", 1)) - 1
+			if int(charges.get("stacks", 0)) <= 0: _ensure_statuses(source).erase("make_em_bleed")
+			else: _ensure_statuses(source)["make_em_bleed"] = charges
 		if definition.get("target", "") == "CHAIN" and definition.has("full_combo") and chain_ids.size() == int(definition.get("chain", 1)) and chain_ids.all(func(id): return id == chain_ids[0]):
 			var combo_target := actor_by_id(int(chain_ids[0]))
 			if combo_target.get("hp", 0) > 0:
@@ -1331,7 +1361,10 @@ func play(hand_index: int, target_id: int, chain_ids: Array = []) -> bool:
 		source["statuses"].erase("conceal")
 	if had_momentum and definition.get("class", "") != "MOVE": source["statuses"].erase("momentum")
 	if _has_status(source, "ravenous") and (definition.get("class", "") in ["ATTACK", "POWER"] or definition.get("effects", []).any(func(e): return e.get("kind", "") == "DAMAGE")):
-		source["statuses"]["ravenous"]["stacks"] = max(0, int(source["statuses"]["ravenous"]["stacks"]) - 1)
+		var rav: Dictionary = _status_state(source, "ravenous")
+		rav["stacks"] = max(0, int(rav.get("stacks", 0)) - 1)
+		if int(rav.get("stacks", 0)) <= 0: _ensure_statuses(source).erase("ravenous")
+		else: _ensure_statuses(source)["ravenous"] = rav
 	if card.get("temporary", false) or definition.get("exhaust", false):
 		card.erase("enhanced_triggered")
 		_exhausted_of(side).append(card)
@@ -1475,8 +1508,10 @@ func use_environment(index: int) -> bool:
 		return false
 	impulse -= cost
 	if _has_status(user, "opportunist"):
-		user["statuses"]["opportunist"]["stacks"] -= 1
-		if user["statuses"]["opportunist"]["stacks"] <= 0: user["statuses"].erase("opportunist")
+		var opp: Dictionary = _status_state(user, "opportunist")
+		opp["stacks"] = int(opp.get("stacks", 1)) - 1
+		if int(opp.get("stacks", 0)) <= 0: _ensure_statuses(user).erase("opportunist")
+		else: _ensure_statuses(user)["opportunist"] = opp
 	environmental_used[index] = true
 	for enemy in living("ENEMY"):
 		if object.get("target", "front") == enemy["row"]:
@@ -1491,8 +1526,10 @@ func use_environment(index: int) -> bool:
 			ally["hp"] = min(int(ally["max_hp"]), int(ally["hp"]) + int(object.get("heal", 0)))
 	_log("Cenário ativado: %s." % object["name"])
 	if object.has("damage") and _has_status(user, "perfect_aim"):
-		user["statuses"]["perfect_aim"]["stacks"] -= 1
-		if user["statuses"]["perfect_aim"]["stacks"] <= 0: user["statuses"].erase("perfect_aim")
+		var aim: Dictionary = _status_state(user, "perfect_aim")
+		aim["stacks"] = int(aim.get("stacks", 1)) - 1
+		if int(aim.get("stacks", 0)) <= 0: _ensure_statuses(user).erase("perfect_aim")
+		else: _ensure_statuses(user)["perfect_aim"] = aim
 	_check_end()
 	changed.emit()
 	return true
@@ -1712,13 +1749,13 @@ func begin_enemy_phase() -> void:
 		enemy_card_plays += 1
 	for enemy in living("ENEMY"):
 		if _has_status(enemy, "next_turn_plays"):
-			var e_bonus: int = maxi(1, int(enemy["statuses"]["next_turn_plays"].get("stacks", 1)))
+			var e_bonus: int = maxi(1, _status_stacks(enemy, "next_turn_plays"))
 			enemy_card_plays += e_bonus
-			enemy["statuses"].erase("next_turn_plays")
+			_ensure_statuses(enemy).erase("next_turn_plays")
 		if _has_status(enemy, "neurally_enhanced"):
-			var e_neu: int = maxi(1, int(enemy["statuses"]["neurally_enhanced"].get("stacks", 1)))
+			var e_neu: int = maxi(1, _status_stacks(enemy, "neurally_enhanced"))
 			enemy_card_plays += e_neu
-			enemy["statuses"].erase("neurally_enhanced")
+			_ensure_statuses(enemy).erase("neurally_enhanced")
 		match enemy.get("passive", ""):
 			"vanguarda":
 				if enemy["row"] == "front": _add_status(enemy, "barrier", 1, 2, int(enemy["id"]))
@@ -1951,7 +1988,7 @@ func _tick_statuses() -> void:
 		statuses_at_start[actor["id"]] = actor["statuses"].keys()
 		if actor["hp"] <= 0: initially_dead.append(actor)
 		if _has_status(actor, "soulbound"):
-			var group_id := int(actor["statuses"]["soulbound"]["source"])
+			var group_id := int(_status_state(actor, "soulbound").get("source", -1))
 			if not linked_groups.has(group_id): linked_groups[group_id] = []
 			linked_groups[group_id].append(actor)
 	for actor in turn_actors:
