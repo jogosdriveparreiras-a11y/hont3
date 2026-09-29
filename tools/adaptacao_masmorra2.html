@@ -63,7 +63,7 @@ nav.toc {
   border-radius: 14px;
   padding: 16px 20px;
   margin-bottom: 28px;
-  position: sticky; top: 8px; z-index: 5;
+  /* TOC stays in normal flow so it never overlays scrolled content. */
   backdrop-filter: blur(8px);
 }
 nav.toc h2 { margin: 0 0 10px; font-size: .95rem; color: var(--accent); }
@@ -281,56 +281,56 @@ ul.compact li { margin: 4px 0; }
 <nav class="toc">
   <h2>Índice</h2>
   <ol>
-    <li contenteditable="true"><a href="#metodo">Método</a></li>
-    <li contenteditable="true"><a href="#nomenclatura">Nomenclatura oficial HotN3</a></li>
-    <li contenteditable="true"><a href="#resumo-contagem">Resumo / contagens</a></li>
-    <li contenteditable="true"><a href="#ja-hotn3-comum">Já no HotN3 (comum)</a></li>
-    <li contenteditable="true"><a href="#ja-hotn3">Mapa de exclusões / aliases</a></li>
-    <li contenteditable="true"><a href="#evelyn">Evelyn Graves</a></li>
-    <li contenteditable="true"><a href="#techna">Techna</a></li>
-    <li contenteditable="true"><a href="#taylor">Taylor Snut</a></li>
-    <li contenteditable="true"><a href="#konrad">Konrad</a></li>
-    <li contenteditable="true"><a href="#madelyn">Madelyn</a></li>
-    <li contenteditable="true"><a href="#dominika">Dominika Seur</a></li>
-    <li contenteditable="true"><a href="#nero">Nero Granger</a></li>
-    <li contenteditable="true"><a href="#alyssa">Alyssa Wine</a></li>
-    <li contenteditable="true"><a href="#resumo">Lacunas do grupo comum</a></li>
-    <li contenteditable="true"><a href="#ausentes">Ausentes (planilha + DOCX)</a></li>
-    <li contenteditable="true"><a href="#dusk">Dusk</a></li>
-    <li contenteditable="true"><a href="#duzhar">Duz&#x27;Har</a></li>
-    <li contenteditable="true"><a href="#hazel">Hazel</a></li>
-    <li contenteditable="true"><a href="#hibiki">Hibiki</a></li>
-    <li contenteditable="true"><a href="#isabel">Isabel</a></li>
-    <li contenteditable="true"><a href="#jun-genesis">Jun Genesis</a></li>
-    <li contenteditable="true"><a href="#kalel">Kalel</a></li>
-    <li contenteditable="true"><a href="#marshmallow">Marshmallow</a></li>
-    <li contenteditable="true"><a href="#mary-ann">Mary Ann</a></li>
-    <li contenteditable="true"><a href="#merida">Merida</a></li>
-    <li contenteditable="true"><a href="#methos">Methos</a></li>
-    <li contenteditable="true"><a href="#motzolop">Motzolop</a></li>
-    <li contenteditable="true"><a href="#paladino">Paladino</a></li>
-    <li contenteditable="true"><a href="#qp">QP</a></li>
-    <li contenteditable="true"><a href="#soren">Soren</a></li>
-    <li contenteditable="true"><a href="#martha">Martha</a></li>
-    <li contenteditable="true"><a href="#jakub">Jakub</a></li>
-    <li contenteditable="true"><a href="#babli">Babli</a></li>
-    <li contenteditable="true"><a href="#irwin">Irwin</a></li>
-    <li contenteditable="true"><a href="#nikki-pimvare">Nikki Pimvare</a></li>
-    <li contenteditable="true"><a href="#scypha">Scypha</a></li>
-    <li contenteditable="true"><a href="#delia">Delia</a></li>
-    <li contenteditable="true"><a href="#chase-quinn">Chase Quinn</a></li>
-    <li contenteditable="true"><a href="#nixie">Nixie</a></li>
-    <li contenteditable="true"><a href="#basil-darkheart">Basil Darkheart</a></li>
-    <li contenteditable="true"><a href="#mahina-kimura">Mahina Kimura</a></li>
-    <li contenteditable="true"><a href="#alduin">Alduin</a></li>
-    <li contenteditable="true"><a href="#john-doe">John Doe</a></li>
-    <li contenteditable="true"><a href="#danilo">Danilo</a></li>
-    <li contenteditable="true"><a href="#martha-ratzinger">Martha Ratzinger</a></li>
-    <li contenteditable="true"><a href="#yumi-yamaguchi">Yumi Yamaguchi</a></li>
-    <li contenteditable="true"><a href="#rita-repulsa">Rita Repulsa</a></li>
-    <li contenteditable="true"><a href="#bonny">Bonny</a></li>
-    <li contenteditable="true"><a href="#inimigos">Inimigos / lacaios (apêndice)</a></li>
-    <li contenteditable="true"><a href="#lacunas">Lacunas compartilhadas (sistema)</a></li>
+    <li><a href="#metodo">Método</a></li>
+    <li><a href="#nomenclatura">Nomenclatura oficial HotN3</a></li>
+    <li><a href="#resumo-contagem">Resumo / contagens</a></li>
+    <li><a href="#ja-hotn3-comum">Já no HotN3 (comum)</a></li>
+    <li><a href="#ja-hotn3">Mapa de exclusões / aliases</a></li>
+    <li><a href="#evelyn">Evelyn Graves</a></li>
+    <li><a href="#techna">Techna</a></li>
+    <li><a href="#taylor">Taylor Snut</a></li>
+    <li><a href="#konrad">Konrad</a></li>
+    <li><a href="#madelyn">Madelyn</a></li>
+    <li><a href="#dominika">Dominika Seur</a></li>
+    <li><a href="#nero">Nero Granger</a></li>
+    <li><a href="#alyssa">Alyssa Wine</a></li>
+    <li><a href="#resumo">Lacunas do grupo comum</a></li>
+    <li><a href="#ausentes">Ausentes (planilha + DOCX)</a></li>
+    <li><a href="#dusk">Dusk</a></li>
+    <li><a href="#duzhar">Duz&#x27;Har</a></li>
+    <li><a href="#hazel">Hazel</a></li>
+    <li><a href="#hibiki">Hibiki</a></li>
+    <li><a href="#isabel">Isabel</a></li>
+    <li><a href="#jun-genesis">Jun Genesis</a></li>
+    <li><a href="#kalel">Kalel</a></li>
+    <li><a href="#marshmallow">Marshmallow</a></li>
+    <li><a href="#mary-ann">Mary Ann</a></li>
+    <li><a href="#merida">Merida</a></li>
+    <li><a href="#methos">Methos</a></li>
+    <li><a href="#motzolop">Motzolop</a></li>
+    <li><a href="#paladino">Paladino</a></li>
+    <li><a href="#qp">QP</a></li>
+    <li><a href="#soren">Soren</a></li>
+    <li><a href="#martha">Martha</a></li>
+    <li><a href="#jakub">Jakub</a></li>
+    <li><a href="#babli">Babli</a></li>
+    <li><a href="#irwin">Irwin</a></li>
+    <li><a href="#nikki-pimvare">Nikki Pimvare</a></li>
+    <li><a href="#scypha">Scypha</a></li>
+    <li><a href="#delia">Delia</a></li>
+    <li><a href="#chase-quinn">Chase Quinn</a></li>
+    <li><a href="#nixie">Nixie</a></li>
+    <li><a href="#basil-darkheart">Basil Darkheart</a></li>
+    <li><a href="#mahina-kimura">Mahina Kimura</a></li>
+    <li><a href="#alduin">Alduin</a></li>
+    <li><a href="#john-doe">John Doe</a></li>
+    <li><a href="#danilo">Danilo</a></li>
+    <li><a href="#martha-ratzinger">Martha Ratzinger</a></li>
+    <li><a href="#yumi-yamaguchi">Yumi Yamaguchi</a></li>
+    <li><a href="#rita-repulsa">Rita Repulsa</a></li>
+    <li><a href="#bonny">Bonny</a></li>
+    <li><a href="#inimigos">Inimigos / lacaios (apêndice)</a></li>
+    <li><a href="#lacunas">Lacunas compartilhadas (sistema)</a></li>
   </ol>
 </nav>
 <section class="method" id="metodo">
