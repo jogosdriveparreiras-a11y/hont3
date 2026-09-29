@@ -1,0 +1,298 @@
+{
+  "generated": "2026-09-29",
+  "html": "/workspace/hont3/tools/adaptacao_masmorra2_ausentes.html",
+  "copy": "/workspace/hont3_shots/adaptacao_masmorra2_ausentes.html",
+  "hotn3_heroes_for_exclusion": 27,
+  "hotn3_hero_names": [
+    "Adam",
+    "Akuji",
+    "Alexis",
+    "Alistair",
+    "Alyssa Wine",
+    "Ashlee",
+    "Daeva",
+    "Damian Alrosa",
+    "Dominika Seur",
+    "Dylan",
+    "Evelyn Graves (Sombria)",
+    "Fate",
+    "Hynda Valdtagen",
+    "Kabuki",
+    "Konrad (Armagedom)",
+    "Leona (Marbas)",
+    "Lust",
+    "Madelyn",
+    "Mingau, o Feiticeiro",
+    "Mutante (Genérico)",
+    "Nero",
+    "Niu Valdtagen",
+    "Pesadelo Vivo",
+    "Pietro",
+    "Quasar",
+    "Taylor (Nave-Mãe)",
+    "Techna"
+  ],
+  "sheet_playable_total": 23,
+  "matched_count": 8,
+  "matched": [
+    {
+      "name": "Alyssa Wine",
+      "alter": "Titânio",
+      "hotn3": "Alyssa Wine",
+      "reason": "alias \"Alyssa Wine\" → Alyssa Wine"
+    },
+    {
+      "name": "Delevingne",
+      "alter": "Techna",
+      "hotn3": "Techna",
+      "reason": "alias \"Techna\" → Techna"
+    },
+    {
+      "name": "Dominika",
+      "alter": "",
+      "hotn3": "Dominika Seur",
+      "reason": "alias \"Dominika\" → Dominika Seur"
+    },
+    {
+      "name": "Evelyn",
+      "alter": "Sombria",
+      "hotn3": "Evelyn Graves (Sombria)",
+      "reason": "alias \"Evelyn\" → Evelyn Graves (Sombria)"
+    },
+    {
+      "name": "Konrad",
+      "alter": "Sicário",
+      "hotn3": "Konrad (Armagedom)",
+      "reason": "alias \"Konrad\" → Konrad (Armagedom)"
+    },
+    {
+      "name": "Madelyn",
+      "alter": "",
+      "hotn3": "Madelyn",
+      "reason": "alias \"Madelyn\" → Madelyn"
+    },
+    {
+      "name": "Nero Granger",
+      "alter": "",
+      "hotn3": "Nero",
+      "reason": "alias \"Nero Granger\" → Nero"
+    },
+    {
+      "name": "Taylor Snut",
+      "alter": "Nave-Mãe",
+      "hotn3": "Taylor (Nave-Mãe)",
+      "reason": "alias \"Taylor Snut\" → Taylor (Nave-Mãe)"
+    }
+  ],
+  "missing_count": 15,
+  "missing": [
+    {
+      "name": "Dusk",
+      "alter": "",
+      "sources": [
+        "Lista R6",
+        "FICHAS - Manobras R340 (Dusk)"
+      ],
+      "cards": 10
+    },
+    {
+      "name": "Duz'Har",
+      "alter": "",
+      "sources": [
+        "Lista R7",
+        "FICHAS - Manobras R405 (Duz'Har)"
+      ],
+      "cards": 9
+    },
+    {
+      "name": "Hazel",
+      "alter": "",
+      "sources": [
+        "Lista R9",
+        "FICHAS - Manobras R291 (Hazel)"
+      ],
+      "cards": 25
+    },
+    {
+      "name": "Hibiki",
+      "alter": "",
+      "sources": [
+        "Lista R10",
+        "FICHAS - Manobras R327 (Hibiki)"
+      ],
+      "cards": 7
+    },
+    {
+      "name": "Isabel",
+      "alter": "Impura",
+      "sources": [
+        "Fichas 3 R167",
+        "Fichas 3 R167"
+      ],
+      "cards": 21
+    },
+    {
+      "name": "Jun Genesis",
+      "alter": "Asura",
+      "sources": [
+        "Lista R3",
+        "FICHAS - Manobras R489 (Asura)"
+      ],
+      "cards": 10
+    },
+    {
+      "name": "Kalel",
+      "alter": "Patrulheiro Azul",
+      "sources": [
+        "Lista R11",
+        "Fichas 3 R144"
+      ],
+      "cards": 1
+    },
+    {
+      "name": "Marshmallow",
+      "alter": "Marshmallow",
+      "sources": [
+        "Lista R13",
+        "FICHAS - Manobras R436 (Marshmallow)"
+      ],
+      "cards": 11
+    },
+    {
+      "name": "Mary Ann",
+      "alter": "Rapina",
+      "sources": [
+        "Lista R20",
+        "FICHAS - Manobras R352 (Rapina)"
+      ],
+      "cards": 10
+    },
+    {
+      "name": "Merida",
+      "alter": "",
+      "sources": [
+        "Lista R14",
+        "FICHAS - Manobras R470 (Merida)"
+      ],
+      "cards": 11
+    },
+    {
+      "name": "Methos",
+      "alter": "",
+      "sources": [
+        "Lista R15",
+        "Lista de Personagens R15",
+        "FICHAS - Manobras R277 (mencionado em Muro Tático do Paladino)"
+      ],
+      "cards": 0
+    },
+    {
+      "name": "Motzolop",
+      "alter": "",
+      "sources": [
+        "Lista R16",
+        "FICHAS - Manobras R393 (Motzolop)"
+      ],
+      "cards": 7
+    },
+    {
+      "name": "Paladino",
+      "alter": "",
+      "sources": [
+        "Lista R18",
+        "FICHAS - Manobras R258 (Paladino)"
+      ],
+      "cards": 21
+    },
+    {
+      "name": "QP",
+      "alter": "QP",
+      "sources": [
+        "Lista R19",
+        "FICHAS - Manobras R382 (QP)"
+      ],
+      "cards": 9
+    },
+    {
+      "name": "Soren",
+      "alter": "",
+      "sources": [
+        "Lista R21",
+        "FICHAS - Manobras R419 (Soren)"
+      ],
+      "cards": 7
+    }
+  ],
+  "ambiguous": [],
+  "enemies_total": 46,
+  "enemies_missing": 38,
+  "enemies_matched": 8,
+  "sheet_structure": {
+    "Lista de Personagens": "21 playable names + alterego (cols sparse)",
+    "Fichas 3": "Character blocks ~23 rows: identity in col B/C, manobras in F-S",
+    "FICHAS - Manobras": "Early unlabeled kits + named labels from Hazel onward",
+    "Inimigos e Ajudantes": "~46 named enemies with class/HP/moves"
+  },
+  "editable_update": "2026-09-29",
+  "docx_merge": {
+    "roster_chars": 28,
+    "report_comum": [
+      "comum: enriched evelyn with H5 Evelyn Graves/Sombria",
+      "comum: enriched techna with H5 Delevingne/Techna",
+      "comum: enriched konrad with H5 Konrad/Amargedom",
+      "comum: enriched konrad with H4 roster",
+      "comum: enriched dominika with H4 roster",
+      "comum: added Alyssa reference section from H5"
+    ],
+    "report_ausentes": [
+      "ausentes: enriched qp",
+      "ausentes: enriched motzolop",
+      "ausentes: enriched duzhar",
+      "ausentes: enriched soren",
+      "ausentes: enriched hibiki",
+      "ausentes: enriched marshmallow",
+      "ausentes: enriched merida",
+      "ausentes: enriched methos",
+      "ausentes: enriched isabel with H5 Impura kit",
+      "ausentes: ADD Martha / Baba-Yaga → #martha",
+      "ausentes: ADD Jakub / Neblina → #jakub",
+      "ausentes: ADD Babli / Vibro → #babli",
+      "ausentes: ADD Irwin / Fobia → #irwin",
+      "ausentes: ADD Nikki Pimvare / Necrolai → #nikki-pimvare",
+      "ausentes: ADD Scypha / Pixie → #scypha",
+      "ausentes: ADD Delia / Sprite → #delia",
+      "ausentes: ADD Chase Quinn / Patrulheiro Vermelho → #chase-quinn",
+      "ausentes: ADD Nixie /  → #nixie",
+      "ausentes: ADD Basil Darkheart / Especialista → #basil-darkheart",
+      "ausentes: ADD Mahina Kimura / Vazio → #mahina-kimura",
+      "ausentes: ADD Alduin / Wyvern → #alduin",
+      "ausentes: ADD John Doe / Silent Soldier → #john-doe",
+      "ausentes: ADD Danilo / Maldito → #danilo",
+      "ausentes: ADD Martha Ratzinger / Matriarca → #martha-ratzinger",
+      "ausentes: ADD Yumi Yamaguchi / Princesa Yumi → #yumi-yamaguchi",
+      "ausentes: ADD Rita Repulsa / Patrulheira Verde → #rita-repulsa",
+      "ausentes: ADD Bonny /  → #bonny",
+      "ausentes: added H5 enemies table"
+    ]
+  },
+  "docx_added_to_ausentes": [
+    "Martha / Baba-Yaga → #martha",
+    "Jakub / Neblina → #jakub",
+    "Babli / Vibro → #babli",
+    "Irwin / Fobia → #irwin",
+    "Nikki Pimvare / Necrolai → #nikki-pimvare",
+    "Scypha / Pixie → #scypha",
+    "Delia / Sprite → #delia",
+    "Chase Quinn / Patrulheiro Vermelho → #chase-quinn",
+    "Nixie /  → #nixie",
+    "Basil Darkheart / Especialista → #basil-darkheart",
+    "Mahina Kimura / Vazio → #mahina-kimura",
+    "Alduin / Wyvern → #alduin",
+    "John Doe / Silent Soldier → #john-doe",
+    "Danilo / Maldito → #danilo",
+    "Martha Ratzinger / Matriarca → #martha-ratzinger",
+    "Yumi Yamaguchi / Princesa Yumi → #yumi-yamaguchi",
+    "Rita Repulsa / Patrulheira Verde → #rita-repulsa",
+    "Bonny /  → #bonny"
+  ]
+}
