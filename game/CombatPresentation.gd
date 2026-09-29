@@ -71,10 +71,25 @@ func clear_actors() -> void:
 	shake_time = 0.0
 
 func show_action(kind: String, source_id: int, target_id: int, amount: int) -> void:
-	var cues := {"draw": "draw", "redraw": "redraw", "cast": "cast", "counter": "cast", "hit": "hit", "block": "block", "guard": "block", "heal": "heal", "status": "status", "death": "death", "resist": "resist", "immune": "resist", "move": "move"}
+	var cues := {"draw": "draw", "redraw": "redraw", "cast": "cast", "counter": "cast", "hit": "hit", "block": "block", "guard": "block", "heal": "heal", "status": "status", "death": "death", "resist": "resist", "immune": "resist", "move": "move", "transform": "cast"}
 	if cues.has(kind): sound.cue(cues[kind])
 	if kind == "draw" or kind == "redraw": return
-	if kind in ["cast", "counter"]:
+	if kind == "transform":
+		_focus(source_id)
+		_animate_sprite(source_id, "cast")
+		flash_white(source_id, 0.85 / animation_speed)
+		_burst(source_id, Color("e9c891"))
+		_burst(source_id, Color("ba9dea"))
+		_float_text(source_id, "DESPERTAR", Color("e9c891"))
+		_play_preset("summon", source_id)
+		_play_preset("buff", source_id)
+		# Zoom cinematográfico breve (GameRoot lê estes campos).
+		zoom = maxf(zoom, 1.85)
+		focus_target = _actor_world_pos(source_id)
+		if view_mode != "lateral":
+			var point: Vector3 = _actor_world_pos(source_id)
+			ally_focus = Vector3(point.x * 0.42, 0.28, 0.0)
+	elif kind in ["cast", "counter"]:
 		_animate_sprite(source_id, "cast")
 		_focus(target_id)
 	elif kind == "hit":

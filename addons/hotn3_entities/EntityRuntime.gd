@@ -388,12 +388,20 @@ func _try_nero_transform(battle: Variant, source: Dictionary, card_id: String) -
 		return
 	source["transformed"] = true
 	var hero: Dictionary = catalog.hero(str(source.get("archetype", "ent_nero")))
+	var base_sprite := str(source.get("sprite", ""))
+	var base_portrait := str(source.get("portrait", ""))
 	source["name"] = str(hero.get("transform_name", "Naomi"))
 	if hero.has("transform_sprite"):
 		source["sprite"] = str(hero["transform_sprite"])
 	if hero.has("transform_portrait"):
 		source["portrait"] = str(hero["transform_portrait"])
-	battle._log("%s despertou como %s!" % [str(source.get("base_name", "Nero")), source["name"]])
+	var reused_art := str(source.get("sprite", "")) == base_sprite and str(source.get("portrait", "")) == base_portrait
+	if reused_art or str(source.get("sprite", "")) == "res://assets/cast/ent_nero_sprite.png":
+		battle._log("%s despertou como %s! (arte Naomi: reutilizando Nero por enquanto)" % [str(source.get("base_name", "Nero")), source["name"]])
+	else:
+		battle._log("%s despertou como %s!" % [str(source.get("base_name", "Nero")), source["name"]])
+	if battle.has_signal("visual"):
+		battle.visual.emit("transform", int(source["id"]), int(source["id"]), 0)
 	battle.changed.emit()
 
 func play_block_reason(battle: Variant, hand_index: int, target_id: int = -1, chain_ids: Array = []) -> String:

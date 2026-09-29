@@ -99,6 +99,10 @@ var free_cam_pitch := 0.0
 var free_cam_dragging := false
 var free_cam_last := Vector2.ZERO
 var hover_retarget_freeze_until := 0
+## Foco/zoom cinematográfico (ex.: Nero→Naomi); segura contra o lerp de hover.
+var cinematic_until_msec := 0
+var cinematic_actor_id := -1
+var cinematic_zoom := 1.85
 var weather_fx_root: Node3D = null
 var anim_test_caster := "ent_alyssa_wine"
 var anim_test_target := "ent_akuji"
@@ -1931,10 +1935,17 @@ func _on_event(message: String) -> void:
 		session_report.log_battle("log", {"text": message})
 
 func _on_visual(kind: String, source_id: int, target_id: int, amount: int) -> void:
-	if session_report != null and kind in ["cast", "hit", "heal", "death", "status", "block", "guard", "immune", "resist"]:
+	if session_report != null and kind in ["cast", "hit", "heal", "death", "status", "block", "guard", "immune", "resist", "transform"]:
 		session_report.log_battle("visual", {"kind": kind, "source": source_id, "target": target_id, "amount": amount})
 	if presentation != null: presentation.show_action(kind, source_id, target_id, amount)
-	if kind in ["cast", "hit", "heal", "death", "status", "block", "guard"]:
+	if kind == "transform":
+		cinematic_actor_id = source_id
+		cinematic_zoom = 1.9
+		cinematic_until_msec = Time.get_ticks_msec() + int(1400.0 / maxf(animation_speed, 0.25))
+		_show_actor_portrait(source_id, true)
+		if battle_view_mode == "lateral":
+			_lateral_focus_actor(source_id, cinematic_zoom)
+	elif kind in ["cast", "hit", "heal", "death", "status", "block", "guard"]:
 		_show_actor_portrait(source_id, true)
 		if target_id != source_id: _show_actor_portrait(target_id, true)
 
@@ -4647,7 +4658,13 @@ func _process(delta: float) -> void:
 			# Zoom só no hover de SPRITE: escala o mundo (stage+units). Hover de carta
 			# foca o dono sem zoom — câmera/mão 3D permanecem estáticas na tela.
 			var want_zoom := 1.0
-			if focus_id >= 0 and actor_nodes.has(focus_id):
+			var cinema_active := Time.get_ticks_msec() < cinematic_until_msec and cinematic_actor_id >= 0
+			if cinema_active and actor_nodes.has(cinematic_actor_id):
+				var cbody: Node3D = actor_nodes[cinematic_actor_id]
+				if is_instance_valid(cbody):
+					want_focus = cbody.position
+					want_zoom = cinematic_zoom
+			elif focus_id >= 0 and actor_nodes.has(focus_id):
 				var body: Node3D = actor_nodes[focus_id]
 				if is_instance_valid(body):
 					want_focus = body.position
@@ -4659,7 +4676,12 @@ func _process(delta: float) -> void:
 			presentation.orbit = 0.0
 		else:
 			var focus := Vector3.ZERO
-			if focus_id >= 0 and actor_nodes.has(focus_id):
+			var cinema_active2 := Time.get_ticks_msec() < cinematic_until_msec and cinematic_actor_id >= 0
+			if cinema_active2 and actor_nodes.has(cinematic_actor_id):
+				var cbody2: Node3D = actor_nodes[cinematic_actor_id]
+				if is_instance_valid(cbody2):
+					focus = Vector3(cbody2.position.x * 0.42, 0.28, 0.0)
+			elif focus_id >= 0 and actor_nodes.has(focus_id):
 				var actor: Dictionary = battle.actor_by_id(focus_id)
 				if str(actor.get("side", "")) == "ALLY":
 					var body: Node3D = actor_nodes[focus_id]

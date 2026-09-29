@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-29 — Nero→Naomi transform FX + summons die with summoner
+
+- **Transform FX**: ao completar 5 cartas Nero, emite `visual transform` — foco/zoom cinematográfico (~1,4s), burst/summon/buff FX, flash, texto DESPERTAR; sprite/retrato trocam para `transform_*` (hoje **reutiliza arte de Nero** — sem assets Naomi dedicados).
+- **Lacaios do conjurador**: ao morrer Nero/Naomi (ou qualquer summoner), `purge_summons_of` zera HP dos `is_summon`, remove cartas deles de mão/baralho/descarte e emite death.
+- Smoke: `tools/NeroNaomiTransformSmoke.gd` (Derretimento passive_like, Solidão/Deixe-me Viver redraw+alone, transform, purge).
+
 ## 2026-09-29 — Status Dictionary safe get (dazed / signature crashes)
 
 - **Cause (`dazed`)**: `_normalize_status_id("dazed")` → `stun`. `_has_status(..., "dazed")` succeeded, then `actor["statuses"]["dazed"]` threw *Invalid access* (GDScript 4). Hit on Puxão do Reino Quebrado / Peitada via `_after_card_play`.

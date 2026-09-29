@@ -186,6 +186,20 @@ func purge_owner_cards(owner_id: int) -> void:
 			if int(card.get("owner", -1)) == owner_id:
 				pile.remove_at(i)
 
+func purge_summons_of(summoner_id: int) -> void:
+	# Lacaios convocados pelo conjurador morrem e perdem cartas de mão/pilhas.
+	for actor in actors:
+		if not bool(actor.get("is_summon", false)):
+			continue
+		if int(actor.get("summoner_id", -1)) != summoner_id:
+			continue
+		if int(actor.get("hp", 0)) <= 0:
+			purge_owner_cards(int(actor["id"]))
+			continue
+		actor["hp"] = 0
+		purge_owner_cards(int(actor["id"]))
+		_log("%s dissipou-se com o conjurador." % actor.get("name", "?"))
+		visual.emit("death", summoner_id, int(actor["id"]), 0)
 
 func spawn_enemy(enemy_id: String) -> void:
 	if not Content.HEROES.has(enemy_id):
@@ -1096,6 +1110,8 @@ func _take_damage(source: Dictionary, target: Dictionary, amount: int, pierce: b
 		if bool(target.get("is_summon", false)) or bool(target.get("minion", false)):
 			purge_owner_cards(int(target["id"]))
 			_log("%s caiu — cartas removidas do baralho." % target.get("name", "?"))
+		# Conjurador (ex.: Nero/Naomi) cai → todos os lacaios invocados caem e perdem cartas.
+		purge_summons_of(int(target["id"]))
 		visual.emit("death", int(source["id"]), int(target["id"]), 0)
 		var ability_ko: bool = source["id"] != target["id"] and source["side"] != target["side"] and (not environmental or from_card)
 		if ability_ko and _has_status(source, "fury_totem"): _draw(1)
