@@ -269,7 +269,7 @@ Total: **569** cartas.
 | `ent_dominika_seur_cair_por_cima` | Cair Por Cima | ESTADO | entities | `Neutral1` | `Protection` |
 | `ent_dominika_seur_corpo_de_manteiga` | Corpo de Manteiga | ESTADO | entities | `buff` | `heal` |
 | `ent_dominika_seur_desvantagem_derretimento` | Derretimento | DESVANTAGEM | entities | `ice` | `blow` |
-| `ent_dominika_seur_eu_sou_a_vitima` | Eu Sou a Vítima! | ESTADO | entities | `buff` | `status` |
+| `ent_dominika_seur_eu_sou_a_vitima` | Eu Sou a Vítima! | POSTURA | entities | `buff` | `status` |
 | `ent_dominika_seur_peitada` | Peitada | ATTACK | entities | `Special3` | `Blow1` |
 | `ent_dominika_seur_presenca` | Presença | ESTADO | entities | `cast` | `status` |
 | `ent_dominika_seur_rolar` | Rolar | ESTADO | entities | `Special1` | `smoke` |

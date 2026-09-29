@@ -877,7 +877,7 @@ func _anim_test_set_card(card_id: String) -> void:
 
 
 func _anim_test_cycle_filter_class() -> void:
-	var order := ["", "ATTACK", "ESTADO", "DESVANTAGEM", "SKILL", "ITEM"]
+	var order := ["", "ATTACK", "ESTADO", "POSTURA", "DESVANTAGEM", "SKILL", "ITEM"]
 	var idx := order.find(anim_test_filter_class)
 	if idx < 0:
 		idx = 0
@@ -1717,7 +1717,7 @@ func _show_collection_screen() -> void:
 		hero_bar.add_child(_button(("✓ " if id == collection_hero else "") + Content.HEROES[id]["name"], _select_collection_hero.bind(id)))
 	var filter_bar := HBoxContainer.new()
 	menu.add_child(filter_bar)
-	for filter_name in ["TODAS", "IMPACTO", "PODER", "ESTADO", "ALCANCE", "MELHORADAS"]:
+	for filter_name in ["TODAS", "IMPACTO", "PODER", "ESTADO", "POSTURA", "ALCANCE", "MELHORADAS"]:
 		filter_bar.add_child(_button(("● " if collection_filter == filter_name else "") + filter_name.capitalize(), _set_collection_filter.bind(filter_name)))
 	var type_bar := HBoxContainer.new()
 	menu.add_child(type_bar)
@@ -1796,6 +1796,7 @@ func _matches_collection_filter(card_id: String, hero_id: String) -> bool:
 		"IMPACTO": return _card_has_damage(card) and str(card.get("stat", "attack")) != "power"
 		"PODER": return _card_has_damage(card) and str(card.get("stat", "")) == "power"
 		"ESTADO": return not _card_has_damage(card)
+		"POSTURA": return str(card.get("class", "")) == "POSTURA"
 		"ALCANCE": return card.get("reach", false)
 		"MELHORADAS": return int(improvements.get(hero_id + ":" + card_id, {}).get("upgrade", 0)) > 0
 		"FÍSICO", "MÁGICO", "SUPORTE": return _card_type(card) == collection_filter
@@ -1935,7 +1936,7 @@ func _on_event(message: String) -> void:
 		session_report.log_battle("log", {"text": message})
 
 func _on_visual(kind: String, source_id: int, target_id: int, amount: int) -> void:
-	if session_report != null and kind in ["cast", "hit", "heal", "death", "status", "block", "guard", "immune", "resist", "transform"]:
+	if session_report != null and kind in ["cast", "hit", "heal", "death", "status", "block", "guard", "immune", "resist", "transform", "ini_gain"]:
 		session_report.log_battle("visual", {"kind": kind, "source": source_id, "target": target_id, "amount": amount})
 	if presentation != null: presentation.show_action(kind, source_id, target_id, amount)
 	if kind == "transform":
@@ -1945,6 +1946,13 @@ func _on_visual(kind: String, source_id: int, target_id: int, amount: int) -> vo
 		_show_actor_portrait(source_id, true)
 		if battle_view_mode == "lateral":
 			_lateral_focus_actor(source_id, cinematic_zoom)
+	elif kind == "ini_gain":
+		cinematic_actor_id = target_id
+		cinematic_zoom = 1.55
+		cinematic_until_msec = Time.get_ticks_msec() + int(700.0 / maxf(animation_speed, 0.25))
+		_show_actor_portrait(target_id, true)
+		if battle_view_mode == "lateral":
+			_lateral_focus_actor(target_id, cinematic_zoom)
 	elif kind in ["cast", "hit", "heal", "death", "status", "block", "guard"]:
 		_show_actor_portrait(source_id, true)
 		if target_id != source_id: _show_actor_portrait(target_id, true)
@@ -3173,7 +3181,21 @@ func _status_label(status_id: String) -> String:
 		"marked": "Marcado",
 		"conceal": "Oculto",
 		"counter": "Contra-ataque",
-		"vitima": "Vítima",
+		"vitima": "Tanque",
+		"tanque": "Tanque",
+		"furioso": "Furioso",
+		"curador": "Curador",
+		"empatico": "Empático",
+		"atirador": "Atirador",
+		"drenador": "Drenador",
+		"controlador": "Controlador",
+		"garra": "Garra",
+		"vingador": "Vingador",
+		"executor": "Executor",
+		"indomavel": "Indomável",
+		"sobrevivente": "Sobrevivente",
+		"intocavel": "Intocável",
+		"preparo": "Preparo",
 		"strengthened": "Fortalecido",
 		"slow": "Lento",
 		"bind": "Prisão",

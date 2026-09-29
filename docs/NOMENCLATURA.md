@@ -121,3 +121,31 @@ Counter **não** é um estado genérico: os efeitos do revidе vêm da carta que
 ## Alcance
 
 `reach` / Alcance só faz sentido contra o time inimigo. Cartas `SELF` / `ALLY` / `ALL_ALLIES` não devem marcar Alcance.
+
+
+## Postura
+
+**Postura** = status exclusivo **e** classe de carta (`class: POSTURA`). Um personagem só pode ter **uma** postura por vez — aplicar outra **substitui** a anterior.
+
+Ganho de Iniciativa da postura: **no máximo 1 ativação por postura por rodada** (não por hit de AoE / multi-alvo).
+
+| Id | Nome | Gatilho | INI |
+|----|------|---------|-----|
+| `tanque` | Tanque | Sofre dano de Vida | +1 |
+| `furioso` | Furioso | Causa dano de Vida | +1 |
+| `curador` | Curador | Cura Vida | +2 |
+| `empatico` | Empático | Causa dano de Vida em aliado | +2 |
+| `atirador` | Atirador | Usa carta com Alcance | +2 |
+| `drenador` | Drenador | Usa Dreno | +2 |
+| `controlador` | Controlador | Aplica status negativo em inimigo | +2 |
+| `garra` | Garra | Recebe status negativo de inimigo | +3 |
+| `vingador` | Vingador | Aliado morre | +2 |
+| `executor` | Executor | Mata inimigo | +2 |
+| `indomavel` | Indomável | Fim do turno do time com Vida < 1/3 | +2 |
+| `sobrevivente` | Sobrevivente | Fim do turno do time como único vivo do grupo | +3 |
+| `intocavel` | Intocável | Evita ataque inimigo com Proteção | +2 |
+| `preparo` | Preparo | Usa item | +3 |
+
+UI: popup flutuante verde `+X Iniciativa` sobre o personagem + foco breve de câmera.
+
+Legado: status `vitima` / Vítima normaliza para `tanque` / Tanque. Carta Dominika **Eu Sou a Vítima!** concede Postura Tanque por 3 rodadas (nome da carta mantido).

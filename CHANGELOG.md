@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-29 — Posturas
+
+- Sistema de **Postura** (status exclusivo + classe `POSTURA`): 14 posturas com ganho de Iniciativa (1 ativação/postura/rodada).
+- UI: popup verde `+X Iniciativa` + foco breve de câmera.
+- Dominika **Eu Sou a Vítima!** → concede Postura Tanque 3 rodadas (nome da carta mantido; alias `vitima`→`tanque`).
+- Docs: `NOMENCLATURA.md` § Postura, `docs/STATUSES.txt`. Smoke: `tools/PosturaSmoke.gd`.
+
 ## 2026-09-29 — Nero→Naomi transform FX + summons die with summoner
 
 - **Transform FX**: ao completar 5 cartas Nero, emite `visual transform` — foco/zoom cinematográfico (~1,4s), burst/summon/buff FX, flash, texto DESPERTAR; sprite/retrato trocam para `transform_*` (hoje **reutiliza arte de Nero** — sem assets Naomi dedicados).

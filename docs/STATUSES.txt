@@ -1,0 +1,23 @@
+HotN3 — Status principais (resumo)
+====================================
+
+Defesa
+- protecao / Proteção: ignora N ataques (stacks)
+- barrier / Barreira: pool de HP próprio + duração em rodadas
+- resistente / Resistente ↔ fragil / Frágil (cancelamento mútuo, máx 5)
+- invulnerable / Invulnerável
+
+Negativos (NEGATIVE): weak, vulnerable, marked, stun, bind/bound, fragil,
+poison, bleed, burn, silence, blind, slow, wounded, corrupted, confused,
+banished, webbed_up, taunted, berserk_enemy, feeding_frenzy, drop, overload,
+spike_bomb
+
+Posturas (exclusivas — ver docs/NOMENCLATURA.md § Postura)
+tanque, furioso, curador, empatico, atirador, drenador, controlador, garra,
+vingador, executor, indomavel, sobrevivente, intocavel, preparo
+(alias legado: vitima → tanque)
+
+Outros
+- escuridao: persistente (Alyssa), acumula ao sofrer Vida
+- counter: revidе; efeitos vêm da carta que concedeu
+- atento: ignora desvantagem de arquétipo / algumas defesas

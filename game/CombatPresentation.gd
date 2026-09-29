@@ -71,7 +71,7 @@ func clear_actors() -> void:
 	shake_time = 0.0
 
 func show_action(kind: String, source_id: int, target_id: int, amount: int) -> void:
-	var cues := {"draw": "draw", "redraw": "redraw", "cast": "cast", "counter": "cast", "hit": "hit", "block": "block", "guard": "block", "heal": "heal", "status": "status", "death": "death", "resist": "resist", "immune": "resist", "move": "move", "transform": "cast"}
+	var cues := {"draw": "draw", "redraw": "redraw", "cast": "cast", "counter": "cast", "hit": "hit", "block": "block", "guard": "block", "heal": "heal", "status": "status", "death": "death", "resist": "resist", "immune": "resist", "move": "move", "transform": "cast", "ini_gain": "heal"}
 	if cues.has(kind): sound.cue(cues[kind])
 	if kind == "draw" or kind == "redraw": return
 	if kind == "transform":
@@ -120,6 +120,27 @@ func show_action(kind: String, source_id: int, target_id: int, amount: int) -> v
 		_burst(target_id, Color("ba9dea"))
 		_animate_sprite(target_id, "status")
 		_play_preset("status", target_id)
+	elif kind == "ini_gain":
+		# Postura: popup verde + foco breve na câmera, depois restaura.
+		var msg := "+%d Iniciativa" % maxi(1, amount)
+		_spawn_float(target_id, msg, Color("3dff8a"), 34, true)
+		_burst(target_id, Color("3dff8a"))
+		var prev_focus: Vector3 = focus_target
+		var prev_zoom: float = zoom
+		var prev_ally: Vector3 = ally_focus
+		_focus(target_id)
+		focus_target = _actor_world_pos(target_id)
+		zoom = maxf(zoom, 1.55)
+		if view_mode != "lateral":
+			var point: Vector3 = _actor_world_pos(target_id)
+			ally_focus = Vector3(point.x * 0.38, 0.22, 0.0)
+		var tw := create_tween()
+		tw.tween_interval(0.55 / maxf(animation_speed, 0.25))
+		tw.tween_callback(func() -> void:
+			focus_target = prev_focus
+			zoom = prev_zoom
+			ally_focus = prev_ally
+		)
 	if kind == "hit":
 		_play_preset("hit", target_id)
 	elif kind == "heal":

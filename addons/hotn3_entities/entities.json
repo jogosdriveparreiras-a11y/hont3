@@ -11017,7 +11017,7 @@
       "id": "ent_dominika_seur_eu_sou_a_vitima",
       "name": "Eu Sou a Vítima!",
       "owner": "ent_dominika_seur",
-      "class": "ESTADO",
+      "class": "POSTURA",
       "target": "SELF",
       "actions": [
         [
@@ -11025,7 +11025,7 @@
         ],
         [
           "self_status",
-          "vitima",
+          "tanque",
           "3"
         ]
       ],
@@ -11044,7 +11044,7 @@
       ],
       "anim_timing": "parallel",
       "free": true,
-      "text": "Grátis. Estado Vítima por 3 rodadas: +1 Iniciativa ao sofrer dano."
+      "text": "Grátis. Postura Tanque por 3 rodadas: +1 Iniciativa ao sofrer dano de Vida (1× por rodada)."
     },
     "ent_dominika_seur_abalo_sismico": {
       "id": "ent_dominika_seur_abalo_sismico",

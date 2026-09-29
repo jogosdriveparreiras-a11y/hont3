@@ -745,10 +745,18 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 					battle._add_status(victim, "barrier", maxi(1, br2), bamt2, int(source["id"]))
 			"heal", "full_heal", "heal_all":
 				var healed: Array = _friends(battle, source) if op == "heal_all" else targets
+				var any_healed := false
 				for victim in healed:
 					# Cura = Vida absoluta (não × ATK/Impacto). Aceita fórmula (2*E).
+					var before_h := int(victim["hp"])
 					var heal_amt: int = int(round(battle.resolve_amount(a[1] if a.size() > 1 else 0, source)))
 					victim["hp"] = int(victim["max_hp"]) if op == "full_heal" else mini(int(victim["max_hp"]), int(victim["hp"]) + heal_amt)
+					if int(victim["hp"]) > before_h:
+						any_healed = true
+						if battle.has_signal("visual"):
+							battle.visual.emit("heal", int(source["id"]), int(victim["id"]), int(victim["hp"]) - before_h)
+				if any_healed and battle.has_method("try_posture_trigger"):
+					battle.try_posture_trigger(source, "curador")
 			"hit_flat":
 				# Dano absoluto (ex.: Tormenta 10×E), penetrante ambiental — sem ATK/Poder.
 				var flat_amt: int = maxi(0, int(round(battle.resolve_amount(a[1] if a.size() > 1 else 0, source))))
@@ -768,9 +776,15 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 						if not kos.has(foe["id"]): kos.append(foe["id"])
 			"heal_own_minions":
 				var ham: int = maxi(1, int(round(battle.resolve_amount(a[1] if a.size() > 1 else 1, source))))
+				var ham_any := false
 				for ally in _friends(battle, source):
 					if bool(ally.get("is_summon", false)) and int(ally.get("summoner_id", -1)) == int(source["id"]):
+						var bh2 := int(ally["hp"])
 						ally["hp"] = mini(int(ally["max_hp"]), int(ally["hp"]) + ham)
+						if int(ally["hp"]) > bh2:
+							ham_any = true
+				if ham_any and battle.has_method("try_posture_trigger"):
+					battle.try_posture_trigger(source, "curador")
 			"sacrifice_minion":
 				for victim in targets:
 					if bool(victim.get("is_summon", false)):
@@ -1110,6 +1124,8 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 	if def.get("exhaust", false) or card.get("temporary", false): _acting_exhausted(battle).append(card)
 	elif _counter(source, "retain_next") > 0: _consume(source, "retain_next"); _acting_hand(battle).append(card)
 	else: _acting_discard(battle).append(card)
+	if battle.has_method("_notify_card_posture_hooks"):
+		battle._notify_card_posture_hooks(source, def)
 	battle.played_cards += 1
 	# Instantâneo não encerra a fase — só bloqueia Encerrar enquanto na mão.
 	if battle._has_status(source, "invulnerable"):

@@ -252,7 +252,12 @@ func describe_actions(definition: Dictionary) -> Array[String]:
 			"invulneravel", "invulnerable":
 				parts.append("Invulnerável %s" % str(action[1] if action.size() > 1 else "1"))
 			"status", "self_status", "chance_status", "roulette_status":
-				parts.append("Estado %s" % str(action[1] if action.size() > 1 else ""))
+				var st_name := str(action[1] if action.size() > 1 else "")
+				var posture_ids := ["tanque", "furioso", "curador", "empatico", "atirador", "drenador", "controlador", "garra", "vingador", "executor", "indomavel", "sobrevivente", "intocavel", "preparo", "vitima"]
+				if st_name in posture_ids:
+					parts.append("Postura %s" % st_name.capitalize())
+				else:
+					parts.append("Estado %s" % st_name)
 			"draw", "draw_owner", "draw_heroic", "draw_own":
 				parts.append("Compra" if op != "draw_own" else "Comprar próprio")
 			"recover", "recover_own":

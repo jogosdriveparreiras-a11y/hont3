@@ -45,6 +45,23 @@ var enemy_combo_used := false
 var request_end_turn := false
 var pending_recover: Dictionary = {}  # {count, owner_id} owner_id -1 = qualquer
 const NEGATIVE := ["weak", "vulnerable", "marked", "stun", "bind", "bound", "fragil", "poison", "bleed", "burn", "silence", "blind", "slow", "wounded", "corrupted", "confused", "banished", "webbed_up", "taunted", "berserk_enemy", "feeding_frenzy", "drop", "overload", "spike_bomb"]
+## Posturas: status exclusivo (só 1) + classe de carta POSTURA. INI gain capped 1×/postura/rodada.
+const POSTURES := {
+	"tanque": {"gain": 1, "label": "Tanque"},
+	"furioso": {"gain": 1, "label": "Furioso"},
+	"curador": {"gain": 2, "label": "Curador"},
+	"empatico": {"gain": 2, "label": "Empático"},
+	"atirador": {"gain": 2, "label": "Atirador"},
+	"drenador": {"gain": 2, "label": "Drenador"},
+	"controlador": {"gain": 2, "label": "Controlador"},
+	"garra": {"gain": 3, "label": "Garra"},
+	"vingador": {"gain": 2, "label": "Vingador"},
+	"executor": {"gain": 2, "label": "Executor"},
+	"indomavel": {"gain": 2, "label": "Indomável"},
+	"sobrevivente": {"gain": 3, "label": "Sobrevivente"},
+	"intocavel": {"gain": 2, "label": "Intocável"},
+	"preparo": {"gain": 3, "label": "Preparo"},
+}
 
 func _acting() -> String:
 	return "ENEMY" if phase == "ENEMY" else "ALLY"
@@ -515,8 +532,34 @@ func _normalize_status_id(id: String) -> String:
 			return "wounded"
 		"slow", "lento":
 			return "slow"
-		"vitima", "victim":
-			return "vitima"
+		"vitima", "victim", "tanque":
+			return "tanque"
+		"furioso", "furious":
+			return "furioso"
+		"curador", "healer":
+			return "curador"
+		"empatico", "empathetic", "empatia":
+			return "empatico"
+		"atirador", "marksman":
+			return "atirador"
+		"drenador", "drainer":
+			return "drenador"
+		"controlador", "controller":
+			return "controlador"
+		"garra", "claw":
+			return "garra"
+		"vingador", "avenger":
+			return "vingador"
+		"executor", "executioner":
+			return "executor"
+		"indomavel", "indomitable":
+			return "indomavel"
+		"sobrevivente", "survivor":
+			return "sobrevivente"
+		"intocavel", "untouchable":
+			return "intocavel"
+		"preparo_postura":
+			return "preparo"
 		_:
 			return key
 
@@ -709,6 +752,63 @@ func discard_from_hand(amount: int, prefer_random: bool = true) -> int:
 func grant_next_turn_plays(actor: Dictionary, amount: int) -> void:
 	_add_status(actor, "next_turn_plays", 2, maxi(1, amount), int(actor.get("id", 0)))
 
+func is_posture_id(id: String) -> bool:
+	return POSTURES.has(_normalize_status_id(id))
+
+func _clear_other_postures(actor: Dictionary, keep: String) -> void:
+	var statuses := _ensure_statuses(actor)
+	keep = _normalize_status_id(keep)
+	for pid in POSTURES.keys():
+		if str(pid) != keep and statuses.has(pid):
+			statuses.erase(pid)
+	# legado
+	if keep != "tanque":
+		statuses.erase("vitima")
+
+## +INI de postura: no máx. 1 ativação por postura por rodada (turn).
+func try_posture_trigger(actor: Dictionary, posture_id: String) -> bool:
+	if actor.is_empty() or int(actor.get("hp", 0)) <= 0:
+		return false
+	posture_id = _normalize_status_id(posture_id)
+	if not POSTURES.has(posture_id):
+		return false
+	if not _has_status(actor, posture_id):
+		return false
+	var fired: Variant = actor.get("posture_fired", {})
+	if typeof(fired) != TYPE_DICTIONARY:
+		fired = {}
+	if int(fired.get(posture_id, -1)) == int(turn):
+		return false
+	var gain: int = int(POSTURES[posture_id].get("gain", 1))
+	var side := str(actor.get("side", "ALLY"))
+	_set_impulse(side, mini(int(rules["impulse_max"]), _get_impulse(side) + gain))
+	fired[posture_id] = int(turn)
+	actor["posture_fired"] = fired
+	var label := str(POSTURES[posture_id].get("label", posture_id))
+	_log("%s (%s): +%d Iniciativa." % [actor.get("name", "?"), label, gain])
+	visual.emit("ini_gain", int(actor["id"]), int(actor["id"]), gain)
+	return true
+
+func _posture_end_of_side(side: String) -> void:
+	var living_side := living(side)
+	for actor in living_side:
+		if _has_status(actor, "indomavel"):
+			# Vida abaixo de 1/3
+			if int(actor["hp"]) * 3 < int(actor["max_hp"]):
+				try_posture_trigger(actor, "indomavel")
+		if _has_status(actor, "sobrevivente") and living_side.size() == 1:
+			try_posture_trigger(actor, "sobrevivente")
+
+func _notify_card_posture_hooks(source: Dictionary, definition: Dictionary) -> void:
+	if source.is_empty() or definition.is_empty():
+		return
+	if bool(definition.get("reach", false)):
+		try_posture_trigger(source, "atirador")
+	if bool(definition.get("drain", false)) or card_has_flag(definition, "drain"):
+		try_posture_trigger(source, "drenador")
+	if bool(definition.get("item", false)) or str(definition.get("id", "")).begins_with("item_"):
+		try_posture_trigger(source, "preparo")
+
 func _has_status(actor: Dictionary, id: String) -> bool:
 	var state := _status_state(actor, id)
 	return not state.is_empty() and int(state.get("duration", 0)) > 0
@@ -729,6 +829,9 @@ func _add_status(actor: Dictionary, id: String, duration: int, stacks: int, sour
 	if id == "":
 		return
 	var statuses := _ensure_statuses(actor)
+	# Posturas são exclusivas: aplicar uma remove as demais.
+	if POSTURES.has(id):
+		_clear_other_postures(actor, id)
 	if id in ["stun", "bind", "bound"]:
 		statuses.erase("protecting")
 		statuses.erase("protected")
@@ -788,7 +891,11 @@ func _add_status(actor: Dictionary, id: String, duration: int, stacks: int, sour
 		var add: int = maxi(1, stacks)
 		state["stacks"] = int(state.get("stacks", 0)) + add
 		state["duration"] = maxi(int(state.get("duration", 0)), int(state["stacks"]))
-	elif id in ["atento", "wounded", "slow", "vitima"]:
+	elif POSTURES.has(id):
+		# Postura: duração em rodadas; stacks fixo 1 (não acumula).
+		state["duration"] = maxi(1, duration)
+		state["stacks"] = 1
+	elif id in ["atento", "wounded", "slow"]:
 		var add2: int = maxi(1, stacks)
 		state["stacks"] = int(state.get("stacks", 0)) + add2
 		state["duration"] = max(int(state.get("duration", 0)), maxi(duration, add2))
@@ -800,6 +907,13 @@ func _add_status(actor: Dictionary, id: String, duration: int, stacks: int, sour
 	if id == "summoning": state["armed"] = false
 	statuses[id] = state
 	_log("%s: %s (%d)." % [actor["name"], id, state["stacks"]])
+	# Postura Controlador / Garra: status negativo inimigo↔alvo.
+	if id in NEGATIVE:
+		var applier := actor_by_id(source)
+		if not applier.is_empty() and int(applier.get("id", -1)) != int(actor.get("id", -2)):
+			if str(applier.get("side", "")) != str(actor.get("side", "")):
+				try_posture_trigger(applier, "controlador")
+				try_posture_trigger(actor, "garra")
 
 func _cleanse(actor: Dictionary) -> void:
 	for id in NEGATIVE:
@@ -1032,6 +1146,9 @@ func _take_damage(source: Dictionary, target: Dictionary, amount: int, pierce: b
 			_ensure_statuses(target)["protecao"] = prot
 		_log("%s: Proteção absorveu o ataque." % target["name"])
 		visual.emit("resist", int(source["id"]), int(target["id"]), 0)
+		# Intocável: evitou ataque inimigo via Proteção.
+		if int(source.get("id", -1)) != int(target.get("id", -2)) and str(source.get("side", "")) != str(target.get("side", "")):
+			try_posture_trigger(target, "intocavel")
 		return false
 	# Leftover raw "resist" key (pre-normalize). _has_status("resist") aliases to protecao — never [] on alias.
 	if amount > 0 and not pierce and _ensure_statuses(target).has("resist"):
@@ -1081,11 +1198,13 @@ func _take_damage(source: Dictionary, target: Dictionary, amount: int, pierce: b
 		# Alyssa passive Escuridão: +1 stack cada vez que perde Vida.
 		if str(target.get("passive", "")) == "escuridao":
 			_add_status(target, "escuridao", 99, 1, int(target["id"]))
-		# Dominika: Vítima — +1 Iniciativa ao sofrer dano.
-		if _has_status(target, "vitima"):
-			var side_v := str(target.get("side", "ALLY"))
-			_set_impulse(side_v, mini(int(rules["impulse_max"]), _get_impulse(side_v) + 1))
-			_log("%s (Vítima): +1 Iniciativa." % target["name"])
+		# Posturas: Tanque / Furioso / Empático (1× por postura / rodada).
+		try_posture_trigger(target, "tanque")
+		if int(source.get("id", -1)) != int(target.get("id", -2)):
+			if str(source.get("side", "")) != str(target.get("side", "")):
+				try_posture_trigger(source, "furioso")
+			else:
+				try_posture_trigger(source, "empatico")
 		# Derretimento: Atordoado ao ser atingido por PROJETIVO ou QUIMICO.
 		if str(target.get("desvantagem", "")) == "ent_dominika_seur_desvantagem_derretimento" or str(target.get("passive_derretimento", "")) == "1":
 			var atype := str(source.get("type", ""))
@@ -1107,6 +1226,12 @@ func _take_damage(source: Dictionary, target: Dictionary, amount: int, pierce: b
 	var died: bool = target["hp"] <= 0
 	if died:
 		_log("%s caiu." % target["name"])
+		# Posturas: Executor (matou inimigo) / Vingador (aliado morreu).
+		if int(source.get("id", -1)) != int(target.get("id", -2)) and str(source.get("side", "")) != str(target.get("side", "")):
+			try_posture_trigger(source, "executor")
+		var dead_side := str(target.get("side", ""))
+		for ally in living(dead_side):
+			try_posture_trigger(ally, "vingador")
 		if bool(target.get("is_summon", false)) or bool(target.get("minion", false)):
 			purge_owner_cards(int(target["id"]))
 			_log("%s caiu — cartas removidas do baralho." % target.get("name", "?"))
@@ -1215,8 +1340,11 @@ func _resolve(source: Dictionary, targets: Array[Dictionary], card: Dictionary, 
 						var before_heal := int(target["hp"])
 						var bonus: int = (int(card.get("upgrade", 0)) + (1 if _has_status(source, "strongest_there_is") else 0)) * 2 + (3 if str(source.get("passive", "")) == "devocao" else 0)
 						target["hp"] = min(int(target["max_hp"]), int(target["hp"]) + int(effect.get("amount", 0)) + bonus)
-						visual.emit("heal", int(source["id"]), int(target["id"]), int(target["hp"]) - before_heal)
+						var healed_amt: int = int(target["hp"]) - before_heal
+						visual.emit("heal", int(source["id"]), int(target["id"]), healed_amt)
 						_log("%s recuperou vida (%d PV)." % [target["name"], target["hp"]])
+						if healed_amt > 0:
+							try_posture_trigger(source, "curador")
 					"BLOCK", "SHIELD":
 						# Migrado: BLOCK/SHIELD de Content → Barreira (pool). Cap usa Proteção via packs.
 						var bamt: int = int(effect.get("amount", 0)) + (int(card.get("upgrade", 0)) + (1 if _has_status(source, "strongest_there_is") else 0)) * 2
@@ -1332,7 +1460,7 @@ func play(hand_index: int, target_id: int, chain_ids: Array = []) -> bool:
 	var plays: int = 0 if bool(definition.get("free", false)) or card_has_flag(definition, "free") else int(definition.get("plays", 1))
 	if _get_impulse(side) < cost or _get_plays(side) < plays or _has_status(source, "stun") or _has_status(source, "bind") or _has_status(source, "bound") or _has_status(source, "dazed") or _has_status(source, "banished") or _has_status(source, "finalized"):
 		return false
-	if _has_status(source, "silence") and definition.get("class", "") in ["SKILL", "ESTADO", "POWER"]:
+	if _has_status(source, "silence") and definition.get("class", "") in ["SKILL", "ESTADO", "POSTURA", "POWER"]:
 		return false
 	var targets := _targets(source, target, definition, chain_ids)
 	if definition.get("target", "") == "CHAIN" and chain_ids.size() != int(definition.get("chain", 1)):
@@ -1366,6 +1494,7 @@ func play(hand_index: int, target_id: int, chain_ids: Array = []) -> bool:
 			if combo_target.get("hp", 0) > 0:
 				var one: Array[Dictionary] = [combo_target]
 				_resolve(source, one, card, {"effects": definition["full_combo"]})
+	_notify_card_posture_hooks(source, definition)
 	if source.get("archetype", "") == "clerigo" and definition.get("effects", []).any(func(e): return e.get("kind", "") == "HEAL"):
 		_set_impulse(side, min(int(rules["impulse_max"]), _get_impulse(side) + 1))
 		_log("Clérigo ganhou Iniciativa ao curar.")
@@ -1499,6 +1628,9 @@ func use_item(id: String, target_id: int) -> bool:
 	items[id] -= 1
 	item_uses -= 1
 	_log("Item utilizado: %s." % id)
+	# Preparo: +3 INI ao usar item (qualquer aliado com a postura).
+	for ally in living("ALLY"):
+		try_posture_trigger(ally, "preparo")
 	_check_end()
 	changed.emit()
 	return true
@@ -1754,6 +1886,7 @@ func preview(hand_index: int, target_id: int, chain_ids: Array = []) -> Dictiona
 
 func begin_enemy_phase() -> void:
 	if phase != "PLAYER": return
+	_posture_end_of_side("ALLY")
 	_purge_ephemeral_hand("ALLY")
 	_purge_dead_cards()
 	request_end_turn = false
@@ -1830,6 +1963,7 @@ func enemy_step() -> bool:
 
 func finish_enemy_phase() -> void:
 	if phase != "ENEMY": return
+	_posture_end_of_side("ENEMY")
 	_tick_statuses()
 	if mission.get("objective", "") == "PROTECT" and not living("ENEMY").is_empty():
 		protect_hp = max(0, protect_hp - max(1, living("ENEMY").size() * 2))
