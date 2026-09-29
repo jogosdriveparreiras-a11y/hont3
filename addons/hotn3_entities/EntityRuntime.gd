@@ -132,6 +132,12 @@ func deploy(battle: Variant, mission_id: String, entity_ids: Array[String], chos
 			if str(apr) != "": target["passive"] = str(apr)
 		target["grupos"] = replacement.get("grupos", [])
 		target["biografia"] = str(replacement.get("biografia", ""))
+		target["desvantagem"] = str(replacement.get("desvantagem", ""))
+		target["nero_plays"] = 0
+		target["transformed"] = false
+		target["base_name"] = str(replacement.get("name", target.get("name", "")))
+		if str(replacement.get("desvantagem", "")) == "ent_dominika_seur_desvantagem_derretimento":
+			target["passive_derretimento"] = "1"
 	install(battle, owner_map, selection)
 	append_combo_cards(battle, entity_ids, owner_map)
 	battle._shuffle(battle.deck)
@@ -143,7 +149,12 @@ func deploy(battle: Variant, mission_id: String, entity_ids: Array[String], chos
 			"vanguarda":
 				if ally["row"] == "front": battle._add_status(ally, "barrier", 1, 2, int(ally["id"]))
 			"baluarte": battle._add_status(ally, "barrier", 1, 2, int(ally["id"]))
+			"gordura_100":
+				pass  # imunidade via _add_status
 			"canalizar": battle.impulse = mini(int(battle.rules["impulse_max"]), int(battle.impulse) + 1)
+			"naomi_despertar":
+				ally["nero_plays"] = 0
+				ally["transformed"] = false
 	battle._draw(int(battle.rules["opening_hand"]))
 	for card in battle.hand: on_draw(battle, card)
 	on_turn_start(battle)
@@ -350,6 +361,38 @@ func install(battle: Variant, owner_map: Dictionary, selected: Dictionary = {}) 
 	battle._shuffle(battle.deck)
 	return installed
 
+func _resolve_card_def(battle: Variant, source: Dictionary, def: Dictionary) -> Dictionary:
+	# Aplica overlay Naomi se o conjurador transformou.
+	var out: Dictionary = def.duplicate(true)
+	if bool(source.get("transformed", false)) and def.has("naomi_actions"):
+		out["actions"] = def["naomi_actions"].duplicate(true)
+		if def.has("naomi_name"):
+			out["name"] = str(def["naomi_name"])
+	return out
+
+func _try_nero_transform(battle: Variant, source: Dictionary, card_id: String) -> void:
+	var apr = source.get("aprimoramento", source.get("passive", ""))
+	var apr_id := str(apr.get("id", "")) if typeof(apr) == TYPE_DICTIONARY else str(apr)
+	if apr_id != "naomi_despertar" and str(source.get("passive", "")) != "naomi_despertar":
+		return
+	if bool(source.get("transformed", false)):
+		return
+	if not str(card_id).begins_with("ent_nero_"):
+		return
+	source["nero_plays"] = int(source.get("nero_plays", 0)) + 1
+	if int(source["nero_plays"]) < 5:
+		battle._log("%s: Despertar %d/5." % [source.get("name", "Nero"), int(source["nero_plays"])])
+		return
+	source["transformed"] = true
+	var hero: Dictionary = catalog.hero(str(source.get("archetype", "ent_nero")))
+	source["name"] = str(hero.get("transform_name", "Naomi"))
+	if hero.has("transform_sprite"):
+		source["sprite"] = str(hero["transform_sprite"])
+	if hero.has("transform_portrait"):
+		source["portrait"] = str(hero["transform_portrait"])
+	battle._log("%s despertou como %s!" % [str(source.get("base_name", "Nero")), source["name"]])
+	battle.changed.emit()
+
 func play_block_reason(battle: Variant, hand_index: int, target_id: int = -1, chain_ids: Array = []) -> String:
 	# Motivo em pt-BR quando a Manobra não pode ser usada.
 	if battle == null or hand_index < 0 or hand_index >= battle.hand.size():
@@ -359,6 +402,8 @@ func play_block_reason(battle: Variant, hand_index: int, target_id: int = -1, ch
 	if def.is_empty():
 		return "Carta desconhecida."
 	var source: Dictionary = battle.actor_by_id(int(card["owner"]))
+	if not source.is_empty():
+		def = _resolve_card_def(battle, source, def)
 	if source.is_empty() or int(source.get("hp", 0)) <= 0:
 		return "O herói desta carta está fora de combate."
 	if battle.phase != "PLAYER":
@@ -382,6 +427,10 @@ func play_block_reason(battle: Variant, hand_index: int, target_id: int = -1, ch
 		if battle._has_status(source, "slow"): cost += 1
 	cost = maxi(0, cost)
 	var plays: int = 0 if bool(def.get("free", false)) or _has_action(def, "free") else 1
+	if bool(def.get("quick", false)) or _has_action(def, "quick"):
+		plays = 0
+	if battle.has_method("must_play_instantaneo_first") and battle.must_play_instantaneo_first(card, def, "ALLY"):
+		return "Há Instantâneo jogável — jogue um Instantâneo antes de outras cartas."
 	if battle.impulse < cost:
 		return "Você precisa de %d Iniciativa para usar esta Manobra." % cost
 	if battle.card_plays < plays:
@@ -397,6 +446,17 @@ func play_block_reason(battle: Variant, hand_index: int, target_id: int = -1, ch
 				var pretty := need_st.capitalize()
 				if need_st == "escuridao": pretty = "Escuridão"
 				return "Requer: %s %d" % [pretty, need_n]
+		elif str(a[0]) == "requires_alone":
+			if battle.living("ALLY").size() > 1:
+				return "Requer: estar sozinho no time."
+		elif str(a[0]) == "requires_own_minion_front":
+			var okm := false
+			for ally in battle.living("ALLY"):
+				if bool(ally.get("is_summon", false)) and int(ally.get("summoner_id", -1)) == int(source["id"]) and str(ally.get("row", "")) == "front":
+					okm = true
+					break
+			if not okm:
+				return "Requer: um lacaio seu na frente."
 	# Alcance / fileira
 	if target_id >= 0:
 		var target: Dictionary = battle.actor_by_id(target_id)
@@ -434,6 +494,11 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 	var target: Dictionary = battle.actor_by_id(target_id)
 	if source.is_empty() or target.is_empty(): return false
 	if str(source.get("side", "")) != _acting_side(battle): return false
+	def = _resolve_card_def(battle, source, def)
+	# Instantâneo jogável obriga jogar Instantâneo antes de qualquer outra carta.
+	if battle.has_method("must_play_instantaneo_first") and battle.must_play_instantaneo_first(card, def, _acting_side(battle)):
+		battle._log("Há Instantâneo jogável — jogue-o antes de outras cartas.")
+		return false
 	if int(source.get("hp", 0)) <= 0 and not _has_action(def, "revive_self"): return false
 	# Itens com dono explícito: dono precisa estar vivo / no time do conjurador.
 	if bool(def.get("item", false)) and def.has("owner_hero"):
@@ -476,6 +541,8 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 	var is_instant: bool = bool(def.get("instant", false)) or _has_action(def, "instant")
 	if is_instant: card["instant"] = true
 	var plays: int = 0 if bool(def.get("free", false)) or _has_action(def, "free") or owner_free else 1
+	if bool(def.get("quick", false)) or _has_action(def, "quick"):
+		plays = 0
 	if _get_ini(battle) < cost or _get_plays(battle) < plays: return false
 	var resolved_def: Dictionary = def.duplicate(true)
 	# Escala de alvo por stacks (ex.: Relâmpago E4/E5/E6+).
@@ -623,8 +690,31 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 				for victim in ([source] if op == "self_status" else targets):
 					var stacks := int(round(battle.resolve_amount(a[2] if a.size() > 2 else 1, source)))
 					stacks = maxi(1, stacks)
-					battle._add_status(victim, str(a[1]), maxi(1, stacks), stacks, int(source["id"]))
-					if a[1] == "all_together_now": battle.team_ko_charges = stacks
+					var st_id := str(a[1])
+					battle._add_status(victim, st_id, maxi(1, stacks), stacks, int(source["id"]))
+					if st_id == "all_together_now": battle.team_ko_charges = stacks
+					if st_id == "counter":
+						var st: Dictionary = victim["statuses"].get("counter", {})
+						st["mode"] = str(def.get("counter_mode", "default"))
+						var cefx = def.get("counter_effects", [])
+						if typeof(cefx) == TYPE_ARRAY and not cefx.is_empty():
+							st["effects"] = cefx.duplicate(true)
+						elif _has_action(def, "counter_effects"):
+							# ["counter_effects", "hit", "0", "status", "wounded", "1"] → parse pairs
+							var raw: Array = _action(def, "counter_effects")
+							var parsed: Array = []
+							var i := 1
+							while i < raw.size():
+								var opx := str(raw[i])
+								if opx == "hit" and i + 1 < raw.size():
+									parsed.append(["hit", str(raw[i+1])]); i += 2
+								elif opx == "status" and i + 2 < raw.size():
+									parsed.append(["status", str(raw[i+1]), str(raw[i+2])]); i += 3
+								else:
+									i += 1
+							st["effects"] = parsed
+						st["from_card"] = str(def.get("id", card.get("id", "")))
+						victim["statuses"]["counter"] = st
 			"block", "block_hp":
 				# Legado: redireciona para Barreira (pool). Cap usa protecao.
 				for victim in targets:
@@ -644,6 +734,41 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 					# Cura = Vida absoluta (não × ATK/Impacto). Aceita fórmula (2*E).
 					var heal_amt: int = int(round(battle.resolve_amount(a[1] if a.size() > 1 else 0, source)))
 					victim["hp"] = int(victim["max_hp"]) if op == "full_heal" else mini(int(victim["max_hp"]), int(victim["hp"]) + heal_amt)
+			"hit_flat":
+				# Dano absoluto (ex.: Tormenta 10×E), penetrante ambiental — sem ATK/Poder.
+				var flat_amt: int = maxi(0, int(round(battle.resolve_amount(a[1] if a.size() > 1 else 0, source))))
+				for victim in targets:
+					if battle._take_damage(source, victim, flat_amt, true, false, true, targets.size() > 1, false, true, true):
+						if not kos.has(victim["id"]): kos.append(victim["id"])
+			"hit_enemy_front":
+				var flat2: int = maxi(1, int(round(battle.resolve_amount(a[1] if a.size() > 1 else 0, source))))
+				var opp := "ENEMY" if source.get("side", "") == "ALLY" else "ALLY"
+				for foe in battle.living(opp):
+					if str(foe.get("row", "")) != "front":
+						continue
+					var bonus2 := _bonus(battle, source, foe, def, card)
+					var base2: float = float(flat2) + float(_offense(source, def)) + bonus2
+					var dmg2: int = maxi(1, roundi(base2) - int(foe.get("armor", 0)))
+					if battle._take_damage(source, foe, dmg2, false, true, false, true, true, true, true):
+						if not kos.has(foe["id"]): kos.append(foe["id"])
+			"heal_own_minions":
+				var ham: int = maxi(1, int(round(battle.resolve_amount(a[1] if a.size() > 1 else 1, source))))
+				for ally in _friends(battle, source):
+					if bool(ally.get("is_summon", false)) and int(ally.get("summoner_id", -1)) == int(source["id"]):
+						ally["hp"] = mini(int(ally["max_hp"]), int(ally["hp"]) + ham)
+			"sacrifice_minion":
+				for victim in targets:
+					if bool(victim.get("is_summon", false)):
+						victim["hp"] = 0
+						if not kos.has(int(victim["id"])): kos.append(int(victim["id"]))
+			"self_damage_hp":
+				var frac: float = float(a[1]) if a.size() > 1 else 1.0
+				var raw_sd: int = maxi(1, roundi(float(source.get("max_hp", 1)) * frac))
+				battle._take_damage(source, source, raw_sd, true, false)
+			"counter_effects":
+				pass  # metadata; aplicada ao conceder counter
+			"requires_alone", "requires_own_minion_front":
+				pass
 			"cure":
 				for victim in targets: battle._cleanse(victim)
 			"push", "pull", "move_target":
@@ -943,11 +1068,21 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 				pass  # Avaliado em on_redraw.
 			"requires_self_status", "requires_status":
 				pass  # Pré-checagem em play().
-			"quick", "free", "exhaust", "final", "chain", "chain_hand_owner", "random_chain", "full_combo", "bonus_status", "bonus_damaged", "bonus_block", "bonus_targeting_self", "bonus_full_hp", "bonus_en_fuego", "force_if_damaged", "hand_block", "hand_cost_down", "hand_damage_growth", "hand_resist", "overheal_max", "cost_down_en_fuego", "area_en_fuego", "enhanced", "redraw_force", "redraw_bonus", "redraw_strengthened", "play_while_disabled", "penetrating", "lethargic", "recoil", "drain", "instant", "ephemeral", "warmup", "barrier_from_hit": pass # Evaluated in preplay, hooks, or _bonus.
+			"quick", "free", "exhaust", "final", "chain", "chain_hand_owner", "random_chain", "full_combo", "bonus_status", "bonus_damaged", "bonus_block", "bonus_targeting_self", "bonus_full_hp", "bonus_en_fuego", "force_if_damaged", "hand_block", "hand_cost_down", "hand_damage_growth", "hand_resist", "overheal_max", "cost_down_en_fuego", "area_en_fuego", "enhanced", "redraw_force", "redraw_bonus", "redraw_strengthened", "play_while_disabled", "penetrating", "lethargic", "recoil", "drain", "instant", "ephemeral", "warmup", "barrier_from_hit", "counter_effects", "requires_alone", "requires_own_minion_front", "hit_flat", "hit_enemy_front", "heal_own_minions", "sacrifice_minion", "self_damage_hp": pass # Evaluated in preplay, hooks, or _bonus.
 			_:
 				push_error("Unsupported external card action: " + op)
-	if (def.get("quick", false) or card.get("next_quick_active", false) or battle._has_status(source, "assimilation")) and kos.has(target_id) or kos.any(func(id): return battle._has_status(battle.actor_by_id(id), "marked")):
+	# Rápida: não gasta jogada (já tratado); ["quick", N] concede N jogadas extras.
+	if bool(def.get("quick", false)) or _has_action(def, "quick") or card.get("next_quick_active", false):
+		var qn := 0
+		if _has_action(def, "quick"):
+			var qa: Array = _action(def, "quick")
+			if qa.size() > 1:
+				qn = int(qa[1])
+		if qn > 0:
+			_add_plays(battle, qn)
+	elif (battle._has_status(source, "assimilation") and kos.has(target_id)) or kos.any(func(id): return battle._has_status(battle.actor_by_id(id), "marked")):
 		_add_plays(battle, 1)
+	_try_nero_transform(battle, source, str(card.get("id", "")))
 	if battle._has_status(source, "assimilation") and not kos.is_empty(): _draw_filtered(battle, source, "draw_attack_heroic", 1)
 	if battle._has_status(source, "ravenous") and _is_damage_card(def):
 		if _counter(source, "preserve_ravenous") > 0: _consume(source, "preserve_ravenous")
@@ -1198,7 +1333,8 @@ func _summon(battle: Variant, source: Dictionary, type: String, duration: int) -
 		}
 	template["minion"] = true
 	template["row"] = "front"
-	if int(template.get("hp", 1)) > 3:
+	# Lacaios tipados (ent_minion_*) mantêm HP do template; fallback genérico fica em 1.
+	if not str(template_id).begins_with("ent_minion_") and int(template.get("hp", 1)) > 3:
 		template["hp"] = 1
 	template["statuses"] = {}
 	var ally: Dictionary = battle._create_actor(template, str(source.get("side", "ALLY")), template_id if template_id != "" else "summon")

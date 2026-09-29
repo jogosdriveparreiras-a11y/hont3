@@ -1,5 +1,239 @@
 [
   {
+    "id": "abrigo",
+    "name": "Abrigo sagrado",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "HeartMark1",
+    "anim_target": "Reflection"
+  },
+  {
+    "id": "agitar",
+    "name": "Agitação dirigida",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "guard",
+    "anim_target": "status"
+  },
+  {
+    "id": "armadilha",
+    "name": "Armadilha curta",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "Neutral1",
+    "anim_target": "status"
+  },
+  {
+    "id": "armadilha_tempo",
+    "name": "Laço instável",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "buff",
+    "anim_target": "shield"
+  },
+  {
+    "id": "balanca",
+    "name": "Balança de cinzas",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "light",
+    "anim_target": "heal"
+  },
+  {
+    "id": "barreira",
+    "name": "Barreira arcana",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "buff",
+    "anim_target": "Shield"
+  },
+  {
+    "id": "benzer",
+    "name": "Bênção do grupo",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "BreathLight",
+    "anim_target": "status"
+  },
+  {
+    "id": "benção",
+    "name": "Bênção persistente",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "BreathLight",
+    "anim_target": "shield"
+  },
+  {
+    "id": "brilho",
+    "name": "Clarão",
+    "class": "ATTACK",
+    "owner": "",
+    "source": "content",
+    "anim_self": "lightning",
+    "anim_target": "StarsHit"
+  },
+  {
+    "id": "campo_sagrado",
+    "name": "Campo sagrado",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "BreathLight",
+    "anim_target": "StarsHit"
+  },
+  {
+    "id": "centelha",
+    "name": "Centelha",
+    "class": "ATTACK",
+    "owner": "",
+    "source": "content",
+    "anim_self": "BreathThunder",
+    "anim_target": "Thunder1"
+  },
+  {
+    "id": "cerco_frente",
+    "name": "Cerco frontal",
+    "class": "POWER",
+    "owner": "",
+    "source": "content",
+    "anim_self": "fire",
+    "anim_target": "slash"
+  },
+  {
+    "id": "chuva",
+    "name": "Chuva de pontas",
+    "class": "POWER",
+    "owner": "",
+    "source": "content",
+    "anim_self": "lightning",
+    "anim_target": "HitSP2"
+  },
+  {
+    "id": "contra",
+    "name": "Resposta de aço",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "Neutral1",
+    "anim_target": "shield"
+  },
+  {
+    "id": "controlar_mente",
+    "name": "Ruído mental",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "Neutral2",
+    "anim_target": "StarsHit"
+  },
+  {
+    "id": "corrente",
+    "name": "Corte em sequência",
+    "class": "ATTACK",
+    "owner": "",
+    "source": "content",
+    "anim_self": "Special2",
+    "anim_target": "SlashSP2"
+  },
+  {
+    "id": "corte",
+    "name": "Corte firme",
+    "class": "ATTACK",
+    "owner": "",
+    "source": "content",
+    "anim_self": "Special3",
+    "anim_target": "SlashSP1"
+  },
+  {
+    "id": "corte_adj",
+    "name": "Corte de flanco",
+    "class": "ATTACK",
+    "owner": "",
+    "source": "content",
+    "anim_self": "Special2",
+    "anim_target": "SlashSP1"
+  },
+  {
+    "id": "corte_dreno",
+    "name": "Corte drenante",
+    "class": "ATTACK",
+    "owner": "",
+    "source": "content",
+    "anim_self": "fire",
+    "anim_target": "CrossSlash"
+  },
+  {
+    "id": "cura",
+    "name": "Cura vital",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "HeartMark1",
+    "anim_target": "Light1"
+  },
+  {
+    "id": "distorcer",
+    "name": "Distorcer vontade",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "buff",
+    "anim_target": "bind"
+  },
+  {
+    "id": "dominio",
+    "name": "Domínio do selo",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "Neutral1",
+    "anim_target": "stun"
+  },
+  {
+    "id": "dueto",
+    "name": "Pacto de batalha",
+    "class": "COMBO",
+    "owner": "",
+    "source": "content",
+    "anim_self": "Special2",
+    "anim_target": "CrossHit"
+  },
+  {
+    "id": "eco",
+    "name": "Eco arcano",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "summon",
+    "anim_target": "shield"
+  },
+  {
+    "id": "egide",
+    "name": "Égide",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "buff",
+    "anim_target": "Reflection"
+  },
+  {
+    "id": "elo_vital",
+    "name": "Elo vital",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "HeartMark1",
+    "anim_target": "Light4"
+  },
+  {
     "id": "ent_adam_abrigo_rapido",
     "name": "Abrigo rápido",
     "class": "ESTADO",
@@ -783,94 +1017,94 @@
     "anim_target": "stun"
   },
   {
-    "id": "ent_dominika_seur_absorver_impacto",
-    "name": "Absorver impacto",
-    "class": "ESTADO",
-    "owner": "ent_dominika_seur",
-    "source": "entities",
-    "anim_self": "light",
-    "anim_target": "Light1"
-  },
-  {
-    "id": "ent_dominika_seur_avanco_colossal",
-    "name": "Avanço colossal",
+    "id": "ent_dominika_seur_abalo_sismico",
+    "name": "Abalo Sísmico",
     "class": "ATTACK",
     "owner": "ent_dominika_seur",
     "source": "entities",
-    "anim_self": "fire",
-    "anim_target": "push"
+    "anim_self": "earth",
+    "anim_target": "Explosion1"
   },
   {
-    "id": "ent_dominika_seur_campo_de_massa",
-    "name": "Campo de massa",
-    "class": "ESTADO",
-    "owner": "ent_dominika_seur",
-    "source": "entities",
-    "anim_self": "guard",
-    "anim_target": "Reflection"
-  },
-  {
-    "id": "ent_dominika_seur_corpo_acolchoado",
-    "name": "Corpo acolchoado",
-    "class": "ESTADO",
-    "owner": "ent_dominika_seur",
-    "source": "entities",
-    "anim_self": "guard",
-    "anim_target": "shield"
-  },
-  {
-    "id": "ent_dominika_seur_engolfamento",
-    "name": "Engolfamento",
-    "class": "ATTACK",
-    "owner": "ent_dominika_seur",
-    "source": "entities",
-    "anim_self": "lightning",
-    "anim_target": "slash"
-  },
-  {
-    "id": "ent_dominika_seur_esmagamento_lento",
-    "name": "Esmagamento lento",
+    "id": "ent_dominika_seur_barrigada",
+    "name": "Barrigada",
     "class": "ATTACK",
     "owner": "ent_dominika_seur",
     "source": "entities",
     "anim_self": "Special2",
+    "anim_target": "push"
+  },
+  {
+    "id": "ent_dominika_seur_cair_por_cima",
+    "name": "Cair Por Cima",
+    "class": "ESTADO",
+    "owner": "ent_dominika_seur",
+    "source": "entities",
+    "anim_self": "Neutral1",
+    "anim_target": "Protection"
+  },
+  {
+    "id": "ent_dominika_seur_corpo_de_manteiga",
+    "name": "Corpo de Manteiga",
+    "class": "ESTADO",
+    "owner": "ent_dominika_seur",
+    "source": "entities",
+    "anim_self": "buff",
+    "anim_target": "heal"
+  },
+  {
+    "id": "ent_dominika_seur_desvantagem_derretimento",
+    "name": "Derretimento",
+    "class": "DESVANTAGEM",
+    "owner": "ent_dominika_seur",
+    "source": "entities",
+    "anim_self": "ice",
     "anim_target": "blow"
   },
   {
-    "id": "ent_dominika_seur_massa_em_avanco",
-    "name": "Massa em avanço",
+    "id": "ent_dominika_seur_eu_sou_a_vitima",
+    "name": "Eu Sou a Vítima!",
+    "class": "ESTADO",
+    "owner": "ent_dominika_seur",
+    "source": "entities",
+    "anim_self": "buff",
+    "anim_target": "status"
+  },
+  {
+    "id": "ent_dominika_seur_peitada",
+    "name": "Peitada",
     "class": "ATTACK",
     "owner": "ent_dominika_seur",
     "source": "entities",
     "anim_self": "Special3",
-    "anim_target": "Explosion1"
+    "anim_target": "Blow1"
   },
   {
-    "id": "ent_dominika_seur_onda_de_engolfamento",
-    "name": "Onda de engolfamento",
-    "class": "ATTACK",
-    "owner": "ent_dominika_seur",
-    "source": "entities",
-    "anim_self": "wind",
-    "anim_target": "HitSP1"
-  },
-  {
-    "id": "ent_dominika_seur_pressao_inabalavel",
-    "name": "Pressão inabalável",
+    "id": "ent_dominika_seur_presenca",
+    "name": "Presença",
     "class": "ESTADO",
     "owner": "ent_dominika_seur",
     "source": "entities",
     "anim_self": "cast",
-    "anim_target": "shield"
+    "anim_target": "status"
   },
   {
-    "id": "ent_dominika_seur_regeneracao_volumosa",
-    "name": "Regeneração volumosa",
+    "id": "ent_dominika_seur_rolar",
+    "name": "Rolar",
     "class": "ESTADO",
     "owner": "ent_dominika_seur",
     "source": "entities",
-    "anim_self": "BreathLight",
-    "anim_target": "Light2"
+    "anim_self": "Special1",
+    "anim_target": "smoke"
+  },
+  {
+    "id": "ent_dominika_seur_sentar_em_cima",
+    "name": "Sentar Em Cima",
+    "class": "ATTACK",
+    "owner": "ent_dominika_seur",
+    "source": "entities",
+    "anim_self": "Special3",
+    "anim_target": "bind"
   },
   {
     "id": "ent_dylan_atrair_atencao",
@@ -1773,6 +2007,141 @@
     "anim_target": "bind"
   },
   {
+    "id": "ent_minion_banshee_grito_a",
+    "name": "Uivo",
+    "class": "ATTACK",
+    "owner": "ent_minion_banshee",
+    "source": "entities",
+    "anim_self": "Special3",
+    "anim_target": "HitSP1"
+  },
+  {
+    "id": "ent_minion_banshee_grito_b",
+    "name": "Lamento",
+    "class": "ATTACK",
+    "owner": "ent_minion_banshee",
+    "source": "entities",
+    "anim_self": "Special3",
+    "anim_target": "HitSP1"
+  },
+  {
+    "id": "ent_minion_esqueleto_golpe",
+    "name": "Tiro Ósseo",
+    "class": "ATTACK",
+    "owner": "ent_minion_esqueleto",
+    "source": "entities",
+    "anim_self": "Special3",
+    "anim_target": "HitSP1"
+  },
+  {
+    "id": "ent_minion_fantasma_golpe",
+    "name": "Toque Gélido",
+    "class": "ATTACK",
+    "owner": "ent_minion_fantasma",
+    "source": "entities",
+    "anim_self": "Special3",
+    "anim_target": "HitSP1"
+  },
+  {
+    "id": "ent_minion_ghoul_golpe_a",
+    "name": "Rasgar",
+    "class": "ATTACK",
+    "owner": "ent_minion_ghoul",
+    "source": "entities",
+    "anim_self": "Special3",
+    "anim_target": "HitSP1"
+  },
+  {
+    "id": "ent_minion_ghoul_golpe_b",
+    "name": "Dilacerar",
+    "class": "ATTACK",
+    "owner": "ent_minion_ghoul",
+    "source": "entities",
+    "anim_self": "Special3",
+    "anim_target": "HitSP1"
+  },
+  {
+    "id": "ent_minion_golem_golpe_a",
+    "name": "Esmagar",
+    "class": "ATTACK",
+    "owner": "ent_minion_golem",
+    "source": "entities",
+    "anim_self": "Special3",
+    "anim_target": "HitSP1"
+  },
+  {
+    "id": "ent_minion_golem_golpe_b",
+    "name": "Muralha",
+    "class": "ATTACK",
+    "owner": "ent_minion_golem",
+    "source": "entities",
+    "anim_self": "Special3",
+    "anim_target": "HitSP1"
+  },
+  {
+    "id": "ent_minion_lich_golpe_a",
+    "name": "Raio Necrótico",
+    "class": "ATTACK",
+    "owner": "ent_minion_lich",
+    "source": "entities",
+    "anim_self": "Special3",
+    "anim_target": "HitSP1"
+  },
+  {
+    "id": "ent_minion_lich_golpe_b",
+    "name": "Dominar",
+    "class": "ATTACK",
+    "owner": "ent_minion_lich",
+    "source": "entities",
+    "anim_self": "Special3",
+    "anim_target": "HitSP1"
+  },
+  {
+    "id": "ent_minion_mumia_golpe",
+    "name": "Envoltório",
+    "class": "ATTACK",
+    "owner": "ent_minion_mumia",
+    "source": "entities",
+    "anim_self": "Special3",
+    "anim_target": "HitSP1"
+  },
+  {
+    "id": "ent_minion_strigoi_golpe_a",
+    "name": "Sede",
+    "class": "ATTACK",
+    "owner": "ent_minion_strigoi",
+    "source": "entities",
+    "anim_self": "Special3",
+    "anim_target": "HitSP1"
+  },
+  {
+    "id": "ent_minion_strigoi_golpe_b",
+    "name": "Devorar",
+    "class": "ATTACK",
+    "owner": "ent_minion_strigoi",
+    "source": "entities",
+    "anim_self": "Special3",
+    "anim_target": "HitSP1"
+  },
+  {
+    "id": "ent_minion_vampiro_golpe",
+    "name": "Mordida Vampírica",
+    "class": "ATTACK",
+    "owner": "ent_minion_vampiro",
+    "source": "entities",
+    "anim_self": "Special3",
+    "anim_target": "HitSP1"
+  },
+  {
+    "id": "ent_minion_zumbi_golpe",
+    "name": "Mordida",
+    "class": "ATTACK",
+    "owner": "ent_minion_zumbi",
+    "source": "entities",
+    "anim_self": "Special3",
+    "anim_target": "HitSP1"
+  },
+  {
     "id": "ent_mutante_generico_barreira_condensada",
     "name": "Barreira condensada",
     "class": "ESTADO",
@@ -1863,94 +2232,103 @@
     "anim_target": "blow"
   },
   {
-    "id": "ent_nero_chamar_o_caido",
-    "name": "Chamar o caído",
-    "class": "ESTADO",
-    "owner": "ent_nero",
-    "source": "entities",
-    "anim_self": "Neutral1",
-    "anim_target": "hit"
-  },
-  {
-    "id": "ent_nero_circulo_funerario",
-    "name": "Círculo funerário",
-    "class": "ESTADO",
-    "owner": "ent_nero",
-    "source": "entities",
-    "anim_self": "guard",
-    "anim_target": "Protection"
-  },
-  {
-    "id": "ent_nero_escudo_de_ossos",
-    "name": "Escudo de ossos",
+    "id": "ent_nero_armadura_de_osso",
+    "name": "Armadura de Osso",
     "class": "ESTADO",
     "owner": "ent_nero",
     "source": "entities",
     "anim_self": "buff",
-    "anim_target": "Shield"
+    "anim_target": "Protection"
   },
   {
-    "id": "ent_nero_foice_de_sangue",
-    "name": "Foice de sangue",
-    "class": "ATTACK",
-    "owner": "ent_nero",
-    "source": "entities",
-    "anim_self": "ice",
-    "anim_target": "ClawSP1"
-  },
-  {
-    "id": "ent_nero_golpe_ritual",
-    "name": "Golpe ritual",
-    "class": "ATTACK",
-    "owner": "ent_nero",
-    "source": "entities",
-    "anim_self": "fire",
-    "anim_target": "CrossHit"
-  },
-  {
-    "id": "ent_nero_inferi_temporario",
-    "name": "Inferi temporário",
-    "class": "ESTADO",
-    "owner": "ent_nero",
-    "source": "entities",
-    "anim_self": "summon",
-    "anim_target": "Light2"
-  },
-  {
-    "id": "ent_nero_marcha_dos_inferi",
-    "name": "Marcha dos inferi",
-    "class": "ATTACK",
-    "owner": "ent_nero",
-    "source": "entities",
-    "anim_self": "lightning",
-    "anim_target": "slash"
-  },
-  {
-    "id": "ent_nero_portao_do_necroterio",
-    "name": "Portão do necrotério",
-    "class": "ATTACK",
-    "owner": "ent_nero",
-    "source": "entities",
-    "anim_self": "cast",
-    "anim_target": "status"
-  },
-  {
-    "id": "ent_nero_toque_no_equilibrio",
-    "name": "Toque no equilíbrio",
-    "class": "ESTADO",
-    "owner": "ent_nero",
-    "source": "entities",
-    "anim_self": "Special1",
-    "anim_target": "debuff"
-  },
-  {
-    "id": "ent_nero_vinculo_de_sangue",
-    "name": "Vínculo de sangue",
+    "id": "ent_nero_curar_os_mortos",
+    "name": "Curar os Mortos",
     "class": "ESTADO",
     "owner": "ent_nero",
     "source": "entities",
     "anim_self": "light",
-    "anim_target": "claw"
+    "anim_target": "heal"
+  },
+  {
+    "id": "ent_nero_desvantagem_solidao",
+    "name": "Solidão",
+    "class": "DESVANTAGEM",
+    "owner": "ent_nero",
+    "source": "entities",
+    "anim_self": "ice",
+    "anim_target": "blow"
+  },
+  {
+    "id": "ent_nero_explodir_cadaver",
+    "name": "Explodir Cadáver",
+    "class": "ATTACK",
+    "owner": "ent_nero",
+    "source": "entities",
+    "anim_self": "fire",
+    "anim_target": "Explosion1"
+  },
+  {
+    "id": "ent_nero_faca_de_osso",
+    "name": "Faca de Osso",
+    "class": "ATTACK",
+    "owner": "ent_nero",
+    "source": "entities",
+    "anim_self": "Special3",
+    "anim_target": "SlashSP1"
+  },
+  {
+    "id": "ent_nero_intimidacao",
+    "name": "Intimidação",
+    "class": "ESTADO",
+    "owner": "ent_nero",
+    "source": "entities",
+    "anim_self": "Neutral2",
+    "anim_target": "debuff"
+  },
+  {
+    "id": "ent_nero_invocar_esqueleto",
+    "name": "Invocar Esqueleto",
+    "class": "ESTADO",
+    "owner": "ent_nero",
+    "source": "entities",
+    "anim_self": "summon",
+    "anim_target": "status"
+  },
+  {
+    "id": "ent_nero_invocar_fantasma",
+    "name": "Invocar Fantasma",
+    "class": "ESTADO",
+    "owner": "ent_nero",
+    "source": "entities",
+    "anim_self": "summon",
+    "anim_target": "status"
+  },
+  {
+    "id": "ent_nero_invocar_mumia",
+    "name": "Invocar Múmia",
+    "class": "ESTADO",
+    "owner": "ent_nero",
+    "source": "entities",
+    "anim_self": "summon",
+    "anim_target": "status"
+  },
+  {
+    "id": "ent_nero_invocar_vampiro",
+    "name": "Invocar Vampiro",
+    "class": "ESTADO",
+    "owner": "ent_nero",
+    "source": "entities",
+    "anim_self": "summon",
+    "anim_target": "status"
+  },
+  {
+    "id": "ent_nero_invocar_zumbi",
+    "name": "Invocar Zumbi",
+    "class": "ESTADO",
+    "owner": "ent_nero",
+    "source": "entities",
+    "anim_self": "summon",
+    "anim_target": "status"
   },
   {
     "id": "ent_niu_valdtagen_alerta_silencioso",
@@ -2491,6 +2869,285 @@
     "source": "entities",
     "anim_self": "Neutral1",
     "anim_target": "debuff"
+  },
+  {
+    "id": "escudo_forte",
+    "name": "Muralha",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "buff",
+    "anim_target": "Protection"
+  },
+  {
+    "id": "esquiva",
+    "name": "Passo oculto",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "Neutral1",
+    "anim_target": "shield"
+  },
+  {
+    "id": "estandarte",
+    "name": "Estandarte de defesa",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "buff",
+    "anim_target": "bind"
+  },
+  {
+    "id": "explosao",
+    "name": "Detonação rúnica",
+    "class": "POWER",
+    "owner": "",
+    "source": "content",
+    "anim_self": "lightning",
+    "anim_target": "explosion"
+  },
+  {
+    "id": "fagulha_incerta",
+    "name": "Fagulha incerta",
+    "class": "ATTACK",
+    "owner": "",
+    "source": "content",
+    "anim_self": "Special3",
+    "anim_target": "CrossHit"
+  },
+  {
+    "id": "falcon",
+    "name": "Olho da falcoaria",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "Special1",
+    "anim_target": "status"
+  },
+  {
+    "id": "fervor",
+    "name": "Fervor",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "Neutral2",
+    "anim_target": "debuff"
+  },
+  {
+    "id": "flanquear",
+    "name": "Flanquear",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "Neutral2",
+    "anim_target": "shield"
+  },
+  {
+    "id": "flecha",
+    "name": "Flecha certeira",
+    "class": "ATTACK",
+    "owner": "",
+    "source": "content",
+    "anim_self": "Special2",
+    "anim_target": "pierce"
+  },
+  {
+    "id": "foco",
+    "name": "Foco do caçador",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "cast",
+    "anim_target": "bind"
+  },
+  {
+    "id": "foco_ambiental",
+    "name": "Foco ambiental",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "cast",
+    "anim_target": "status"
+  },
+  {
+    "id": "frenesi_aco",
+    "name": "Frenesi de aço",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "cast",
+    "anim_target": "debuff"
+  },
+  {
+    "id": "furia",
+    "name": "Fúria disciplinada",
+    "class": "POWER",
+    "owner": "",
+    "source": "content",
+    "anim_self": "wind",
+    "anim_target": "shield"
+  },
+  {
+    "id": "furia_total",
+    "name": "Força total",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "Neutral1",
+    "anim_target": "StarsHit"
+  },
+  {
+    "id": "furia_totem",
+    "name": "Fúria do totem",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "wind",
+    "anim_target": "debuff"
+  },
+  {
+    "id": "furto",
+    "name": "Furto veloz",
+    "class": "ATTACK",
+    "owner": "",
+    "source": "content",
+    "anim_self": "fire",
+    "anim_target": "hit"
+  },
+  {
+    "id": "golpe_largo",
+    "name": "Arco de aço",
+    "class": "ATTACK",
+    "owner": "",
+    "source": "content",
+    "anim_self": "Special3",
+    "anim_target": "slash"
+  },
+  {
+    "id": "golpe_oculto",
+    "name": "Punhal nas sombras",
+    "class": "POWER",
+    "owner": "",
+    "source": "content",
+    "anim_self": "Smokescreen",
+    "anim_target": "Shoot1"
+  },
+  {
+    "id": "guarda",
+    "name": "Postura de guarda",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "buff",
+    "anim_target": "Protection"
+  },
+  {
+    "id": "guarda_absoluta",
+    "name": "Guarda absoluta",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "guard",
+    "anim_target": "Shield"
+  },
+  {
+    "id": "investida",
+    "name": "Investida de ferro",
+    "class": "ATTACK",
+    "owner": "",
+    "source": "content",
+    "anim_self": "fire",
+    "anim_target": "Explosion1"
+  },
+  {
+    "id": "item_antidote",
+    "name": "Antídoto",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "Special1",
+    "anim_target": "debuff"
+  },
+  {
+    "id": "item_bomb",
+    "name": "Bomba",
+    "class": "ATTACK",
+    "owner": "",
+    "source": "content",
+    "anim_self": "lightning",
+    "anim_target": "hit"
+  },
+  {
+    "id": "item_potion",
+    "name": "Poção",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "light",
+    "anim_target": "Light1"
+  },
+  {
+    "id": "jogo_sombras",
+    "name": "Jogo de sombras",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "darkness",
+    "anim_target": "shield"
+  },
+  {
+    "id": "julgamento",
+    "name": "Julgamento",
+    "class": "POWER",
+    "owner": "",
+    "source": "content",
+    "anim_self": "fire",
+    "anim_target": "shield"
+  },
+  {
+    "id": "juramento",
+    "name": "Juramento de aço",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "Special1",
+    "anim_target": "stun"
+  },
+  {
+    "id": "luz",
+    "name": "Luz incisiva",
+    "class": "ATTACK",
+    "owner": "",
+    "source": "content",
+    "anim_self": "BreathLight",
+    "anim_target": "HitSP2"
+  },
+  {
+    "id": "marca",
+    "name": "Alvo exposto",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "Special1",
+    "anim_target": "shield"
+  },
+  {
+    "id": "martelo",
+    "name": "Golpe de martelo",
+    "class": "ATTACK",
+    "owner": "",
+    "source": "content",
+    "anim_self": "lightning",
+    "anim_target": "pull"
+  },
+  {
+    "id": "martelo_pesado",
+    "name": "Martelo impulsor",
+    "class": "ATTACK",
+    "owner": "",
+    "source": "content",
+    "anim_self": "Special2",
+    "anim_target": "push"
   },
   {
     "id": "ms_blade_daywalker",
@@ -4239,35 +4896,71 @@
     "anim_target": "stun"
   },
   {
-    "id": "corte",
-    "name": "Corte firme",
-    "class": "ATTACK",
-    "owner": "",
-    "source": "content",
-    "anim_self": "Special3",
-    "anim_target": "SlashSP1"
-  },
-  {
-    "id": "guarda",
-    "name": "Postura de guarda",
+    "id": "muralha_viva",
+    "name": "Muralha viva",
     "class": "SKILL",
     "owner": "",
     "source": "content",
-    "anim_self": "buff",
+    "anim_self": "guard",
     "anim_target": "Protection"
   },
   {
-    "id": "investida",
-    "name": "Investida de ferro",
+    "id": "pele_rigida",
+    "name": "Pele selada",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "cast",
+    "anim_target": "stun"
+  },
+  {
+    "id": "portal_impulso",
+    "name": "Impulso do selo",
     "class": "ATTACK",
     "owner": "",
     "source": "content",
-    "anim_self": "fire",
-    "anim_target": "Explosion1"
+    "anim_self": "lightning",
+    "anim_target": "push"
   },
   {
-    "id": "contra",
-    "name": "Resposta de aço",
+    "id": "predador",
+    "name": "Instinto do predador",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "Neutral2",
+    "anim_target": "bind"
+  },
+  {
+    "id": "preparo",
+    "name": "Reunir forças",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "Special1",
+    "anim_target": "StarsHit"
+  },
+  {
+    "id": "prisma",
+    "name": "Prisma de defesa",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "cast",
+    "anim_target": "bind"
+  },
+  {
+    "id": "prisma_sangue",
+    "name": "Prisma sanguíneo",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "Special1",
+    "anim_target": "debuff"
+  },
+  {
+    "id": "provocar",
+    "name": "Desafio",
     "class": "SKILL",
     "owner": "",
     "source": "content",
@@ -4275,13 +4968,31 @@
     "anim_target": "shield"
   },
   {
-    "id": "furia",
-    "name": "Fúria disciplinada",
-    "class": "POWER",
+    "id": "punhal",
+    "name": "Punhal veloz",
+    "class": "ATTACK",
     "owner": "",
     "source": "content",
-    "anim_self": "wind",
+    "anim_self": "Neutral2",
+    "anim_target": "Arrow"
+  },
+  {
+    "id": "purificar",
+    "name": "Purificação",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "cast",
     "anim_target": "shield"
+  },
+  {
+    "id": "queda",
+    "name": "Passagem perigosa",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "Neutral2",
+    "anim_target": "Explosion1"
   },
   {
     "id": "raio",
@@ -4293,26 +5004,80 @@
     "anim_target": "Thunder2"
   },
   {
-    "id": "barreira",
-    "name": "Barreira arcana",
+    "id": "rede",
+    "name": "Rede de caça",
     "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "Neutral1",
+    "anim_target": "pull"
+  },
+  {
+    "id": "resgate",
+    "name": "Resgate",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "light",
+    "anim_target": "Light3"
+  },
+  {
+    "id": "runas",
+    "name": "Runas móveis",
+    "class": "SKILL",
+    "owner": "",
+    "source": "content",
+    "anim_self": "Special1",
+    "anim_target": "shield"
+  },
+  {
+    "id": "ruptura",
+    "name": "Quebra de escudo",
+    "class": "POWER",
     "owner": "",
     "source": "content",
     "anim_self": "buff",
     "anim_target": "Shield"
   },
   {
-    "id": "explosao",
-    "name": "Detonação rúnica",
+    "id": "salva",
+    "name": "Salva rente",
+    "class": "ATTACK",
+    "owner": "",
+    "source": "content",
+    "anim_self": "Special3",
+    "anim_target": "HitSP1"
+  },
+  {
+    "id": "selo_ruina",
+    "name": "Selo de ruína",
     "class": "POWER",
     "owner": "",
     "source": "content",
-    "anim_self": "lightning",
-    "anim_target": "explosion"
+    "anim_self": "Special3",
+    "anim_target": "blow"
   },
   {
-    "id": "runas",
-    "name": "Runas móveis",
+    "id": "sentenca",
+    "name": "Sentença",
+    "class": "POWER",
+    "owner": "",
+    "source": "content",
+    "anim_self": "Neutral2",
+    "anim_target": "blow"
+  },
+  {
+    "id": "sombra",
+    "name": "Dança sombria",
+    "class": "POWER",
+    "owner": "",
+    "source": "content",
+    "anim_self": "Special3",
+    "anim_target": "shield"
+  },
+  {
+    "id": "teia",
+    "name": "Teia de caça",
     "class": "SKILL",
     "owner": "",
     "source": "content",
@@ -4329,319 +5094,13 @@
     "anim_target": "shield"
   },
   {
-    "id": "punhal",
-    "name": "Punhal veloz",
-    "class": "ATTACK",
-    "owner": "",
-    "source": "content",
-    "anim_self": "Neutral2",
-    "anim_target": "Arrow"
-  },
-  {
-    "id": "esquiva",
-    "name": "Passo oculto",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "Neutral1",
-    "anim_target": "shield"
-  },
-  {
-    "id": "marca",
-    "name": "Alvo exposto",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "Special1",
-    "anim_target": "shield"
-  },
-  {
-    "id": "corrente",
-    "name": "Corte em sequência",
-    "class": "ATTACK",
-    "owner": "",
-    "source": "content",
-    "anim_self": "Special2",
-    "anim_target": "SlashSP2"
-  },
-  {
-    "id": "sombra",
-    "name": "Dança sombria",
+    "id": "tiro_retaguarda",
+    "name": "Disparo de retaguarda",
     "class": "POWER",
-    "owner": "",
-    "source": "content",
-    "anim_self": "Special3",
-    "anim_target": "shield"
-  },
-  {
-    "id": "luz",
-    "name": "Luz incisiva",
-    "class": "ATTACK",
-    "owner": "",
-    "source": "content",
-    "anim_self": "BreathLight",
-    "anim_target": "HitSP2"
-  },
-  {
-    "id": "cura",
-    "name": "Cura vital",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "HeartMark1",
-    "anim_target": "Light1"
-  },
-  {
-    "id": "benção",
-    "name": "Bênção persistente",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "BreathLight",
-    "anim_target": "shield"
-  },
-  {
-    "id": "purificar",
-    "name": "Purificação",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "cast",
-    "anim_target": "shield"
-  },
-  {
-    "id": "julgamento",
-    "name": "Julgamento",
-    "class": "POWER",
-    "owner": "",
-    "source": "content",
-    "anim_self": "fire",
-    "anim_target": "shield"
-  },
-  {
-    "id": "martelo",
-    "name": "Golpe de martelo",
-    "class": "ATTACK",
-    "owner": "",
-    "source": "content",
-    "anim_self": "lightning",
-    "anim_target": "pull"
-  },
-  {
-    "id": "egide",
-    "name": "Égide",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "buff",
-    "anim_target": "Reflection"
-  },
-  {
-    "id": "provocar",
-    "name": "Desafio",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "Neutral1",
-    "anim_target": "shield"
-  },
-  {
-    "id": "escudo_forte",
-    "name": "Muralha",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "buff",
-    "anim_target": "Protection"
-  },
-  {
-    "id": "sentenca",
-    "name": "Sentença",
-    "class": "POWER",
-    "owner": "",
-    "source": "content",
-    "anim_self": "Neutral2",
-    "anim_target": "blow"
-  },
-  {
-    "id": "dueto",
-    "name": "Pacto de batalha",
-    "class": "COMBO",
-    "owner": "",
-    "source": "content",
-    "anim_self": "Special2",
-    "anim_target": "CrossHit"
-  },
-  {
-    "id": "golpe_largo",
-    "name": "Arco de aço",
-    "class": "ATTACK",
-    "owner": "",
-    "source": "content",
-    "anim_self": "Special3",
-    "anim_target": "slash"
-  },
-  {
-    "id": "preparo",
-    "name": "Reunir forças",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "Special1",
-    "anim_target": "StarsHit"
-  },
-  {
-    "id": "ruptura",
-    "name": "Quebra de escudo",
-    "class": "POWER",
-    "owner": "",
-    "source": "content",
-    "anim_self": "buff",
-    "anim_target": "Shield"
-  },
-  {
-    "id": "centelha",
-    "name": "Centelha",
-    "class": "ATTACK",
-    "owner": "",
-    "source": "content",
-    "anim_self": "BreathThunder",
-    "anim_target": "Thunder1"
-  },
-  {
-    "id": "prisma",
-    "name": "Prisma de defesa",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "cast",
-    "anim_target": "bind"
-  },
-  {
-    "id": "eco",
-    "name": "Eco arcano",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "summon",
-    "anim_target": "shield"
-  },
-  {
-    "id": "armadilha",
-    "name": "Armadilha curta",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "Neutral1",
-    "anim_target": "status"
-  },
-  {
-    "id": "furto",
-    "name": "Furto veloz",
-    "class": "ATTACK",
-    "owner": "",
-    "source": "content",
-    "anim_self": "fire",
-    "anim_target": "hit"
-  },
-  {
-    "id": "golpe_oculto",
-    "name": "Punhal nas sombras",
-    "class": "POWER",
-    "owner": "",
-    "source": "content",
-    "anim_self": "Smokescreen",
-    "anim_target": "Shoot1"
-  },
-  {
-    "id": "abrigo",
-    "name": "Abrigo sagrado",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "HeartMark1",
-    "anim_target": "Reflection"
-  },
-  {
-    "id": "fervor",
-    "name": "Fervor",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "Neutral2",
-    "anim_target": "debuff"
-  },
-  {
-    "id": "resgate",
-    "name": "Resgate",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "light",
-    "anim_target": "Light3"
-  },
-  {
-    "id": "muralha_viva",
-    "name": "Muralha viva",
-    "class": "SKILL",
     "owner": "",
     "source": "content",
     "anim_self": "guard",
-    "anim_target": "Protection"
-  },
-  {
-    "id": "juramento",
-    "name": "Juramento de aço",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "Special1",
-    "anim_target": "stun"
-  },
-  {
-    "id": "brilho",
-    "name": "Clarão",
-    "class": "ATTACK",
-    "owner": "",
-    "source": "content",
-    "anim_self": "lightning",
-    "anim_target": "StarsHit"
-  },
-  {
-    "id": "flecha",
-    "name": "Flecha certeira",
-    "class": "ATTACK",
-    "owner": "",
-    "source": "content",
-    "anim_self": "Special2",
-    "anim_target": "pierce"
-  },
-  {
-    "id": "foco",
-    "name": "Foco do caçador",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "cast",
-    "anim_target": "bind"
-  },
-  {
-    "id": "salva",
-    "name": "Salva rente",
-    "class": "ATTACK",
-    "owner": "",
-    "source": "content",
-    "anim_self": "Special3",
-    "anim_target": "HitSP1"
-  },
-  {
-    "id": "rede",
-    "name": "Rede de caça",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "Neutral1",
-    "anim_target": "pull"
+    "anim_target": "Reflection"
   },
   {
     "id": "veneno",
@@ -4653,51 +5112,6 @@
     "anim_target": "PierceSP1"
   },
   {
-    "id": "flanquear",
-    "name": "Flanquear",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "Neutral2",
-    "anim_target": "shield"
-  },
-  {
-    "id": "falcon",
-    "name": "Olho da falcoaria",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "Special1",
-    "anim_target": "status"
-  },
-  {
-    "id": "chuva",
-    "name": "Chuva de pontas",
-    "class": "POWER",
-    "owner": "",
-    "source": "content",
-    "anim_self": "lightning",
-    "anim_target": "HitSP2"
-  },
-  {
-    "id": "frenesi_aco",
-    "name": "Frenesi de aço",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "cast",
-    "anim_target": "debuff"
-  },
-  {
-    "id": "martelo_pesado",
-    "name": "Martelo impulsor",
-    "class": "ATTACK",
-    "owner": "",
-    "source": "content",
-    "anim_self": "Special2",
-    "anim_target": "push"
-  },
-  {
     "id": "visao",
     "name": "Visão do porvir",
     "class": "SKILL",
@@ -4705,275 +5119,5 @@
     "source": "content",
     "anim_self": "Neutral1",
     "anim_target": "stun"
-  },
-  {
-    "id": "selo_ruina",
-    "name": "Selo de ruína",
-    "class": "POWER",
-    "owner": "",
-    "source": "content",
-    "anim_self": "Special3",
-    "anim_target": "blow"
-  },
-  {
-    "id": "corte_dreno",
-    "name": "Corte drenante",
-    "class": "ATTACK",
-    "owner": "",
-    "source": "content",
-    "anim_self": "fire",
-    "anim_target": "CrossSlash"
-  },
-  {
-    "id": "queda",
-    "name": "Passagem perigosa",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "Neutral2",
-    "anim_target": "Explosion1"
-  },
-  {
-    "id": "campo_sagrado",
-    "name": "Campo sagrado",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "BreathLight",
-    "anim_target": "StarsHit"
-  },
-  {
-    "id": "elo_vital",
-    "name": "Elo vital",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "HeartMark1",
-    "anim_target": "Light4"
-  },
-  {
-    "id": "estandarte",
-    "name": "Estandarte de defesa",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "buff",
-    "anim_target": "bind"
-  },
-  {
-    "id": "guarda_absoluta",
-    "name": "Guarda absoluta",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "guard",
-    "anim_target": "Shield"
-  },
-  {
-    "id": "teia",
-    "name": "Teia de caça",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "Special1",
-    "anim_target": "shield"
-  },
-  {
-    "id": "foco_ambiental",
-    "name": "Foco ambiental",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "cast",
-    "anim_target": "status"
-  },
-  {
-    "id": "furia_totem",
-    "name": "Fúria do totem",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "wind",
-    "anim_target": "debuff"
-  },
-  {
-    "id": "dominio",
-    "name": "Domínio do selo",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "Neutral1",
-    "anim_target": "stun"
-  },
-  {
-    "id": "portal_impulso",
-    "name": "Impulso do selo",
-    "class": "ATTACK",
-    "owner": "",
-    "source": "content",
-    "anim_self": "lightning",
-    "anim_target": "push"
-  },
-  {
-    "id": "controlar_mente",
-    "name": "Ruído mental",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "Neutral2",
-    "anim_target": "StarsHit"
-  },
-  {
-    "id": "distorcer",
-    "name": "Distorcer vontade",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "buff",
-    "anim_target": "bind"
-  },
-  {
-    "id": "jogo_sombras",
-    "name": "Jogo de sombras",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "darkness",
-    "anim_target": "shield"
-  },
-  {
-    "id": "benzer",
-    "name": "Bênção do grupo",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "BreathLight",
-    "anim_target": "status"
-  },
-  {
-    "id": "prisma_sangue",
-    "name": "Prisma sanguíneo",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "Special1",
-    "anim_target": "debuff"
-  },
-  {
-    "id": "pele_rigida",
-    "name": "Pele selada",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "cast",
-    "anim_target": "stun"
-  },
-  {
-    "id": "furia_total",
-    "name": "Força total",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "Neutral1",
-    "anim_target": "StarsHit"
-  },
-  {
-    "id": "predador",
-    "name": "Instinto do predador",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "Neutral2",
-    "anim_target": "bind"
-  },
-  {
-    "id": "armadilha_tempo",
-    "name": "Laço instável",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "buff",
-    "anim_target": "shield"
-  },
-  {
-    "id": "agitar",
-    "name": "Agitação dirigida",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "guard",
-    "anim_target": "status"
-  },
-  {
-    "id": "corte_adj",
-    "name": "Corte de flanco",
-    "class": "ATTACK",
-    "owner": "",
-    "source": "content",
-    "anim_self": "Special2",
-    "anim_target": "SlashSP1"
-  },
-  {
-    "id": "fagulha_incerta",
-    "name": "Fagulha incerta",
-    "class": "ATTACK",
-    "owner": "",
-    "source": "content",
-    "anim_self": "Special3",
-    "anim_target": "CrossHit"
-  },
-  {
-    "id": "cerco_frente",
-    "name": "Cerco frontal",
-    "class": "POWER",
-    "owner": "",
-    "source": "content",
-    "anim_self": "fire",
-    "anim_target": "slash"
-  },
-  {
-    "id": "tiro_retaguarda",
-    "name": "Disparo de retaguarda",
-    "class": "POWER",
-    "owner": "",
-    "source": "content",
-    "anim_self": "guard",
-    "anim_target": "Reflection"
-  },
-  {
-    "id": "balanca",
-    "name": "Balança de cinzas",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "light",
-    "anim_target": "heal"
-  },
-  {
-    "id": "item_potion",
-    "name": "Poção",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "light",
-    "anim_target": "Light1"
-  },
-  {
-    "id": "item_antidote",
-    "name": "Antídoto",
-    "class": "SKILL",
-    "owner": "",
-    "source": "content",
-    "anim_self": "Special1",
-    "anim_target": "debuff"
-  },
-  {
-    "id": "item_bomb",
-    "name": "Bomba",
-    "class": "ATTACK",
-    "owner": "",
-    "source": "content",
-    "anim_self": "lightning",
-    "anim_target": "hit"
   }
 ]

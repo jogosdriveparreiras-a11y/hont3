@@ -3,7 +3,7 @@
 Regra: **exatamente 1** `anim_self` (cast) + **1** `anim_target` por carta.
 Fontes: RM sheets + Effekseer basenames via `FxPlayer`/`RmAnimPlayer`.
 
-Total: **553** cartas.
+Total: **569** cartas.
 
 ## Distribuição cast (self)
 
@@ -264,16 +264,42 @@ Total: **553** cartas.
 | `ent_damian_alrosa_rede_de_contatos` | Rede de contatos | ESTADO | entities | `Neutral2` | `hit` |
 | `ent_damian_alrosa_renegociar_termos` | Renegociar termos | ESTADO | entities | `buff` | `debuff` |
 | `ent_damian_alrosa_ritual_condicionado` | Ritual condicionado | ESTADO | entities | `Special1` | `stun` |
-| `ent_dominika_seur_absorver_impacto` | Absorver impacto | ESTADO | entities | `light` | `Light1` |
-| `ent_dominika_seur_avanco_colossal` | Avanço colossal | ATTACK | entities | `fire` | `push` |
-| `ent_dominika_seur_campo_de_massa` | Campo de massa | ESTADO | entities | `guard` | `Reflection` |
-| `ent_dominika_seur_corpo_acolchoado` | Corpo acolchoado | ESTADO | entities | `guard` | `shield` |
-| `ent_dominika_seur_engolfamento` | Engolfamento | ATTACK | entities | `lightning` | `slash` |
-| `ent_dominika_seur_esmagamento_lento` | Esmagamento lento | ATTACK | entities | `Special2` | `blow` |
-| `ent_dominika_seur_massa_em_avanco` | Massa em avanço | ATTACK | entities | `Special3` | `Explosion1` |
-| `ent_dominika_seur_onda_de_engolfamento` | Onda de engolfamento | ATTACK | entities | `wind` | `HitSP1` |
-| `ent_dominika_seur_pressao_inabalavel` | Pressão inabalável | ESTADO | entities | `cast` | `shield` |
-| `ent_dominika_seur_regeneracao_volumosa` | Regeneração volumosa | ESTADO | entities | `BreathLight` | `Light2` |
+| `ent_dominika_seur_abalo_sismico` | Abalo Sísmico | ATTACK | entities | `earth` | `Explosion1` |
+| `ent_dominika_seur_barrigada` | Barrigada | ATTACK | entities | `Special2` | `push` |
+| `ent_dominika_seur_cair_por_cima` | Cair Por Cima | ESTADO | entities | `Neutral1` | `Protection` |
+| `ent_dominika_seur_corpo_de_manteiga` | Corpo de Manteiga | ESTADO | entities | `buff` | `heal` |
+| `ent_dominika_seur_desvantagem_derretimento` | Derretimento | DESVANTAGEM | entities | `ice` | `blow` |
+| `ent_dominika_seur_eu_sou_a_vitima` | Eu Sou a Vítima! | ESTADO | entities | `buff` | `status` |
+| `ent_dominika_seur_peitada` | Peitada | ATTACK | entities | `Special3` | `Blow1` |
+| `ent_dominika_seur_presenca` | Presença | ESTADO | entities | `cast` | `status` |
+| `ent_dominika_seur_rolar` | Rolar | ESTADO | entities | `Special1` | `smoke` |
+| `ent_dominika_seur_sentar_em_cima` | Sentar Em Cima | ATTACK | entities | `Special3` | `bind` |
+| `ent_minion_banshee_grito_a` | Uivo | ATTACK | entities | `Special3` | `HitSP1` |
+| `ent_minion_banshee_grito_b` | Lamento | ATTACK | entities | `Special3` | `HitSP1` |
+| `ent_minion_esqueleto_golpe` | Tiro Ósseo | ATTACK | entities | `Special3` | `HitSP1` |
+| `ent_minion_fantasma_golpe` | Toque Gélido | ATTACK | entities | `Special3` | `HitSP1` |
+| `ent_minion_ghoul_golpe_a` | Rasgar | ATTACK | entities | `Special3` | `HitSP1` |
+| `ent_minion_ghoul_golpe_b` | Dilacerar | ATTACK | entities | `Special3` | `HitSP1` |
+| `ent_minion_golem_golpe_a` | Esmagar | ATTACK | entities | `Special3` | `HitSP1` |
+| `ent_minion_golem_golpe_b` | Muralha | ATTACK | entities | `Special3` | `HitSP1` |
+| `ent_minion_lich_golpe_a` | Raio Necrótico | ATTACK | entities | `Special3` | `HitSP1` |
+| `ent_minion_lich_golpe_b` | Dominar | ATTACK | entities | `Special3` | `HitSP1` |
+| `ent_minion_mumia_golpe` | Envoltório | ATTACK | entities | `Special3` | `HitSP1` |
+| `ent_minion_strigoi_golpe_a` | Sede | ATTACK | entities | `Special3` | `HitSP1` |
+| `ent_minion_strigoi_golpe_b` | Devorar | ATTACK | entities | `Special3` | `HitSP1` |
+| `ent_minion_vampiro_golpe` | Mordida Vampírica | ATTACK | entities | `Special3` | `HitSP1` |
+| `ent_minion_zumbi_golpe` | Mordida | ATTACK | entities | `Special3` | `HitSP1` |
+| `ent_nero_armadura_de_osso` | Armadura de Osso | ESTADO | entities | `buff` | `Protection` |
+| `ent_nero_curar_os_mortos` | Curar os Mortos | ESTADO | entities | `light` | `heal` |
+| `ent_nero_desvantagem_solidao` | Solidão | DESVANTAGEM | entities | `ice` | `blow` |
+| `ent_nero_explodir_cadaver` | Explodir Cadáver | ATTACK | entities | `fire` | `Explosion1` |
+| `ent_nero_faca_de_osso` | Faca de Osso | ATTACK | entities | `Special3` | `SlashSP1` |
+| `ent_nero_intimidacao` | Intimidação | ESTADO | entities | `Neutral2` | `debuff` |
+| `ent_nero_invocar_esqueleto` | Invocar Esqueleto | ESTADO | entities | `summon` | `status` |
+| `ent_nero_invocar_fantasma` | Invocar Fantasma | ESTADO | entities | `summon` | `status` |
+| `ent_nero_invocar_mumia` | Invocar Múmia | ESTADO | entities | `summon` | `status` |
+| `ent_nero_invocar_vampiro` | Invocar Vampiro | ESTADO | entities | `summon` | `status` |
+| `ent_nero_invocar_zumbi` | Invocar Zumbi | ESTADO | entities | `summon` | `status` |
 | `ent_dylan_atrair_atencao` | Atrair atenção | ATTACK | entities | `fire` | `HitSP2` |
 | `ent_dylan_avisar_o_perigo` | Avisar o perigo | ESTADO | entities | `Neutral1` | `StarsHit` |
 | `ent_dylan_buscar_ajuda` | Buscar ajuda | ESTADO | entities | `Neutral2` | `bind` |
@@ -384,16 +410,6 @@ Total: **553** cartas.
 | `ent_mutante_generico_parede_do_elemento` | Parede do elemento | ESTADO | entities | `guard` | `shield` |
 | `ent_mutante_generico_rajada_elemental` | Rajada elemental | ATTACK | entities | `Special2` | `HitSP2` |
 | `ent_mutante_generico_ruptura_de_terreno` | Ruptura de terreno | ATTACK | entities | `Special3` | `blow` |
-| `ent_nero_chamar_o_caido` | Chamar o caído | ESTADO | entities | `Neutral1` | `hit` |
-| `ent_nero_circulo_funerario` | Círculo funerário | ESTADO | entities | `guard` | `Protection` |
-| `ent_nero_escudo_de_ossos` | Escudo de ossos | ESTADO | entities | `buff` | `Shield` |
-| `ent_nero_foice_de_sangue` | Foice de sangue | ATTACK | entities | `ice` | `ClawSP1` |
-| `ent_nero_golpe_ritual` | Golpe ritual | ATTACK | entities | `fire` | `CrossHit` |
-| `ent_nero_inferi_temporario` | Inferi temporário | ESTADO | entities | `summon` | `Light2` |
-| `ent_nero_marcha_dos_inferi` | Marcha dos inferi | ATTACK | entities | `lightning` | `slash` |
-| `ent_nero_portao_do_necroterio` | Portão do necrotério | ATTACK | entities | `cast` | `status` |
-| `ent_nero_toque_no_equilibrio` | Toque no equilíbrio | ESTADO | entities | `Special1` | `debuff` |
-| `ent_nero_vinculo_de_sangue` | Vínculo de sangue | ESTADO | entities | `light` | `claw` |
 | `ent_niu_valdtagen_alerta_silencioso` | Alerta silencioso | ESTADO | entities | `Neutral1` | `stun` |
 | `ent_niu_valdtagen_coincidencia_impossivel` | Coincidência impossível | ATTACK | entities | `Neutral2` | `StarsHit` |
 | `ent_niu_valdtagen_encontrar_saida` | Encontrar saída | ESTADO | entities | `buff` | `bind` |

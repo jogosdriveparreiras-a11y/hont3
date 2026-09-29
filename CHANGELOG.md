@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-09-29 — Tormenta Instantânea, Dominika/Nero redesign, Counter, Alcance, score
+
+- **Tormenta (Alyssa)**: agora Instantâneo; requer Escuridão ≥1; dano absoluto 10×E em ALL_OTHERS; não recomprável; removido tick passivo E≥4.
+- **Instantâneo**: só Instantâneo *jogável* obriga jogar antes de outras cartas / Encerrar; injogável libera o resto.
+- **Alcance**: removido `reach` de 111 cartas SELF/ALLY/ALL_ALLIES (Alcance sem sentido em alvo próprio/aliado).
+- **Counter**: efeitos/modo vêm da carta; alcance padrão frente×frente (fallback melee).
+- **Dominika Seur**: kit Peitada…Presença + Derretimento; aprimoramento **100% Gordura** (imune Ferido/Sangrando/Preso).
+- **Nero→Naomi**: após 5 cartas Nero na luta transforma; cartas dual Nero/Naomi; lacaios Zumbi…Lich; Explodir Cadáver / Curar os Mortos; Solidão Instantânea.
+- **Editor**: pontuação automática por carta e totais inicial / deck final / final+ por personagem.
+
 ## 2026-09-29 — Push ≠ pull (Daeva Cobertura)
 
 - **Anim 1+1 audit**: 553/553 cartas com exatamente 1 `anim_self` + 1 `anim_target` (0 missing, 0 2+, 0 comma-lists).

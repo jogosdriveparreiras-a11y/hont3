@@ -467,7 +467,7 @@
         "Desperto",
         "Anomalia"
       ],
-      "biografia": "Alyssa Wine é uma Inumana marcada pela Tormenta. Seu aprimoramento Escuridão cresce com o sofrimento e alimenta manobras brutais. Quando E ≥ 4, a Desvantagem Tormenta fere todos ao redor.",
+      "biografia": "Alyssa Wine é uma Inumana marcada pela Tormenta. Seu aprimoramento Escuridão cresce com o sofrimento e alimenta manobras brutais. A Desvantagem Tormenta é Instantânea: com E≥1 deve ser jogada antes das outras cartas e causa 10×E a todos exceto Alyssa.",
       "iniciais": [
         "ent_alyssa_wine_bastao_retratil",
         "ent_alyssa_wine_garras_e_presas",
@@ -785,25 +785,25 @@
       "type": "BRUTO",
       "row": "front",
       "sprite": "res://assets/cast/ent_dominika_seur_sprite.png",
-      "passive": "baluarte",
+      "passive": "gordura_100",
       "pool": [
-        "ent_dominika_seur_massa_em_avanco",
-        "ent_dominika_seur_corpo_acolchoado",
-        "ent_dominika_seur_engolfamento",
-        "ent_dominika_seur_regeneracao_volumosa",
-        "ent_dominika_seur_pressao_inabalavel",
-        "ent_dominika_seur_esmagamento_lento",
-        "ent_dominika_seur_campo_de_massa",
-        "ent_dominika_seur_avanco_colossal",
-        "ent_dominika_seur_absorver_impacto",
-        "ent_dominika_seur_onda_de_engolfamento"
+        "ent_dominika_seur_peitada",
+        "ent_dominika_seur_barrigada",
+        "ent_dominika_seur_corpo_de_manteiga",
+        "ent_dominika_seur_cair_por_cima",
+        "ent_dominika_seur_rolar",
+        "ent_dominika_seur_sentar_em_cima",
+        "ent_dominika_seur_eu_sou_a_vitima",
+        "ent_dominika_seur_abalo_sismico",
+        "ent_dominika_seur_presenca",
+        "ent_dominika_seur_desvantagem_derretimento"
       ],
       "cards": [
-        "ent_dominika_seur_massa_em_avanco",
-        "ent_dominika_seur_corpo_acolchoado",
-        "ent_dominika_seur_engolfamento",
-        "ent_dominika_seur_regeneracao_volumosa",
-        "ent_dominika_seur_pressao_inabalavel"
+        "ent_dominika_seur_peitada",
+        "ent_dominika_seur_barrigada",
+        "ent_dominika_seur_corpo_de_manteiga",
+        "ent_dominika_seur_cair_por_cima",
+        "ent_dominika_seur_rolar"
       ],
       "signature": {
         "name": "Recuperação de massa",
@@ -840,27 +840,31 @@
       "portrait": "res://assets/cast/ent_dominika_seur_portrait.png",
       "signature_icon": "res://assets/cast/ent_dominika_seur_icon.png",
       "escudo": 24,
-      "aprimoramento": "baluarte",
+      "aprimoramento": {
+        "id": "gordura_100",
+        "name": "100% Gordura",
+        "text": "Imune a Ferido, Sangrando e Preso."
+      },
       "grupos": [
         "Inabalável",
         "Colosso",
         "Regenerador"
       ],
-      "biografia": "Dominika Seur — Armadura · Inumano. (Biografia pendente.)",
+      "biografia": "Dominika Seur — Armadura · Inumano. 100% Gordura a torna imune a Ferido, Sangrando e Preso; Derretimento a deixa vulnerável a projéteis e químicos.",
       "iniciais": [
-        "ent_dominika_seur_massa_em_avanco",
-        "ent_dominika_seur_corpo_acolchoado",
-        "ent_dominika_seur_engolfamento",
-        "ent_dominika_seur_regeneracao_volumosa",
-        "ent_dominika_seur_pressao_inabalavel"
+        "ent_dominika_seur_peitada",
+        "ent_dominika_seur_barrigada",
+        "ent_dominika_seur_corpo_de_manteiga",
+        "ent_dominika_seur_cair_por_cima",
+        "ent_dominika_seur_rolar"
       ],
       "evoluidas": [
-        "ent_dominika_seur_esmagamento_lento",
-        "ent_dominika_seur_campo_de_massa",
-        "ent_dominika_seur_avanco_colossal",
-        "ent_dominika_seur_absorver_impacto",
-        "ent_dominika_seur_onda_de_engolfamento"
-      ]
+        "ent_dominika_seur_sentar_em_cima",
+        "ent_dominika_seur_eu_sou_a_vitima",
+        "ent_dominika_seur_abalo_sismico",
+        "ent_dominika_seur_presenca"
+      ],
+      "desvantagem": "ent_dominika_seur_desvantagem_derretimento"
     },
     "ent_dylan": {
       "id": "ent_dylan",
@@ -1885,25 +1889,26 @@
       "type": "PROJETIVO",
       "row": "back",
       "sprite": "res://assets/cast/ent_nero_sprite.png",
-      "passive": "canalizar",
+      "passive": "naomi_despertar",
       "pool": [
-        "ent_nero_foice_de_sangue",
-        "ent_nero_escudo_de_ossos",
-        "ent_nero_inferi_temporario",
-        "ent_nero_toque_no_equilibrio",
-        "ent_nero_vinculo_de_sangue",
-        "ent_nero_golpe_ritual",
-        "ent_nero_marcha_dos_inferi",
-        "ent_nero_chamar_o_caido",
-        "ent_nero_circulo_funerario",
-        "ent_nero_portao_do_necroterio"
+        "ent_nero_faca_de_osso",
+        "ent_nero_armadura_de_osso",
+        "ent_nero_intimidacao",
+        "ent_nero_invocar_zumbi",
+        "ent_nero_invocar_fantasma",
+        "ent_nero_invocar_vampiro",
+        "ent_nero_invocar_esqueleto",
+        "ent_nero_invocar_mumia",
+        "ent_nero_explodir_cadaver",
+        "ent_nero_curar_os_mortos",
+        "ent_nero_desvantagem_solidao"
       ],
       "cards": [
-        "ent_nero_foice_de_sangue",
-        "ent_nero_escudo_de_ossos",
-        "ent_nero_inferi_temporario",
-        "ent_nero_toque_no_equilibrio",
-        "ent_nero_vinculo_de_sangue"
+        "ent_nero_faca_de_osso",
+        "ent_nero_armadura_de_osso",
+        "ent_nero_intimidacao",
+        "ent_nero_invocar_zumbi",
+        "ent_nero_invocar_fantasma"
       ],
       "signature": {
         "name": "Presença funerária",
@@ -1944,27 +1949,35 @@
       "portrait": "res://assets/cast/ent_nero_portrait.png",
       "signature_icon": "res://assets/cast/ent_nero_icon.png",
       "escudo": 22,
-      "aprimoramento": "canalizar",
+      "aprimoramento": {
+        "id": "naomi_despertar",
+        "name": "Despertar de Naomi",
+        "text": "Após jogar 5 cartas de Nero nesta luta, transforma-se em Naomi até o fim do combate (nome, aparência e efeitos das cartas)."
+      },
       "grupos": [
         "Invocador",
         "Controlador",
         "Ilusionista"
       ],
-      "biografia": "Nero — Poder · Humano. (Biografia pendente.)",
+      "biografia": "Nero — Poder · Humano. Ao acumular 5 Manobras próprias na luta, desperta Naomi.",
       "iniciais": [
-        "ent_nero_foice_de_sangue",
-        "ent_nero_escudo_de_ossos",
-        "ent_nero_inferi_temporario",
-        "ent_nero_toque_no_equilibrio",
-        "ent_nero_vinculo_de_sangue"
+        "ent_nero_faca_de_osso",
+        "ent_nero_armadura_de_osso",
+        "ent_nero_intimidacao",
+        "ent_nero_invocar_zumbi",
+        "ent_nero_invocar_fantasma"
       ],
       "evoluidas": [
-        "ent_nero_golpe_ritual",
-        "ent_nero_marcha_dos_inferi",
-        "ent_nero_chamar_o_caido",
-        "ent_nero_circulo_funerario",
-        "ent_nero_portao_do_necroterio"
-      ]
+        "ent_nero_invocar_vampiro",
+        "ent_nero_invocar_esqueleto",
+        "ent_nero_invocar_mumia",
+        "ent_nero_explodir_cadaver",
+        "ent_nero_curar_os_mortos"
+      ],
+      "desvantagem": "ent_nero_desvantagem_solidao",
+      "transform_name": "Naomi",
+      "transform_sprite": "res://assets/cast/ent_nero_sprite.png",
+      "transform_portrait": "res://assets/cast/ent_nero_portrait.png"
     },
     "ent_niu_valdtagen": {
       "id": "ent_niu_valdtagen",
@@ -2527,6 +2540,261 @@
         "ent_techna_armadura_de_bloqueio",
         "ent_techna_protocolo_nocaute"
       ]
+    },
+    "ent_minion_zumbi": {
+      "id": "ent_minion_zumbi",
+      "name": "Zumbi",
+      "hp": 1,
+      "attack": 20,
+      "power": 16,
+      "armor": 10,
+      "escudo": 10,
+      "type": "BRUTO",
+      "row": "front",
+      "minion": true,
+      "playable": false,
+      "passive": "oportunista",
+      "sprite": "res://en_dog.png",
+      "cards": [
+        "ent_minion_zumbi_golpe"
+      ],
+      "pool": [
+        "ent_minion_zumbi_golpe"
+      ],
+      "iniciais": [
+        "ent_minion_zumbi_golpe"
+      ]
+    },
+    "ent_minion_fantasma": {
+      "id": "ent_minion_fantasma",
+      "name": "Fantasma",
+      "hp": 1,
+      "attack": 16,
+      "power": 22,
+      "armor": 8,
+      "escudo": 12,
+      "type": "MENTAL",
+      "row": "front",
+      "minion": true,
+      "playable": false,
+      "passive": "oportunista",
+      "sprite": "res://en_sniper.png",
+      "cards": [
+        "ent_minion_fantasma_golpe"
+      ],
+      "pool": [
+        "ent_minion_fantasma_golpe"
+      ],
+      "iniciais": [
+        "ent_minion_fantasma_golpe"
+      ]
+    },
+    "ent_minion_esqueleto": {
+      "id": "ent_minion_esqueleto",
+      "name": "Esqueleto",
+      "hp": 1,
+      "attack": 18,
+      "power": 20,
+      "armor": 12,
+      "escudo": 10,
+      "type": "PROJETIVO",
+      "row": "front",
+      "minion": true,
+      "playable": false,
+      "passive": "oportunista",
+      "sprite": "res://en_sniper.png",
+      "cards": [
+        "ent_minion_esqueleto_golpe"
+      ],
+      "pool": [
+        "ent_minion_esqueleto_golpe"
+      ],
+      "iniciais": [
+        "ent_minion_esqueleto_golpe"
+      ]
+    },
+    "ent_minion_vampiro": {
+      "id": "ent_minion_vampiro",
+      "name": "Vampiro",
+      "hp": 5,
+      "attack": 28,
+      "power": 24,
+      "armor": 14,
+      "escudo": 14,
+      "type": "PSICOLOGICO",
+      "row": "front",
+      "minion": true,
+      "playable": false,
+      "passive": "oportunista",
+      "sprite": "res://en_elite.png",
+      "cards": [
+        "ent_minion_vampiro_golpe"
+      ],
+      "pool": [
+        "ent_minion_vampiro_golpe"
+      ],
+      "iniciais": [
+        "ent_minion_vampiro_golpe"
+      ]
+    },
+    "ent_minion_mumia": {
+      "id": "ent_minion_mumia",
+      "name": "Múmia",
+      "hp": 5,
+      "attack": 22,
+      "power": 26,
+      "armor": 16,
+      "escudo": 16,
+      "type": "QUIMICO",
+      "row": "front",
+      "minion": true,
+      "playable": false,
+      "passive": "oportunista",
+      "sprite": "res://en_elite.png",
+      "cards": [
+        "ent_minion_mumia_golpe"
+      ],
+      "pool": [
+        "ent_minion_mumia_golpe"
+      ],
+      "iniciais": [
+        "ent_minion_mumia_golpe"
+      ]
+    },
+    "ent_minion_ghoul": {
+      "id": "ent_minion_ghoul",
+      "name": "Ghoul",
+      "hp": 5,
+      "attack": 26,
+      "power": 20,
+      "armor": 14,
+      "escudo": 12,
+      "type": "BRUTO",
+      "row": "front",
+      "minion": true,
+      "playable": false,
+      "passive": "oportunista",
+      "sprite": "res://en_dog.png",
+      "cards": [
+        "ent_minion_ghoul_golpe_a",
+        "ent_minion_ghoul_golpe_b"
+      ],
+      "pool": [
+        "ent_minion_ghoul_golpe_a",
+        "ent_minion_ghoul_golpe_b"
+      ],
+      "iniciais": [
+        "ent_minion_ghoul_golpe_a",
+        "ent_minion_ghoul_golpe_b"
+      ]
+    },
+    "ent_minion_banshee": {
+      "id": "ent_minion_banshee",
+      "name": "Banshee",
+      "hp": 1,
+      "attack": 14,
+      "power": 28,
+      "armor": 8,
+      "escudo": 14,
+      "type": "MENTAL",
+      "row": "front",
+      "minion": true,
+      "playable": false,
+      "passive": "oportunista",
+      "sprite": "res://en_sniper.png",
+      "cards": [
+        "ent_minion_banshee_grito_a",
+        "ent_minion_banshee_grito_b"
+      ],
+      "pool": [
+        "ent_minion_banshee_grito_a",
+        "ent_minion_banshee_grito_b"
+      ],
+      "iniciais": [
+        "ent_minion_banshee_grito_a",
+        "ent_minion_banshee_grito_b"
+      ]
+    },
+    "ent_minion_strigoi": {
+      "id": "ent_minion_strigoi",
+      "name": "Strigoi",
+      "hp": 7,
+      "attack": 30,
+      "power": 26,
+      "armor": 16,
+      "escudo": 16,
+      "type": "PSICOLOGICO",
+      "row": "front",
+      "minion": true,
+      "playable": false,
+      "passive": "oportunista",
+      "sprite": "res://en_elite.png",
+      "cards": [
+        "ent_minion_strigoi_golpe_a",
+        "ent_minion_strigoi_golpe_b"
+      ],
+      "pool": [
+        "ent_minion_strigoi_golpe_a",
+        "ent_minion_strigoi_golpe_b"
+      ],
+      "iniciais": [
+        "ent_minion_strigoi_golpe_a",
+        "ent_minion_strigoi_golpe_b"
+      ]
+    },
+    "ent_minion_golem": {
+      "id": "ent_minion_golem",
+      "name": "Golem",
+      "hp": 10,
+      "attack": 32,
+      "power": 20,
+      "armor": 24,
+      "escudo": 18,
+      "type": "BRUTO",
+      "row": "front",
+      "minion": true,
+      "playable": false,
+      "passive": "oportunista",
+      "sprite": "res://en_elite.png",
+      "cards": [
+        "ent_minion_golem_golpe_a",
+        "ent_minion_golem_golpe_b"
+      ],
+      "pool": [
+        "ent_minion_golem_golpe_a",
+        "ent_minion_golem_golpe_b"
+      ],
+      "iniciais": [
+        "ent_minion_golem_golpe_a",
+        "ent_minion_golem_golpe_b"
+      ]
+    },
+    "ent_minion_lich": {
+      "id": "ent_minion_lich",
+      "name": "Lich",
+      "hp": 10,
+      "attack": 22,
+      "power": 34,
+      "armor": 16,
+      "escudo": 22,
+      "type": "MENTAL",
+      "row": "front",
+      "minion": true,
+      "playable": false,
+      "passive": "oportunista",
+      "sprite": "res://en_elite.png",
+      "cards": [
+        "ent_minion_lich_golpe_a",
+        "ent_minion_lich_golpe_b"
+      ],
+      "pool": [
+        "ent_minion_lich_golpe_a",
+        "ent_minion_lich_golpe_b"
+      ],
+      "iniciais": [
+        "ent_minion_lich_golpe_a",
+        "ent_minion_lich_golpe_b"
+      ]
     }
   },
   "cards": {
@@ -2570,7 +2838,7 @@
           "5"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -2597,7 +2865,7 @@
           "2"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -2656,7 +2924,7 @@
           "3"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "RARE",
       "unlock": "starting",
@@ -2686,7 +2954,7 @@
           "cure"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "RARE",
       "unlock": "starting",
@@ -2751,7 +3019,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "EPIC",
       "unlock": "starting",
@@ -2783,7 +3051,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "EPIC",
       "unlock": "progression",
@@ -2875,7 +3143,7 @@
           "9"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -2935,7 +3203,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -3031,7 +3299,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "RARE",
       "unlock": "starting",
@@ -3157,7 +3425,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -3243,7 +3511,7 @@
           "2"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -3271,7 +3539,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "RARE",
       "unlock": "starting",
@@ -3298,7 +3566,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "RARE",
       "unlock": "starting",
@@ -3359,7 +3627,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "EPIC",
       "unlock": "starting",
@@ -3391,7 +3659,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "EPIC",
       "unlock": "progression",
@@ -3485,7 +3753,7 @@
           "6"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -3612,7 +3880,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "RARE",
       "unlock": "starting",
@@ -3671,7 +3939,7 @@
           "7"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "EPIC",
       "unlock": "starting",
@@ -3739,7 +4007,7 @@
           "exhaust"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "LEGENDARY",
       "unlock": "progression",
@@ -3861,7 +4129,7 @@
           "cure"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -3923,7 +4191,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "RARE",
       "unlock": "starting",
@@ -3984,7 +4252,7 @@
           "5"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "EPIC",
       "unlock": "starting",
@@ -4111,7 +4379,7 @@
           "2"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -4139,7 +4407,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -4167,7 +4435,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -4226,7 +4494,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "RARE",
       "unlock": "starting",
@@ -4291,7 +4559,7 @@
           "0.5"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "EPIC",
       "unlock": "starting",
@@ -4323,7 +4591,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "EPIC",
       "unlock": "progression",
@@ -4356,7 +4624,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "LEGENDARY",
       "unlock": "progression",
@@ -4443,7 +4711,7 @@
           "2"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -4475,7 +4743,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -4536,7 +4804,7 @@
           "4"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "RARE",
       "unlock": "starting",
@@ -4682,315 +4950,6 @@
       ],
       "anim_timing": "parallel"
     },
-    "ent_dominika_seur_massa_em_avanco": {
-      "id": "ent_dominika_seur_massa_em_avanco",
-      "name": "Massa em avanço",
-      "owner": "ent_dominika_seur",
-      "class": "ATTACK",
-      "target": "ENEMY",
-      "actions": [
-        [
-          "hit",
-          "0"
-        ],
-        [
-          "push",
-          "1"
-        ]
-      ],
-      "reach": false,
-      "stat": "attack",
-      "rarity": "COMMON",
-      "unlock": "starting",
-      "exhaust": false,
-      "gain": 1,
-      "tier": "inicial",
-      "anim_self": [
-        "Special3"
-      ],
-      "anim_target": [
-        "Explosion1"
-      ],
-      "anim_timing": "parallel"
-    },
-    "ent_dominika_seur_corpo_acolchoado": {
-      "id": "ent_dominika_seur_corpo_acolchoado",
-      "name": "Corpo acolchoado",
-      "owner": "ent_dominika_seur",
-      "class": "ESTADO",
-      "target": "SELF",
-      "actions": [
-        [
-          "barreira_hp",
-          "1",
-          "0.35"
-        ]
-      ],
-      "reach": true,
-      "stat": "attack",
-      "rarity": "COMMON",
-      "unlock": "starting",
-      "exhaust": false,
-      "gain": 2,
-      "tier": "inicial",
-      "anim_self": [
-        "guard"
-      ],
-      "anim_target": [
-        "shield"
-      ],
-      "anim_timing": "parallel"
-    },
-    "ent_dominika_seur_engolfamento": {
-      "id": "ent_dominika_seur_engolfamento",
-      "name": "Engolfamento",
-      "owner": "ent_dominika_seur",
-      "class": "ATTACK",
-      "target": "ENEMY",
-      "actions": [
-        [
-          "hit",
-          "0"
-        ],
-        [
-          "status",
-          "bind",
-          "1"
-        ]
-      ],
-      "reach": true,
-      "stat": "attack",
-      "rarity": "COMMON",
-      "unlock": "starting",
-      "exhaust": false,
-      "cost": 2,
-      "tier": "inicial",
-      "anim_self": [
-        "lightning"
-      ],
-      "anim_target": [
-        "slash"
-      ],
-      "anim_timing": "parallel"
-    },
-    "ent_dominika_seur_regeneracao_volumosa": {
-      "id": "ent_dominika_seur_regeneracao_volumosa",
-      "name": "Regeneração volumosa",
-      "owner": "ent_dominika_seur",
-      "class": "ESTADO",
-      "target": "SELF",
-      "actions": [
-        [
-          "heal",
-          "2"
-        ]
-      ],
-      "reach": true,
-      "stat": "attack",
-      "rarity": "COMMON",
-      "unlock": "starting",
-      "exhaust": false,
-      "gain": 2,
-      "tier": "inicial",
-      "anim_self": [
-        "BreathLight"
-      ],
-      "anim_target": [
-        "Light2"
-      ],
-      "anim_timing": "parallel"
-    },
-    "ent_dominika_seur_pressao_inabalavel": {
-      "id": "ent_dominika_seur_pressao_inabalavel",
-      "name": "Pressão inabalável",
-      "owner": "ent_dominika_seur",
-      "class": "ESTADO",
-      "target": "SELF",
-      "actions": [
-        [
-          "self_status",
-          "protecao",
-          "2"
-        ],
-        [
-          "self_status",
-          "counter",
-          "1"
-        ]
-      ],
-      "reach": true,
-      "stat": "attack",
-      "rarity": "RARE",
-      "unlock": "starting",
-      "exhaust": false,
-      "gain": 2,
-      "tier": "inicial",
-      "anim_self": [
-        "cast"
-      ],
-      "anim_target": [
-        "shield"
-      ],
-      "anim_timing": "parallel"
-    },
-    "ent_dominika_seur_esmagamento_lento": {
-      "id": "ent_dominika_seur_esmagamento_lento",
-      "name": "Esmagamento lento",
-      "owner": "ent_dominika_seur",
-      "class": "ATTACK",
-      "target": "ENEMY",
-      "actions": [
-        [
-          "hit",
-          "3"
-        ],
-        [
-          "status",
-          "slow",
-          "1"
-        ]
-      ],
-      "reach": false,
-      "stat": "attack",
-      "rarity": "RARE",
-      "unlock": "starting",
-      "exhaust": false,
-      "gain": 1,
-      "tier": "inicial",
-      "anim_self": [
-        "Special2"
-      ],
-      "anim_target": [
-        "blow"
-      ],
-      "anim_timing": "parallel"
-    },
-    "ent_dominika_seur_campo_de_massa": {
-      "id": "ent_dominika_seur_campo_de_massa",
-      "name": "Campo de massa",
-      "owner": "ent_dominika_seur",
-      "class": "ESTADO",
-      "target": "ALL_ALLIES",
-      "actions": [
-        [
-          "barreira",
-          "1",
-          "5"
-        ]
-      ],
-      "reach": true,
-      "stat": "attack",
-      "rarity": "RARE",
-      "unlock": "starting",
-      "exhaust": false,
-      "gain": 2,
-      "tier": "inicial",
-      "anim_self": [
-        "guard"
-      ],
-      "anim_target": [
-        "Reflection"
-      ],
-      "anim_timing": "parallel"
-    },
-    "ent_dominika_seur_avanco_colossal": {
-      "id": "ent_dominika_seur_avanco_colossal",
-      "name": "Avanço colossal",
-      "owner": "ent_dominika_seur",
-      "class": "ATTACK",
-      "target": "ENEMY_ROW",
-      "actions": [
-        [
-          "hit",
-          "3"
-        ],
-        [
-          "push",
-          "1"
-        ]
-      ],
-      "reach": true,
-      "stat": "attack",
-      "rarity": "EPIC",
-      "unlock": "starting",
-      "exhaust": false,
-      "cost": 3,
-      "tier": "inicial",
-      "anim_self": [
-        "fire"
-      ],
-      "anim_target": [
-        "push"
-      ],
-      "anim_timing": "parallel"
-    },
-    "ent_dominika_seur_absorver_impacto": {
-      "id": "ent_dominika_seur_absorver_impacto",
-      "name": "Absorver impacto",
-      "owner": "ent_dominika_seur",
-      "class": "ESTADO",
-      "target": "SELF",
-      "actions": [
-        [
-          "barreira_hp",
-          "1",
-          "0.5"
-        ],
-        [
-          "heal",
-          "1"
-        ]
-      ],
-      "reach": true,
-      "stat": "attack",
-      "rarity": "EPIC",
-      "unlock": "progression",
-      "exhaust": false,
-      "gain": 2,
-      "tier": "evoluida",
-      "anim_self": [
-        "light"
-      ],
-      "anim_target": [
-        "Light1"
-      ],
-      "anim_timing": "parallel"
-    },
-    "ent_dominika_seur_onda_de_engolfamento": {
-      "id": "ent_dominika_seur_onda_de_engolfamento",
-      "name": "Onda de engolfamento",
-      "owner": "ent_dominika_seur",
-      "class": "ATTACK",
-      "target": "ALL_ENEMIES",
-      "actions": [
-        [
-          "hit",
-          "7"
-        ],
-        [
-          "status",
-          "bind",
-          "1"
-        ],
-        [
-          "exhaust"
-        ]
-      ],
-      "reach": true,
-      "stat": "attack",
-      "rarity": "LEGENDARY",
-      "unlock": "progression",
-      "exhaust": true,
-      "cost": 5,
-      "tier": "evoluida",
-      "anim_self": [
-        "wind"
-      ],
-      "anim_target": [
-        "HitSP1"
-      ],
-      "anim_timing": "parallel"
-    },
     "ent_dylan_avisar_o_perigo": {
       "id": "ent_dylan_avisar_o_perigo",
       "name": "Avisar o perigo",
@@ -5004,7 +4963,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -5061,7 +5020,7 @@
           "cure"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -5089,7 +5048,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -5149,7 +5108,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "RARE",
       "unlock": "starting",
@@ -5176,7 +5135,7 @@
           "2"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "RARE",
       "unlock": "starting",
@@ -5209,7 +5168,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "EPIC",
       "unlock": "starting",
@@ -5237,7 +5196,7 @@
           "5"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "EPIC",
       "unlock": "progression",
@@ -5269,7 +5228,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "LEGENDARY",
       "unlock": "progression",
@@ -5355,7 +5314,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "power",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -5387,7 +5346,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "power",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -5638,7 +5597,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -5754,7 +5713,7 @@
           "2"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "RARE",
       "unlock": "starting",
@@ -5937,7 +5896,7 @@
           "cure"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "power",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -5969,7 +5928,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "power",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -6029,7 +5988,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "power",
       "rarity": "RARE",
       "unlock": "starting",
@@ -6121,7 +6080,7 @@
           "cure"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "power",
       "rarity": "EPIC",
       "unlock": "starting",
@@ -6255,7 +6214,7 @@
           "2"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -6351,7 +6310,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "RARE",
       "unlock": "starting",
@@ -6444,7 +6403,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "EPIC",
       "unlock": "starting",
@@ -6571,7 +6530,7 @@
           "9"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -6599,7 +6558,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -6659,7 +6618,7 @@
           "5"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "RARE",
       "unlock": "starting",
@@ -6879,7 +6838,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "power",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -6941,7 +6900,7 @@
           "cure"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "power",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -7007,7 +6966,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "power",
       "rarity": "RARE",
       "unlock": "starting",
@@ -7165,7 +7124,7 @@
           "0.5"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "power",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -7193,7 +7152,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "power",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -7276,7 +7235,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "power",
       "rarity": "RARE",
       "unlock": "starting",
@@ -7341,7 +7300,7 @@
           "4"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "power",
       "rarity": "RARE",
       "unlock": "starting",
@@ -7401,7 +7360,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "power",
       "rarity": "EPIC",
       "unlock": "progression",
@@ -7437,7 +7396,7 @@
           "exhaust"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "power",
       "rarity": "LEGENDARY",
       "unlock": "progression",
@@ -7560,7 +7519,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -7588,7 +7547,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "RARE",
       "unlock": "starting",
@@ -7650,7 +7609,7 @@
           "cure"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "RARE",
       "unlock": "starting",
@@ -7705,7 +7664,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "EPIC",
       "unlock": "progression",
@@ -7833,7 +7792,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "power",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -8111,7 +8070,7 @@
           "7"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "power",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -8202,7 +8161,7 @@
           "4"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "power",
       "rarity": "RARE",
       "unlock": "starting",
@@ -8229,7 +8188,7 @@
           "2"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "power",
       "rarity": "RARE",
       "unlock": "starting",
@@ -8321,7 +8280,7 @@
           "10"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "power",
       "rarity": "EPIC",
       "unlock": "progression",
@@ -8366,315 +8325,6 @@
       ],
       "anim_timing": "parallel"
     },
-    "ent_nero_foice_de_sangue": {
-      "id": "ent_nero_foice_de_sangue",
-      "name": "Foice de sangue",
-      "owner": "ent_nero",
-      "class": "ATTACK",
-      "target": "ENEMY",
-      "actions": [
-        [
-          "hit",
-          "0"
-        ],
-        [
-          "status",
-          "bleed",
-          "1"
-        ]
-      ],
-      "reach": true,
-      "stat": "power",
-      "rarity": "COMMON",
-      "unlock": "starting",
-      "exhaust": false,
-      "gain": 1,
-      "tier": "inicial",
-      "anim_self": [
-        "ice"
-      ],
-      "anim_target": [
-        "ClawSP1"
-      ],
-      "anim_timing": "parallel"
-    },
-    "ent_nero_escudo_de_ossos": {
-      "id": "ent_nero_escudo_de_ossos",
-      "name": "Escudo de ossos",
-      "owner": "ent_nero",
-      "class": "ESTADO",
-      "target": "ALLY",
-      "actions": [
-        [
-          "barreira",
-          "1",
-          "7"
-        ]
-      ],
-      "reach": true,
-      "stat": "power",
-      "rarity": "COMMON",
-      "unlock": "starting",
-      "exhaust": false,
-      "gain": 2,
-      "tier": "inicial",
-      "anim_self": [
-        "buff"
-      ],
-      "anim_target": [
-        "Shield"
-      ],
-      "anim_timing": "parallel"
-    },
-    "ent_nero_inferi_temporario": {
-      "id": "ent_nero_inferi_temporario",
-      "name": "Inferi temporário",
-      "owner": "ent_nero",
-      "class": "ESTADO",
-      "target": "SELF",
-      "actions": [
-        [
-          "summon",
-          "inferi",
-          "1"
-        ],
-        [
-          "draw",
-          "1"
-        ]
-      ],
-      "reach": true,
-      "stat": "power",
-      "rarity": "COMMON",
-      "unlock": "starting",
-      "exhaust": false,
-      "cost": 2,
-      "tier": "inicial",
-      "anim_self": [
-        "summon"
-      ],
-      "anim_target": [
-        "Light2"
-      ],
-      "anim_timing": "parallel"
-    },
-    "ent_nero_toque_no_equilibrio": {
-      "id": "ent_nero_toque_no_equilibrio",
-      "name": "Toque no equilíbrio",
-      "owner": "ent_nero",
-      "class": "ESTADO",
-      "target": "ENEMY",
-      "actions": [
-        [
-          "status",
-          "weak",
-          "2"
-        ]
-      ],
-      "reach": true,
-      "stat": "power",
-      "rarity": "COMMON",
-      "unlock": "starting",
-      "exhaust": false,
-      "gain": 2,
-      "tier": "inicial",
-      "anim_self": [
-        "Special1"
-      ],
-      "anim_target": [
-        "debuff"
-      ],
-      "anim_timing": "parallel"
-    },
-    "ent_nero_vinculo_de_sangue": {
-      "id": "ent_nero_vinculo_de_sangue",
-      "name": "Vínculo de sangue",
-      "owner": "ent_nero",
-      "class": "ESTADO",
-      "target": "ALLY",
-      "actions": [
-        [
-          "heal",
-          "1"
-        ],
-        [
-          "status",
-          "protecao",
-          "1"
-        ]
-      ],
-      "reach": true,
-      "stat": "power",
-      "rarity": "RARE",
-      "unlock": "starting",
-      "exhaust": false,
-      "gain": 2,
-      "tier": "inicial",
-      "anim_self": [
-        "light"
-      ],
-      "anim_target": [
-        "claw"
-      ],
-      "anim_timing": "parallel"
-    },
-    "ent_nero_golpe_ritual": {
-      "id": "ent_nero_golpe_ritual",
-      "name": "Golpe ritual",
-      "owner": "ent_nero",
-      "class": "ATTACK",
-      "target": "ENEMY",
-      "actions": [
-        [
-          "hit",
-          "0"
-        ],
-        [
-          "bonus_status",
-          "bleed",
-          "1"
-        ]
-      ],
-      "reach": true,
-      "stat": "power",
-      "rarity": "RARE",
-      "unlock": "starting",
-      "exhaust": false,
-      "gain": 1,
-      "tier": "inicial",
-      "anim_self": [
-        "fire"
-      ],
-      "anim_target": [
-        "CrossHit"
-      ],
-      "anim_timing": "parallel"
-    },
-    "ent_nero_marcha_dos_inferi": {
-      "id": "ent_nero_marcha_dos_inferi",
-      "name": "Marcha dos inferi",
-      "owner": "ent_nero",
-      "class": "ATTACK",
-      "target": "ENEMY_ROW",
-      "actions": [
-        [
-          "hit",
-          "3"
-        ]
-      ],
-      "reach": true,
-      "stat": "power",
-      "rarity": "RARE",
-      "unlock": "starting",
-      "exhaust": false,
-      "cost": 3,
-      "tier": "inicial",
-      "anim_self": [
-        "lightning"
-      ],
-      "anim_target": [
-        "slash"
-      ],
-      "anim_timing": "parallel"
-    },
-    "ent_nero_chamar_o_caido": {
-      "id": "ent_nero_chamar_o_caido",
-      "name": "Chamar o caído",
-      "owner": "ent_nero",
-      "class": "ESTADO",
-      "target": "ALLY",
-      "actions": [
-        [
-          "revive_ally",
-          "0.4"
-        ],
-        [
-          "exhaust"
-        ]
-      ],
-      "reach": true,
-      "stat": "power",
-      "rarity": "EPIC",
-      "unlock": "starting",
-      "exhaust": true,
-      "gain": 2,
-      "tier": "inicial",
-      "anim_self": [
-        "Neutral1"
-      ],
-      "anim_target": [
-        "hit"
-      ],
-      "anim_timing": "parallel"
-    },
-    "ent_nero_circulo_funerario": {
-      "id": "ent_nero_circulo_funerario",
-      "name": "Círculo funerário",
-      "owner": "ent_nero",
-      "class": "ESTADO",
-      "target": "ALL_ALLIES",
-      "actions": [
-        [
-          "barreira",
-          "1",
-          "6"
-        ],
-        [
-          "status",
-          "counter",
-          "1"
-        ]
-      ],
-      "reach": true,
-      "stat": "power",
-      "rarity": "EPIC",
-      "unlock": "progression",
-      "exhaust": false,
-      "gain": 2,
-      "tier": "evoluida",
-      "anim_self": [
-        "guard"
-      ],
-      "anim_target": [
-        "Protection"
-      ],
-      "anim_timing": "parallel"
-    },
-    "ent_nero_portao_do_necroterio": {
-      "id": "ent_nero_portao_do_necroterio",
-      "name": "Portão do necrotério",
-      "owner": "ent_nero",
-      "class": "ATTACK",
-      "target": "ALL_ENEMIES",
-      "actions": [
-        [
-          "hit",
-          "7"
-        ],
-        [
-          "status",
-          "bleed",
-          "2"
-        ],
-        [
-          "exhaust"
-        ]
-      ],
-      "reach": true,
-      "stat": "power",
-      "rarity": "LEGENDARY",
-      "unlock": "progression",
-      "exhaust": true,
-      "cost": 5,
-      "tier": "evoluida",
-      "anim_self": [
-        "cast"
-      ],
-      "anim_target": [
-        "status"
-      ],
-      "anim_timing": "parallel"
-    },
     "ent_niu_valdtagen_esquiva_involuntaria": {
       "id": "ent_niu_valdtagen_esquiva_involuntaria",
       "name": "Esquiva involuntária",
@@ -8688,7 +8338,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -8742,7 +8392,7 @@
           "2"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -8770,7 +8420,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -8829,7 +8479,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "RARE",
       "unlock": "starting",
@@ -8893,7 +8543,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "EPIC",
       "unlock": "starting",
@@ -8921,7 +8571,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "EPIC",
       "unlock": "progression",
@@ -9040,7 +8690,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -9192,7 +8842,7 @@
           "2"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "EPIC",
       "unlock": "starting",
@@ -9316,7 +8966,7 @@
           "1.5"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -9497,7 +9147,7 @@
           "cure"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "EPIC",
       "unlock": "starting",
@@ -9622,7 +9272,7 @@
           "2"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -9716,7 +9366,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "RARE",
       "unlock": "starting",
@@ -9778,7 +9428,7 @@
           "cure"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "RARE",
       "unlock": "starting",
@@ -9934,7 +9584,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -9990,7 +9640,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -10049,7 +9699,7 @@
           "5"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "RARE",
       "unlock": "starting",
@@ -10180,7 +9830,7 @@
           "exhaust"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "LEGENDARY",
       "unlock": "progression",
@@ -10240,7 +9890,7 @@
           "10"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -10365,7 +10015,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "RARE",
       "unlock": "starting",
@@ -10461,7 +10111,7 @@
           "3"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "EPIC",
       "unlock": "progression",
@@ -10612,7 +10262,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "COMMON",
       "unlock": "starting",
@@ -10678,7 +10328,7 @@
           "2*E"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "RARE",
       "unlock": "starting",
@@ -10759,7 +10409,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "RARE",
       "unlock": "progression",
@@ -10788,7 +10438,7 @@
           "2"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "EPIC",
       "unlock": "progression",
@@ -10809,16 +10459,29 @@
       "name": "Tormenta",
       "owner": "ent_alyssa_wine",
       "class": "DESVANTAGEM",
-      "target": "SELF",
-      "actions": [],
+      "target": "ALL_OTHERS",
+      "actions": [
+        [
+          "requires_self_status",
+          "escuridao",
+          "1"
+        ],
+        [
+          "instant"
+        ],
+        [
+          "hit_flat",
+          "10*E"
+        ]
+      ],
       "reach": true,
-      "stat": "attack",
+      "stat": "power",
       "rarity": "COMMON",
       "unlock": "starting",
       "exhaust": false,
       "gain": 0,
-      "passive_like": true,
-      "text": "Desvantagem — Tormenta: se Escuridão ≥ 4, no fim do turno todos os outros (aliados e inimigos) sofrem 1 de dano (penetrante).",
+      "passive_like": false,
+      "text": "Instantâneo. Requer Escuridão ≥ 1. Causa 10×E de dano a todos os outros (aliados e inimigos). Não pode ser recomprada.",
       "tier": "desvantagem",
       "anim_self": [
         "ice"
@@ -10826,7 +10489,9 @@
       "anim_target": [
         "blow"
       ],
-      "anim_timing": "parallel"
+      "anim_timing": "parallel",
+      "instant": true,
+      "cost": 0
     },
     "ent_alyssa_wine_bastao_retratil_plus": {
       "id": "ent_alyssa_wine_bastao_retratil_plus",
@@ -10933,7 +10598,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "COMMON",
       "unlock": "melhorada",
@@ -11003,7 +10668,7 @@
           "2*E"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "RARE",
       "unlock": "melhorada",
@@ -11088,7 +10753,7 @@
           "1"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "RARE",
       "unlock": "melhorada",
@@ -11119,7 +10784,7 @@
           "2"
         ]
       ],
-      "reach": true,
+      "reach": false,
       "stat": "attack",
       "rarity": "EPIC",
       "unlock": "melhorada",
@@ -11136,6 +10801,1275 @@
         "debuff"
       ],
       "anim_timing": "parallel"
+    },
+    "ent_dominika_seur_peitada": {
+      "id": "ent_dominika_seur_peitada",
+      "name": "Peitada",
+      "owner": "ent_dominika_seur",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ],
+        [
+          "status",
+          "stun",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "Blow1"
+      ],
+      "anim_timing": "parallel",
+      "text": "Impacto. Atordoado 1."
+    },
+    "ent_dominika_seur_barrigada": {
+      "id": "ent_dominika_seur_barrigada",
+      "name": "Barrigada",
+      "owner": "ent_dominika_seur",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ],
+        [
+          "push",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Special2"
+      ],
+      "anim_target": [
+        "push"
+      ],
+      "anim_timing": "parallel",
+      "text": "Impacto. Empurrar."
+    },
+    "ent_dominika_seur_corpo_de_manteiga": {
+      "id": "ent_dominika_seur_corpo_de_manteiga",
+      "name": "Corpo de Manteiga",
+      "owner": "ent_dominika_seur",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "heal",
+          "4"
+        ],
+        [
+          "resistente",
+          "2"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 2,
+      "tier": "inicial",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "heal"
+      ],
+      "anim_timing": "parallel",
+      "text": "Em si. Cura. Resistente."
+    },
+    "ent_dominika_seur_cair_por_cima": {
+      "id": "ent_dominika_seur_cair_por_cima",
+      "name": "Cair Por Cima",
+      "owner": "ent_dominika_seur",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "counter",
+          "1"
+        ],
+        [
+          "counter_effects",
+          "hit",
+          "0",
+          "status",
+          "wounded",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 2,
+      "tier": "inicial",
+      "anim_self": [
+        "Neutral1"
+      ],
+      "anim_target": [
+        "Protection"
+      ],
+      "anim_timing": "parallel",
+      "text": "Counter. Ao revidar: Impacto e Ferido.",
+      "counter_effects": [
+        [
+          "hit",
+          "0"
+        ],
+        [
+          "status",
+          "wounded",
+          "1"
+        ]
+      ],
+      "counter_mode": "default"
+    },
+    "ent_dominika_seur_rolar": {
+      "id": "ent_dominika_seur_rolar",
+      "name": "Rolar",
+      "owner": "ent_dominika_seur",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "quick",
+          "2"
+        ],
+        [
+          "move_target"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Special1"
+      ],
+      "anim_target": [
+        "smoke"
+      ],
+      "anim_timing": "parallel",
+      "text": "Rápida 2. Mover (troca de fileira).",
+      "quick": true
+    },
+    "ent_dominika_seur_sentar_em_cima": {
+      "id": "ent_dominika_seur_sentar_em_cima",
+      "name": "Sentar Em Cima",
+      "owner": "ent_dominika_seur",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "status",
+          "bind",
+          "2"
+        ],
+        [
+          "final"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "evoluida",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "bind"
+      ],
+      "anim_timing": "parallel",
+      "text": "Preso. Final.",
+      "final": true
+    },
+    "ent_dominika_seur_eu_sou_a_vitima": {
+      "id": "ent_dominika_seur_eu_sou_a_vitima",
+      "name": "Eu Sou a Vítima!",
+      "owner": "ent_dominika_seur",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "free"
+        ],
+        [
+          "self_status",
+          "vitima",
+          "3"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 0,
+      "tier": "evoluida",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel",
+      "free": true,
+      "text": "Grátis. Estado Vítima por 3 rodadas: +1 Iniciativa ao sofrer dano."
+    },
+    "ent_dominika_seur_abalo_sismico": {
+      "id": "ent_dominika_seur_abalo_sismico",
+      "name": "Abalo Sísmico",
+      "owner": "ent_dominika_seur",
+      "class": "ATTACK",
+      "target": "ENEMY_ROW",
+      "actions": [
+        [
+          "hit",
+          "3"
+        ]
+      ],
+      "reach": true,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 0,
+      "tier": "evoluida",
+      "anim_self": [
+        "earth"
+      ],
+      "anim_target": [
+        "Explosion1"
+      ],
+      "anim_timing": "parallel",
+      "cost": 2,
+      "text": "Poder. Atinge a fileira inimiga."
+    },
+    "ent_dominika_seur_presenca": {
+      "id": "ent_dominika_seur_presenca",
+      "name": "Presença",
+      "owner": "ent_dominika_seur",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "free"
+        ],
+        [
+          "draw_own",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 0,
+      "tier": "evoluida",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel",
+      "free": true,
+      "text": "Grátis. Comprar carta própria."
+    },
+    "ent_dominika_seur_desvantagem_derretimento": {
+      "id": "ent_dominika_seur_desvantagem_derretimento",
+      "name": "Derretimento",
+      "owner": "ent_dominika_seur",
+      "class": "DESVANTAGEM",
+      "target": "SELF",
+      "actions": [],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 0,
+      "tier": "desvantagem",
+      "anim_self": [
+        "ice"
+      ],
+      "anim_target": [
+        "blow"
+      ],
+      "anim_timing": "parallel",
+      "passive_like": true,
+      "text": "Desvantagem: ao ser atingido por ataque PROJETIVO ou QUÍMICO, recebe Atordoado 1."
+    },
+    "ent_minion_zumbi_golpe": {
+      "id": "ent_minion_zumbi_golpe",
+      "name": "Mordida",
+      "owner": "ent_minion_zumbi",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ],
+        [
+          "status",
+          "bleed",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "HitSP1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_minion_fantasma_golpe": {
+      "id": "ent_minion_fantasma_golpe",
+      "name": "Toque Gélido",
+      "owner": "ent_minion_fantasma",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ],
+        [
+          "status",
+          "slow",
+          "1"
+        ]
+      ],
+      "reach": true,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "HitSP1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_minion_esqueleto_golpe": {
+      "id": "ent_minion_esqueleto_golpe",
+      "name": "Tiro Ósseo",
+      "owner": "ent_minion_esqueleto",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ]
+      ],
+      "reach": true,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "HitSP1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_minion_vampiro_golpe": {
+      "id": "ent_minion_vampiro_golpe",
+      "name": "Mordida Vampírica",
+      "owner": "ent_minion_vampiro",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ],
+        [
+          "drain"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "HitSP1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_minion_mumia_golpe": {
+      "id": "ent_minion_mumia_golpe",
+      "name": "Envoltório",
+      "owner": "ent_minion_mumia",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "status",
+          "weak",
+          "1"
+        ],
+        [
+          "status",
+          "fragil",
+          "1"
+        ],
+        [
+          "status",
+          "slow",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "HitSP1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_minion_ghoul_golpe_a": {
+      "id": "ent_minion_ghoul_golpe_a",
+      "name": "Rasgar",
+      "owner": "ent_minion_ghoul",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ],
+        [
+          "penetrating"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "HitSP1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_minion_ghoul_golpe_b": {
+      "id": "ent_minion_ghoul_golpe_b",
+      "name": "Dilacerar",
+      "owner": "ent_minion_ghoul",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "penetrating"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "HitSP1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_minion_banshee_grito_a": {
+      "id": "ent_minion_banshee_grito_a",
+      "name": "Uivo",
+      "owner": "ent_minion_banshee",
+      "class": "ATTACK",
+      "target": "ENEMY_ROW",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ]
+      ],
+      "reach": true,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "HitSP1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_minion_banshee_grito_b": {
+      "id": "ent_minion_banshee_grito_b",
+      "name": "Lamento",
+      "owner": "ent_minion_banshee",
+      "class": "ATTACK",
+      "target": "ENEMY_ROW",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ]
+      ],
+      "reach": true,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "HitSP1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_minion_strigoi_golpe_a": {
+      "id": "ent_minion_strigoi_golpe_a",
+      "name": "Sede",
+      "owner": "ent_minion_strigoi",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ],
+        [
+          "drain"
+        ],
+        [
+          "status",
+          "bleed",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "HitSP1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_minion_strigoi_golpe_b": {
+      "id": "ent_minion_strigoi_golpe_b",
+      "name": "Devorar",
+      "owner": "ent_minion_strigoi",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "2"
+        ],
+        [
+          "drain"
+        ],
+        [
+          "status",
+          "bleed",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "HitSP1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_minion_golem_golpe_a": {
+      "id": "ent_minion_golem_golpe_a",
+      "name": "Esmagar",
+      "owner": "ent_minion_golem",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ],
+        [
+          "self_status",
+          "resistente",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "HitSP1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_minion_golem_golpe_b": {
+      "id": "ent_minion_golem_golpe_b",
+      "name": "Muralha",
+      "owner": "ent_minion_golem",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "2"
+        ],
+        [
+          "self_status",
+          "resistente",
+          "2"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "HitSP1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_minion_lich_golpe_a": {
+      "id": "ent_minion_lich_golpe_a",
+      "name": "Raio Necrótico",
+      "owner": "ent_minion_lich",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ],
+        [
+          "self_status",
+          "protecao",
+          "1"
+        ]
+      ],
+      "reach": true,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "HitSP1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_minion_lich_golpe_b": {
+      "id": "ent_minion_lich_golpe_b",
+      "name": "Dominar",
+      "owner": "ent_minion_lich",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "2"
+        ],
+        [
+          "self_status",
+          "protecao",
+          "1"
+        ]
+      ],
+      "reach": true,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "HitSP1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_nero_faca_de_osso": {
+      "id": "ent_nero_faca_de_osso",
+      "name": "Faca de Osso",
+      "owner": "ent_nero",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ],
+        [
+          "status",
+          "bleed",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "SlashSP1"
+      ],
+      "anim_timing": "parallel",
+      "text": "Impacto + Sangramento. (Naomi: +Impacto +Ferido +Dreno)",
+      "naomi_name": "Foice de Sangue",
+      "naomi_actions": [
+        [
+          "hit",
+          "2"
+        ],
+        [
+          "status",
+          "bleed",
+          "1"
+        ],
+        [
+          "status",
+          "wounded",
+          "1"
+        ],
+        [
+          "drain"
+        ]
+      ]
+    },
+    "ent_nero_armadura_de_osso": {
+      "id": "ent_nero_armadura_de_osso",
+      "name": "Armadura de Osso",
+      "owner": "ent_nero",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "resistente",
+          "1"
+        ],
+        [
+          "barreira",
+          "1",
+          "6"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 2,
+      "tier": "inicial",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Protection"
+      ],
+      "anim_timing": "parallel",
+      "text": "Resistente + Barreira. (Naomi: dobro)",
+      "naomi_name": "Armadura de Osso+",
+      "naomi_actions": [
+        [
+          "resistente",
+          "2"
+        ],
+        [
+          "barreira",
+          "2",
+          "12"
+        ]
+      ]
+    },
+    "ent_nero_intimidacao": {
+      "id": "ent_nero_intimidacao",
+      "name": "Intimidação",
+      "owner": "ent_nero",
+      "class": "ESTADO",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "status",
+          "slow",
+          "2"
+        ]
+      ],
+      "reach": true,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Neutral2"
+      ],
+      "anim_target": [
+        "debuff"
+      ],
+      "anim_timing": "parallel",
+      "text": "Lento. (Naomi: +Fraco)",
+      "naomi_name": "Intimidação+",
+      "naomi_actions": [
+        [
+          "status",
+          "slow",
+          "2"
+        ],
+        [
+          "status",
+          "weak",
+          "1"
+        ]
+      ]
+    },
+    "ent_nero_invocar_zumbi": {
+      "id": "ent_nero_invocar_zumbi",
+      "name": "Invocar Zumbi",
+      "owner": "ent_nero",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "summon",
+          "ent_minion_zumbi",
+          "99"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "summon"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel",
+      "text": "Invoca Zumbi. (Naomi: Ghoul)",
+      "naomi_name": "Invocar Ghoul",
+      "naomi_actions": [
+        [
+          "summon",
+          "ent_minion_ghoul",
+          "99"
+        ]
+      ]
+    },
+    "ent_nero_invocar_fantasma": {
+      "id": "ent_nero_invocar_fantasma",
+      "name": "Invocar Fantasma",
+      "owner": "ent_nero",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "summon",
+          "ent_minion_fantasma",
+          "99"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "summon"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel",
+      "text": "Invoca Fantasma. (Naomi: Banshee)",
+      "naomi_name": "Invocar Banshee",
+      "naomi_actions": [
+        [
+          "summon",
+          "ent_minion_banshee",
+          "99"
+        ]
+      ]
+    },
+    "ent_nero_invocar_vampiro": {
+      "id": "ent_nero_invocar_vampiro",
+      "name": "Invocar Vampiro",
+      "owner": "ent_nero",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "summon",
+          "ent_minion_vampiro",
+          "99"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "evoluida",
+      "anim_self": [
+        "summon"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel",
+      "text": "Invoca Vampiro. (Naomi: Strigoi)",
+      "naomi_name": "Invocar Strigoi",
+      "naomi_actions": [
+        [
+          "summon",
+          "ent_minion_strigoi",
+          "99"
+        ]
+      ]
+    },
+    "ent_nero_invocar_esqueleto": {
+      "id": "ent_nero_invocar_esqueleto",
+      "name": "Invocar Esqueleto",
+      "owner": "ent_nero",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "summon",
+          "ent_minion_esqueleto",
+          "99"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "evoluida",
+      "anim_self": [
+        "summon"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel",
+      "text": "Invoca Esqueleto. (Naomi: Golem)",
+      "naomi_name": "Invocar Golem",
+      "naomi_actions": [
+        [
+          "summon",
+          "ent_minion_golem",
+          "99"
+        ]
+      ]
+    },
+    "ent_nero_invocar_mumia": {
+      "id": "ent_nero_invocar_mumia",
+      "name": "Invocar Múmia",
+      "owner": "ent_nero",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "summon",
+          "ent_minion_mumia",
+          "99"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "evoluida",
+      "anim_self": [
+        "summon"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel",
+      "text": "Invoca Múmia. (Naomi: Lich)",
+      "naomi_name": "Invocar Lich",
+      "naomi_actions": [
+        [
+          "summon",
+          "ent_minion_lich",
+          "99"
+        ]
+      ]
+    },
+    "ent_nero_explodir_cadaver": {
+      "id": "ent_nero_explodir_cadaver",
+      "name": "Explodir Cadáver",
+      "owner": "ent_nero",
+      "class": "ATTACK",
+      "target": "OWN_MINION",
+      "actions": [
+        [
+          "requires_own_minion_front"
+        ],
+        [
+          "sacrifice_minion"
+        ],
+        [
+          "hit_enemy_front",
+          "3"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "evoluida",
+      "anim_self": [
+        "fire"
+      ],
+      "anim_target": [
+        "Explosion1"
+      ],
+      "anim_timing": "parallel",
+      "cost": 0,
+      "text": "Alvo: um dos seus lacaios na frente. Impacto em área na frente inimiga.",
+      "naomi_name": "Explodir Cadáver+",
+      "naomi_actions": [
+        [
+          "requires_own_minion_front"
+        ],
+        [
+          "sacrifice_minion"
+        ],
+        [
+          "hit_enemy_front",
+          "6"
+        ]
+      ]
+    },
+    "ent_nero_curar_os_mortos": {
+      "id": "ent_nero_curar_os_mortos",
+      "name": "Curar os Mortos",
+      "owner": "ent_nero",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "heal_own_minions",
+          "3"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 2,
+      "tier": "evoluida",
+      "anim_self": [
+        "light"
+      ],
+      "anim_target": [
+        "heal"
+      ],
+      "anim_timing": "parallel",
+      "text": "Cura todos os seus lacaios.",
+      "naomi_name": "Curar os Mortos+",
+      "naomi_actions": [
+        [
+          "heal_own_minions",
+          "6"
+        ]
+      ]
+    },
+    "ent_nero_desvantagem_solidao": {
+      "id": "ent_nero_desvantagem_solidao",
+      "name": "Solidão",
+      "owner": "ent_nero",
+      "class": "DESVANTAGEM",
+      "target": "SELF",
+      "actions": [
+        [
+          "requires_alone"
+        ],
+        [
+          "instant"
+        ],
+        [
+          "self_damage_hp",
+          "1.0"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 0,
+      "tier": "desvantagem",
+      "anim_self": [
+        "ice"
+      ],
+      "anim_target": [
+        "blow"
+      ],
+      "anim_timing": "parallel",
+      "instant": true,
+      "text": "Instantâneo. Se estiver sozinho no time, perde 100% da Vida. (Naomi: Lento+Ferido+Fraco+Frágil em si)",
+      "naomi_name": "Deixe-me Viver",
+      "naomi_actions": [
+        [
+          "instant"
+        ],
+        [
+          "self_status",
+          "slow",
+          "2"
+        ],
+        [
+          "self_status",
+          "wounded",
+          "1"
+        ],
+        [
+          "self_status",
+          "weak",
+          "1"
+        ],
+        [
+          "self_status",
+          "fragil",
+          "1"
+        ]
+      ]
     }
   }
 }

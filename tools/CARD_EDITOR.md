@@ -102,3 +102,13 @@ Aba **Tabela de atributos**: lista todos os personagens com Vida/Impacto/Poder/A
 - Clique no cabeçalho para ordenar.
 - Edite células e use **Salvar atributos** para aplicar no catálogo em memória.
 - Em seguida **Exportar entities.json completo** para baixar o arquivo atualizado.
+
+
+## Pontuação automática (balance)
+
+Cada carta recebe um score = soma de pontos dos efeitos/requisitos + Iniciativa (ganho×2 − custo×2) ± keywords (Alcance, Rápida, Grátis, Instantâneo, Exhaust, Final, área).
+
+Por personagem o editor mostra:
+- **inicial**: Iniciais + Desvantagem
+- **deck final**: Iniciais + Evoluídas + Desvantagem (Melhoradas substituem base)
+- **final+**: versões melhoradas quando existirem

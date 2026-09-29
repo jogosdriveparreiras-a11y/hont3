@@ -81,7 +81,7 @@ Toggle **Melhorada** (nome com `+`, `tier=melhorada`, `melhorada_de`).
 | Iniciais (5) | Bastão Retrátil, Garras e Presas, Premonição, A Filha Dele, Regeneração |
 | Evoluídas | Relâmpago, Intelecto, Super Sentidos |
 | Melhoradas | stubs `…+` para cada Inicial/Evoluída |
-| Desvantagem | Tormenta |
+| Desvantagem | Tormenta (Instantâneo; E≥1; 10×E em todos os outros) |
 
 ## Esquema de dados (resumo)
 
@@ -108,3 +108,16 @@ Toggle **Melhorada** (nome com `+`, `tier=melhorada`, `melhorada_de`).
   }
 }
 ```
+
+
+## Instantâneo
+
+Enquanto houver um Instantâneo **jogável** na mão, o jogador **deve** jogar um Instantâneo antes de qualquer outra carta ou de Encerrar. Se houver vários, escolhe qual. Se o Instantâneo estiver injogável (requisitos, INI, incapacitado…), pode Encerrar ou jogar outras cartas; se depois ficar jogável, a restrição volta. Instantâneo **não** pode ser recomprado.
+
+## Counter
+
+Counter **não** é um estado genérico: os efeitos do revidе vêm da carta que o concedeu. Padrão de alcance: só frente vs frente; se não houver frente no time, usam-se as regras de corpo-a-corpo (sem Alcance).
+
+## Alcance
+
+`reach` / Alcance só faz sentido contra o time inimigo. Cartas `SELF` / `ALLY` / `ALL_ALLIES` não devem marcar Alcance.

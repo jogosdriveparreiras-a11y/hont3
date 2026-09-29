@@ -52,6 +52,7 @@ func _initialize() -> void:
 	b5._take_damage(atk, vic, 5, true, false)
 	if int(vic["hp"]) >= hp_v: fails.append("atento_pierce")
 
+	# Tormenta Instantânea: sem tick passivo; carta com instant + hit_flat.
 	var b6 = Battle.new()
 	b6.begin("road", ["guerreiro", "mago", "clerigo"], {}, 16)
 	var storm: Dictionary = b6.living("ALLY")[0]
@@ -64,8 +65,8 @@ func _initialize() -> void:
 	b6._tick_statuses()
 	for id in hps.keys():
 		var victim: Dictionary = b6.actor_by_id(int(id))
-		if int(victim["hp"]) != int(hps[id]) - 1:
-			fails.append("tormenta_%s" % id)
+		if int(victim["hp"]) != int(hps[id]):
+			fails.append("tormenta_no_passive_tick_%s" % id)
 
 	var def: Dictionary = packs.definition("ent_alyssa_wine_bastao_retratil")
 	if def.is_empty(): fails.append("bastao_missing")
@@ -79,6 +80,28 @@ func _initialize() -> void:
 	if int(hero_def.get("iniciais", []).size()) != 5: fails.append("iniciais5")
 	var tor: Dictionary = packs.definition("ent_alyssa_wine_desvantagem_tormenta")
 	if str(tor.get("class", "")) != "DESVANTAGEM": fails.append("desv_class")
+	if not bool(tor.get("instant", false)): fails.append("tormenta_instant")
+	var has_flat := false
+	for act in tor.get("actions", []):
+		if typeof(act) == TYPE_ARRAY and not act.is_empty() and str(act[0]) == "hit_flat":
+			has_flat = true
+	if not has_flat: fails.append("tormenta_hit_flat")
+	# Instantâneo jogável: com E=0 Tormenta não bloqueia Encerrar; com E>=1 bloqueia.
+	var bi = Battle.new()
+	bi.begin("road", ["guerreiro", "mago", "clerigo"], {}, 17)
+	var aly: Dictionary = bi.living("ALLY")[0]
+	aly["passive"] = "escuridao"
+	bi.hand.clear()
+	bi.next_card_id += 1
+	bi.hand.append({"uid": bi.next_card_id, "id": "ent_alyssa_wine_desvantagem_tormenta", "owner": int(aly["id"]), "instant": true, "class": "DESVANTAGEM", "upgrade": 0})
+	bi.card_plays = 3
+	bi.impulse = 5
+	bi.phase = "PLAYER"
+	if bi.hand_has_playable_instantaneo("ALLY"): fails.append("instant_unplayable_E0")
+	if not bi.can_end_turn(): fails.append("can_end_E0")
+	bi._add_status(aly, "escuridao", 99, 2, int(aly["id"]))
+	if not bi.hand_has_playable_instantaneo("ALLY"): fails.append("instant_playable_E2")
+	if bi.can_end_turn(): fails.append("cannot_end_E2")
 
 	# wounded via entity play (lightweight)
 	var b7 = Battle.new()

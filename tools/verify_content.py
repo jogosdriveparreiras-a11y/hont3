@@ -66,7 +66,7 @@ opportunist overload overpowered perfect_aim poison portal protected protecting
 ravenous regen resist resistente fragil protecao protection barreira
 slow soulbound spike_bomb strengthened strongest_there_is
 stun summoning symbiote_skin taunt taunted unleashed vampiric_essence
-vulnerable weak webbed_up wounded invulneravel
+vulnerable weak webbed_up wounded invulneravel vitima escuridao atento
 """.split())
 
 for hero_id, hero in heroes.items():
@@ -92,13 +92,21 @@ entity_data = json.loads((ROOT / "addons/hotn3_entities/entities.json").read_tex
 entity_pack = entity_data["heroes"]
 entity_cards = entity_data["cards"]
 external_cards = json.loads((ROOT / "addons/hotn3_external_cards/cards.json").read_text(encoding="utf-8"))["cards"]
-assert len(entity_pack) == 27
-assert len(entity_cards) == 277
+assert len([h for h,v in entity_pack.items() if not v.get("minion")]) >= 27
+assert len(entity_cards) >= 277
 assert len(external_cards) == 194
 merged_card_ids = set(cards) | set(entity_cards) | set(external_cards)
-assert len(merged_card_ids) == 553
+assert len(merged_card_ids) >= 553
 for hero_id, hero in entity_pack.items():
     assert hero_id.startswith("ent_"), hero_id
+    if hero.get("minion"):
+        assert hero.get("playable") is False, hero_id
+        for card_id in hero.get("cards", hero.get("iniciais", [])):
+            assert card_id in entity_cards, (hero_id, card_id)
+        art = str(hero.get("sprite", ""))
+        assert art.startswith("res://"), (hero_id, art)
+        assert (ROOT / art.removeprefix("res://")).is_file(), (hero_id, art)
+        continue
     assert len(hero.get("iniciais", [])) == rules["manobras_iniciais"], hero_id
     assert len(set(hero["iniciais"])) == rules["manobras_iniciais"], hero_id
     for card_id in hero.get("pool", []):

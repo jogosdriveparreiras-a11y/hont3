@@ -271,6 +271,14 @@ func describe_actions(definition: Dictionary) -> Array[String]:
 				parts.append("Ao recomprar: +%s ações" % str(action[1] if action.size() > 1 else 1))
 			"discard":
 				parts.append("Descarta %s" % str(action[1] if action.size() > 1 else 1))
+			"hit_flat":
+				parts.append("Dano absoluto %s" % (str(action[1]) if action.size() > 1 else "?"))
+			"heal_own_minions":
+				parts.append("Cura lacaios %s" % (str(action[1]) if action.size() > 1 else "1"))
+			"requires_alone":
+				parts.append("Requer: sozinho no time")
+			"requires_own_minion_front":
+				parts.append("Requer: lacaio na frente")
 			"penetrating":
 				parts.append("Penetrante")
 			"lethargic":
@@ -280,7 +288,7 @@ func describe_actions(definition: Dictionary) -> Array[String]:
 			"drain":
 				parts.append("Dreno (1/4)")
 			"instant":
-				parts.append("Instantâneo (obrigatória nesta rodada)")
+				parts.append("Instantâneo (se jogável, jogue antes de outras cartas)")
 			"ephemeral":
 				parts.append("Efêmero")
 			"warmup":

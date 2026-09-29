@@ -377,11 +377,87 @@ func hand_has_instantaneo(side: String = "") -> bool:
 			return true
 	return false
 
+## Instantâneo *jogável* na mão (requisitos, INI, jogadas, dono vivo).
+func hand_has_playable_instantaneo(side: String = "") -> bool:
+	return not playable_instantaneo_indices(side).is_empty()
+
+func playable_instantaneo_indices(side: String = "") -> Array:
+	var acting := side if side != "" else _acting()
+	var acting_hand := _hand_of(acting)
+	var out: Array = []
+	for i in range(acting_hand.size()):
+		var held: Dictionary = acting_hand[i]
+		var definition: Dictionary = Content.CARDS.get(str(held.get("id", "")), {})
+		if not is_instant_card(held, definition):
+			continue
+		if _instant_card_playable(held, definition, acting):
+			out.append(i)
+	return out
+
+func _instant_card_playable(card: Dictionary, definition: Dictionary, side: String) -> bool:
+	var source := actor_by_id(int(card.get("owner", -1)))
+	if source.is_empty() or int(source.get("hp", 0)) <= 0:
+		return false
+	if str(source.get("side", "")) != side:
+		return false
+	for locked in ["stun", "bind", "bound", "banished", "finalized"]:
+		if _has_status(source, locked) and not bool(definition.get("play_while_disabled", false)):
+			return false
+	if not card_warmup_ready(card, definition):
+		return false
+	var cost := _cost(source, definition)
+	var plays: int = 0 if bool(definition.get("free", false)) or card_has_flag(definition, "free") else int(definition.get("plays", 1))
+	# quick também não gasta jogada
+	if bool(definition.get("quick", false)) or card_has_flag(definition, "quick"):
+		plays = 0
+	if _get_impulse(side) < cost or _get_plays(side) < plays:
+		return false
+	for action in definition.get("actions", []):
+		if typeof(action) != TYPE_ARRAY or action.is_empty():
+			continue
+		var op := str(action[0])
+		if op == "requires_self_status":
+			var need_st := str(action[1] if action.size() > 1 else "")
+			var need_n: int = int(round(resolve_amount(action[2] if action.size() > 2 else 1, source)))
+			if _status_stacks(source, need_st) < need_n:
+				return false
+		elif op == "requires_alone":
+			if living(side).size() > 1:
+				return false
+		elif op == "requires_own_minion_front":
+			var has_minion := false
+			for ally in living(side):
+				if bool(ally.get("is_summon", false)) and int(ally.get("summoner_id", -1)) == int(source["id"]) and str(ally.get("row", "")) == "front":
+					has_minion = true
+					break
+			if not has_minion:
+				return false
+	# Precisa existir pelo menos um alvo legal
+	var kind := str(definition.get("target", "SELF"))
+	match kind:
+		"SELF", "ALL_ALLIES", "ALL_OTHERS":
+			return true
+		"OWN_MINION":
+			for ally in living(side):
+				if bool(ally.get("is_summon", false)) and int(ally.get("summoner_id", -1)) == int(source["id"]):
+					return true
+			return false
+		_:
+			return true
+
 func can_end_turn() -> bool:
-	# Instantâneo na mão impede Encerrar — deve ser jogado nesta rodada.
+	# Só Instantâneo *jogável* impede Encerrar / passar.
 	if phase != "PLAYER":
 		return false
-	return not hand_has_instantaneo("ALLY")
+	return not hand_has_playable_instantaneo("ALLY")
+
+## Bloqueia jogar outra carta enquanto houver Instantâneo jogável.
+func must_play_instantaneo_first(card: Dictionary, definition: Dictionary = {}, side: String = "") -> bool:
+	var acting := side if side != "" else _acting()
+	if not hand_has_playable_instantaneo(acting):
+		return false
+	var def2: Dictionary = definition if not definition.is_empty() else Content.CARDS.get(str(card.get("id", "")), {})
+	return not is_instant_card(card, def2)
 
 func _normalize_status_id(id: String) -> String:
 	var key := id.strip_edges().to_lower()
@@ -408,6 +484,8 @@ func _normalize_status_id(id: String) -> String:
 			return "wounded"
 		"slow", "lento":
 			return "slow"
+		"vitima", "victim":
+			return "vitima"
 		_:
 			return key
 
@@ -605,6 +683,14 @@ func _has_status(actor: Dictionary, id: String) -> bool:
 	return actor.get("statuses", {}).has(id) and actor["statuses"][id]["duration"] > 0
 
 func _add_status(actor: Dictionary, id: String, duration: int, stacks: int, source: int) -> void:
+	# 100% Gordura: imune a Ferido, Sangrando, Preso.
+	if str(actor.get("passive", "")) == "gordura_100":
+		var nid := _normalize_status_id(id)
+		if nid in ["wounded", "bleed", "bind", "bound"]:
+			_log("%s: 100%% Gordura ignorou %s." % [actor["name"], nid])
+			visual.emit("immune", int(source), int(actor["id"]), 0)
+			return
+	# Counter metadata: preserve effects/mode if já setados no state parcial via caller.
 	if actor.is_empty() or actor["hp"] <= 0:
 		return
 	id = _normalize_status_id(id)
@@ -664,7 +750,7 @@ func _add_status(actor: Dictionary, id: String, duration: int, stacks: int, sour
 		var add: int = maxi(1, stacks)
 		state["stacks"] = int(state.get("stacks", 0)) + add
 		state["duration"] = maxi(int(state.get("duration", 0)), int(state["stacks"]))
-	elif id in ["atento", "wounded", "slow"]:
+	elif id in ["atento", "wounded", "slow", "vitima"]:
 		var add2: int = maxi(1, stacks)
 		state["stacks"] = int(state.get("stacks", 0)) + add2
 		state["duration"] = max(int(state.get("duration", 0)), maxi(duration, add2))
@@ -680,6 +766,43 @@ func _add_status(actor: Dictionary, id: String, duration: int, stacks: int, sour
 func _cleanse(actor: Dictionary) -> void:
 	for id in NEGATIVE:
 		actor["statuses"].erase(id)
+
+
+## Counter padrão: só frente vs frente; se não houver frente no time atacante, usa regras de alcance corpo-a-corpo.
+func _counter_can_strike(defender: Dictionary, attacker: Dictionary) -> bool:
+	if defender.is_empty() or attacker.is_empty() or int(attacker.get("hp", 0)) <= 0:
+		return false
+	var mode := str(defender.get("statuses", {}).get("counter", {}).get("mode", "default"))
+	if mode == "any":
+		return true
+	# default: frente vs frente; se o atacante não tem frente no time, mesmas regras de melee (can_reach sem Alcance).
+	var atk_side := str(attacker.get("side", ""))
+	var def_side := str(defender.get("side", ""))
+	var atk_has_front := living(atk_side).any(func(a): return a["row"] == "front")
+	var def_has_front := living(def_side).any(func(a): return a["row"] == "front")
+	if atk_has_front and def_has_front:
+		return str(defender.get("row", "")) == "front" and str(attacker.get("row", "")) == "front"
+	# Sem frente: regras de alcance corpo-a-corpo (carta sem reach).
+	var faux := {"reach": false}
+	return can_reach(defender, attacker, faux)
+
+func _resolve_counter_effects(defender: Dictionary, attacker: Dictionary, effects: Array) -> void:
+	for a in effects:
+		if typeof(a) != TYPE_ARRAY or a.is_empty():
+			continue
+		var op := str(a[0])
+		match op:
+			"hit":
+				var card_amt: float = resolve_amount(a[1] if a.size() > 1 else 0, defender)
+				var base: float = card_amt + float(defender.get("attack", 0))
+				var dmg: int = maxi(1, roundi(base) - int(attacker.get("armor", 0)))
+				_take_damage(defender, attacker, dmg, false, false)
+			"status":
+				var st := str(a[1] if a.size() > 1 else "wounded")
+				var stacks := maxi(1, int(round(resolve_amount(a[2] if a.size() > 2 else 1, defender))))
+				_add_status(attacker, st, stacks, stacks, int(defender["id"]))
+			_:
+				pass
 
 func can_reach(source: Dictionary, target: Dictionary, card: Dictionary) -> bool:
 	if source.is_empty() or target.is_empty() or target["hp"] <= 0:
@@ -703,6 +826,9 @@ func _targets(source: Dictionary, primary: Dictionary, card: Dictionary, chain_i
 	if primary.is_empty(): return result
 	if target_kind == "SELF":
 		result.append(source)
+	elif target_kind == "OWN_MINION":
+		if primary.get("side", "") == source.get("side", "") and bool(primary.get("is_summon", false)) and int(primary.get("summoner_id", -1)) == int(source["id"]) and int(primary.get("hp", 0)) > 0:
+			result.append(primary)
 	elif target_kind == "ALLY":
 		if primary["side"] == source["side"] and primary["hp"] > 0:
 			result.append(primary)
@@ -916,6 +1042,17 @@ func _take_damage(source: Dictionary, target: Dictionary, amount: int, pierce: b
 		# Alyssa passive Escuridão: +1 stack cada vez que perde Vida.
 		if str(target.get("passive", "")) == "escuridao":
 			_add_status(target, "escuridao", 99, 1, int(target["id"]))
+		# Dominika: Vítima — +1 Iniciativa ao sofrer dano.
+		if _has_status(target, "vitima"):
+			var side_v := str(target.get("side", "ALLY"))
+			_set_impulse(side_v, mini(int(rules["impulse_max"]), _get_impulse(side_v) + 1))
+			_log("%s (Vítima): +1 Iniciativa." % target["name"])
+		# Derretimento: Atordoado ao ser atingido por PROJETIVO ou QUIMICO.
+		if str(target.get("desvantagem", "")) == "ent_dominika_seur_desvantagem_derretimento" or str(target.get("passive_derretimento", "")) == "1":
+			var atype := str(source.get("type", ""))
+			if atype in ["PROJETIVO", "QUIMICO"] and int(source.get("id", -1)) != int(target.get("id", -2)):
+				_add_status(target, "stun", 1, 1, int(source["id"]))
+				_log("%s: Derretimento (Atordoado)." % target["name"])
 		if source["id"] != target["id"] and from_card and (_has_status(source, "lifesteal") or _has_status(source, "blood_magic") and attack_card or _has_status(source, "berserk_lifesteal") or _has_status(source, "vampiric_essence")):
 			source["hp"] = min(int(source["max_hp"]), int(source["hp"]) + hp_lost)
 		if source["id"] != target["id"] and not environmental and (from_card or not counter_allowed) and _has_status(source, "bloodlust"):
@@ -952,9 +1089,15 @@ func _take_damage(source: Dictionary, target: Dictionary, amount: int, pierce: b
 		spawn_enemy("fera")
 		_log("O Guardião iniciou a segunda fase.")
 	if not died and counter_allowed and _has_status(target, "counter") and source["hp"] > 0:
-		_log("%s contra-atacou." % target["name"])
-		visual.emit("counter", int(target["id"]), int(source["id"]), 0)
-		_take_damage(target, source, max(1, 3 + floori(float(target["attack"]) / 2.0)), false, false)
+		if _counter_can_strike(target, source):
+			_log("%s contra-atacou." % target["name"])
+			visual.emit("counter", int(target["id"]), int(source["id"]), 0)
+			var cst: Dictionary = target["statuses"]["counter"]
+			var cfx: Array = cst.get("effects", [])
+			if typeof(cfx) == TYPE_ARRAY and not cfx.is_empty():
+				_resolve_counter_effects(target, source, cfx)
+			else:
+				_take_damage(target, source, max(1, 3 + floori(float(target["attack"]) / 2.0)), false, false)
 	return died
 
 func _purge_dead_cards() -> void:
@@ -1736,16 +1879,24 @@ func diagnose_enemy_hand() -> Array:
 func _best_enemy_play() -> Dictionary:
 	var best := {}
 	var best_score := -0.001
+	var force_instant := hand_has_playable_instantaneo("ENEMY")
 	for index in range(enemy_hand.size()):
 		var card: Dictionary = enemy_hand[index]
 		var definition: Dictionary = Content.CARDS.get(card["id"], {})
 		var source := actor_by_id(int(card["owner"]))
 		if source.is_empty() or source.get("hp", 0) <= 0 or definition.is_empty(): continue
+		if force_instant and not is_instant_card(card, definition):
+			continue
 		if _has_status(source, "stun") or _has_status(source, "bind") or _has_status(source, "bound") or _has_status(source, "dazed") or _has_status(source, "banished") or _has_status(source, "finalized"):
 			continue
 		var kind := str(definition.get("target", "ENEMY"))
 		var candidates: Array[Dictionary] = []
 		if kind == "SELF": candidates = [source]
+		elif kind == "OWN_MINION":
+			candidates = []
+			for ally in living("ENEMY"):
+				if bool(ally.get("is_summon", false)) and int(ally.get("summoner_id", -1)) == int(source["id"]):
+					candidates.append(ally)
 		elif kind in ["ALLY", "ALL_ALLIES"]: candidates = living("ENEMY")
 		elif kind == "ANY_UNIT": candidates = living("ALLY") + living("ENEMY")
 		else: candidates = living("ALLY")
@@ -1862,19 +2013,7 @@ func _tick_statuses() -> void:
 			state["duration"] -= 1
 			if state["duration"] <= 0: actor["statuses"].erase(id)
 			else: actor["statuses"][id] = state
-	# Tormenta (Desvantagem Alyssa): Escuridão ≥ 4 → 1 dano penetrante em todos os outros.
-	for actor in turn_actors:
-		if actor["hp"] <= 0: continue
-		if str(actor.get("passive", "")) != "escuridao" and not _has_status(actor, "escuridao"):
-			continue
-		if _status_stacks(actor, "escuridao") < 4:
-			continue
-		_log("%s: Tormenta (Escuridão %d)." % [actor["name"], _status_stacks(actor, "escuridao")])
-		for victim in actors:
-			if victim["hp"] <= 0: continue
-			if int(victim["id"]) == int(actor["id"]): continue
-			if _has_status(victim, "banished"): continue
-			_take_damage(actor, victim, 1, true, false, true, true)
+	# Tormenta agora é Instantâneo jogável (carta DESVANTAGEM); sem tick passivo.
 	for actor in field_emitters:
 		if actor["hp"] <= 0: continue
 		for ally in actors:

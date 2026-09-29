@@ -1907,6 +1907,21 @@ func _begin_battle_session() -> void:
 func _card_def(card_id: String) -> Dictionary:
 	return packs.definition(str(card_id))
 
+func _card_def_for(card: Dictionary) -> Dictionary:
+	var def: Dictionary = packs.definition(str(card.get("id", "")))
+	if def.is_empty() or battle == null:
+		return def
+	var owner: Dictionary = battle.actor_by_id(int(card.get("owner", -1)))
+	if owner.is_empty() or not bool(owner.get("transformed", false)):
+		return def
+	if not def.has("naomi_actions"):
+		return def
+	var out: Dictionary = def.duplicate(true)
+	out["actions"] = def["naomi_actions"].duplicate(true)
+	if def.has("naomi_name"):
+		out["name"] = str(def["naomi_name"])
+	return out
+
 func _on_event(message: String) -> void:
 	# Log de combate vai só para a janela de log (esquerda) — nada flutuando sobre as cartas.
 	event_history.append(message)
@@ -2026,7 +2041,7 @@ func _render_battle() -> void:
 	# 3D hand arc (kept)
 	for index in range(battle.hand.size()):
 		var card: Dictionary = battle.hand[index]
-		var definition: Dictionary = _card_def(str(card["id"]))
+		var definition: Dictionary = _card_def_for(card)
 		_make_3d_card(index, card, definition)
 	# Bottom-left hero focus HUD
 	_build_hero_hud(viewport_size)
@@ -2366,10 +2381,10 @@ func _build_economy_hud(viewport_size: Vector2) -> void:
 	view_btn.custom_minimum_size = Vector2(258, 36)
 	view_btn.tooltip_text = "Alterna vista Normal (atual) e Lateral (aliados à esquerda)."
 	economy_hud.add_child(view_btn)
-	var instant_blocks: bool = battle != null and battle.has_method("hand_has_instantaneo") and battle.hand_has_instantaneo("ALLY")
+	var instant_blocks: bool = battle != null and battle.has_method("hand_has_playable_instantaneo") and battle.hand_has_playable_instantaneo("ALLY")
 	var end_btn := _button("ENCERRAR TURNO", func():
-		if battle != null and battle.has_method("hand_has_instantaneo") and battle.hand_has_instantaneo("ALLY"):
-			feedback = "Instantâneo na mão — jogue antes de encerrar."
+		if battle != null and battle.has_method("hand_has_playable_instantaneo") and battle.hand_has_playable_instantaneo("ALLY"):
+			feedback = "Instantâneo jogável na mão — jogue-o antes de encerrar."
 			_render_battle()
 			return
 		_present_enemy_turn()
@@ -2377,7 +2392,7 @@ func _build_economy_hud(viewport_size: Vector2) -> void:
 	# Não desabilita por Instantâneo: clique mostra toast curto (sem modal). Tooltip explica.
 	end_btn.disabled = battle.phase != "PLAYER" or enemy_presenting or recover_pick_active
 	if instant_blocks:
-		end_btn.tooltip_text = "Há Instantâneo na mão: jogue essas cartas antes de encerrar o turno."
+		end_btn.tooltip_text = "Há Instantâneo jogável: jogue-o antes de outras cartas ou de encerrar."
 	else:
 		end_btn.tooltip_text = "Encerrar o turno do jogador."
 	end_btn.position = Vector2(16, 246)
@@ -2489,7 +2504,7 @@ func _choose_target(actor_id: int) -> void:
 		feedback = "Selecione uma carta para mostrar a prévia."
 		_render_battle()
 		return
-	var definition: Dictionary = _card_def(str(battle.hand[selected_card]["id"]))
+	var definition: Dictionary = _card_def_for(battle.hand[selected_card])
 	if definition.get("target", "") == "CHAIN":
 		chain_targets.append(actor_id)
 		if chain_targets.size() < int(definition.get("chain", 1)):
@@ -3147,6 +3162,7 @@ func _status_label(status_id: String) -> String:
 		"marked": "Marcado",
 		"conceal": "Oculto",
 		"counter": "Contra-ataque",
+		"vitima": "Vítima",
 		"strengthened": "Fortalecido",
 		"slow": "Lento",
 		"bind": "Prisão",
@@ -3182,7 +3198,7 @@ func _effect_short_bbcode(definition: Dictionary, card: Dictionary = {}) -> Stri
 	if not owner.is_empty() and battle != null:
 		e_stacks = battle._status_stacks(owner, "escuridao")
 	var amplify := e_stacks > 0
-	var target_names := {"SELF": "Si", "ALLY": "Aliado", "ALL_ALLIES": "Aliados", "ENEMY": "Inimigo", "SINGLE": "Inimigo", "ENEMY_ROW": "Linha", "ROW": "Linha", "FRONT_ROW": "Frente", "BACK_ROW": "Retaguarda", "ALL_ENEMIES": "Inimigos", "ALL_OTHERS": "Outros", "ADJACENT": "Adjacentes", "RANDOM": "Aleatório", "CHAIN": "Cadeia", "ANY_UNIT": "Qualquer"}
+	var target_names := {"SELF": "Si", "ALLY": "Aliado", "ALL_ALLIES": "Aliados", "ENEMY": "Inimigo", "SINGLE": "Inimigo", "ENEMY_ROW": "Linha", "ROW": "Linha", "FRONT_ROW": "Frente", "BACK_ROW": "Retaguarda", "ALL_ENEMIES": "Inimigos", "ALL_OTHERS": "Outros", "OWN_MINION": "Lacaio", "ADJACENT": "Adjacentes", "RANDOM": "Aleatório", "CHAIN": "Cadeia", "ANY_UNIT": "Qualquer"}
 	var tgt := str(definition.get("target", "ENEMY"))
 	if tgt != "ENEMY" and tgt != "SINGLE":
 		bits.append(target_names.get(tgt, tgt))
@@ -3292,7 +3308,7 @@ func _effect_short_bbcode(definition: Dictionary, card: Dictionary = {}) -> Stri
 
 func _rules_bbcode(definition: Dictionary, card: Dictionary) -> String:
 	var lines: Array[String] = []
-	var target_names := {"SELF": "si mesmo", "ALLY": "aliado", "ALL_ALLIES": "todos os aliados", "ENEMY": "inimigo", "SINGLE": "inimigo", "ENEMY_ROW": "linha inimiga", "ROW": "linha inimiga", "FRONT_ROW": "frente inimiga", "BACK_ROW": "retaguarda inimiga", "ALL_ENEMIES": "todos os inimigos", "ALL_OTHERS": "todos os outros (exceto você)", "ADJACENT": "alvo e adjacentes", "RANDOM": "inimigo aleatório", "CHAIN": "sequência", "ANY_UNIT": "qualquer unidade"}
+	var target_names := {"SELF": "si mesmo", "ALLY": "aliado", "ALL_ALLIES": "todos os aliados", "ENEMY": "inimigo", "SINGLE": "inimigo", "ENEMY_ROW": "linha inimiga", "ROW": "linha inimiga", "FRONT_ROW": "frente inimiga", "BACK_ROW": "retaguarda inimiga", "ALL_ENEMIES": "todos os inimigos", "ALL_OTHERS": "todos os outros (exceto você)", "OWN_MINION": "seu lacaio", "ADJACENT": "alvo e adjacentes", "RANDOM": "inimigo aleatório", "CHAIN": "sequência", "ANY_UNIT": "qualquer unidade"}
 	lines.append("[b]Alvo:[/b] %s" % target_names.get(str(definition.get("target", "ENEMY")), "inimigo"))
 	var keywords: Array[String] = []
 	if definition.get("quick", false): keywords.append("[b]Rápida[/b]")
@@ -3678,7 +3694,7 @@ func _note_card_hover(index: int, host: Control, width: float, height: float) ->
 	if index >= 0 and index < battle.hand.size():
 		_show_actor_portrait(int(battle.hand[index]["owner"]), false)
 		if is_instance_valid(hover_hint):
-			hover_hint.text = _card_description(_card_def(str(battle.hand[index]["id"])), battle.hand[index])
+			hover_hint.text = _card_description(_card_def_for(battle.hand[index]), battle.hand[index])
 
 func _on_card_gui(event: InputEvent, index: int) -> void:
 	if battle == null or battle.phase != "PLAYER" or not event is InputEventMouseButton: return
@@ -3883,7 +3899,7 @@ func _confirm_selected_card(index: int = -1) -> void:
 		_show_block_popup("Herói fora de combate — carta indisponível.")
 		_render_battle()
 		return
-	var definition: Dictionary = _card_def(str(battle.hand[index]["id"]))
+	var definition: Dictionary = _card_def_for(battle.hand[index])
 	var kind := str(definition.get("target", "ENEMY"))
 	selected_card = index
 	card_confirmed = true
@@ -4171,7 +4187,7 @@ func _pick_recover_card(discard_index: int) -> void:
 func _present_enemy_turn() -> void:
 	if enemy_presenting or battle == null or battle.phase != "PLAYER": return
 	if battle.has_method("can_end_turn") and not battle.can_end_turn():
-		feedback = "Há Instantâneo na mão — jogue antes de encerrar."
+		feedback = "Há Instantâneo jogável — jogue-o antes de encerrar."
 		if session_report != null:
 			session_report.log_ai("end_turn_blocked", {"reason": "instantaneo"})
 		_render_battle()
@@ -4445,7 +4461,7 @@ func _unhandled_input(input: InputEvent) -> void:
 
 func _card_description(definition: Dictionary, card: Dictionary = {}) -> String:
 	var parts: Array[String] = []
-	var target_names := {"SELF": "em si", "ALLY": "aliado", "ALL_ALLIES": "todos os aliados", "ENEMY": "inimigo", "SINGLE": "inimigo", "ENEMY_ROW": "linha inimiga", "ROW": "linha inimiga", "FRONT_ROW": "frente inimiga", "BACK_ROW": "retaguarda inimiga", "ALL_ENEMIES": "todos os inimigos", "ALL_OTHERS": "todos os outros", "ADJACENT": "alvo e adjacentes", "RANDOM": "inimigo aleatório", "CHAIN": "sequência", "ANY_UNIT": "qualquer unidade"}
+	var target_names := {"SELF": "em si", "ALLY": "aliado", "ALL_ALLIES": "todos os aliados", "ENEMY": "inimigo", "SINGLE": "inimigo", "ENEMY_ROW": "linha inimiga", "ROW": "linha inimiga", "FRONT_ROW": "frente inimiga", "BACK_ROW": "retaguarda inimiga", "ALL_ENEMIES": "todos os inimigos", "ALL_OTHERS": "todos os outros", "OWN_MINION": "seu lacaio", "ADJACENT": "alvo e adjacentes", "RANDOM": "inimigo aleatório", "CHAIN": "sequência", "ANY_UNIT": "qualquer unidade"}
 	parts.append("ALVO: " + target_names.get(definition.get("target", "ENEMY"), "inimigo"))
 	if definition.get("quick", false): parts.append("RÁPIDA: devolve ação no KO")
 	if definition.get("free", false): parts.append("LIVRE")
@@ -4458,7 +4474,7 @@ func _card_description(definition: Dictionary, card: Dictionary = {}) -> String:
 	if definition.get("lethargic", false): parts.append("LETÁRGICO")
 	if definition.get("recoil", false): parts.append("RECUO")
 	if definition.get("drain", false): parts.append("DRENO")
-	if definition.get("instant", false): parts.append("INSTANTÂNEO (obrigatória; bloqueia Encerrar)")
+	if definition.get("instant", false): parts.append("INSTANTÂNEO (se jogável, deve ser jogado antes de outras cartas)")
 	if definition.get("ephemeral", false): parts.append("EFÊMERO")
 	if int(definition.get("warmup", 0)) > 0: parts.append("AQUECIMENTO %d" % int(definition["warmup"]))
 	if definition.get("chain", 0) > 0: parts.append("CHAIN %d" % definition["chain"])
@@ -4582,7 +4598,7 @@ func _process(delta: float) -> void:
 			if hovered_card >= 0 and hovered_card < battle.hand.size() and not selection_lock:
 				_show_actor_portrait(int(battle.hand[hovered_card]["owner"]), false)
 				if is_instance_valid(hover_hint):
-					hover_hint.text = _card_description(_card_def(str(battle.hand[hovered_card]["id"])), battle.hand[hovered_card])
+					hover_hint.text = _card_description(_card_def_for(battle.hand[hovered_card]), battle.hand[hovered_card])
 		if new_actor != hovered_actor:
 			hovered_actor = new_actor
 			status_hover_actor = new_actor
