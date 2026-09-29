@@ -1,3 +1,10 @@
+# Changelog
+
+## 2026-09-28 — Title orientation + Jogar fit
+
+- **Title video/UI orientation**: Label3D on the camera-local menu no longer uses Y=180 (that mirrored glyphs). Video cover plane keeps identity UV/scale/rotation so the backdrop matches `assets/video/Title.*` (verified L/R brightness vs source frame).
+- **Jogar submenu fit**: dense stack uses compact plates, frustum-based pack/scale, and a slightly smaller submenu header so Campanha / Missões / Arena / Escolher equipe / Escolher itens / Voltar all stay on-screen.
+
 ## 2026-09-28 — Título: vídeo full-cover + menu 3D flutuante
 
 - **Backdrop**: `Title.ogv`/`Title.mp4` em loop, plano travado na câmera em modo **cover** (preenche o viewport; não é um quad pequeno no mundo).

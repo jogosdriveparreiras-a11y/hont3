@@ -390,6 +390,7 @@ func _ensure_title_screen() -> void:
 	mat.albedo_texture = vp.get_texture()
 	mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR
 	mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+	mat.uv1_scale = Vector3(1.0, 1.0, 1.0)
 	plane.material_override = mat
 	# Locked to camera: always fills the lens (cover), never a small world plane.
 	if camera != null:
@@ -415,7 +416,9 @@ func _layout_title_video_plane() -> void:
 		return
 	var dist := 14.0
 	title_video_plane.position = Vector3(0.0, 0.0, -dist)
+	# Camera-local: plane at -Z, QuadMesh +Z faces the lens with identity UV/scale (matches source).
 	title_video_plane.rotation = Vector3.ZERO
+	title_video_plane.scale = Vector3.ONE
 	var aspect := 16.0 / 9.0
 	var vis := get_viewport().get_visible_rect().size
 	var view_aspect := vis.x / maxf(vis.y, 1.0)
@@ -437,7 +440,10 @@ func _layout_title_video_plane() -> void:
 			vp.size = Vector2i(maxi(int(vis.x), 1280), maxi(int(vis.y), 720))
 			if title_video_player != null and is_instance_valid(title_video_player):
 				title_video_player.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-				title_video_player.size = Vector2(vp.size)
+				title_video_player.offset_left = 0.0
+				title_video_player.offset_top = 0.0
+				title_video_player.offset_right = 0.0
+				title_video_player.offset_bottom = 0.0
 
 func _teardown_title_screen() -> void:
 	if title_video_player != null and is_instance_valid(title_video_player):
@@ -484,7 +490,7 @@ func _make_title_menu_button_3d(text_value: String, on_click: Callable, hint: St
 	var plate := MeshInstance3D.new()
 	plate.name = "Plate"
 	var box := BoxMesh.new()
-	box.size = Vector3(3.6 if big else 3.0, 0.62 if big else 0.5, 0.12)
+	box.size = Vector3(3.6 if big else 2.85, 0.62 if big else 0.44, 0.12)
 	plate.mesh = box
 	var pmat := StandardMaterial3D.new()
 	pmat.albedo_color = Color(0.07, 0.09, 0.16, 0.82)
@@ -498,13 +504,14 @@ func _make_title_menu_button_3d(text_value: String, on_click: Callable, hint: St
 	var lab := Label3D.new()
 	lab.name = "Label"
 	lab.text = text_value
-	lab.font_size = 42 if big else 32
+	lab.font_size = 42 if big else 28
 	lab.modulate = Color("f6edd8")
 	lab.outline_size = 10
 	lab.outline_modulate = Color(0.05, 0.02, 0.08, 0.95)
 	lab.billboard = BaseMaterial3D.BILLBOARD_DISABLED
 	lab.position = Vector3(0.0, 0.0, 0.09)
-	lab.rotation_degrees.y = 180.0
+	# Camera-local host: Label3D +Z already faces the lens; do not Y-flip (that mirrors glyphs).
+	lab.rotation_degrees.y = 0.0
 	var f := _title_menu_font()
 	if f != null:
 		lab.font = f
@@ -518,7 +525,7 @@ func _make_title_menu_button_3d(text_value: String, on_click: Callable, hint: St
 	area.set_meta("title_btn_root", root)
 	var col := CollisionShape3D.new()
 	var shape := BoxShape3D.new()
-	shape.size = Vector3(3.7 if big else 3.1, 0.7 if big else 0.55, 0.35)
+	shape.size = Vector3(3.7 if big else 2.95, 0.7 if big else 0.50, 0.35)
 	col.shape = shape
 	area.add_child(col)
 	root.add_child(area)
@@ -532,7 +539,7 @@ func _make_title_menu_label_3d(text_value: String, font_size: int, color: Color)
 	lab.outline_size = 8
 	lab.outline_modulate = Color(0, 0, 0, 0.85)
 	lab.billboard = BaseMaterial3D.BILLBOARD_DISABLED
-	lab.rotation_degrees.y = 180.0
+	lab.rotation_degrees.y = 0.0
 	var f := _title_menu_font()
 	if f != null:
 		lab.font = f
@@ -553,14 +560,18 @@ func _populate_title_menu() -> void:
 		return
 	_clear_title_menu_3d_children()
 	var rows: Array = []
-	rows.append({"kind": "title", "text": "HEROES OF THE NIGHTMARE 3", "size": 52, "color": Color("f0c27a")})
-	rows.append({"kind": "label", "text": "Missões %d/%d · Essência %d" % [best_stars.size(), Content.MISSIONS.size(), essence], "size": 22, "color": Color("9aa6bf")})
+	if title_menu_section == "":
+		rows.append({"kind": "title", "text": "HEROES OF THE NIGHTMARE 3", "size": 52, "color": Color("f0c27a")})
+		rows.append({"kind": "label", "text": "Missões %d/%d · Essência %d" % [best_stars.size(), Content.MISSIONS.size(), essence], "size": 22, "color": Color("9aa6bf")})
+	else:
+		# Submenus: compact header so Campanha…Escolher itens + Voltar stay fully on-screen.
+		rows.append({"kind": "title", "text": "HEROES OF THE NIGHTMARE 3", "size": 34, "color": Color("f0c27a")})
+		rows.append({"kind": "label", "text": "Missões %d/%d · Essência %d" % [best_stars.size(), Content.MISSIONS.size(), essence], "size": 18, "color": Color("9aa6bf")})
 	if feedback != "":
 		rows.append({"kind": "label", "text": feedback, "size": 20, "color": Color("a3eec4")})
 		feedback = ""
 	match title_menu_section:
 		"jogar":
-			rows.append({"kind": "label", "text": "JOGAR", "size": 28, "color": Color("dcc28b")})
 			if ResourceLoader.exists("res://addons/hotn3_campaign/CampaignRoot.tscn"):
 				rows.append({"kind": "btn", "text": "Campanha", "hint": "A Fenda das Três Vigílias · três capítulos", "cb": _launch_campaign_module})
 			else:
@@ -586,7 +597,6 @@ func _populate_title_menu() -> void:
 				_show_menu()
 			})
 		"testes":
-			rows.append({"kind": "label", "text": "TESTES", "size": 28, "color": Color("dcc28b")})
 			rows.append({"kind": "btn", "text": "Copiar caminho do report", "hint": "Relatório JSONL desta sessão", "cb": func() -> void:
 				_copy_session_report_path()
 				_show_menu()
@@ -616,21 +626,65 @@ func _populate_title_menu() -> void:
 				_teardown_title_screen()
 				_show_settings()
 			})
-	var y := 1.55
+	# Fit stack into camera frustum at menu Z (compact + scale when dense, e.g. Jogar).
+	var btn_count := 0
+	for row0 in rows:
+		if str(row0.get("kind", "")) == "btn":
+			btn_count += 1
+	var force_compact := btn_count >= 4 or title_menu_section in ["jogar", "testes"]
+	var step_title := 0.42 if force_compact else 0.55
+	var step_label := 0.30 if force_compact else 0.44
+	var step_btn_big := 0.66 if force_compact else 0.78
+	var step_btn_sm := 0.50 if force_compact else 0.64
+	var est_h := 0.0
+	for row in rows:
+		var kind0 := str(row.get("kind", ""))
+		if kind0 == "title":
+			est_h += step_title
+		elif kind0 == "label":
+			est_h += step_label
+		elif kind0 == "btn":
+			var big0 := bool(row.get("big", true)) and not force_compact
+			est_h += step_btn_big if big0 else step_btn_sm
+	var menu_z := absf(title_menu_3d.position.z)
+	var v_fov := deg_to_rad(camera.fov if camera != null else 51.0)
+	var view_h := 2.0 * menu_z * tan(v_fov * 0.5)
+	var max_h := view_h * 0.84  # leave margin top/bottom
+	var pack := 1.0
+	if est_h > max_h and est_h > 0.001:
+		pack = max_h / est_h
+	pack = clampf(pack, 0.52, 1.0)
+	var root_scale := 1.0
+	if force_compact:
+		root_scale = minf(root_scale, 0.92)
+	if pack < 0.70:
+		root_scale *= pack / 0.70
+		pack = 0.70
+	title_menu_3d.scale = Vector3(root_scale, root_scale, root_scale)
+	step_title *= pack
+	step_label *= pack
+	step_btn_big *= pack
+	step_btn_sm *= pack
+	var total_h := est_h * pack
+	# Center; slight downward bias when dense so the top title is not clipped by the lens.
+	var y := total_h * 0.5 - (0.12 if force_compact else 0.0)
 	for row in rows:
 		var kind := str(row.get("kind", ""))
 		if kind == "title" or kind == "label":
-			var lab := _make_title_menu_label_3d(str(row["text"]), int(row.get("size", 22)), row.get("color", Color.WHITE))
+			var fs := int(row.get("size", 22))
+			if pack < 0.95 or force_compact:
+				fs = maxi(16, int(round(float(fs) * lerpf(0.80, 1.0, pack))))
+			var lab := _make_title_menu_label_3d(str(row["text"]), fs, row.get("color", Color.WHITE))
 			lab.position = Vector3(0.0, y, 0.0)
 			title_menu_3d.add_child(lab)
-			y -= 0.42 if kind == "label" else 0.55
+			y -= step_label if kind == "label" else step_title
 		elif kind == "btn":
-			var big := bool(row.get("big", true))
+			var big := bool(row.get("big", true)) and not force_compact
 			var btn := _make_title_menu_button_3d(str(row["text"]), row["cb"], str(row.get("hint", "")), big)
 			btn.position = Vector3(0.0, y, 0.0)
 			title_menu_3d.add_child(btn)
 			title_menu_btn_nodes.append(btn)
-			y -= 0.78 if big else 0.64
+			y -= step_btn_big if big else step_btn_sm
 
 func _handle_title_menu_input(input: InputEvent) -> bool:
 	if title_menu_3d == null or not is_instance_valid(title_menu_3d):
