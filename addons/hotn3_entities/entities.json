@@ -3326,6 +3326,162 @@
       "biografia": "Delirio — personagem novo importado do Cast Edited (kit genérico).",
       "playable": true,
       "source_sheet": "edited_cast"
+    },
+    "ent_cacadora": {
+      "id": "ent_cacadora",
+      "name": "Caçadora",
+      "archetype": "Poder",
+      "species": "Humano",
+      "level_reference": 3,
+      "power_reference": 80,
+      "hp": 76,
+      "attack": 31,
+      "power": 29,
+      "armor": 18,
+      "type": "TECNICO",
+      "row": "back",
+      "sprite": "res://assets/cast/ent_cacadora_sprite.png",
+      "portrait": "res://assets/cast/ent_cacadora_portrait.png",
+      "signature_icon": "res://assets/cast/ent_cacadora_icon.png",
+      "passive": "",
+      "pool": [
+        "ent_cacadora_golpe",
+        "ent_cacadora_guarda",
+        "ent_cacadora_foco",
+        "ent_cacadora_rajada",
+        "ent_cacadora_cura_rapida",
+        "ent_cacadora_impacto",
+        "ent_cacadora_barreira",
+        "ent_cacadora_onda",
+        "ent_cacadora_inspirar",
+        "ent_cacadora_finisher"
+      ],
+      "cards": [
+        "ent_cacadora_golpe",
+        "ent_cacadora_guarda",
+        "ent_cacadora_foco",
+        "ent_cacadora_rajada",
+        "ent_cacadora_cura_rapida"
+      ],
+      "iniciais": [
+        "ent_cacadora_golpe",
+        "ent_cacadora_guarda",
+        "ent_cacadora_foco",
+        "ent_cacadora_rajada",
+        "ent_cacadora_cura_rapida"
+      ],
+      "evoluidas": [
+        "ent_cacadora_impacto",
+        "ent_cacadora_barreira",
+        "ent_cacadora_onda",
+        "ent_cacadora_inspirar",
+        "ent_cacadora_finisher"
+      ],
+      "desvantagem": "",
+      "signature": {
+        "name": "Reserva",
+        "target": "SELF",
+        "action": [
+          "BLOCK",
+          "2"
+        ]
+      },
+      "tags": [
+        {
+          "name": "Genérico",
+          "level": 1
+        }
+      ],
+      "escudo": 16,
+      "aprimoramento": {
+        "id": "generico",
+        "name": "Kit Genérico",
+        "text": "Baralho genérico provisório — a refinar."
+      },
+      "grupos": [
+        "Genérico"
+      ],
+      "biografia": "Caçadora — personagem novo importado do Cast Edited (kit genérico).",
+      "playable": true,
+      "source_sheet": "edited_cast"
+    },
+    "ent_pessoa_planta": {
+      "id": "ent_pessoa_planta",
+      "name": "Pessoa Planta",
+      "archetype": "Poder",
+      "species": "Humano",
+      "level_reference": 3,
+      "power_reference": 80,
+      "hp": 88,
+      "attack": 27,
+      "power": 32,
+      "armor": 22,
+      "type": "QUIMICO",
+      "row": "front",
+      "sprite": "res://assets/cast/ent_pessoa_planta_sprite.png",
+      "portrait": "res://assets/cast/ent_pessoa_planta_portrait.png",
+      "signature_icon": "res://assets/cast/ent_pessoa_planta_icon.png",
+      "passive": "",
+      "pool": [
+        "ent_pessoa_planta_golpe",
+        "ent_pessoa_planta_guarda",
+        "ent_pessoa_planta_foco",
+        "ent_pessoa_planta_rajada",
+        "ent_pessoa_planta_cura_rapida",
+        "ent_pessoa_planta_impacto",
+        "ent_pessoa_planta_barreira",
+        "ent_pessoa_planta_onda",
+        "ent_pessoa_planta_inspirar",
+        "ent_pessoa_planta_finisher"
+      ],
+      "cards": [
+        "ent_pessoa_planta_golpe",
+        "ent_pessoa_planta_guarda",
+        "ent_pessoa_planta_foco",
+        "ent_pessoa_planta_rajada",
+        "ent_pessoa_planta_cura_rapida"
+      ],
+      "iniciais": [
+        "ent_pessoa_planta_golpe",
+        "ent_pessoa_planta_guarda",
+        "ent_pessoa_planta_foco",
+        "ent_pessoa_planta_rajada",
+        "ent_pessoa_planta_cura_rapida"
+      ],
+      "evoluidas": [
+        "ent_pessoa_planta_impacto",
+        "ent_pessoa_planta_barreira",
+        "ent_pessoa_planta_onda",
+        "ent_pessoa_planta_inspirar",
+        "ent_pessoa_planta_finisher"
+      ],
+      "desvantagem": "",
+      "signature": {
+        "name": "Reserva",
+        "target": "SELF",
+        "action": [
+          "BLOCK",
+          "2"
+        ]
+      },
+      "tags": [
+        {
+          "name": "Genérico",
+          "level": 1
+        }
+      ],
+      "escudo": 18,
+      "aprimoramento": {
+        "id": "generico",
+        "name": "Kit Genérico",
+        "text": "Baralho genérico provisório — a refinar."
+      },
+      "grupos": [
+        "Genérico"
+      ],
+      "biografia": "Pessoa Planta — personagem novo importado do Cast Edited (kit genérico).",
+      "playable": true,
+      "source_sheet": "edited_cast"
     }
   },
   "cards": {
@@ -14840,6 +14996,578 @@
       "anim_timing": "parallel",
       "melhorada_de": "ent_marcell_wine_furia_primordial",
       "chrome_3d": true
+    },
+    "ent_cacadora_golpe": {
+      "id": "ent_cacadora_golpe",
+      "name": "Golpe",
+      "owner": "ent_cacadora",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ]
+      ],
+      "reach": true,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Slash1"
+      ],
+      "anim_target": [
+        "Hit1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_cacadora_guarda": {
+      "id": "ent_cacadora_guarda",
+      "name": "Guarda",
+      "owner": "ent_cacadora",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "barrier",
+          "2"
+        ],
+        [
+          "block_hp",
+          "6"
+        ]
+      ],
+      "reach": false,
+      "stat": "armor",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Shield"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_cacadora_foco": {
+      "id": "ent_cacadora_foco",
+      "name": "Foco",
+      "owner": "ent_cacadora",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "strengthened",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_cacadora_rajada": {
+      "id": "ent_cacadora_rajada",
+      "name": "Rajada",
+      "owner": "ent_cacadora",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ]
+      ],
+      "reach": true,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Special2"
+      ],
+      "anim_target": [
+        "HitSP2"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_cacadora_cura_rapida": {
+      "id": "ent_cacadora_cura_rapida",
+      "name": "Cura Rapida",
+      "owner": "ent_cacadora",
+      "class": "ESTADO",
+      "target": "ALLY",
+      "actions": [
+        [
+          "heal",
+          "0"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Recovery1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_cacadora_impacto": {
+      "id": "ent_cacadora_impacto",
+      "name": "Impacto",
+      "owner": "ent_cacadora",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 2,
+      "tier": "evoluida",
+      "anim_self": [
+        "Slash2"
+      ],
+      "anim_target": [
+        "Hit2"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_cacadora_barreira": {
+      "id": "ent_cacadora_barreira",
+      "name": "Barreira",
+      "owner": "ent_cacadora",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "barrier",
+          "3"
+        ],
+        [
+          "block_hp",
+          "10"
+        ]
+      ],
+      "reach": false,
+      "stat": "armor",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "evoluida",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Shield"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_cacadora_onda": {
+      "id": "ent_cacadora_onda",
+      "name": "Onda",
+      "owner": "ent_cacadora",
+      "class": "ATTACK",
+      "target": "ALL_ENEMIES",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ]
+      ],
+      "reach": true,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "evoluida",
+      "anim_self": [
+        "Special1"
+      ],
+      "anim_target": [
+        "Explosion1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_cacadora_inspirar": {
+      "id": "ent_cacadora_inspirar",
+      "name": "Inspirar",
+      "owner": "ent_cacadora",
+      "class": "ESTADO",
+      "target": "ALL_ALLIES",
+      "actions": [
+        [
+          "heal",
+          "0"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "evoluida",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Recovery2"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_cacadora_finisher": {
+      "id": "ent_cacadora_finisher",
+      "name": "Finisher",
+      "owner": "ent_cacadora",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "2"
+        ],
+        [
+          "self_status",
+          "strengthened",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 2,
+      "tier": "evoluida",
+      "anim_self": [
+        "Slash3"
+      ],
+      "anim_target": [
+        "Blow1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_pessoa_planta_golpe": {
+      "id": "ent_pessoa_planta_golpe",
+      "name": "Golpe",
+      "owner": "ent_pessoa_planta",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ]
+      ],
+      "reach": true,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Slash1"
+      ],
+      "anim_target": [
+        "Hit1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_pessoa_planta_guarda": {
+      "id": "ent_pessoa_planta_guarda",
+      "name": "Guarda",
+      "owner": "ent_pessoa_planta",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "barrier",
+          "2"
+        ],
+        [
+          "block_hp",
+          "6"
+        ]
+      ],
+      "reach": false,
+      "stat": "armor",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Shield"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_pessoa_planta_foco": {
+      "id": "ent_pessoa_planta_foco",
+      "name": "Foco",
+      "owner": "ent_pessoa_planta",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "strengthened",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_pessoa_planta_rajada": {
+      "id": "ent_pessoa_planta_rajada",
+      "name": "Rajada",
+      "owner": "ent_pessoa_planta",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ]
+      ],
+      "reach": true,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Special2"
+      ],
+      "anim_target": [
+        "HitSP2"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_pessoa_planta_cura_rapida": {
+      "id": "ent_pessoa_planta_cura_rapida",
+      "name": "Cura Rapida",
+      "owner": "ent_pessoa_planta",
+      "class": "ESTADO",
+      "target": "ALLY",
+      "actions": [
+        [
+          "heal",
+          "0"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Recovery1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_pessoa_planta_impacto": {
+      "id": "ent_pessoa_planta_impacto",
+      "name": "Impacto",
+      "owner": "ent_pessoa_planta",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 2,
+      "tier": "evoluida",
+      "anim_self": [
+        "Slash2"
+      ],
+      "anim_target": [
+        "Hit2"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_pessoa_planta_barreira": {
+      "id": "ent_pessoa_planta_barreira",
+      "name": "Barreira",
+      "owner": "ent_pessoa_planta",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "barrier",
+          "3"
+        ],
+        [
+          "block_hp",
+          "10"
+        ]
+      ],
+      "reach": false,
+      "stat": "armor",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "evoluida",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Shield"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_pessoa_planta_onda": {
+      "id": "ent_pessoa_planta_onda",
+      "name": "Onda",
+      "owner": "ent_pessoa_planta",
+      "class": "ATTACK",
+      "target": "ALL_ENEMIES",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ]
+      ],
+      "reach": true,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "evoluida",
+      "anim_self": [
+        "Special1"
+      ],
+      "anim_target": [
+        "Explosion1"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_pessoa_planta_inspirar": {
+      "id": "ent_pessoa_planta_inspirar",
+      "name": "Inspirar",
+      "owner": "ent_pessoa_planta",
+      "class": "ESTADO",
+      "target": "ALL_ALLIES",
+      "actions": [
+        [
+          "heal",
+          "0"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "evoluida",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Recovery2"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_pessoa_planta_finisher": {
+      "id": "ent_pessoa_planta_finisher",
+      "name": "Finisher",
+      "owner": "ent_pessoa_planta",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "2"
+        ],
+        [
+          "self_status",
+          "strengthened",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 2,
+      "tier": "evoluida",
+      "anim_self": [
+        "Slash3"
+      ],
+      "anim_target": [
+        "Blow1"
+      ],
+      "anim_timing": "parallel"
     }
   }
 }

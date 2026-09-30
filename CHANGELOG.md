@@ -1,5 +1,14 @@
 # Changelog
 
+
+## 2026-09-30 — Cast Edited sync
+
+- Atualizados a partir de HotN3 Cast/Edited (arquivo mais recente por nome): Nero (`Nero 2`), Naomi transform (`Naomi 3`), Kabuki, Techna, Pietro/Chaos, Delírio (`Delírio 2`), Dr. Espantalho, Patrulheiro Rosa, Pauline (`Pailine 2`), Pesadelo Vivo, Siren.
+- Novos com kit genérico: **Caçadora** (`ent_cacadora`), **Pessoa Planta** (`ent_pessoa_planta`).
+- Pipeline: `tools/scripts/PackBridge/cast/sync_edited_cast.py` (punch/trim/fit + ícone simbólico).
+- Ignorados (sem nome): `8zFgG.jpg`, `2kj0_…` (duplicata de Pessoa Planta.png).
+- **Marcell Wine**: sem arte em Edited — placeholders genéricos mantidos.
+
 ## 2026-09-30 — Marcell Wine (Escuridão)
 
 - Novo herói jogável **Marcell Wine** (`ent_marcell_wine`): mesmo aprimoramento **Escuridão** de Alyssa (E sobe ao sofrer dano).
