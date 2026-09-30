@@ -778,6 +778,43 @@ let pendingHeroArt = {}; // field -> {blob, url, name}
 let heroArtField = "portrait";
 let deckPreviewMode = "full";
 
+// Combos de equipe do Content.gd (runtime: BattleState._check_combo).
+// Não vivem em entities.json — só no editor, para alinhar com o que aparece em batalha.
+const PARTY_COMBOS = {
+  "dueto": {
+    "id": "dueto",
+    "name": "Pacto de batalha",
+    "class": "COMBO",
+    "tier": "combo",
+    "party_combo": true,
+    "owner": "_party",
+    "target": "ENEMY",
+    "reach": true,
+    "cost": 4,
+    "exhaust": true,
+    "text": "Combo de equipe (runtime). Entra na mão 1× por lado quando ≥2 aliados vivos e Iniciativa ≥4. Dano Poder 40 + comprar 1. Exhaust.",
+    "effects": [
+      {"kind": "DAMAGE", "amount": 40, "stat": "power"},
+      {"kind": "DRAW", "amount": 1}
+    ],
+    "anim_self": ["Special2"],
+    "anim_target": ["CrossHit"],
+    "_editor_only": true,
+    "_source": "Content.gd / BattleState._check_combo"
+  }
+};
+
+function mergePartyCombosIntoCatalog() {
+  if (!catalog.cards) catalog.cards = {};
+  Object.keys(PARTY_COMBOS).forEach(id => {
+    const existing = catalog.cards[id];
+    // Não sobrescrever carta real do catálogo de entities.
+    if (existing && !existing._editor_only) return;
+    catalog.cards[id] = Object.assign({}, PARTY_COMBOS[id]);
+  });
+}
+
+
 function heroList() {
   const ids = Object.keys(catalog.heroes || {});
   if (ids.length) {
@@ -955,7 +992,7 @@ function fillSelects() {
   const fo = document.getElementById("filterOwner");
   const ow = document.getElementById("owner");
   const heroes = heroList();
-  fo.innerHTML = '<option value="">Todos</option>';
+  fo.innerHTML = '<option value="">Todos</option><option value="_party">Combos de equipe</option>';
   ow.innerHTML = "";
   heroes.forEach(h => {
     fo.insertAdjacentHTML("beforeend", `<option value="${h.id}">${h.name}</option>`);
@@ -1344,11 +1381,12 @@ function syncForm(fromDraft) {
 
 function cardTier(c) {
   if (!c) return "outra";
-  if (c.tier) return c.tier;
+  if (c.class === "COMBO" || c.tier === "combo" || c.party_combo || (c.ephemeral && c.combo_members)) return "combo";
   if (c.class === "DESVANTAGEM") return "desvantagem";
+  if (c.tier && c.tier !== "inicial") return c.tier;
   if (c.melhorada_de || String(c.name||"").endsWith("+")) return "melhorada";
   if (c.unlock === "progression") return "evoluida";
-  if (c.tier === "combo" || (c.ephemeral && c.combo_members)) return "combo";
+  if (c.tier) return c.tier;
   return "inicial";
 }
 function renderList() {
@@ -1361,7 +1399,10 @@ function renderList() {
   let n = 0;
   ids.forEach(id => {
     const c = catalog.cards[id];
-    if (fo && c.owner !== fo) return;
+    const isPartyCombo = !!(c && (c.party_combo || c.owner === "_party" || c.class === "COMBO"));
+    // Combos de equipe aparecem mesmo com filtro de personagem (valem para qualquer kit em batalha).
+    if (fo && c.owner !== fo && !(isPartyCombo && fo !== "_party")) return;
+    if (fo === "_party" && !isPartyCombo) return;
     if (q && !(String(c.name).toLowerCase().includes(q) || id.includes(q))) return;
     n++;
     const tier = cardTier(c);
@@ -1485,7 +1526,14 @@ function exportFull() {
   if (!Object.keys(catalog.cards).length && !Object.keys(catalog.heroes||{}).length) {
     toast("Importe entities.json primeiro"); return;
   }
-  download("entities.json", JSON.stringify(catalog, null, 2));
+  const clean = {
+    format: catalog.format || 1,
+    heroes: catalog.heroes || {},
+    cards: Object.fromEntries(
+      Object.entries(catalog.cards || {}).filter(([, c]) => !(c && c._editor_only))
+    )
+  };
+  download("entities.json", JSON.stringify(clean, null, 2));
   toast("entities.json completo baixado");
 }
 
@@ -1572,19 +1620,29 @@ function heroDeckCardIds(hero, variant) {
     ? hero.iniciais : (hero.cards || []).slice();
   const evolved = hero.evoluidas || [];
   const drawback = hero.desvantagem ? [hero.desvantagem] : [];
+  // Final = iniciais + evoluídas (+ desvantagem). NÃO inclui melhoradas.
   const allBase = uniqueKnownCardIds([...initial, ...evolved, ...drawback]);
   if (variant === "initial") return uniqueKnownCardIds([...initial, ...drawback]);
+  if (variant === "full") return allBase;
+  // Final+ = versões melhoradas do Final (substitui base por melhorada_de).
   const explicitUpgrades = hero.melhoradas || [];
   const detectedUpgrades = Object.keys(catalog.cards).filter(id => {
       const card = catalog.cards[id];
-      return card.owner === hero.id && card.melhorada_de;
+      return card && card.owner === hero.id && card.melhorada_de;
     });
-  const upgrades = uniqueKnownCardIds(variant === "full"
-    ? explicitUpgrades
-    : [...explicitUpgrades, ...detectedUpgrades]);
-  const replacement = new Map(upgrades.map(id => [String(catalog.cards[id].melhorada_de || ""), id]));
+  const upgrades = uniqueKnownCardIds([...explicitUpgrades, ...detectedUpgrades])
+    .filter(id => catalog.cards[id]);
+  const replacement = new Map();
+  upgrades.forEach(id => {
+    const base = String((catalog.cards[id] || {}).melhorada_de || "");
+    if (base) replacement.set(base, id);
+  });
   return uniqueKnownCardIds(allBase.map(id => replacement.get(id) || id).concat(
-    upgrades.filter(id => !replacement.has(id))
+    upgrades.filter(id => {
+      const base = String((catalog.cards[id] || {}).melhorada_de || "");
+      // Inclui melhoradas órfãs (base fora do deck Final) ou sem melhorada_de.
+      return !base || !allBase.includes(base);
+    })
   ));
 }
 
@@ -1608,10 +1666,14 @@ function renderHeroDeckPreview(hero) {
     btn.classList.toggle("active", btn.dataset.deckMode === deckPreviewMode);
   });
   const ids = heroDeckCardIds(hero, deckPreviewMode);
-  const score = ids.reduce((total, id) => total + scoreCard(catalog.cards[id]), 0);
-  summary.textContent = `${labels[deckPreviewMode]} · ${ids.length} cartas · ${Math.round(score * 10) / 10} pts. Clique em uma carta para abri-la no editor.`;
+  const partyComboIds = Object.keys(PARTY_COMBOS || {});
+  const score = ids.reduce((total, id) => total + scoreCard(catalog.cards[id] || {}), 0);
+  const comboNote = partyComboIds.length
+    ? ` · Combo de equipe em batalha: ${partyComboIds.map(id => (PARTY_COMBOS[id] || {}).name || id).join(", ")} (não no deck fixo)`
+    : "";
+  summary.textContent = `${labels[deckPreviewMode]} · ${ids.length} cartas · ${Math.round(score * 10) / 10} pts${comboNote}. Clique em uma carta para abri-la no editor.`;
   grid.innerHTML = "";
-  if (!ids.length) {
+  if (!ids.length && !partyComboIds.length) {
     const empty = document.createElement("div");
     empty.className = "muted";
     empty.textContent = "Nenhuma carta configurada para esta visão do deck.";
@@ -1653,6 +1715,51 @@ function renderHeroDeckPreview(hero) {
     };
     grid.appendChild(tile);
   });
+  if (partyComboIds.length) {
+    const sep = document.createElement("div");
+    sep.className = "muted";
+    sep.style.gridColumn = "1 / -1";
+    sep.style.marginTop = "8px";
+    sep.textContent = "Combos de equipe (runtime — entram na mão em batalha, não no baralho do herói):";
+    grid.appendChild(sep);
+    partyComboIds.forEach(id => {
+      const card = catalog.cards[id] || PARTY_COMBOS[id];
+      if (!card) return;
+      const tile = document.createElement("button");
+      tile.type = "button";
+      tile.className = `deck-card ${card.class || "COMBO"}`;
+      tile.title = `Abrir ${card.name || id} (combo de equipe)`;
+      const art = document.createElement("div");
+      art.className = "deck-card-art";
+      const artUrl = resolveAssetUrl(card.art) || ownerArtUrl(hero.id);
+      if (artUrl) art.style.backgroundImage = `url("${artUrl}")`;
+      const shade = document.createElement("div");
+      shade.className = "deck-card-shade";
+      const content = document.createElement("div");
+      content.className = "deck-card-content";
+      const tier = document.createElement("span");
+      tier.className = "deck-card-tier";
+      tier.textContent = "combo";
+      const name = document.createElement("div");
+      name.className = "deck-card-name";
+      name.textContent = card.name || id;
+      const meta = document.createElement("div");
+      meta.className = "deck-card-meta";
+      meta.textContent = `${card.target || "—"} · equipe · custo ${card.cost ?? "—"}`;
+      const rules = document.createElement("div");
+      rules.className = "deck-card-rules";
+      rules.textContent = card.text || deckCardRuleSummary(card);
+      content.append(tier, name, meta, rules);
+      tile.append(art, shade, content);
+      tile.onclick = () => {
+        document.getElementById("filterOwner").value = "_party";
+        setMode("cards");
+        loadCard(id);
+      };
+      grid.appendChild(tile);
+    });
+  }
+
 }
 
 function heroPreviewUrl() {
@@ -2003,16 +2110,22 @@ function scoreHeroDecks(hero, cardsMap) {
   const sumIds = (ids) => ids.reduce((acc, id) => acc + scoreCard(cardsMap[id] || {}), 0);
   // Deck inicial de combate: iniciais + desvantagem
   const initial = sumIds([...iniciais, ...desv]);
-  // Deck final completo (todas manobras + desv, melhoradas substituem base)
-  let finalIds = [...iniciais, ...evoluidas, ...desv];
-  const replaced = new Set(melhoradas.map(id => (cardsMap[id]||{}).melhorada_de).filter(Boolean));
-  finalIds = finalIds.filter(id => !replaced.has(id)).concat(melhoradas);
+  // Final = iniciais + evoluídas + desv (sem melhoradas)
+  const finalIds = [...iniciais, ...evoluidas, ...desv];
   const full = sumIds(finalIds);
-  // final+: todas as melhoradas + evoluídas melhoradas stubs + desv
-  const finalPlusIds = [...new Set([...melhoradas, ...evoluidas.map(id => id + "_plus").filter(x => cardsMap[x]), ...desv, ...iniciais.map(id => {
-    const plus = Object.keys(cardsMap).find(k => (cardsMap[k]||{}).melhorada_de === id);
-    return plus || id;
-  })])];
+  // Final+ = melhoradas no lugar das bases correspondentes
+  const replacement = new Map();
+  melhoradas.forEach(id => {
+    const base = (cardsMap[id] || {}).melhorada_de;
+    if (base) replacement.set(String(base), id);
+  });
+  Object.keys(cardsMap).forEach(id => {
+    const c = cardsMap[id] || {};
+    if (c.melhorada_de && (c.owner === hero.id || melhoradas.includes(id))) {
+      replacement.set(String(c.melhorada_de), id);
+    }
+  });
+  const finalPlusIds = finalIds.map(id => replacement.get(String(id)) || id);
   const finalPlus = sumIds(finalPlusIds);
   return { initial: Math.round(initial*10)/10, full: Math.round(full*10)/10, finalPlus: Math.round(finalPlus*10)/10, cardScores: Object.fromEntries([...new Set([...iniciais,...evoluidas,...melhoradas,...desv])].map(id => [id, scoreCard(cardsMap[id]||{})])) };
 }
@@ -2311,6 +2424,7 @@ document.getElementById("btnNew").onclick = () => {
 
 function applyCatalog(data, sourceLabel) {
   catalog = { format: data.format || 1, heroes: data.heroes || {}, cards: data.cards || {} };
+  mergePartyCombosIntoCatalog();
   dirtyIds.clear();
   dirtyHeroIds.clear();
   fillSelects();
