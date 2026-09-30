@@ -83,7 +83,7 @@ func _merge_entity_heroes() -> void:
 			"evoluidas": src.get("evoluidas", []),
 			"melhoradas": src.get("melhoradas", []),
 			"desvantagem": str(src.get("desvantagem", "")),
-			"playable": true,
+			"playable": bool(src.get("playable", not bool(src.get("minion", false)))),
 			"minion": bool(src.get("minion", false)),
 			"repeatable": bool(src.get("repeatable", src.get("minion", false))),
 			"pool": pool,
@@ -247,6 +247,14 @@ func describe_actions(definition: Dictionary) -> Array[String]:
 					parts.append("Barreira %s HP" % str(action[1] if action.size() > 1 else ""))
 			"resistente":
 				parts.append("Resistente %s" % str(action[1] if action.size() > 1 else "1"))
+			"forte", "fortalecido":
+				parts.append("Forte %s" % str(action[1] if action.size() > 1 else "1"))
+			"rapido", "rápido":
+				parts.append("Rápido %s" % str(action[1] if action.size() > 1 else "1"))
+			"heal_pct":
+				parts.append("Cura %s da Vida máxima" % str(action[1] if action.size() > 1 else "?"))
+			"summon_foe", "reinforce_enemy":
+				parts.append("Reforços inimigos ×%s (%s)" % [str(action[2] if action.size() > 2 else 1), str(action[1] if action.size() > 1 else "?")])
 			"fragil":
 				parts.append("Frágil %s" % str(action[1] if action.size() > 1 else "1"))
 			"invulneravel", "invulnerable":

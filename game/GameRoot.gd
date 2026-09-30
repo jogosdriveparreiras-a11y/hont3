@@ -1391,13 +1391,14 @@ func _status_icon_glyph(status_id: String) -> String:
 		"resistente": return "🪨"
 		"fragil", "frágil": return "💔"
 		"escuridao", "escuro", "darkness": return "🌑"
+		"strengthened", "forte", "fortalecido": return "💪"
+		"fast", "rapido", "rápido": return "⚡"
 		"atento": return "👁️"
 		"wounded", "ferido": return "🩹"
 		"regen": return "💚"
 		"blind", "cego": return "🙈"
 		"invulneravel", "invulnerável", "invulnerable": return "✨"
 		"marked", "marcado": return "🎯"
-		"strengthened", "fortalecido": return "💪"
 		_: return "◆"
 
 func _update_status_icons(body: Node3D, actor: Dictionary, expanded: bool) -> void:
@@ -3243,6 +3244,11 @@ func _status_label(status_id: String) -> String:
 		"intocavel": "Intocável",
 		"preparo": "Preparo",
 		"strengthened": "Fortalecido",
+		"forte": "Forte",
+		"fortalecido": "Fortalecido",
+		"fast": "Rápido",
+		"rapido": "Rápido",
+		"rápido": "Rápido",
 		"slow": "Lento",
 		"bind": "Prisão",
 		"bound": "Preso",
@@ -4050,7 +4056,7 @@ func _status_plain(id: String, stacks: int = 1) -> String:
 		"wounded", "ferido":
 			return "[b]Ferido[/b]: Causa dano quando o personagem usa uma Manobra. Diminui com o tempo."
 		"escuridao", "escuro", "darkness":
-			return "[b]Escuridão[/b]: Quando [b]Alyssa[/b] recebe dano, [b]Escuridão[/b] aumenta em 1."
+			return "[b]Escuridão[/b]: Quando o portador (Alyssa/Marcell Wine) recebe dano, [b]Escuridão[/b] (E) aumenta em 1. Manobras escalam com E."
 		"protecao", "protegido":
 			return "Proteção %d — funciona como Escudo: absorve dano de Impacto." % n
 		"barreira", "barrier":
@@ -4116,6 +4122,14 @@ func _effect_glossary_lines(definition: Dictionary, card: Dictionary = {}) -> Pa
 				line2 = _status_plain("barreira", int(action[1]) if action.size() > 1 else 1)
 			"resistente":
 				line2 = _status_plain("resistente", int(action[1]) if action.size() > 1 else 1)
+			"forte", "fortalecido":
+				line2 = "Forte %s (Fortalecido)." % (action[1] if action.size() > 1 else "1")
+			"rapido", "rápido":
+				line2 = "Rápido %s (cartas custam −1 INI)." % (action[1] if action.size() > 1 else "1")
+			"heal_pct":
+				line2 = "Cura %s da Vida máxima." % (action[1] if action.size() > 1 else "?")
+			"summon_foe", "reinforce_enemy":
+				line2 = "Reforços inimigos ×%s." % (action[2] if action.size() > 2 else "1")
 			"heal":
 				line2 = "Recupera %s de Vida." % (action[1] if action.size() > 1 else "?")
 			"push":

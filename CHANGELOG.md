@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-30 — Marcell Wine (Escuridão)
+
+- Novo herói jogável **Marcell Wine** (`ent_marcell_wine`): mesmo aprimoramento **Escuridão** de Alyssa (E sobe ao sofrer dano).
+- Kit (~19 cartas): Pacto Escuro (Forte/Resistente/Rápido ×E), Regeneração Sombria (cura 10%×E), Garras do Abismo (dano+counter ×E), Relâmpago Negro (cadeia 1+E), Tempestade Latente, Desvantagem Instantânea **Legião das Sombras** (reforça o inimigo com E lacaios).
+- Novos efeitos de carta: `forte`, `rapido`, `heal_pct`, `summon_foe`; `chain` aceita fórmula com E.
+- Assets provisórios (placeholders genéricos) — sem arte dedicada em HotN3 Cast/Edited.
+
+
 ## 2026-09-29 — Herói morto no ciclo, Reanimar, cadáver, editor
 
 ### Regras (reverte o purge agressivo de cartas de herói morto)

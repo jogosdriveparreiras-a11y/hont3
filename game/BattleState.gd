@@ -681,6 +681,10 @@ func _normalize_status_id(id: String) -> String:
 			return "atento"
 		"escuridao", "escuro", "darkness":
 			return "escuridao"
+		"forte", "fortalecido":
+			return "strengthened"
+		"rapido", "rápido":
+			return "fast"
 		"wounded", "wound", "ferido":
 			return "wounded"
 		"slow", "lento":

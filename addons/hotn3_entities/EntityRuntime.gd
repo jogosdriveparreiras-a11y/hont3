@@ -586,6 +586,10 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 		resolved_def["target"] = chosen
 	if def.get("target") == "CHAIN" or resolved_def.get("target") == "CHAIN":
 		resolved_def["chain"] = int(def.get("chain", 1)) + int(card.get("next_chain", 0))
+		if _has_action(def, "chain"):
+			var ca_chain: Array = _action(def, "chain")
+			if ca_chain.size() > 1:
+				resolved_def["chain"] = maxi(1, int(round(battle.resolve_amount(ca_chain[1], source)))) + int(card.get("next_chain", 0))
 		if _has_action(def, "grow_chain"): resolved_def["chain"] += int(_counter(source, str(_action(def, "grow_chain")[1])))
 		if _has_action(def, "chain_hand_owner"):
 			resolved_def["chain"] = maxi(1, _acting_hand(battle).filter(func(c): return c.get("owner") == source["id"]).size())
@@ -982,7 +986,7 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 			"restore_items":
 				for item in battle.items.keys(): battle.items[item] = int(battle.items[item]) + 1
 			"hazard": battle.environmental_used["pack_hazard_" + str(a[1])] = 0
-			"grow", "grow_chain": _stack(source, str(a[1]), 1)
+			"grow": _stack(source, str(a[1]), 1)
 			"spend_all_block": source["block"] = 0  # legado
 			"spend_block": source["block"] = roundi(float(source["block"]) * (1.0 - float(a[1])))  # legado
 			"spend_all_protecao":
@@ -1042,6 +1046,35 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 				var rx: int = maxi(1, int(round(battle.resolve_amount(a[1] if a.size() > 1 else 1, source))))
 				for victim in targets:
 					battle._add_status(victim, "resistente", maxi(1, rx), rx, int(source["id"]))
+			"forte", "fortalecido":
+				var fo: int = maxi(1, int(round(battle.resolve_amount(a[1] if a.size() > 1 else 1, source))))
+				for victim in targets:
+					battle._add_status(victim, "strengthened", maxi(1, fo), fo, int(source["id"]))
+			"rapido", "rápido":
+				var ra: int = maxi(1, int(round(battle.resolve_amount(a[1] if a.size() > 1 else 1, source))))
+				for victim in targets:
+					battle._add_status(victim, "fast", maxi(1, ra), ra, int(source["id"]))
+			"heal_pct":
+				# Cura = fração da Vida máxima (aceita fórmula, ex.: 0.1*E).
+				var frac_h: float = float(battle.resolve_amount(a[1] if a.size() > 1 else 0, source))
+				var any_hpct := false
+				for victim in targets:
+					var before_hpct := int(victim["hp"])
+					var heal_pct_amt: int = maxi(0, roundi(float(victim.get("max_hp", 1)) * frac_h))
+					victim["hp"] = mini(int(victim["max_hp"]), int(victim["hp"]) + heal_pct_amt)
+					if int(victim["hp"]) > before_hpct:
+						any_hpct = true
+						if battle.has_signal("visual"):
+							battle.visual.emit("heal", int(source["id"]), int(victim["id"]), int(victim["hp"]) - before_hpct)
+				if any_hpct and battle.has_method("try_posture_trigger"):
+					battle.try_posture_trigger(source, "curador")
+			"summon_foe", "reinforce_enemy":
+				# Invoca N lacaios no time inimigo (Desvantagem: reforços).
+				var foe_id := str(a[1] if a.size() > 1 else "ent_minion_zumbi")
+				var foe_n: int = maxi(1, int(round(battle.resolve_amount(a[2] if a.size() > 2 else 1, source))))
+				var foe_side := "ENEMY" if str(source.get("side", "ALLY")) == "ALLY" else "ALLY"
+				for _fi in range(foe_n):
+					_summon_on_side(battle, source, foe_id, 99, foe_side)
 			"fragil":
 				var fx: int = maxi(1, int(round(battle.resolve_amount(a[1] if a.size() > 1 else 1, source))))
 				for victim in targets:
@@ -1110,7 +1143,7 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 				pass  # Avaliado em on_redraw.
 			"requires_self_status", "requires_status":
 				pass  # Pré-checagem em play().
-			"quick", "free", "exhaust", "final", "chain", "chain_hand_owner", "random_chain", "full_combo", "bonus_status", "bonus_damaged", "bonus_block", "bonus_targeting_self", "bonus_full_hp", "bonus_en_fuego", "force_if_damaged", "hand_block", "hand_cost_down", "hand_damage_growth", "hand_resist", "overheal_max", "cost_down_en_fuego", "area_en_fuego", "enhanced", "redraw_force", "redraw_bonus", "redraw_strengthened", "play_while_disabled", "penetrating", "lethargic", "recoil", "drain", "instant", "ephemeral", "warmup", "barrier_from_hit", "counter_effects", "requires_alone", "requires_own_minion_front", "hit_flat", "hit_enemy_front", "heal_own_minions", "sacrifice_minion", "self_damage_hp": pass # Evaluated in preplay, hooks, or _bonus.
+			"quick", "free", "exhaust", "final", "chain", "grow_chain", "chain_hand_owner", "random_chain", "full_combo", "bonus_status", "bonus_damaged", "bonus_block", "bonus_targeting_self", "bonus_full_hp", "bonus_en_fuego", "force_if_damaged", "hand_block", "hand_cost_down", "hand_damage_growth", "hand_resist", "overheal_max", "cost_down_en_fuego", "area_en_fuego", "enhanced", "redraw_force", "redraw_bonus", "redraw_strengthened", "play_while_disabled", "penetrating", "lethargic", "recoil", "drain", "instant", "ephemeral", "warmup", "barrier_from_hit", "counter_effects", "requires_alone", "requires_own_minion_front", "hit_flat", "hit_enemy_front", "heal_own_minions", "sacrifice_minion", "self_damage_hp": pass # Evaluated in preplay, hooks, or _bonus.
 			_:
 				push_error("Unsupported external card action: " + op)
 	# Rápida: não gasta jogada (já tratado); ["quick", N] concede N jogadas extras.
@@ -1379,6 +1412,9 @@ func _draw_filtered(battle: Variant, source: Dictionary, mode: String, amount: i
 		hand.append(deck.pop_at(found))
 
 func _summon(battle: Variant, source: Dictionary, type: String, duration: int) -> void:
+	_summon_on_side(battle, source, type, duration, str(source.get("side", "ALLY")))
+
+func _summon_on_side(battle: Variant, source: Dictionary, type: String, duration: int, side: String) -> void:
 	# Invocação = personagem normal (minion): 1 HP típico, frente, deck próprio mesclado.
 	var template_id := str(type)
 	var template: Dictionary = {}
@@ -1405,7 +1441,7 @@ func _summon(battle: Variant, source: Dictionary, type: String, duration: int) -
 	if not str(template_id).begins_with("ent_minion_") and int(template.get("hp", 1)) > 3:
 		template["hp"] = 1
 	template["statuses"] = {}
-	var ally: Dictionary = battle._create_actor(template, str(source.get("side", "ALLY")), template_id if template_id != "" else "summon")
+	var ally: Dictionary = battle._create_actor(template, str(side), template_id if template_id != "" else "summon")
 	ally["summon_until"] = int(battle.turn) + maxi(1, duration)
 	ally["summoner_id"] = int(source.get("id", -1))
 	ally["is_summon"] = true
@@ -1427,11 +1463,11 @@ func _summon(battle: Variant, source: Dictionary, type: String, duration: int) -
 				"tier": "inicial",
 			}
 		card_ids = [free_id]
-	var side := str(ally.get("side", "ALLY"))
-	var pile = battle.deck if side == "ALLY" else battle.enemy_deck
+	var pile = battle.deck if str(side) == "ALLY" else battle.enemy_deck
 	for cid in card_ids:
 		var card: Dictionary = battle._create_card(str(cid), int(ally["id"]))
 		pile.append(card)
 	battle._shuffle(pile)
-	battle._log("%s convocou %s (cartas mescladas no baralho)." % [source.get("name", "?"), ally.get("name", "?")])
+	var side_label := "inimigo" if str(side) != str(source.get("side", "")) else "aliado"
+	battle._log("%s convocou %s (%s; cartas mescladas no baralho)." % [source.get("name", "?"), ally.get("name", "?"), side_label])
 	battle.changed.emit()
