@@ -22,12 +22,40 @@ var right_portrait_id := ""
 var reward_offers: Array = []
 var campaign_view: CampaignView
 var original_music: AudioStream
+var _boot_open_campaign := true
 
 func _ready() -> void:
 	_read_story()
 	_load_campaign()
 	super._ready()
-	original_music = sound.music.stream
+	if original_music == null and sound != null:
+		original_music = sound.music.stream
+
+func _show_menu() -> void:
+	# Após change_scene a partir do título do GameRoot, não remontar o menu 3D —
+	# isso fazia Campanha "voltar ao título". Entra direto na VN uma vez.
+	if _boot_open_campaign and not campaign_story.is_empty():
+		_boot_open_campaign = false
+		battle_menu_open = false
+		if battle != null:
+			battle = null
+		if presentation != null:
+			presentation.drive_camera = false
+			presentation.clear_actors()
+		if sound != null and original_music == null:
+			original_music = sound.music.stream
+		_teardown_title_screen()
+		_open_campaign()
+		return
+	_boot_open_campaign = false
+	super._show_menu()
+
+func _launch_campaign_module() -> void:
+	# Já estamos no CampaignRoot: abre a narrativa no lugar (sem recarregar a cena).
+	if sound != null and original_music == null:
+		original_music = sound.music.stream
+	_teardown_title_screen()
+	_open_campaign()
 
 func _read_story() -> void:
 	var file := FileAccess.open(StoryPath, FileAccess.READ)
@@ -110,6 +138,7 @@ func _enter_scene() -> void:
 	campaign_active = true
 	campaign_phase = "story"
 	right_portrait_id = ""
+	_teardown_title_screen()
 	_clear_ui()
 	_clear_combat_visuals()
 	_build_arena(str(data.get("arena", "campaign_road")))
@@ -200,6 +229,7 @@ func _team_is_valid(ids: Array[String]) -> bool:
 func _prepare_team() -> void:
 	campaign_active = true
 	campaign_phase = "team"
+	_teardown_title_screen()
 	_clear_ui()
 	_clear_combat_visuals()
 	var chapter := clampi(battle_index, 0, Battles.size() - 1)
