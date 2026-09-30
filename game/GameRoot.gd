@@ -4696,7 +4696,7 @@ func _process(delta: float) -> void:
 		var aid := int(spr.get_meta("actor_id", -1))
 		var dead := false
 		if battle != null and aid >= 0:
-			var body_actor := battle.actor_by_id(aid)
+			var body_actor: Dictionary = battle.actor_by_id(aid)
 			dead = (not body_actor.is_empty()) and int(body_actor.get("hp", 0)) <= 0
 		if dead:
 			# Cadáver: sem respiração; sprite em escala de cinza.
