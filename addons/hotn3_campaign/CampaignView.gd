@@ -43,6 +43,7 @@ func _ready() -> void:
 	canvas.add_child(wash)
 	wash.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	heading = _label("", 25, Color("e4c896"))
+	heading.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	heading.anchor_left = 0.025
 	heading.anchor_right = 0.975
 	heading.anchor_top = 0.025
@@ -53,6 +54,7 @@ func _ready() -> void:
 	right_frame = _portrait_frame(0.62, 0.96)
 	right_portrait = right_frame.get_child(0) as TextureRect
 	namebox = _label("", 23, Color("f7d9a1"))
+	namebox.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	namebox.anchor_left = 0.055
 	namebox.anchor_right = 0.44
 	namebox.anchor_top = 0.765
@@ -65,7 +67,7 @@ func _ready() -> void:
 	text_panel.anchor_top = 0.815
 	text_panel.anchor_bottom = 0.97
 	canvas.add_child(text_panel)
-	text_panel.gui_input.connect(_on_text_input)
+	text_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var padding := MarginContainer.new()
 	padding.add_theme_constant_override("margin_left", 24)
 	padding.add_theme_constant_override("margin_right", 24)
@@ -83,7 +85,9 @@ func _ready() -> void:
 	hint.anchor_right = 0.975
 	hint.anchor_top = 0.97
 	hint.anchor_bottom = 1.0
+	hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	canvas.add_child(hint)
+	canvas.gui_input.connect(_on_canvas_input)
 	action_area = PanelContainer.new()
 	action_area.anchor_left = 0.26
 	action_area.anchor_right = 0.74
@@ -134,6 +138,7 @@ func _portrait_frame(start: float, stop: float) -> PanelContainer:
 	panel.anchor_right = stop
 	panel.anchor_top = 0.12
 	panel.anchor_bottom = 0.76
+	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	panel.add_theme_stylebox_override("panel", _style(Color(0.08, 0.09, 0.14, 0.48), Color(0.4, 0.4, 0.5, 0.35)))
 	canvas.add_child(panel)
 	var picture := TextureRect.new()
@@ -312,30 +317,42 @@ func _on_screen_resized() -> void:
 	weather.position = Vector2(area.x * 0.5, -18 if _weather_kind == "rain" else area.y * 0.25)
 	weather.emission_rect_extents = Vector2(area.x * 0.5, 30 if _weather_kind == "rain" else area.y * 0.30)
 
-func _on_text_input(event: InputEvent) -> void:
-	if mode == "line" and event is InputEventMouseButton and event.pressed:
+func _on_canvas_input(event: InputEvent) -> void:
+	if mode != "line":
+		return
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		advance()
 		var _vp := get_viewport()
 		if _vp != null:
 			_vp.set_input_as_handled()
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not visible or mode != "line": return
+	if not visible or mode != "line":
+		return
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode in [KEY_SPACE, KEY_ENTER, KEY_KP_ENTER]:
 		advance()
 		var _vp := get_viewport()
 		if _vp != null:
 			_vp.set_input_as_handled()
 
+func _line_revealed() -> bool:
+	# RichTextLabel uses -1 to mean "show all"; that must count as finished
+	# or the first skip-click traps advance forever (visible_characters < length).
+	if body.visible_characters < 0:
+		return true
+	return body.visible_characters >= _full_text.length()
+
 func advance() -> void:
-	if mode != "line": return
-	if body.visible_characters < _full_text.length():
+	if mode != "line":
+		return
+	if not _line_revealed():
 		body.visible_characters = -1
 	else:
 		next_line.emit()
 
 func _process(delta: float) -> void:
-	if not visible or mode != "line" or body.visible_characters < 0: return
+	if not visible or mode != "line" or body.visible_characters < 0:
+		return
 	_typing += delta * 44.0
 	if _typing >= 1.0:
 		body.visible_characters = mini(_full_text.length(), body.visible_characters + int(_typing))
