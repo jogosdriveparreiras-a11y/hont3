@@ -724,9 +724,12 @@ func _handle_title_menu_input(input: InputEvent) -> bool:
 		session_report.log_ui("title_button", {"label": label})
 	if sound != null:
 		sound.cue("confirm", "UI")
+	# Marca o input ANTES do callback: Campanha faz change_scene e invalida o viewport.
+	var vp := get_viewport()
+	if vp != null:
+		vp.set_input_as_handled()
 	if cb.is_valid():
 		cb.call()
-	get_viewport().set_input_as_handled()
 	return true
 
 func _tick_title_menu_hover() -> void:

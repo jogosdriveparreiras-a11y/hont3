@@ -315,13 +315,17 @@ func _on_screen_resized() -> void:
 func _on_text_input(event: InputEvent) -> void:
 	if mode == "line" and event is InputEventMouseButton and event.pressed:
 		advance()
-		get_viewport().set_input_as_handled()
+		var _vp := get_viewport()
+		if _vp != null:
+			_vp.set_input_as_handled()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not visible or mode != "line": return
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode in [KEY_SPACE, KEY_ENTER, KEY_KP_ENTER]:
 		advance()
-		get_viewport().set_input_as_handled()
+		var _vp := get_viewport()
+		if _vp != null:
+			_vp.set_input_as_handled()
 
 func advance() -> void:
 	if mode != "line": return
