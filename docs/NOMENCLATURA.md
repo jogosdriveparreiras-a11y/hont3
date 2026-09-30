@@ -46,11 +46,12 @@ Exemplo Alyssa: aprimoramento **Escuridão** (`escuridao`).
 ## Grupos e Combos
 
 - Cada personagem tem `grupos: []` (geralmente 3 nomes).
-- Se **os 3** membros do time compartilham **o mesmo** grupo, o deck recebe **4 Combo Manobras**:
-  - 3 pares (AB, AC, BC) + 1 trio (ABC).
-- Combos são **Efêmeros** (`ephemeral` / `tier: combo`).
-- Só jogáveis se **todos** os personagens daquele Combo estão vivos.
-- Ao jogar um Combo: as Manobras daqueles personagens custam **0 Iniciativa** naquele round.
+- Se **os 3** membros do time compartilham **o mesmo** grupo, o **deck compartilhado do time** recebe **4 Manobras Combo** (não são cartas de kit por herói):
+  - 3 pares nomeados (ex.: `Combo Alyssa e Dominika`) + 1 trio (ex.: `Combo Alyssa, Dominika e Nero`).
+- Propriedades: **Grátis** (sem PA), **custo INI 0**, **Efêmeras** (`ephemeral` / `tier: combo` / `class: COMBO`) — descartadas se não usadas no turno.
+- Só jogáveis se **todos** os personagens nomeados naquela Combo estão vivos.
+- Ao jogar: concede **Impulso 1** a cada envolvido — a **próxima** Manobra daquele herói **neste round** custa **0 INI** (1 carga por herói; consome ao jogar a Manobra).
+- **Não** usar o legado `dueto` / "Pacto de batalha" (injeção por Iniciativa ≥4) como sistema de combo de grupo.
 
 ## Ficha do personagem (UI)
 

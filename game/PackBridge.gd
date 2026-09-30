@@ -141,7 +141,7 @@ func definition(card_id: String) -> Dictionary:
 
 func is_pack_card(card_id: String) -> bool:
 	var id := str(card_id)
-	return id.begins_with("ms_") or id.begins_with("ent_")
+	return id.begins_with("ms_") or id.begins_with("ent_") or id.begins_with("combo_")
 
 func play_card(battle: Variant, mode: String, hand_index: int, target_id: int, chain_ids: Array = []) -> bool:
 	if battle == null:
@@ -151,7 +151,7 @@ func play_card(battle: Variant, mode: String, hand_index: int, target_id: int, c
 	if hand_index < 0 or hand_index >= acting_hand.size():
 		return false
 	var card_id: String = str(acting_hand[hand_index].get("id", ""))
-	if mode == "entities" or card_id.begins_with("ent_"):
+	if mode == "entities" or card_id.begins_with("ent_") or card_id.begins_with("combo_"):
 		return entities.play(battle, hand_index, target_id, chain_ids)
 	if mode == "external" or card_id.begins_with("ms_"):
 		return external.play(battle, hand_index, target_id, chain_ids)

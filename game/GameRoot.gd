@@ -5491,13 +5491,14 @@ func _card_unusable_reason(hand_index: int, target_id: int = -1) -> String:
 		return "Carta inválida."
 	var card: Dictionary = battle.hand[hand_index]
 	var card_id := str(card.get("id", ""))
-	# Só roteia ent_ pelo EntityRuntime (itens/ms_/combo usam Content abaixo).
-	if card_id.begins_with("ent_"):
+	# ent_ e combo_ (Manobras Combo de grupo) passam pelo EntityRuntime.
+	if card_id.begins_with("ent_") or card_id.begins_with("combo_"):
 		var reason: String = packs.entities.play_block_reason(battle, hand_index, target_id, chain_targets)
 		if reason != "":
 			return reason
 	var source: Dictionary = battle.actor_by_id(int(card.get("owner", 0)))
 	var definition: Dictionary = _card_def(card_id)
+	var is_combo := str(definition.get("tier", card.get("tier", ""))) == "combo" or str(definition.get("class", "")) == "COMBO" or card_id.begins_with("combo_")
 	if source.is_empty() or int(source.get("hp", 0)) <= 0:
 		return "O herói desta carta está fora de combate."
 	if battle.phase != "PLAYER":
@@ -5505,18 +5506,31 @@ func _card_unusable_reason(hand_index: int, target_id: int = -1) -> String:
 	for locked in ["stun", "bind", "bound", "banished", "finalized"]:
 		if battle._has_status(source, locked):
 			return "Você não pode usar Manobras enquanto estiver incapacitado."
+	var combo_members: Array = definition.get("combo_members", card.get("combo_members", []))
+	if is_combo or not combo_members.is_empty():
+		for mid in combo_members:
+			var alive := false
+			for ally in battle.living("ALLY"):
+				if str(ally.get("archetype", "")) == str(mid):
+					alive = true
+					break
+			if not alive:
+				return "Combo exige que todos os membros estejam vivos."
 	# Instantâneo jogável: alinha com BattleState (só bloqueia outras cartas).
 	if battle.has_method("must_play_instantaneo_first") and battle.must_play_instantaneo_first(card, definition, "ALLY"):
 		return "Há Instantâneo jogável — jogue um Instantâneo antes de outras cartas."
 	# Slow/Fast só modificam custo base > 0 (custo 0 / Instantâneo free permanece 0).
 	var cost := int(card.get("cost_override", definition.get("cost", 0)))
+	if (not is_combo) and str(definition.get("class", "")) != "DESVANTAGEM":
+		if int(battle.combo_zero_owners.get(int(source.get("id", -1)), 0)) > 0:
+			cost = 0
 	if cost > 0:
 		if battle._has_status(source, "fast"): cost -= 1
 		if battle._has_status(source, "slow"): cost += 1
 	cost = maxi(0, cost)
 	if int(battle.impulse) < cost:
 		return "Você precisa de %d Iniciativa para usar esta Manobra." % cost
-	var plays := 0 if bool(definition.get("free", false)) else int(definition.get("plays", 1))
+	var plays := 0 if bool(definition.get("free", false)) or is_combo else int(definition.get("plays", 1))
 	if int(battle.card_plays) < plays:
 		return "Você não tem jogadas de carta restantes neste turno."
 	if not bool(definition.get("reach", false)) and str(source.get("row", "")) == "back":

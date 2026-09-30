@@ -778,37 +778,142 @@ let pendingHeroArt = {}; // field -> {blob, url, name}
 let heroArtField = "portrait";
 let deckPreviewMode = "full";
 
-// Combos de equipe do Content.gd (runtime: BattleState._check_combo).
-// Não vivem em entities.json — só no editor, para alinhar com o que aparece em batalha.
-const PARTY_COMBOS = {
-  "dueto": {
-    "id": "dueto",
-    "name": "Pacto de batalha",
-    "class": "COMBO",
-    "tier": "combo",
-    "party_combo": true,
-    "owner": "_party",
-    "target": "ENEMY",
-    "reach": true,
-    "cost": 4,
-    "exhaust": true,
-    "text": "Combo de equipe (runtime). Entra na mão 1× por lado quando ≥2 aliados vivos e Iniciativa ≥4. Dano Poder 40 + comprar 1. Exhaust.",
-    "effects": [
-      {"kind": "DAMAGE", "amount": 40, "stat": "power"},
-      {"kind": "DRAW", "amount": 1}
-    ],
-    "anim_self": ["Special2"],
-    "anim_target": ["CrossHit"],
-    "_editor_only": true,
-    "_source": "Content.gd / BattleState._check_combo"
+// Manobras Combo de grupo (runtime: EntityRuntime.append_combo_cards).
+// Se os 3 heróis compartilham o mesmo `grupos`, o deck compartilhado recebe 4 cartas:
+// 3 duos + 1 trio — Grátis, INI 0, Efêmeras, Impulso 1. Não são kit por herói.
+let PARTY_COMBOS = {};
+
+function comboDisplayName(names) {
+  const n = (names || []).filter(Boolean);
+  if (n.length === 2) return `Combo ${n[0]} e ${n[1]}`;
+  if (n.length >= 3) return `Combo ${n[0]}, ${n[1]} e ${n[2]}`;
+  return n.length ? `Combo ${n[0]}` : "Combo";
+}
+
+function sharedGroupOf(ids) {
+  if (!ids || ids.length !== 3) return "";
+  const sets = ids.map(id => {
+    const h = (catalog.heroes || {})[id] || {};
+    const g = h.grupos || [];
+    return new Set(g.map(String));
+  });
+  for (const name of sets[0]) {
+    if (sets[1].has(name) && sets[2].has(name)) return String(name);
   }
-};
+  return "";
+}
+
+function buildComboCard(group, memberIds) {
+  const heroes = catalog.heroes || {};
+  const names = memberIds.map(id => (heroes[id] && heroes[id].name) || id);
+  const idBits = memberIds.join("_");
+  const comboId = `combo_${String(group).toLowerCase().replace(/\s+/g, "_")}_${idBits}`;
+  return {
+    id: comboId,
+    name: comboDisplayName(names),
+    class: "COMBO",
+    tier: "combo",
+    party_combo: true,
+    owner: "_party",
+    target: "SELF",
+    free: true,
+    cost: 0,
+    gain: 0,
+    plays: 0,
+    ephemeral: true,
+    combo_members: memberIds.slice(),
+    combo_group: group,
+    actions: [],
+    effects: [],
+    text: "Grátis. Efêmera (descarta se não usada). Só jogável se todos os nomes estiverem vivos. Impulso 1: a próxima Manobra de cada envolvido neste round custa 0 INI.",
+    _editor_only: true,
+    _source: "EntityRuntime.append_combo_cards",
+  };
+}
+
+function partyCombosForTrio(ids) {
+  const group = sharedGroupOf(ids);
+  if (!group) return {};
+  const sets = [
+    [ids[0], ids[1]],
+    [ids[0], ids[2]],
+    [ids[1], ids[2]],
+    [ids[0], ids[1], ids[2]],
+  ];
+  const out = {};
+  sets.forEach(members => {
+    const c = buildComboCard(group, members);
+    out[c.id] = c;
+  });
+  return out;
+}
+
+function sampleTrioIncluding(heroId) {
+  const heroes = catalog.heroes || {};
+  const ids = Object.keys(heroes).filter(id => {
+    const h = heroes[id] || {};
+    return h.playable !== false && !h.minion && !h.boss;
+  });
+  if (!heroId || !heroes[heroId]) return null;
+  const others = ids.filter(id => id !== heroId);
+  for (let i = 0; i < others.length; i++) {
+    for (let j = i + 1; j < others.length; j++) {
+      const trio = [heroId, others[i], others[j]];
+      if (sharedGroupOf(trio)) return trio;
+    }
+  }
+  return null;
+}
+
+function rebuildPartyCombos(focusHeroId) {
+  const next = {};
+  const heroes = catalog.heroes || {};
+  const ids = Object.keys(heroes).filter(id => {
+    const h = heroes[id] || {};
+    return h.playable !== false && !h.minion && !h.boss;
+  });
+  // Para cada herói, gera 1 conjunto demo (4 cartas) se houver trio com grupo compartilhado.
+  const seen = new Set();
+  const focusFirst = focusHeroId ? [focusHeroId, ...ids.filter(x => x !== focusHeroId)] : ids;
+  focusFirst.forEach(hid => {
+    const trio = sampleTrioIncluding(hid);
+    if (!trio) return;
+    const key = trio.slice().sort().join("|") + "|" + sharedGroupOf(trio);
+    if (seen.has(key)) return;
+    seen.add(key);
+    Object.assign(next, partyCombosForTrio(trio));
+  });
+  // Limite de ruído no editor: se focusHero, só o trio dele; senão até ~12 conjuntos.
+  if (focusHeroId) {
+    const trio = sampleTrioIncluding(focusHeroId);
+    PARTY_COMBOS = trio ? partyCombosForTrio(trio) : {};
+  } else {
+    const keys = Object.keys(next);
+    if (keys.length > 48) {
+      const trimmed = {};
+      keys.slice(0, 48).forEach(k => { trimmed[k] = next[k]; });
+      PARTY_COMBOS = trimmed;
+    } else {
+      PARTY_COMBOS = next;
+    }
+  }
+  return PARTY_COMBOS;
+}
 
 function mergePartyCombosIntoCatalog() {
   if (!catalog.cards) catalog.cards = {};
+  // Remove stubs editor-only antigos (ex.: dueto/Pacto).
+  Object.keys(catalog.cards).forEach(id => {
+    const c = catalog.cards[id];
+    if (c && c._editor_only && (c.party_combo || c.owner === "_party" || c.legacy_combo)) {
+      delete catalog.cards[id];
+    }
+  });
+  const fo = document.getElementById("filterOwner");
+  const focus = fo && fo.value && fo.value !== "_party" ? fo.value : "";
+  rebuildPartyCombos(focus || "");
   Object.keys(PARTY_COMBOS).forEach(id => {
     const existing = catalog.cards[id];
-    // Não sobrescrever carta real do catálogo de entities.
     if (existing && !existing._editor_only) return;
     catalog.cards[id] = Object.assign({}, PARTY_COMBOS[id]);
   });
@@ -1391,6 +1496,8 @@ function cardTier(c) {
 }
 function renderList() {
   const fo = document.getElementById("filterOwner").value;
+  // Atualiza stubs de Combos duo/trio conforme filtro (herói ou equipe).
+  mergePartyCombosIntoCatalog();
   const q = document.getElementById("filterText").value.trim().toLowerCase();
   const list = document.getElementById("cardList");
   list.innerHTML = "";
@@ -1666,11 +1773,18 @@ function renderHeroDeckPreview(hero) {
     btn.classList.toggle("active", btn.dataset.deckMode === deckPreviewMode);
   });
   const ids = heroDeckCardIds(hero, deckPreviewMode);
+  // Combos do grupo compartilhado (demo com este herói + 2 aliados do mesmo grupo).
+  rebuildPartyCombos(hero.id);
+  Object.keys(PARTY_COMBOS).forEach(id => {
+    if (!catalog.cards[id] || catalog.cards[id]._editor_only) {
+      catalog.cards[id] = Object.assign({}, PARTY_COMBOS[id]);
+    }
+  });
   const partyComboIds = Object.keys(PARTY_COMBOS || {});
   const score = ids.reduce((total, id) => total + scoreCard(catalog.cards[id] || {}), 0);
   const comboNote = partyComboIds.length
-    ? ` · Combo de equipe em batalha: ${partyComboIds.map(id => (PARTY_COMBOS[id] || {}).name || id).join(", ")} (não no deck fixo)`
-    : "";
+    ? ` · Manobras Combo (grupo compartilhado): ${partyComboIds.map(id => (PARTY_COMBOS[id] || {}).name || id).join(", ")} — entram no deck do time, não no kit individual`
+    : " · Sem grupo compartilhado com 2 outros heróis — sem Manobras Combo";
   summary.textContent = `${labels[deckPreviewMode]} · ${ids.length} cartas · ${Math.round(score * 10) / 10} pts${comboNote}. Clique em uma carta para abri-la no editor.`;
   grid.innerHTML = "";
   if (!ids.length && !partyComboIds.length) {
@@ -1720,7 +1834,7 @@ function renderHeroDeckPreview(hero) {
     sep.className = "muted";
     sep.style.gridColumn = "1 / -1";
     sep.style.marginTop = "8px";
-    sep.textContent = "Combos de equipe (runtime — entram na mão em batalha, não no baralho do herói):";
+    sep.textContent = "Manobras Combo de grupo (deck compartilhado se os 3 tiverem o mesmo grupo — 3 duos + 1 trio):";
     grid.appendChild(sep);
     partyComboIds.forEach(id => {
       const card = catalog.cards[id] || PARTY_COMBOS[id];

@@ -273,8 +273,40 @@ func build_combat_deck_ids(entity_ids: Array[String], owned: Dictionary = {}) ->
 		per[id] = apply_melhorada_replace(entries)
 	return per
 
+func combo_display_name(name_bits: PackedStringArray) -> String:
+	# "Combo Alyssa e Dominika" / "Combo Alyssa, Dominika e Nero"
+	if name_bits.size() == 2:
+		return "Combo %s e %s" % [name_bits[0], name_bits[1]]
+	if name_bits.size() >= 3:
+		return "Combo %s, %s e %s" % [name_bits[0], name_bits[1], name_bits[2]]
+	if name_bits.is_empty():
+		return "Combo"
+	return "Combo %s" % name_bits[0]
+
+func _runtime_card_def(card: Dictionary) -> Dictionary:
+	# Combos de grupo vivem em Content.CARDS (injetados no deploy), não no catálogo ent_.
+	var cid := str(card.get("id", ""))
+	var def: Dictionary = catalog.definition(cid)
+	if def.is_empty() and Content.CARDS.has(cid):
+		def = Content.CARDS[cid]
+	if def.is_empty():
+		return {}
+	var out: Dictionary = def.duplicate(true)
+	if not out.has("actions"):
+		out["actions"] = []
+	if card.has("combo_members") and not out.has("combo_members"):
+		out["combo_members"] = card["combo_members"]
+	if str(out.get("tier", "")) == "combo" or out.has("combo_members"):
+		out["tier"] = "combo"
+		out["class"] = "COMBO"
+		out["ephemeral"] = true
+		out["free"] = true
+		out["cost"] = 0
+	return out
+
 func append_combo_cards(battle: Variant, entity_ids: Array[String], owner_map: Dictionary) -> int:
-	# Se os 3 compartilham um grupo, adiciona 4 Combos Efêmeros (3 pares + 1 trio).
+	# Se os 3 compartilham um grupo, adiciona 4 Combos Efêmeros no deck compartilhado (3 pares + 1 trio).
+	# NÃO são cartas de kit por herói — nomes de duo/trio, grátis, INI 0, Impulso 1 ao jogar.
 	var group := shared_group(entity_ids)
 	if group == "": return 0
 	var pairs: Array = [
@@ -292,23 +324,25 @@ func append_combo_cards(battle: Variant, entity_ids: Array[String], owner_map: D
 			id_bits.append(str(mid))
 			name_bits.append(str(catalog.hero(str(mid)).get("name", mid)))
 		var combo_id := "combo_%s_%s" % [group.to_lower().replace(" ", "_"), "_".join(id_bits)]
-		# Runtime-only definition injected into Content if missing
-		if not Content.CARDS.has(combo_id):
-			var label := "Combo %s (%s)" % [group, " + ".join(name_bits)]
-			Content.CARDS[combo_id] = {
-				"name": label,
-				"class": "ESTADO",
-				"tier": "combo",
-				"ephemeral": true,
-				"target": "SELF",
-				"cost": 0,
-				"gain": 0,
-				"combo_members": member_ids.duplicate(),
-				"combo_group": group,
-				"effects": [],
-				"text": "Efêmero. Requer todos vivos. Manobras dos membros custam 0 Iniciativa neste round.",
-			}
-		# Owner = first living member
+		var label := combo_display_name(name_bits)
+		# Sempre (re)registra a definição — design travado.
+		Content.CARDS[combo_id] = {
+			"name": label,
+			"class": "COMBO",
+			"tier": "combo",
+			"ephemeral": true,
+			"free": true,
+			"target": "SELF",
+			"cost": 0,
+			"gain": 0,
+			"plays": 0,
+			"party_combo": true,
+			"combo_members": member_ids.duplicate(),
+			"combo_group": group,
+			"actions": [],
+			"effects": [],
+			"text": "Grátis. Efêmera (descarta se não usada). Só jogável se todos os nomes estiverem vivos. Impulso 1: a próxima Manobra de cada envolvido neste round custa 0 INI.",
+		}
 		var owner_actor: int = int(owner_map.get(member_ids[0], -1))
 		if owner_actor < 0: continue
 		battle.next_card_id += 1
@@ -316,18 +350,19 @@ func append_combo_cards(battle: Variant, entity_ids: Array[String], owner_map: D
 			"uid": battle.next_card_id,
 			"id": combo_id,
 			"owner": owner_actor,
-			"class": "ESTADO",
+			"class": "COMBO",
 			"tier": "combo",
 			"ephemeral": true,
+			"free": true,
 			"combo_members": member_ids.duplicate(),
 			"upgrade": 0,
 			"external_pack": true,
+			"party_combo": true,
 		})
 		added += 1
 	if added > 0:
-		battle._log("Grupo compartilhado '%s': +%d Combo Manobras." % [group, added])
+		battle._log("Grupo compartilhado '%s': +%d Manobras Combo no deck." % [group, added])
 	return added
-
 func end_player_turn(battle: Variant) -> void:
 	var prior: Dictionary = {}
 	for card in battle.hand: prior[int(card["uid"])] = true
@@ -422,7 +457,7 @@ func play_block_reason(battle: Variant, hand_index: int, target_id: int = -1, ch
 		return "Carta inválida."
 	var card: Dictionary = battle.hand[hand_index]
 	var cid := str(card.get("id", ""))
-	var def: Dictionary = catalog.definition(cid)
+	var def: Dictionary = _runtime_card_def(card)
 	if def.is_empty():
 		# Itens / ms_ / combo runtime não vivem no catálogo ent_.
 		if cid.begins_with("ent_"):
@@ -446,8 +481,8 @@ func play_block_reason(battle: Variant, hand_index: int, target_id: int = -1, ch
 		if not battle.card_warmup_ready(card, def):
 			return "Esta Manobra ainda está em aquecimento."
 	var cost: int = int(card.get("cost_override", def.get("cost", 0)))
-	if str(def.get("tier", card.get("tier", ""))) != "combo":
-		if battle.get("combo_zero_owners") and battle.combo_zero_owners.get(int(source.get("id", -1)), false):
+	if str(def.get("tier", card.get("tier", ""))) != "combo" and str(def.get("class", card.get("class", ""))) != "DESVANTAGEM":
+		if battle.get("combo_zero_owners") and int(battle.combo_zero_owners.get(int(source.get("id", -1)), 0)) > 0:
 			cost = 0
 	if cost > 0:
 		if battle._has_status(source, "fast"): cost -= 1
@@ -515,7 +550,7 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 	var card: Dictionary = acting_hand[hand_index]
 	var prior_hand: Dictionary = {}
 	for held in acting_hand: prior_hand[int(held["uid"])] = true
-	var def: Dictionary = catalog.definition(str(card.get("id", "")))
+	var def: Dictionary = _runtime_card_def(card)
 	if def.is_empty(): return battle.play(hand_index, target_id, chain_ids)
 	var source: Dictionary = battle.actor_by_id(int(card["owner"]))
 	var target: Dictionary = battle.actor_by_id(target_id)
@@ -546,9 +581,11 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 		if not battle.card_warmup_ready(card, def): return false
 	var cost: int = int(card.get("cost_override", def.get("cost", 0)))
 	# Custo gasta Iniciativa (recurso compartilhado do turno) — não existe pool de "Poder".
+	var used_impulso := false
 	if str(def.get("tier", card.get("tier", ""))) != "combo" and str(card.get("class", "")) != "DESVANTAGEM":
-		if battle.get("combo_zero_owners") and battle.combo_zero_owners.get(int(source.get("id", -1)), false):
+		if battle.get("combo_zero_owners") and int(battle.combo_zero_owners.get(int(source.get("id", -1)), 0)) > 0:
 			cost = 0
+			used_impulso = true
 	if cost > 0:
 		if battle._has_status(source, "fast"): cost -= 1
 		if battle._has_status(source, "slow"): cost += 1
@@ -567,7 +604,8 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 	var owner_free: bool = def.get("owner") == "spider_man" and _counter(source, "free_owner") > 0
 	var is_instant: bool = bool(def.get("instant", false)) or _has_action(def, "instant")
 	if is_instant: card["instant"] = true
-	var plays: int = 0 if bool(def.get("free", false)) or _has_action(def, "free") or owner_free else 1
+	var is_party_combo: bool = str(def.get("tier", card.get("tier", ""))) == "combo" or not combo_members.is_empty()
+	var plays: int = 0 if bool(def.get("free", false)) or _has_action(def, "free") or owner_free or is_party_combo else 1
 	if bool(def.get("quick", false)) or _has_action(def, "quick"):
 		plays = 0
 	if _get_ini(battle) < cost or _get_plays(battle) < plays: return false
@@ -623,7 +661,7 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 	battle._log("%s usou %s." % [source.get("name", "?"), def.get("name", card.get("id", "?"))])
 	if battle.has_signal("visual"):
 		battle.visual.emit("cast", int(source["id"]), int(target["id"]), 0)
-	# Combo jogado → Manobras dos membros a 0 INI neste round
+	# Combo jogado → Impulso 1 nos membros (próxima Manobra de cada um custa 0 INI neste round)
 	if str(def.get("tier", card.get("tier", ""))) == "combo" or not combo_members.is_empty():
 		var actor_ids: Array = []
 		for mid in combo_members:
@@ -631,10 +669,18 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 				if str(ally.get("archetype", "")) == str(mid):
 					actor_ids.append(int(ally["id"]))
 		if battle.has_method("apply_combo_zero_cost"):
-			battle.apply_combo_zero_cost(actor_ids)
+			battle.apply_combo_zero_cost(actor_ids, 1)
 		else:
 			for aid in actor_ids:
-				battle.combo_zero_owners[int(aid)] = true
+				var sid := int(aid)
+				battle.combo_zero_owners[sid] = int(battle.combo_zero_owners.get(sid, 0)) + 1
+	elif used_impulso:
+		var sid2 := int(source.get("id", -1))
+		var left: int = int(battle.combo_zero_owners.get(sid2, 0)) - 1
+		if left <= 0:
+			battle.combo_zero_owners.erase(sid2)
+		else:
+			battle.combo_zero_owners[sid2] = left
 	# Ferido: dano ao jogar carta (igual BattleState.play).
 	if battle._has_status(source, "wounded"):
 		battle._take_damage(source, source, 3 * battle._status_stacks(source, "wounded"), true, false)

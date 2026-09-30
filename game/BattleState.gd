@@ -29,7 +29,7 @@ var protect_hp := 0
 var items: Dictionary = {"potion": 1, "bomb": 1, "antidote": 1}
 var environmental_used: Dictionary = {}
 var combo_used := false
-var combo_zero_owners: Dictionary = {}  # actor_id -> true (Manobras custam 0 INI neste round)
+var combo_zero_owners: Dictionary = {}  # actor_id -> cargas Impulso (próx. Manobra custa 0 INI neste round)
 var team_ko_charges := 0
 var improvements: Dictionary = {}
 var next_actor_id := 0
@@ -274,15 +274,25 @@ func living(side: String) -> Array[Dictionary]:
 	return found
 
 
-func apply_combo_zero_cost(member_actor_ids: Array) -> void:
-	# Combo jogado: Manobras desses atores custam 0 Iniciativa neste round.
+func apply_combo_zero_cost(member_actor_ids: Array, stacks: int = 1) -> void:
+	# Impulso N: cada membro ganha N cargas; a próxima Manobra consome 1 carga (0 INI) neste round.
+	var n := maxi(1, int(stacks))
 	for aid in member_actor_ids:
-		combo_zero_owners[int(aid)] = true
-	_log("Combo: Manobras dos membros custam 0 Iniciativa neste round.")
+		var sid := int(aid)
+		combo_zero_owners[sid] = int(combo_zero_owners.get(sid, 0)) + n
+	_log("Impulso %d: próxima Manobra de cada membro custa 0 Iniciativa neste round." % n)
+
+func consume_combo_zero_cost(actor_id: int) -> void:
+	var sid := int(actor_id)
+	var left: int = int(combo_zero_owners.get(sid, 0)) - 1
+	if left <= 0:
+		combo_zero_owners.erase(sid)
+	else:
+		combo_zero_owners[sid] = left
 
 func manobra_initiative_cost(source: Dictionary, base_cost: int) -> int:
 	var cost := base_cost
-	if combo_zero_owners.get(int(source.get("id", -1)), false):
+	if int(combo_zero_owners.get(int(source.get("id", -1)), 0)) > 0:
 		return 0
 	if _has_status(source, "fast"):
 		cost -= 1
@@ -1609,8 +1619,8 @@ func _revive_unit(source: Dictionary, target: Dictionary, fraction: float) -> vo
 func _cost(source: Dictionary, definition: Dictionary) -> int:
 	# Único recurso de turno compartilhado: Iniciativa (impulse). Sem pool de "Poder".
 	var cost: int = int(definition.get("cost", 0))
-	if combo_zero_owners.get(int(source.get("id", -1)), false):
-		if str(definition.get("tier", "")) != "combo":
+	if int(combo_zero_owners.get(int(source.get("id", -1)), 0)) > 0:
+		if str(definition.get("tier", "")) != "combo" and str(definition.get("class", "")) != "COMBO":
 			return 0
 	if cost > 0:
 		if _has_status(source, "fast"): cost -= 1
@@ -1664,14 +1674,30 @@ func play(hand_index: int, target_id: int, chain_ids: Array = []) -> bool:
 	var definition: Dictionary = Content.CARDS.get(card["id"], {})
 	if source.is_empty() or target.is_empty() or source["hp"] <= 0 or definition.is_empty() or source.get("side", "") != side:
 		return false
+	# Manobra Combo (duo/trio): exige todos os membros nomeados vivos.
+	var combo_members: Array = definition.get("combo_members", card.get("combo_members", []))
+	if str(definition.get("tier", card.get("tier", ""))) == "combo" or str(definition.get("class", "")) == "COMBO" or not combo_members.is_empty():
+		for mid in combo_members:
+			var alive := false
+			for ally in living(side):
+				if str(ally.get("archetype", "")) == str(mid) or str(ally.get("id", "")) == str(mid):
+					alive = true
+					break
+			if not alive:
+				return false
+	# Legado dueto (Pacto) — se ainda existir na mão, exige parceiro vivo.
 	if card["id"] == "dueto" and actor_by_id(int(card.get("partner", -1))).get("hp", 0) <= 0:
 		return false
 	if not card_warmup_ready(card, definition):
 		_log("%s ainda em aquecimento." % definition.get("name", card["id"]))
 		return false
+	var is_party_combo: bool = str(definition.get("tier", card.get("tier", ""))) == "combo" or str(definition.get("class", "")) == "COMBO" or not combo_members.is_empty()
+	var had_impulso: bool = int(combo_zero_owners.get(int(source.get("id", -1)), 0)) > 0
 	var cost := _cost(source, definition)
+	# Consome Impulso ao jogar Manobra (não Combo/Desvantagem) enquanto houver carga.
+	var used_impulso: bool = had_impulso and (not is_party_combo) and str(definition.get("class", "")) != "DESVANTAGEM" and cost == 0
 	# Instantâneo NÃO é free por padrão (é restrição negativa); só free se marcado.
-	var plays: int = 0 if bool(definition.get("free", false)) or card_has_flag(definition, "free") else int(definition.get("plays", 1))
+	var plays: int = 0 if bool(definition.get("free", false)) or card_has_flag(definition, "free") or is_party_combo else int(definition.get("plays", 1))
 	if _get_impulse(side) < cost or _get_plays(side) < plays or _has_status(source, "stun") or _has_status(source, "bind") or _has_status(source, "bound") or _has_status(source, "dazed") or _has_status(source, "banished") or _has_status(source, "finalized"):
 		return false
 	if _has_status(source, "silence") and definition.get("class", "") in ["SKILL", "ESTADO", "POSTURA", "POWER"]:
@@ -1688,6 +1714,16 @@ func play(hand_index: int, target_id: int, chain_ids: Array = []) -> bool:
 	_set_impulse(side, clampi(_get_impulse(side) - cost + gained, 0, int(rules["impulse_max"])))
 	_log("%s usou %s." % [source["name"], definition["name"]])
 	visual.emit("cast", int(source["id"]), int(target["id"]), 0)
+	if is_party_combo and not combo_members.is_empty():
+		var actor_ids: Array = []
+		for mid in combo_members:
+			for ally in living(side):
+				if str(ally.get("archetype", "")) == str(mid):
+					actor_ids.append(int(ally["id"]))
+					break
+		apply_combo_zero_cost(actor_ids, 1)
+	elif used_impulso:
+		consume_combo_zero_cost(int(source["id"]))
 	acting_hand.remove_at(hand_index)
 	played_cards += 1
 	if card.get("infected", false): _add_status(source, "bleed", 1, 1, int(source["id"]))
@@ -1759,18 +1795,9 @@ func play(hand_index: int, target_id: int, chain_ids: Array = []) -> bool:
 	return true
 
 func _check_combo() -> void:
-	var side := _acting()
-	var acting_hand := _hand_of(side)
-	var used: bool = enemy_combo_used if side == "ENEMY" else combo_used
-	if used or living(side).size() < 2:
-		return
-	if _get_impulse(side) >= 4 and not acting_hand.any(func(c): return c["id"] == "dueto") and acting_hand.size() < int(rules["hand_max"]):
-		var combo := _create_card("dueto", int(living(side)[0]["id"]))
-		combo["partner"] = int(living(side)[1]["id"])
-		acting_hand.append(combo)
-		if side == "ENEMY": enemy_combo_used = true
-		else: combo_used = true
-		_log("Uma combinação de equipe entrou na mão.")
+	# Legado removido: "Pacto de batalha" (dueto) por Iniciativa ≥4.
+	# Combos de grupo = 4 Manobras Combo no deck compartilhado (EntityRuntime.append_combo_cards).
+	return
 
 func redraw(hand_index: int) -> bool:
 	return _redraw_side("ALLY", hand_index)

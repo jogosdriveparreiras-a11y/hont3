@@ -1,6 +1,13 @@
 # Changelog
 
 
+## 2026-09-30 — Manobras Combo de grupo (duo/trio)
+
+- Design travado: se os 3 heróis compartilham o mesmo `grupos`, o deck compartilhado recebe 4 Manobras Combo (3 pares + 1 trio), nomeadas (`Combo A e B` / `Combo A, B e C`).
+- Grátis, INI 0, Efêmeras; jogáveis só com todos os nomes vivos; efeito = **Impulso 1** (próxima Manobra de cada envolvido no round custa 0 INI).
+- Removida a injeção legada de `dueto` / Pacto de batalha por Iniciativa ≥4 como sistema de combo de grupo.
+- Editor: seção Combos mostra stubs duo/trio (não Pacto / não kit falso por herói).
+
 ## 2026-09-30 — Cast Edited sync
 
 - Atualizados a partir de HotN3 Cast/Edited (arquivo mais recente por nome): Nero (`Nero 2`), Naomi transform (`Naomi 3`), Kabuki, Techna, Pietro/Chaos, Delírio (`Delírio 2`), Dr. Espantalho, Patrulheiro Rosa, Pauline (`Pailine 2`), Pesadelo Vivo, Siren.
