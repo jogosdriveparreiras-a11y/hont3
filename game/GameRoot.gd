@@ -1986,7 +1986,7 @@ func _on_visual(kind: String, source_id: int, target_id: int, amount: int) -> vo
 			_lateral_focus_actor(target_id, cinematic_zoom)
 	elif kind == "climate":
 		var climate_ids := ["none", "rain", "snow", "leaves", "fog", "heat", "night"]
-		var mode := climate_ids[clampi(amount, 0, climate_ids.size() - 1)]
+		var mode: String = climate_ids[clampi(amount, 0, climate_ids.size() - 1)]
 		_set_weather(mode)
 	elif kind in ["cast", "hit", "heal", "death", "status", "block", "guard"]:
 		_show_actor_portrait(source_id, true)
