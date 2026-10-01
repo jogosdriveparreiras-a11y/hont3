@@ -15,7 +15,7 @@
       "type": "TECNICO",
       "row": "back",
       "sprite": "res://assets/cast/ent_adam_sprite.png",
-      "passive": "rastreador",
+      "passive": "",
       "pool": [
         "ent_adam_faca_de_sobrevivencia",
         "ent_adam_cobertura_improvisada",
@@ -70,7 +70,7 @@
       "portrait": "res://assets/cast/ent_adam_portrait.png",
       "signature_icon": "res://assets/cast/ent_adam_icon.png",
       "escudo": 20,
-      "aprimoramento": "rastreador",
+      "aprimoramento": "",
       "grupos": [
         "Preparo",
         "Encantador",
@@ -106,7 +106,7 @@
       "type": "BRUTO",
       "row": "front",
       "sprite": "res://assets/cast/ent_akuji_sprite.png",
-      "passive": "vanguarda",
+      "passive": "",
       "pool": [
         "ent_akuji_brasa_negra",
         "ent_akuji_escamas_da_fornalha",
@@ -169,7 +169,7 @@
       "portrait": "res://assets/cast/ent_akuji_portrait.png",
       "signature_icon": "res://assets/cast/ent_akuji_icon.png",
       "escudo": 20,
-      "aprimoramento": "vanguarda",
+      "aprimoramento": "",
       "grupos": [
         "Canhão",
         "Furtivo",
@@ -205,7 +205,7 @@
       "type": "TECNICO",
       "row": "back",
       "sprite": "res://assets/cast/ent_alexis_sprite.png",
-      "passive": "rastreador",
+      "passive": "",
       "pool": [
         "ent_alexis_alerta_aos_gritos",
         "ent_alexis_objeto_arremessado",
@@ -256,7 +256,7 @@
       "portrait": "res://assets/cast/ent_alexis_portrait.png",
       "signature_icon": "res://assets/cast/ent_alexis_icon.png",
       "escudo": 20,
-      "aprimoramento": "rastreador",
+      "aprimoramento": "",
       "grupos": [
         "Encantador",
         "Preparo",
@@ -292,7 +292,7 @@
       "type": "MENTAL",
       "row": "front",
       "sprite": "res://assets/cast/ent_alistair_sprite.png",
-      "passive": "baluarte",
+      "passive": "",
       "pool": [
         "ent_alistair_punho_de_armadura",
         "ent_alistair_armadura_instantanea",
@@ -355,7 +355,7 @@
       "portrait": "res://assets/cast/ent_alistair_portrait.png",
       "signature_icon": "res://assets/cast/ent_alistair_icon.png",
       "escudo": 29,
-      "aprimoramento": "baluarte",
+      "aprimoramento": "",
       "grupos": [
         "Vanguarda",
         "Retaliador",
@@ -622,7 +622,7 @@
       "type": "TECNICO",
       "row": "back",
       "sprite": "res://assets/cast/ent_ashlee_sprite.png",
-      "passive": "rastreador",
+      "passive": "",
       "pool": [
         "ent_ashlee_disparo_de_contencao",
         "ent_ashlee_scanner_de_soma",
@@ -682,7 +682,7 @@
       "portrait": "res://assets/cast/ent_ashlee_portrait.png",
       "signature_icon": "res://assets/cast/ent_ashlee_icon.png",
       "escudo": 20,
-      "aprimoramento": "rastreador",
+      "aprimoramento": "",
       "grupos": [
         "Preparo",
         "Calculista",
@@ -718,7 +718,7 @@
       "type": "PSICOLOGICO",
       "row": "back",
       "sprite": "res://assets/cast/ent_daeva_sprite.png",
-      "passive": "oportunista",
+      "passive": "",
       "pool": [
         "ent_daeva_tiro_de_airsoft",
         "ent_daeva_plano_de_assalto",
@@ -774,7 +774,7 @@
       "portrait": "res://assets/cast/ent_daeva_portrait.png",
       "signature_icon": "res://assets/cast/ent_daeva_icon.png",
       "escudo": 22,
-      "aprimoramento": "oportunista",
+      "aprimoramento": "",
       "grupos": [
         "Furtivo",
         "Encantador",
@@ -810,7 +810,7 @@
       "type": "PSICOLOGICO",
       "row": "back",
       "sprite": "res://assets/cast/ent_damian_alrosa_sprite.png",
-      "passive": "oportunista",
+      "passive": "",
       "pool": [
         "ent_damian_alrosa_oferta_irrecusavel",
         "ent_damian_alrosa_clausula_oculta",
@@ -865,7 +865,7 @@
       "portrait": "res://assets/cast/ent_damian_alrosa_portrait.png",
       "signature_icon": "res://assets/cast/ent_damian_alrosa_icon.png",
       "escudo": 22,
-      "aprimoramento": "oportunista",
+      "aprimoramento": "",
       "grupos": [
         "Calculista",
         "Encantador",
@@ -997,7 +997,7 @@
       "type": "TECNICO",
       "row": "back",
       "sprite": "res://assets/cast/ent_dylan_sprite.png",
-      "passive": "rastreador",
+      "passive": "",
       "pool": [
         "ent_dylan_avisar_o_perigo",
         "ent_dylan_xicara_improvisada",
@@ -1044,7 +1044,7 @@
       "portrait": "res://assets/cast/ent_dylan_portrait.png",
       "signature_icon": "res://assets/cast/ent_dylan_icon.png",
       "escudo": 20,
-      "aprimoramento": "rastreador",
+      "aprimoramento": "",
       "grupos": [
         "Encantador",
         "Preparo",
@@ -1080,7 +1080,7 @@
       "type": "PROJETIVO",
       "row": "back",
       "sprite": "res://assets/cast/ent_evelyn_graves_sprite.png",
-      "passive": "canalizar",
+      "passive": "",
       "pool": [
         "ent_evelyn_graves_puxao_do_reino_quebrado",
         "ent_evelyn_graves_fio_de_marionete",
@@ -1136,7 +1136,7 @@
       "portrait": "res://assets/cast/ent_evelyn_graves_portrait.png",
       "signature_icon": "res://assets/cast/ent_evelyn_graves_icon.png",
       "escudo": 24,
-      "aprimoramento": "canalizar",
+      "aprimoramento": "",
       "grupos": [
         "Marionetista",
         "Controlador",
@@ -1172,7 +1172,7 @@
       "type": "BRUTO",
       "row": "front",
       "sprite": "res://assets/cast/ent_fate_sprite.png",
-      "passive": "vanguarda",
+      "passive": "",
       "pool": [
         "ent_fate_espada_da_fronteira",
         "ent_fate_guarda_interdimensional",
@@ -1228,7 +1228,7 @@
       "portrait": "res://assets/cast/ent_fate_portrait.png",
       "signature_icon": "res://assets/cast/ent_fate_icon.png",
       "escudo": 20,
-      "aprimoramento": "vanguarda",
+      "aprimoramento": "",
       "grupos": [
         "Velocista",
         "Duelista",
@@ -1264,7 +1264,7 @@
       "type": "PROJETIVO",
       "row": "back",
       "sprite": "res://assets/cast/ent_hynda_valdtagen_sprite.png",
-      "passive": "canalizar",
+      "passive": "",
       "pool": [
         "ent_hynda_valdtagen_glifo_ofensivo",
         "ent_hynda_valdtagen_pocao_restauradora",
@@ -1323,7 +1323,7 @@
       "portrait": "res://assets/cast/ent_hynda_valdtagen_portrait.png",
       "signature_icon": "res://assets/cast/ent_hynda_valdtagen_icon.png",
       "escudo": 27,
-      "aprimoramento": "canalizar",
+      "aprimoramento": "",
       "grupos": [
         "Acrobata",
         "Controlador",
@@ -1359,7 +1359,7 @@
       "type": "PSICOLOGICO",
       "row": "back",
       "sprite": "res://assets/cast/ent_kabuki_sprite.png",
-      "passive": "oportunista",
+      "passive": "",
       "pool": [
         "ent_kabuki_golpe_acrobatico",
         "ent_kabuki_armadura_furtiva",
@@ -1427,7 +1427,7 @@
       "portrait": "res://assets/cast/ent_kabuki_portrait.png",
       "signature_icon": "res://assets/cast/ent_kabuki_icon.png",
       "escudo": 22,
-      "aprimoramento": "oportunista",
+      "aprimoramento": "",
       "grupos": [
         "Acrobata",
         "Furtivo",
@@ -1463,7 +1463,7 @@
       "type": "MENTAL",
       "row": "front",
       "sprite": "res://assets/cast/ent_konrad_sprite.png",
-      "passive": "baluarte",
+      "passive": "",
       "pool": [
         "ent_konrad_incisao_precisa",
         "ent_konrad_pele_de_escudo",
@@ -1514,7 +1514,7 @@
       "portrait": "res://assets/cast/ent_konrad_portrait.png",
       "signature_icon": "res://assets/cast/ent_konrad_icon.png",
       "escudo": 29,
-      "aprimoramento": "baluarte",
+      "aprimoramento": "",
       "grupos": [
         "Furtivo",
         "Carniceiro",
@@ -1550,7 +1550,7 @@
       "type": "PROJETIVO",
       "row": "back",
       "sprite": "res://assets/cast/ent_leona_sprite.png",
-      "passive": "canalizar",
+      "passive": "",
       "pool": [
         "ent_leona_mordida_de_marbas",
         "ent_leona_fome_sem_fim",
@@ -1609,7 +1609,7 @@
       "portrait": "res://assets/cast/ent_leona_portrait.png",
       "signature_icon": "res://assets/cast/ent_leona_icon.png",
       "escudo": 27,
-      "aprimoramento": "canalizar",
+      "aprimoramento": "",
       "grupos": [
         "Carniceiro",
         "Anomalia",
@@ -1645,7 +1645,7 @@
       "type": "PROJETIVO",
       "row": "back",
       "sprite": "res://assets/cast/ent_lust_sprite.png",
-      "passive": "canalizar",
+      "passive": "",
       "pool": [
         "ent_lust_runa_de_soma",
         "ent_lust_projecao_eterea",
@@ -1700,7 +1700,7 @@
       "portrait": "res://assets/cast/ent_lust_portrait.png",
       "signature_icon": "res://assets/cast/ent_lust_icon.png",
       "escudo": 24,
-      "aprimoramento": "canalizar",
+      "aprimoramento": "",
       "grupos": [
         "Encantador",
         "Marionetista",
@@ -1736,7 +1736,7 @@
       "type": "BRUTO",
       "row": "front",
       "sprite": "res://assets/cast/ent_madelyn_sprite.png",
-      "passive": "vanguarda",
+      "passive": "",
       "pool": [
         "ent_madelyn_ataque_teatral",
         "ent_madelyn_risada_confusa",
@@ -1791,7 +1791,7 @@
       "portrait": "res://assets/cast/ent_madelyn_portrait.png",
       "signature_icon": "res://assets/cast/ent_madelyn_icon.png",
       "escudo": 20,
-      "aprimoramento": "vanguarda",
+      "aprimoramento": "",
       "grupos": [
         "Frenético",
         "Furtivo",
@@ -1827,7 +1827,7 @@
       "type": "PROJETIVO",
       "row": "back",
       "sprite": "res://assets/cast/ent_mingau_o_feiticeiro_sprite.png",
-      "passive": "canalizar",
+      "passive": "",
       "pool": [
         "ent_mingau_o_feiticeiro_arranhao_transformador",
         "ent_mingau_o_feiticeiro_varinha_roubada",
@@ -1887,7 +1887,7 @@
       "portrait": "res://assets/cast/ent_mingau_o_feiticeiro_portrait.png",
       "signature_icon": "res://assets/cast/ent_mingau_o_feiticeiro_icon.png",
       "escudo": 27,
-      "aprimoramento": "canalizar",
+      "aprimoramento": "",
       "grupos": [
         "Anomalia",
         "Encantador",
@@ -1923,7 +1923,7 @@
       "type": "PROJETIVO",
       "row": "back",
       "sprite": "res://assets/cast/ent_mutante_generico_sprite.png",
-      "passive": "canalizar",
+      "passive": "",
       "pool": [
         "ent_mutante_generico_rajada_elemental",
         "ent_mutante_generico_parede_do_elemento",
@@ -1970,7 +1970,7 @@
       "portrait": "res://assets/cast/ent_mutante_generico_portrait.png",
       "signature_icon": "res://assets/cast/ent_mutante_generico_icon.png",
       "escudo": 22,
-      "aprimoramento": "canalizar",
+      "aprimoramento": "",
       "grupos": [
         "Canhão",
         "Construtor",
@@ -2110,7 +2110,7 @@
       "type": "PSICOLOGICO",
       "row": "back",
       "sprite": "res://assets/cast/ent_niu_valdtagen_sprite.png",
-      "passive": "oportunista",
+      "passive": "",
       "pool": [
         "ent_niu_valdtagen_esquiva_involuntaria",
         "ent_niu_valdtagen_pedra_atirada",
@@ -2154,7 +2154,7 @@
       "portrait": "res://assets/cast/ent_niu_valdtagen_portrait.png",
       "signature_icon": "res://assets/cast/ent_niu_valdtagen_icon.png",
       "escudo": 22,
-      "aprimoramento": "oportunista",
+      "aprimoramento": "",
       "grupos": [
         "Furtivo",
         "Preparo",
@@ -2190,7 +2190,7 @@
       "type": "BRUTO",
       "row": "front",
       "sprite": "res://assets/cast/ent_pesadelo_vivo_sprite.png",
-      "passive": "vanguarda",
+      "passive": "",
       "pool": [
         "ent_pesadelo_vivo_sombra_encarnada",
         "ent_pesadelo_vivo_imagem_do_trauma",
@@ -2250,7 +2250,7 @@
       "portrait": "res://assets/cast/ent_pesadelo_vivo_portrait.png",
       "signature_icon": "res://assets/cast/ent_pesadelo_vivo_icon.png",
       "escudo": 20,
-      "aprimoramento": "vanguarda",
+      "aprimoramento": "",
       "grupos": [
         "Frenético",
         "Furtivo",
@@ -2286,7 +2286,7 @@
       "type": "PSICOLOGICO",
       "row": "back",
       "sprite": "res://assets/cast/ent_pietro_caos_sprite.png",
-      "passive": "oportunista",
+      "passive": "",
       "pool": [
         "ent_pietro_caos_corrente_de_buer",
         "ent_pietro_caos_recompor_carne",
@@ -2357,7 +2357,7 @@
       "portrait": "res://assets/cast/ent_pietro_caos_portrait.png",
       "signature_icon": "res://assets/cast/ent_pietro_caos_icon.png",
       "escudo": 22,
-      "aprimoramento": "oportunista",
+      "aprimoramento": "",
       "grupos": [
         "Desperto",
         "Sabotador",
@@ -2393,7 +2393,7 @@
       "type": "BRUTO",
       "row": "front",
       "sprite": "res://assets/cast/ent_quasar_sprite.png",
-      "passive": "vanguarda",
+      "passive": "",
       "pool": [
         "ent_quasar_jab_divino",
         "ent_quasar_contra_de_combate",
@@ -2453,7 +2453,7 @@
       "portrait": "res://assets/cast/ent_quasar_portrait.png",
       "signature_icon": "res://assets/cast/ent_quasar_icon.png",
       "escudo": 20,
-      "aprimoramento": "vanguarda",
+      "aprimoramento": "",
       "grupos": [
         "Duelista",
         "Velocista",
@@ -2489,7 +2489,7 @@
       "type": "MENTAL",
       "row": "front",
       "sprite": "res://assets/cast/ent_taylor_sprite.png",
-      "passive": "baluarte",
+      "passive": "",
       "pool": [
         "ent_taylor_lanca_mental",
         "ent_taylor_fortaleza_de_zaphter",
@@ -2544,7 +2544,7 @@
       "portrait": "res://assets/cast/ent_taylor_portrait.png",
       "signature_icon": "res://assets/cast/ent_taylor_icon.png",
       "escudo": 29,
-      "aprimoramento": "baluarte",
+      "aprimoramento": "",
       "grupos": [
         "Marionetista",
         "Calculista",
@@ -2580,7 +2580,7 @@
       "type": "BRUTO",
       "row": "front",
       "sprite": "res://assets/cast/ent_techna_sprite.png",
-      "passive": "baluarte",
+      "passive": "",
       "pool": [
         "ent_techna_choque_incapacitante",
         "ent_techna_placas_modulares",
@@ -2636,7 +2636,7 @@
       "portrait": "res://assets/cast/ent_techna_portrait.png",
       "signature_icon": "res://assets/cast/ent_techna_icon.png",
       "escudo": 24,
-      "aprimoramento": "baluarte",
+      "aprimoramento": "",
       "grupos": [
         "Preparo",
         "Caçador",
@@ -2670,19 +2670,21 @@
       "row": "front",
       "minion": true,
       "playable": false,
-      "passive": "oportunista",
+      "passive": "",
       "sprite": "res://assets/cast/ent_minion_zumbi_sprite.png",
       "cards": [
-        "ent_minion_zumbi_golpe"
+        "manobra_golpe"
       ],
       "pool": [
-        "ent_minion_zumbi_golpe"
+        "manobra_golpe"
       ],
       "iniciais": [
-        "ent_minion_zumbi_golpe"
+        "manobra_golpe"
       ],
       "portrait": "res://assets/cast/ent_minion_zumbi_portrait.png",
-      "signature_icon": "res://assets/cast/ent_minion_zumbi_icon.png"
+      "signature_icon": "res://assets/cast/ent_minion_zumbi_icon.png",
+      "aprimoramento": "",
+      "evoluidas": []
     },
     "ent_minion_fantasma": {
       "id": "ent_minion_fantasma",
@@ -2696,19 +2698,21 @@
       "row": "front",
       "minion": true,
       "playable": false,
-      "passive": "oportunista",
+      "passive": "",
       "sprite": "res://assets/cast/ent_minion_fantasma_sprite.png",
       "cards": [
-        "ent_minion_fantasma_golpe"
+        "manobra_golpe"
       ],
       "pool": [
-        "ent_minion_fantasma_golpe"
+        "manobra_golpe"
       ],
       "iniciais": [
-        "ent_minion_fantasma_golpe"
+        "manobra_golpe"
       ],
       "portrait": "res://assets/cast/ent_minion_fantasma_portrait.png",
-      "signature_icon": "res://assets/cast/ent_minion_fantasma_icon.png"
+      "signature_icon": "res://assets/cast/ent_minion_fantasma_icon.png",
+      "aprimoramento": "",
+      "evoluidas": []
     },
     "ent_minion_esqueleto": {
       "id": "ent_minion_esqueleto",
@@ -2722,19 +2726,21 @@
       "row": "front",
       "minion": true,
       "playable": false,
-      "passive": "oportunista",
+      "passive": "",
       "sprite": "res://assets/cast/ent_minion_esqueleto_sprite.png",
       "cards": [
-        "ent_minion_esqueleto_golpe"
+        "manobra_golpe"
       ],
       "pool": [
-        "ent_minion_esqueleto_golpe"
+        "manobra_golpe"
       ],
       "iniciais": [
-        "ent_minion_esqueleto_golpe"
+        "manobra_golpe"
       ],
       "portrait": "res://assets/cast/ent_minion_esqueleto_portrait.png",
-      "signature_icon": "res://assets/cast/ent_minion_esqueleto_icon.png"
+      "signature_icon": "res://assets/cast/ent_minion_esqueleto_icon.png",
+      "aprimoramento": "",
+      "evoluidas": []
     },
     "ent_minion_vampiro": {
       "id": "ent_minion_vampiro",
@@ -2748,19 +2754,21 @@
       "row": "front",
       "minion": true,
       "playable": false,
-      "passive": "oportunista",
+      "passive": "",
       "sprite": "res://assets/cast/ent_minion_vampiro_sprite.png",
       "cards": [
-        "ent_minion_vampiro_golpe"
+        "manobra_golpe"
       ],
       "pool": [
-        "ent_minion_vampiro_golpe"
+        "manobra_golpe"
       ],
       "iniciais": [
-        "ent_minion_vampiro_golpe"
+        "manobra_golpe"
       ],
       "portrait": "res://assets/cast/ent_minion_vampiro_portrait.png",
-      "signature_icon": "res://assets/cast/ent_minion_vampiro_icon.png"
+      "signature_icon": "res://assets/cast/ent_minion_vampiro_icon.png",
+      "aprimoramento": "",
+      "evoluidas": []
     },
     "ent_minion_mumia": {
       "id": "ent_minion_mumia",
@@ -2774,19 +2782,21 @@
       "row": "front",
       "minion": true,
       "playable": false,
-      "passive": "oportunista",
+      "passive": "",
       "sprite": "res://assets/cast/ent_minion_mumia_sprite.png",
       "cards": [
-        "ent_minion_mumia_golpe"
+        "manobra_golpe"
       ],
       "pool": [
-        "ent_minion_mumia_golpe"
+        "manobra_golpe"
       ],
       "iniciais": [
-        "ent_minion_mumia_golpe"
+        "manobra_golpe"
       ],
       "portrait": "res://assets/cast/ent_minion_mumia_portrait.png",
-      "signature_icon": "res://assets/cast/ent_minion_mumia_icon.png"
+      "signature_icon": "res://assets/cast/ent_minion_mumia_icon.png",
+      "aprimoramento": "",
+      "evoluidas": []
     },
     "ent_minion_ghoul": {
       "id": "ent_minion_ghoul",
@@ -2800,7 +2810,7 @@
       "row": "front",
       "minion": true,
       "playable": false,
-      "passive": "oportunista",
+      "passive": "",
       "sprite": "res://assets/cast/ent_minion_ghoul_sprite.png",
       "cards": [
         "ent_minion_ghoul_golpe_a",
@@ -2815,7 +2825,8 @@
         "ent_minion_ghoul_golpe_b"
       ],
       "portrait": "res://assets/cast/ent_minion_ghoul_portrait.png",
-      "signature_icon": "res://assets/cast/ent_minion_ghoul_icon.png"
+      "signature_icon": "res://assets/cast/ent_minion_ghoul_icon.png",
+      "aprimoramento": ""
     },
     "ent_minion_banshee": {
       "id": "ent_minion_banshee",
@@ -2829,7 +2840,7 @@
       "row": "front",
       "minion": true,
       "playable": false,
-      "passive": "oportunista",
+      "passive": "",
       "sprite": "res://assets/cast/ent_minion_banshee_sprite.png",
       "cards": [
         "ent_minion_banshee_grito_a",
@@ -2844,7 +2855,8 @@
         "ent_minion_banshee_grito_b"
       ],
       "portrait": "res://assets/cast/ent_minion_banshee_portrait.png",
-      "signature_icon": "res://assets/cast/ent_minion_banshee_icon.png"
+      "signature_icon": "res://assets/cast/ent_minion_banshee_icon.png",
+      "aprimoramento": ""
     },
     "ent_minion_strigoi": {
       "id": "ent_minion_strigoi",
@@ -2858,7 +2870,7 @@
       "row": "front",
       "minion": true,
       "playable": false,
-      "passive": "oportunista",
+      "passive": "",
       "sprite": "res://assets/cast/ent_minion_strigoi_sprite.png",
       "cards": [
         "ent_minion_strigoi_golpe_a",
@@ -2873,7 +2885,8 @@
         "ent_minion_strigoi_golpe_b"
       ],
       "portrait": "res://assets/cast/ent_minion_strigoi_portrait.png",
-      "signature_icon": "res://assets/cast/ent_minion_strigoi_icon.png"
+      "signature_icon": "res://assets/cast/ent_minion_strigoi_icon.png",
+      "aprimoramento": ""
     },
     "ent_minion_golem": {
       "id": "ent_minion_golem",
@@ -2887,7 +2900,7 @@
       "row": "front",
       "minion": true,
       "playable": false,
-      "passive": "oportunista",
+      "passive": "",
       "sprite": "res://assets/cast/ent_minion_golem_sprite.png",
       "cards": [
         "ent_minion_golem_golpe_a",
@@ -2902,7 +2915,8 @@
         "ent_minion_golem_golpe_b"
       ],
       "portrait": "res://assets/cast/ent_minion_golem_portrait.png",
-      "signature_icon": "res://assets/cast/ent_minion_golem_icon.png"
+      "signature_icon": "res://assets/cast/ent_minion_golem_icon.png",
+      "aprimoramento": ""
     },
     "ent_minion_lich": {
       "id": "ent_minion_lich",
@@ -2916,7 +2930,7 @@
       "row": "front",
       "minion": true,
       "playable": false,
-      "passive": "oportunista",
+      "passive": "",
       "sprite": "res://assets/cast/ent_minion_lich_sprite.png",
       "cards": [
         "ent_minion_lich_golpe_a",
@@ -2931,7 +2945,8 @@
         "ent_minion_lich_golpe_b"
       ],
       "portrait": "res://assets/cast/ent_minion_lich_portrait.png",
-      "signature_icon": "res://assets/cast/ent_minion_lich_icon.png"
+      "signature_icon": "res://assets/cast/ent_minion_lich_icon.png",
+      "aprimoramento": ""
     },
     "ent_dr_espantalho": {
       "id": "ent_dr_espantalho",
@@ -2951,37 +2966,37 @@
       "signature_icon": "res://assets/cast/ent_dr_espantalho_icon.png",
       "passive": "",
       "pool": [
-        "ent_dr_espantalho_golpe",
-        "ent_dr_espantalho_guarda",
-        "ent_dr_espantalho_foco",
-        "ent_dr_espantalho_rajada",
-        "ent_dr_espantalho_cura_rapida",
-        "ent_dr_espantalho_impacto",
-        "ent_dr_espantalho_barreira",
-        "ent_dr_espantalho_onda",
-        "ent_dr_espantalho_inspirar",
-        "ent_dr_espantalho_finisher"
+        "manobra_golpe",
+        "manobra_guarda",
+        "manobra_foco",
+        "manobra_rajada",
+        "manobra_cura_rapida",
+        "manobra_impacto",
+        "manobra_barreira",
+        "manobra_onda",
+        "manobra_inspirar",
+        "manobra_finisher"
       ],
       "cards": [
-        "ent_dr_espantalho_golpe",
-        "ent_dr_espantalho_guarda",
-        "ent_dr_espantalho_foco",
-        "ent_dr_espantalho_rajada",
-        "ent_dr_espantalho_cura_rapida"
+        "manobra_golpe",
+        "manobra_guarda",
+        "manobra_foco",
+        "manobra_rajada",
+        "manobra_cura_rapida"
       ],
       "iniciais": [
-        "ent_dr_espantalho_golpe",
-        "ent_dr_espantalho_guarda",
-        "ent_dr_espantalho_foco",
-        "ent_dr_espantalho_rajada",
-        "ent_dr_espantalho_cura_rapida"
+        "manobra_golpe",
+        "manobra_guarda",
+        "manobra_foco",
+        "manobra_rajada",
+        "manobra_cura_rapida"
       ],
       "evoluidas": [
-        "ent_dr_espantalho_impacto",
-        "ent_dr_espantalho_barreira",
-        "ent_dr_espantalho_onda",
-        "ent_dr_espantalho_inspirar",
-        "ent_dr_espantalho_finisher"
+        "manobra_impacto",
+        "manobra_barreira",
+        "manobra_onda",
+        "manobra_inspirar",
+        "manobra_finisher"
       ],
       "desvantagem": "",
       "signature": {
@@ -2999,11 +3014,7 @@
         }
       ],
       "escudo": 16,
-      "aprimoramento": {
-        "id": "generico",
-        "name": "Kit Genérico",
-        "text": "Baralho genérico provisório — a refinar."
-      },
+      "aprimoramento": "",
       "grupos": [
         "Genérico"
       ],
@@ -3029,37 +3040,37 @@
       "signature_icon": "res://assets/cast/ent_patrulheiro_rosa_icon.png",
       "passive": "",
       "pool": [
-        "ent_patrulheiro_rosa_golpe",
-        "ent_patrulheiro_rosa_guarda",
-        "ent_patrulheiro_rosa_foco",
-        "ent_patrulheiro_rosa_rajada",
-        "ent_patrulheiro_rosa_cura_rapida",
-        "ent_patrulheiro_rosa_impacto",
-        "ent_patrulheiro_rosa_barreira",
-        "ent_patrulheiro_rosa_onda",
-        "ent_patrulheiro_rosa_inspirar",
-        "ent_patrulheiro_rosa_finisher"
+        "manobra_golpe",
+        "manobra_guarda",
+        "manobra_foco",
+        "manobra_rajada",
+        "manobra_cura_rapida",
+        "manobra_impacto",
+        "manobra_barreira",
+        "manobra_onda",
+        "manobra_inspirar",
+        "manobra_finisher"
       ],
       "cards": [
-        "ent_patrulheiro_rosa_golpe",
-        "ent_patrulheiro_rosa_guarda",
-        "ent_patrulheiro_rosa_foco",
-        "ent_patrulheiro_rosa_rajada",
-        "ent_patrulheiro_rosa_cura_rapida"
+        "manobra_golpe",
+        "manobra_guarda",
+        "manobra_foco",
+        "manobra_rajada",
+        "manobra_cura_rapida"
       ],
       "iniciais": [
-        "ent_patrulheiro_rosa_golpe",
-        "ent_patrulheiro_rosa_guarda",
-        "ent_patrulheiro_rosa_foco",
-        "ent_patrulheiro_rosa_rajada",
-        "ent_patrulheiro_rosa_cura_rapida"
+        "manobra_golpe",
+        "manobra_guarda",
+        "manobra_foco",
+        "manobra_rajada",
+        "manobra_cura_rapida"
       ],
       "evoluidas": [
-        "ent_patrulheiro_rosa_impacto",
-        "ent_patrulheiro_rosa_barreira",
-        "ent_patrulheiro_rosa_onda",
-        "ent_patrulheiro_rosa_inspirar",
-        "ent_patrulheiro_rosa_finisher"
+        "manobra_impacto",
+        "manobra_barreira",
+        "manobra_onda",
+        "manobra_inspirar",
+        "manobra_finisher"
       ],
       "desvantagem": "",
       "signature": {
@@ -3077,11 +3088,7 @@
         }
       ],
       "escudo": 17,
-      "aprimoramento": {
-        "id": "generico",
-        "name": "Kit Genérico",
-        "text": "Baralho genérico provisório — a refinar."
-      },
+      "aprimoramento": "",
       "grupos": [
         "Genérico"
       ],
@@ -3107,37 +3114,37 @@
       "signature_icon": "res://assets/cast/ent_pauline_icon.png",
       "passive": "",
       "pool": [
-        "ent_pauline_golpe",
-        "ent_pauline_guarda",
-        "ent_pauline_foco",
-        "ent_pauline_rajada",
-        "ent_pauline_cura_rapida",
-        "ent_pauline_impacto",
-        "ent_pauline_barreira",
-        "ent_pauline_onda",
-        "ent_pauline_inspirar",
-        "ent_pauline_finisher"
+        "manobra_golpe",
+        "manobra_guarda",
+        "manobra_foco",
+        "manobra_rajada",
+        "manobra_cura_rapida",
+        "manobra_impacto",
+        "manobra_barreira",
+        "manobra_onda",
+        "manobra_inspirar",
+        "manobra_finisher"
       ],
       "cards": [
-        "ent_pauline_golpe",
-        "ent_pauline_guarda",
-        "ent_pauline_foco",
-        "ent_pauline_rajada",
-        "ent_pauline_cura_rapida"
+        "manobra_golpe",
+        "manobra_guarda",
+        "manobra_foco",
+        "manobra_rajada",
+        "manobra_cura_rapida"
       ],
       "iniciais": [
-        "ent_pauline_golpe",
-        "ent_pauline_guarda",
-        "ent_pauline_foco",
-        "ent_pauline_rajada",
-        "ent_pauline_cura_rapida"
+        "manobra_golpe",
+        "manobra_guarda",
+        "manobra_foco",
+        "manobra_rajada",
+        "manobra_cura_rapida"
       ],
       "evoluidas": [
-        "ent_pauline_impacto",
-        "ent_pauline_barreira",
-        "ent_pauline_onda",
-        "ent_pauline_inspirar",
-        "ent_pauline_finisher"
+        "manobra_impacto",
+        "manobra_barreira",
+        "manobra_onda",
+        "manobra_inspirar",
+        "manobra_finisher"
       ],
       "desvantagem": "",
       "signature": {
@@ -3155,11 +3162,7 @@
         }
       ],
       "escudo": 16,
-      "aprimoramento": {
-        "id": "generico",
-        "name": "Kit Genérico",
-        "text": "Baralho genérico provisório — a refinar."
-      },
+      "aprimoramento": "",
       "grupos": [
         "Genérico"
       ],
@@ -3185,37 +3188,37 @@
       "signature_icon": "res://assets/cast/ent_siren_icon.png",
       "passive": "",
       "pool": [
-        "ent_siren_golpe",
-        "ent_siren_guarda",
-        "ent_siren_foco",
-        "ent_siren_rajada",
-        "ent_siren_cura_rapida",
-        "ent_siren_impacto",
-        "ent_siren_barreira",
-        "ent_siren_onda",
-        "ent_siren_inspirar",
-        "ent_siren_finisher"
+        "manobra_golpe",
+        "manobra_guarda",
+        "manobra_foco",
+        "manobra_rajada",
+        "manobra_cura_rapida",
+        "manobra_impacto",
+        "manobra_barreira",
+        "manobra_onda",
+        "manobra_inspirar",
+        "manobra_finisher"
       ],
       "cards": [
-        "ent_siren_golpe",
-        "ent_siren_guarda",
-        "ent_siren_foco",
-        "ent_siren_rajada",
-        "ent_siren_cura_rapida"
+        "manobra_golpe",
+        "manobra_guarda",
+        "manobra_foco",
+        "manobra_rajada",
+        "manobra_cura_rapida"
       ],
       "iniciais": [
-        "ent_siren_golpe",
-        "ent_siren_guarda",
-        "ent_siren_foco",
-        "ent_siren_rajada",
-        "ent_siren_cura_rapida"
+        "manobra_golpe",
+        "manobra_guarda",
+        "manobra_foco",
+        "manobra_rajada",
+        "manobra_cura_rapida"
       ],
       "evoluidas": [
-        "ent_siren_impacto",
-        "ent_siren_barreira",
-        "ent_siren_onda",
-        "ent_siren_inspirar",
-        "ent_siren_finisher"
+        "manobra_impacto",
+        "manobra_barreira",
+        "manobra_onda",
+        "manobra_inspirar",
+        "manobra_finisher"
       ],
       "desvantagem": "",
       "signature": {
@@ -3233,11 +3236,7 @@
         }
       ],
       "escudo": 18,
-      "aprimoramento": {
-        "id": "generico",
-        "name": "Kit Genérico",
-        "text": "Baralho genérico provisório — a refinar."
-      },
+      "aprimoramento": "",
       "grupos": [
         "Genérico"
       ],
@@ -3263,37 +3262,37 @@
       "signature_icon": "res://assets/cast/ent_delirio_icon.png",
       "passive": "",
       "pool": [
-        "ent_delirio_golpe",
-        "ent_delirio_guarda",
-        "ent_delirio_foco",
-        "ent_delirio_rajada",
-        "ent_delirio_cura_rapida",
-        "ent_delirio_impacto",
-        "ent_delirio_barreira",
-        "ent_delirio_onda",
-        "ent_delirio_inspirar",
-        "ent_delirio_finisher"
+        "manobra_golpe",
+        "manobra_guarda",
+        "manobra_foco",
+        "manobra_rajada",
+        "manobra_cura_rapida",
+        "manobra_impacto",
+        "manobra_barreira",
+        "manobra_onda",
+        "manobra_inspirar",
+        "manobra_finisher"
       ],
       "cards": [
-        "ent_delirio_golpe",
-        "ent_delirio_guarda",
-        "ent_delirio_foco",
-        "ent_delirio_rajada",
-        "ent_delirio_cura_rapida"
+        "manobra_golpe",
+        "manobra_guarda",
+        "manobra_foco",
+        "manobra_rajada",
+        "manobra_cura_rapida"
       ],
       "iniciais": [
-        "ent_delirio_golpe",
-        "ent_delirio_guarda",
-        "ent_delirio_foco",
-        "ent_delirio_rajada",
-        "ent_delirio_cura_rapida"
+        "manobra_golpe",
+        "manobra_guarda",
+        "manobra_foco",
+        "manobra_rajada",
+        "manobra_cura_rapida"
       ],
       "evoluidas": [
-        "ent_delirio_impacto",
-        "ent_delirio_barreira",
-        "ent_delirio_onda",
-        "ent_delirio_inspirar",
-        "ent_delirio_finisher"
+        "manobra_impacto",
+        "manobra_barreira",
+        "manobra_onda",
+        "manobra_inspirar",
+        "manobra_finisher"
       ],
       "desvantagem": "",
       "signature": {
@@ -3311,11 +3310,7 @@
         }
       ],
       "escudo": 15,
-      "aprimoramento": {
-        "id": "generico",
-        "name": "Kit Genérico",
-        "text": "Baralho genérico provisório — a refinar."
-      },
+      "aprimoramento": "",
       "grupos": [
         "Genérico"
       ],
@@ -3341,37 +3336,37 @@
       "signature_icon": "res://assets/cast/ent_cacadora_icon.png",
       "passive": "",
       "pool": [
-        "ent_cacadora_golpe",
-        "ent_cacadora_guarda",
-        "ent_cacadora_foco",
-        "ent_cacadora_rajada",
-        "ent_cacadora_cura_rapida",
-        "ent_cacadora_impacto",
-        "ent_cacadora_barreira",
-        "ent_cacadora_onda",
-        "ent_cacadora_inspirar",
-        "ent_cacadora_finisher"
+        "manobra_golpe",
+        "manobra_guarda",
+        "manobra_foco",
+        "manobra_rajada",
+        "manobra_cura_rapida",
+        "manobra_impacto",
+        "manobra_barreira",
+        "manobra_onda",
+        "manobra_inspirar",
+        "manobra_finisher"
       ],
       "cards": [
-        "ent_cacadora_golpe",
-        "ent_cacadora_guarda",
-        "ent_cacadora_foco",
-        "ent_cacadora_rajada",
-        "ent_cacadora_cura_rapida"
+        "manobra_golpe",
+        "manobra_guarda",
+        "manobra_foco",
+        "manobra_rajada",
+        "manobra_cura_rapida"
       ],
       "iniciais": [
-        "ent_cacadora_golpe",
-        "ent_cacadora_guarda",
-        "ent_cacadora_foco",
-        "ent_cacadora_rajada",
-        "ent_cacadora_cura_rapida"
+        "manobra_golpe",
+        "manobra_guarda",
+        "manobra_foco",
+        "manobra_rajada",
+        "manobra_cura_rapida"
       ],
       "evoluidas": [
-        "ent_cacadora_impacto",
-        "ent_cacadora_barreira",
-        "ent_cacadora_onda",
-        "ent_cacadora_inspirar",
-        "ent_cacadora_finisher"
+        "manobra_impacto",
+        "manobra_barreira",
+        "manobra_onda",
+        "manobra_inspirar",
+        "manobra_finisher"
       ],
       "desvantagem": "",
       "signature": {
@@ -3389,11 +3384,7 @@
         }
       ],
       "escudo": 16,
-      "aprimoramento": {
-        "id": "generico",
-        "name": "Kit Genérico",
-        "text": "Baralho genérico provisório — a refinar."
-      },
+      "aprimoramento": "",
       "grupos": [
         "Genérico"
       ],
@@ -3419,37 +3410,37 @@
       "signature_icon": "res://assets/cast/ent_pessoa_planta_icon.png",
       "passive": "",
       "pool": [
-        "ent_pessoa_planta_golpe",
-        "ent_pessoa_planta_guarda",
-        "ent_pessoa_planta_foco",
-        "ent_pessoa_planta_rajada",
-        "ent_pessoa_planta_cura_rapida",
-        "ent_pessoa_planta_impacto",
-        "ent_pessoa_planta_barreira",
-        "ent_pessoa_planta_onda",
-        "ent_pessoa_planta_inspirar",
-        "ent_pessoa_planta_finisher"
+        "manobra_golpe",
+        "manobra_guarda",
+        "manobra_foco",
+        "manobra_rajada",
+        "manobra_cura_rapida",
+        "manobra_impacto",
+        "manobra_barreira",
+        "manobra_onda",
+        "manobra_inspirar",
+        "manobra_finisher"
       ],
       "cards": [
-        "ent_pessoa_planta_golpe",
-        "ent_pessoa_planta_guarda",
-        "ent_pessoa_planta_foco",
-        "ent_pessoa_planta_rajada",
-        "ent_pessoa_planta_cura_rapida"
+        "manobra_golpe",
+        "manobra_guarda",
+        "manobra_foco",
+        "manobra_rajada",
+        "manobra_cura_rapida"
       ],
       "iniciais": [
-        "ent_pessoa_planta_golpe",
-        "ent_pessoa_planta_guarda",
-        "ent_pessoa_planta_foco",
-        "ent_pessoa_planta_rajada",
-        "ent_pessoa_planta_cura_rapida"
+        "manobra_golpe",
+        "manobra_guarda",
+        "manobra_foco",
+        "manobra_rajada",
+        "manobra_cura_rapida"
       ],
       "evoluidas": [
-        "ent_pessoa_planta_impacto",
-        "ent_pessoa_planta_barreira",
-        "ent_pessoa_planta_onda",
-        "ent_pessoa_planta_inspirar",
-        "ent_pessoa_planta_finisher"
+        "manobra_impacto",
+        "manobra_barreira",
+        "manobra_onda",
+        "manobra_inspirar",
+        "manobra_finisher"
       ],
       "desvantagem": "",
       "signature": {
@@ -3467,11 +3458,7 @@
         }
       ],
       "escudo": 18,
-      "aprimoramento": {
-        "id": "generico",
-        "name": "Kit Genérico",
-        "text": "Baralho genérico provisório — a refinar."
-      },
+      "aprimoramento": "",
       "grupos": [
         "Genérico"
       ],
@@ -12801,7 +12788,8 @@
           "2"
         ],
         [
-          "block_hp",
+          "barrier",
+          "1",
           "6"
         ]
       ],
@@ -12942,7 +12930,8 @@
           "3"
         ],
         [
-          "block_hp",
+          "barrier",
+          "2",
           "10"
         ]
       ],
@@ -13087,7 +13076,8 @@
           "2"
         ],
         [
-          "block_hp",
+          "barrier",
+          "1",
           "6"
         ]
       ],
@@ -13228,7 +13218,8 @@
           "3"
         ],
         [
-          "block_hp",
+          "barrier",
+          "2",
           "10"
         ]
       ],
@@ -13373,7 +13364,8 @@
           "2"
         ],
         [
-          "block_hp",
+          "barrier",
+          "1",
           "6"
         ]
       ],
@@ -13514,7 +13506,8 @@
           "3"
         ],
         [
-          "block_hp",
+          "barrier",
+          "2",
           "10"
         ]
       ],
@@ -13659,7 +13652,8 @@
           "2"
         ],
         [
-          "block_hp",
+          "barrier",
+          "1",
           "6"
         ]
       ],
@@ -13800,7 +13794,8 @@
           "3"
         ],
         [
-          "block_hp",
+          "barrier",
+          "2",
           "10"
         ]
       ],
@@ -13945,7 +13940,8 @@
           "2"
         ],
         [
-          "block_hp",
+          "barrier",
+          "1",
           "6"
         ]
       ],
@@ -14086,7 +14082,8 @@
           "3"
         ],
         [
-          "block_hp",
+          "barrier",
+          "2",
           "10"
         ]
       ],
@@ -14231,7 +14228,8 @@
           "2"
         ],
         [
-          "block_hp",
+          "barrier",
+          "1",
           "6"
         ]
       ],
@@ -14372,7 +14370,8 @@
           "3"
         ],
         [
-          "block_hp",
+          "barrier",
+          "2",
           "10"
         ]
       ],
@@ -14517,7 +14516,8 @@
           "2"
         ],
         [
-          "block_hp",
+          "barrier",
+          "1",
           "6"
         ]
       ],
@@ -14658,7 +14658,8 @@
           "3"
         ],
         [
-          "block_hp",
+          "barrier",
+          "2",
           "10"
         ]
       ],
@@ -15456,6 +15457,294 @@
       "cost": 0,
       "instant": true,
       "passive_like": false
+    },
+    "manobra_golpe": {
+      "id": "manobra_golpe",
+      "name": "Golpe",
+      "owner": "shared_pool",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ]
+      ],
+      "reach": true,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Slash1"
+      ],
+      "anim_target": [
+        "Hit1"
+      ],
+      "anim_timing": "parallel",
+      "shared_pool": true
+    },
+    "manobra_guarda": {
+      "id": "manobra_guarda",
+      "name": "Guarda",
+      "owner": "shared_pool",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "barrier",
+          "2",
+          "6"
+        ]
+      ],
+      "reach": false,
+      "stat": "armor",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Shield"
+      ],
+      "anim_timing": "parallel",
+      "shared_pool": true
+    },
+    "manobra_foco": {
+      "id": "manobra_foco",
+      "name": "Foco",
+      "owner": "shared_pool",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "strengthened",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel",
+      "shared_pool": true
+    },
+    "manobra_rajada": {
+      "id": "manobra_rajada",
+      "name": "Rajada",
+      "owner": "shared_pool",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ]
+      ],
+      "reach": true,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Special2"
+      ],
+      "anim_target": [
+        "HitSP2"
+      ],
+      "anim_timing": "parallel",
+      "shared_pool": true
+    },
+    "manobra_cura_rapida": {
+      "id": "manobra_cura_rapida",
+      "name": "Cura Rápida",
+      "owner": "shared_pool",
+      "class": "ESTADO",
+      "target": "ALLY",
+      "actions": [
+        [
+          "heal",
+          "8"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Recovery1"
+      ],
+      "anim_timing": "parallel",
+      "shared_pool": true
+    },
+    "manobra_impacto": {
+      "id": "manobra_impacto",
+      "name": "Impacto",
+      "owner": "shared_pool",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 2,
+      "tier": "evoluida",
+      "anim_self": [
+        "Slash2"
+      ],
+      "anim_target": [
+        "Hit2"
+      ],
+      "anim_timing": "parallel",
+      "shared_pool": true
+    },
+    "manobra_barreira": {
+      "id": "manobra_barreira",
+      "name": "Barreira",
+      "owner": "shared_pool",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "barrier",
+          "2",
+          "10"
+        ]
+      ],
+      "reach": false,
+      "stat": "armor",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "evoluida",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Shield"
+      ],
+      "anim_timing": "parallel",
+      "shared_pool": true
+    },
+    "manobra_onda": {
+      "id": "manobra_onda",
+      "name": "Onda",
+      "owner": "shared_pool",
+      "class": "ATTACK",
+      "target": "ALL_ENEMIES",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ]
+      ],
+      "reach": true,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "evoluida",
+      "anim_self": [
+        "Special1"
+      ],
+      "anim_target": [
+        "Explosion1"
+      ],
+      "anim_timing": "parallel",
+      "shared_pool": true
+    },
+    "manobra_inspirar": {
+      "id": "manobra_inspirar",
+      "name": "Inspirar",
+      "owner": "shared_pool",
+      "class": "ESTADO",
+      "target": "ALL_ALLIES",
+      "actions": [
+        [
+          "heal",
+          "6"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 1,
+      "tier": "evoluida",
+      "anim_self": [
+        "buff"
+      ],
+      "anim_target": [
+        "Recovery2"
+      ],
+      "anim_timing": "parallel",
+      "shared_pool": true
+    },
+    "manobra_finisher": {
+      "id": "manobra_finisher",
+      "name": "Finisher",
+      "owner": "shared_pool",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "2"
+        ],
+        [
+          "self_status",
+          "strengthened",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "evolved",
+      "exhaust": false,
+      "gain": 2,
+      "tier": "evoluida",
+      "anim_self": [
+        "Slash3"
+      ],
+      "anim_target": [
+        "Blow1"
+      ],
+      "anim_timing": "parallel",
+      "shared_pool": true
     }
   }
 }

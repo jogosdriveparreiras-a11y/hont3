@@ -35,6 +35,8 @@ var chain_targets: Array[int] = []
 var recover_pick_active := false
 var feedback := ""
 var event_history: Array[String] = []
+var detailed_history: Array[Dictionary] = []
+var battle_log_open := false
 var collection_hero := ""
 var collection_filter := "TODAS"
 var collection_selected := ""
@@ -1921,6 +1923,8 @@ func _begin_battle_session() -> void:
 	selected_action = ""
 	chain_targets.clear()
 	event_history.clear()
+	detailed_history.clear()
+	battle_log_open = false
 	feedback = ""
 	inspect_open = false
 	inspected_card = -1
@@ -1935,6 +1939,14 @@ func _begin_battle_session() -> void:
 	battle.changed.connect(_render_battle)
 	battle.finished.connect(_on_finished)
 	battle.report_cb = func(category: String, action: String, detail: Dictionary = {}) -> void:
+		detailed_history.append({
+			"t": Time.get_datetime_string_from_system(false, true),
+			"kind": str(category),
+			"action": str(action),
+			"detail": detail.duplicate(true) if typeof(detail) == TYPE_DICTIONARY else {},
+		})
+		if detailed_history.size() > 400:
+			detailed_history.pop_front()
 		if session_report != null:
 			session_report.emit_structured(category, action, detail)
 
@@ -1961,8 +1973,11 @@ func _card_def_for(card: Dictionary) -> Dictionary:
 func _on_event(message: String) -> void:
 	# Log de combate vai só para a janela de log (esquerda) — nada flutuando sobre as cartas.
 	event_history.append(message)
-	if event_history.size() > 24:
+	if event_history.size() > 80:
 		event_history.pop_front()
+	detailed_history.append({"t": Time.get_datetime_string_from_system(false, true), "kind": "log", "text": message})
+	if detailed_history.size() > 400:
+		detailed_history.pop_front()
 	if session_report != null:
 		session_report.log_battle("log", {"text": message})
 
@@ -2131,6 +2146,8 @@ func _render_battle() -> void:
 		_add_pending_target_actions(viewport_size)
 	if battle_menu_open and battle.phase == "PLAYER":
 		_add_battle_menu_overlay(viewport_size)
+	if battle_log_open:
+		_add_battle_log_overlay(viewport_size)
 	_apply_weather_fx()
 	visible_uids.clear()
 	for visible_card in battle.hand:
@@ -4422,8 +4439,13 @@ func _step_enemy() -> void:
 			ok = battle.play(int(choice["index"]), target_id, choice.get("chain", []))
 		if not ok:
 			feedback = "Adversário não pôde jogar %s." % str(definition.get("name", card_id))
-			# Evita loop: força fim se a IA escolheu jogada inválida.
-			battle.enemy_card_plays = 0
+			# Não zera as jogadas: marca a carta como falha nesta fase e tenta outra.
+			if battle.has_method("mark_enemy_play_failed"):
+				battle.mark_enemy_play_failed(card)
+			else:
+				battle.enemy_card_plays = 0
+			if session_report != null:
+				session_report.log_ai("enemy_play_failed", {"card": card_id, "target": target_id, "index": int(choice.get("index", -1))})
 		await get_tree().create_timer(pace).timeout
 		if actor_nodes.has(target_id):
 			var reset_body: Node3D = actor_nodes[target_id]
@@ -5191,6 +5213,7 @@ func _open_battle_menu() -> void:
 
 func _close_battle_menu() -> void:
 	battle_menu_open = false
+	battle_log_open = false
 	if sound != null: sound.cue("cancel", "UI")
 	_render_battle()
 
@@ -5306,6 +5329,90 @@ func _apply_weather_fx() -> void:
 		_:
 			root.add_child(_make_weather_particles(40, 1.6, Vector3(10, 0.2, 8), Vector3(0, 7.5, 0), Vector3(0, -0.2, 0.1), 40.0, 0.4, 1.2, Vector3(0, -0.4, 0), Color(1, 1, 1, 0.3), null))
 
+
+func _format_detail_line(entry: Dictionary) -> String:
+	var kind := str(entry.get("kind", ""))
+	var action := str(entry.get("action", ""))
+	var detail: Dictionary = entry.get("detail", {}) if typeof(entry.get("detail", {})) == TYPE_DICTIONARY else {}
+	if kind == "log" or action == "log":
+		return str(entry.get("text", detail.get("text", "")))
+	var bits: PackedStringArray = []
+	if kind != "":
+		bits.append(kind)
+	if action != "":
+		bits.append(action)
+	# Campos comuns de debug
+	for key in ["side", "card", "id", "name", "owner", "owner_name", "target", "source", "actor_id", "damage", "amount", "hp", "max_hp", "formula", "base", "offense", "defense", "raw", "status", "stacks", "reason", "hand_size", "deck_left"]:
+		if detail.has(key):
+			bits.append("%s=%s" % [key, str(detail[key])])
+	# Sub-detalhe de carta
+	if detail.has("card") and typeof(detail["card"]) == TYPE_DICTIONARY:
+		var c: Dictionary = detail["card"]
+		bits.append("card_id=%s" % str(c.get("id", "")))
+		bits.append("card_owner=%s" % str(c.get("owner", "")))
+	return " · ".join(bits)
+
+func _add_battle_log_overlay(viewport_size: Vector2) -> void:
+	var wrap := Control.new()
+	wrap.name = "BattleLogOverlay"
+	wrap.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	wrap.z_index = 48
+	wrap.mouse_filter = Control.MOUSE_FILTER_STOP
+	hud.add_child(wrap)
+	var dim := ColorRect.new()
+	dim.color = Color(0, 0, 0, 0.58)
+	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	dim.gui_input.connect(func(ev: InputEvent) -> void:
+		if ev is InputEventMouseButton and ev.pressed:
+			battle_log_open = false
+			_render_battle()
+	)
+	wrap.add_child(dim)
+	var panel := PanelContainer.new()
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.07, 0.09, 0.14, 0.98)
+	style.set_border_width_all(2)
+	style.border_color = Color(0.85, 0.68, 0.35, 0.95)
+	style.set_corner_radius_all(12)
+	style.set_content_margin_all(14)
+	panel.add_theme_stylebox_override("panel", style)
+	panel.custom_minimum_size = Vector2(minf(720.0, viewport_size.x - 48.0), minf(520.0, viewport_size.y - 80.0))
+	panel.position = Vector2((viewport_size.x - panel.custom_minimum_size.x) * 0.5, 40)
+	wrap.add_child(panel)
+	var col := VBoxContainer.new()
+	col.add_theme_constant_override("separation", 8)
+	panel.add_child(col)
+	col.add_child(_label("HISTÓRICO DETALHADO", 24, Color("f0c27a")))
+	col.add_child(_label("Compras, jogadas, alvos, dano e status — também gravados no session report.", 13, Color("9aa7b8")))
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.custom_minimum_size = Vector2(0, panel.custom_minimum_size.y - 120.0)
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	col.add_child(scroll)
+	var lines := VBoxContainer.new()
+	lines.add_theme_constant_override("separation", 4)
+	lines.custom_minimum_size.x = panel.custom_minimum_size.x - 40.0
+	scroll.add_child(lines)
+	var rows: Array = detailed_history.duplicate()
+	if rows.is_empty():
+		for msg in event_history:
+			rows.append({"kind": "log", "text": str(msg)})
+	var start := maxi(0, rows.size() - 120)
+	for i in range(start, rows.size()):
+		var entry: Dictionary = rows[i]
+		var line := _label(_format_detail_line(entry), 12, Color("d5deea"))
+		line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		line.custom_minimum_size.x = panel.custom_minimum_size.x - 48.0
+		lines.add_child(line)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 10)
+	col.add_child(row)
+	row.add_child(_button("Copiar report", _copy_session_report_path, "Copia o caminho do JSONL"))
+	row.add_child(_button("Fechar", func() -> void:
+		battle_log_open = false
+		_render_battle()
+	))
+
 func _add_battle_menu_button(viewport_size: Vector2) -> void:
 	var btn := _button("Menu", Callable(), "Abre o menu de combate (ESC)")
 	btn.name = "BattleMenuButton"
@@ -5317,6 +5424,18 @@ func _add_battle_menu_button(viewport_size: Vector2) -> void:
 		else: _open_battle_menu()
 	)
 	hud.add_child(btn)
+	var log_btn := _button("Log", Callable(), "Histórico detalhado de combate (mão, jogadas, dano)")
+	log_btn.name = "BattleLogButton"
+	log_btn.custom_minimum_size = Vector2(110, 40)
+	log_btn.position = Vector2(viewport_size.x - 248, 14)
+	log_btn.z_index = 35
+	log_btn.pressed.connect(func() -> void:
+		battle_log_open = not battle_log_open
+		if battle_log_open:
+			battle_menu_open = false
+		_render_battle()
+	)
+	hud.add_child(log_btn)
 
 func _add_battle_menu_overlay(viewport_size: Vector2) -> void:
 	var wrap := Control.new()

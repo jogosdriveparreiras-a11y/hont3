@@ -193,11 +193,12 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 					battle._add_status(victim, str(a[1]), maxi(1, stacks), stacks, int(source["id"]))
 					if a[1] == "all_together_now": battle.team_ko_charges = stacks
 			"block", "block_hp":
-				# Legado: redireciona para Barreira (pool). Cap usa protecao.
+				# Legado → Barreira. block = absoluto; block_hp: ≤1 fração, >1 HP absoluto.
 				for victim in targets:
-					var bamt: int = int(a[1]) if op == "block" else roundi(float(victim["max_hp"]) * float(a[1]))
+					var raw := float(a[1]) if a.size() > 1 else 0.0
+					var bamt: int = maxi(1, roundi(raw)) if (op == "block" or raw > 1.0) else maxi(1, roundi(float(victim["max_hp"]) * raw))
 					var br: int = 2 if bamt >= 10 else 1
-					battle._add_status(victim, "barrier", br, maxi(1, bamt), int(source["id"]))
+					battle._add_status(victim, "barrier", br, bamt, int(source["id"]))
 			"barreira_hp":
 				# ["barreira_hp", rounds, fraction_of_max_hp]
 				var br2: int = int(a[1]) if a.size() > 1 else 1

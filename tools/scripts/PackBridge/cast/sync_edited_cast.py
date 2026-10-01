@@ -77,45 +77,43 @@ SKIP_PATTERNS = [
     re.compile(r"^[A-Za-z0-9_-]{20,}\.(png|jpg|jpeg|webp)$", re.I),
 ]
 
-GENERIC_CARD_SPECS = [
-    # iniciais
-    {"suffix": "golpe", "name": "Golpe", "class": "ATTACK", "target": "ENEMY",
+SHARED_MANEUVER_POOL = [
+    # Pool compartilhado — NÃO inventar manobras temáticas por nome de personagem.
+    {"id": "manobra_golpe", "name": "Golpe", "class": "ATTACK", "target": "ENEMY",
      "actions": [["hit", "0"]], "reach": True, "stat": "attack", "unlock": "starting",
      "gain": 1, "tier": "inicial", "anim_self": ["Slash1"], "anim_target": ["Hit1"]},
-    {"suffix": "guarda", "name": "Guarda", "class": "ESTADO", "target": "SELF",
-     "actions": [["self_status", "barrier", "2"], ["block_hp", "6"]], "reach": False,
+    {"id": "manobra_guarda", "name": "Guarda", "class": "ESTADO", "target": "SELF",
+     "actions": [["barrier", "2", "6"]], "reach": False,
      "stat": "armor", "unlock": "starting", "gain": 1, "tier": "inicial",
      "anim_self": ["buff"], "anim_target": ["Shield"]},
-    {"suffix": "foco", "name": "Foco", "class": "ESTADO", "target": "SELF",
+    {"id": "manobra_foco", "name": "Foco", "class": "ESTADO", "target": "SELF",
      "actions": [["self_status", "strengthened", "1"]], "reach": False, "stat": "power",
      "unlock": "starting", "gain": 1, "tier": "inicial", "anim_self": ["buff"], "anim_target": ["status"]},
-    {"suffix": "rajada", "name": "Rajada", "class": "ATTACK", "target": "ENEMY",
+    {"id": "manobra_rajada", "name": "Rajada", "class": "ATTACK", "target": "ENEMY",
      "actions": [["hit", "0"]], "reach": True, "stat": "power", "unlock": "starting",
      "gain": 1, "tier": "inicial", "anim_self": ["Special2"], "anim_target": ["HitSP2"]},
-    {"suffix": "cura_rapida", "name": "Cura Rapida", "class": "ESTADO", "target": "ALLY",
-     "actions": [["heal", "0"]], "reach": False, "stat": "power", "unlock": "starting",
+    {"id": "manobra_cura_rapida", "name": "Cura Rápida", "class": "ESTADO", "target": "ALLY",
+     "actions": [["heal", "8"]], "reach": False, "stat": "power", "unlock": "starting",
      "gain": 1, "tier": "inicial", "anim_self": ["buff"], "anim_target": ["Recovery1"]},
-    # evoluídas
-    {"suffix": "impacto", "name": "Impacto", "class": "ATTACK", "target": "ENEMY",
+    {"id": "manobra_impacto", "name": "Impacto", "class": "ATTACK", "target": "ENEMY",
      "actions": [["hit", "1"]], "reach": False, "stat": "attack", "unlock": "evolved",
      "gain": 2, "tier": "evoluida", "anim_self": ["Slash2"], "anim_target": ["Hit2"]},
-    {"suffix": "barreira", "name": "Barreira", "class": "ESTADO", "target": "SELF",
-     "actions": [["self_status", "barrier", "3"], ["block_hp", "10"]], "reach": False,
+    {"id": "manobra_barreira", "name": "Barreira", "class": "ESTADO", "target": "SELF",
+     "actions": [["barrier", "2", "10"]], "reach": False,
      "stat": "armor", "unlock": "evolved", "gain": 1, "tier": "evoluida",
      "anim_self": ["buff"], "anim_target": ["Shield"]},
-    {"suffix": "onda", "name": "Onda", "class": "ATTACK", "target": "ALL_ENEMIES",
+    {"id": "manobra_onda", "name": "Onda", "class": "ATTACK", "target": "ALL_ENEMIES",
      "actions": [["hit", "0"]], "reach": True, "stat": "power", "unlock": "evolved",
      "gain": 1, "tier": "evoluida", "anim_self": ["Special1"], "anim_target": ["Explosion1"]},
-    {"suffix": "inspirar", "name": "Inspirar", "class": "ESTADO", "target": "ALL_ALLIES",
-     "actions": [["heal", "0"]], "reach": False, "stat": "power", "unlock": "evolved",
+    {"id": "manobra_inspirar", "name": "Inspirar", "class": "ESTADO", "target": "ALL_ALLIES",
+     "actions": [["heal", "6"]], "reach": False, "stat": "power", "unlock": "evolved",
      "gain": 1, "tier": "evoluida", "anim_self": ["buff"], "anim_target": ["Recovery2"]},
-    {"suffix": "finisher", "name": "Finisher", "class": "ATTACK", "target": "ENEMY",
+    {"id": "manobra_finisher", "name": "Finisher", "class": "ATTACK", "target": "ENEMY",
      "actions": [["hit", "2"], ["self_status", "strengthened", "1"]], "reach": False,
      "stat": "attack", "unlock": "evolved", "gain": 2, "tier": "evoluida",
      "anim_self": ["Slash3"], "anim_target": ["Blow1"]},
 ]
-
-
+GENERIC_CARD_SPECS = SHARED_MANEUVER_POOL  # alias legado
 def is_background(color, bg):
     r, g, b = color[:3]
     return abs(r - bg[0]) + abs(g - bg[1]) + abs(b - bg[2]) < 28
@@ -272,16 +270,14 @@ def process_art(source: Path, hero_id: str, type_name: str) -> dict:
     }
 
 
-def make_generic_cards(hero_id: str) -> tuple[list[dict], list[str], list[str]]:
-    cards = []
-    iniciais = []
-    evoluidas = []
-    for spec in GENERIC_CARD_SPECS:
-        cid = f"{hero_id}_{spec['suffix']}"
-        card = {
+def ensure_shared_maneuver_pool(cards: dict) -> None:
+    """Valida/insere o pool compartilhado de manobras genéricas (sem tema por nome)."""
+    for spec in SHARED_MANEUVER_POOL:
+        cid = spec["id"]
+        cards[cid] = {
             "id": cid,
             "name": spec["name"],
-            "owner": hero_id,
+            "owner": "shared_pool",
             "class": spec["class"],
             "target": spec["target"],
             "actions": spec["actions"],
@@ -295,13 +291,26 @@ def make_generic_cards(hero_id: str) -> tuple[list[dict], list[str], list[str]]:
             "anim_self": spec["anim_self"],
             "anim_target": spec["anim_target"],
             "anim_timing": "parallel",
+            "shared_pool": True,
         }
-        cards.append(card)
+
+
+def make_generic_cards(hero_id: str) -> tuple[list[dict], list[str], list[str]]:
+    # Personagens sem kit customizado usam só o pool compartilhado (ids manobra_*).
+    # Não cria cartas temáticas com o nome do herói.
+    cards = []
+    iniciais = []
+    evoluidas = []
+    for spec in SHARED_MANEUVER_POOL:
+        cid = spec["id"]
+        # cards list returned for report only; real defs live in shared pool
+        cards.append({"id": cid, "shared_pool": True, "owner_ref": hero_id})
         if spec["tier"] == "inicial":
             iniciais.append(cid)
         else:
             evoluidas.append(cid)
     return cards, iniciais, evoluidas
+
 
 
 def make_generic_hero(meta: dict, paths: dict) -> dict:
@@ -333,11 +342,7 @@ def make_generic_hero(meta: dict, paths: dict) -> dict:
         "signature": {"name": "Reserva", "target": "SELF", "action": ["BLOCK", "2"]},
         "tags": [{"name": "Genérico", "level": 1}],
         "escudo": meta.get("escudo", 16),
-        "aprimoramento": {
-            "id": "generico",
-            "name": "Kit Genérico",
-            "text": "Baralho genérico provisório — a refinar.",
-        },
+        "aprimoramento": "",
         "grupos": ["Genérico"],
         "biografia": f"{meta['name']} — personagem novo importado do Cast Edited (kit genérico).",
         "playable": True,
@@ -362,6 +367,7 @@ def main() -> None:
     catalog = json.loads(CATALOG.read_text(encoding="utf-8"))
     heroes = catalog.setdefault("heroes", {})
     cards = catalog.setdefault("cards", {})
+    ensure_shared_maneuver_pool(cards)
 
     report = {
         "updated": [],

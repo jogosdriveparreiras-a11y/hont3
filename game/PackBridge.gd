@@ -33,9 +33,9 @@ func _load_owner_mapping() -> void:
 		archetype_owners[archetype].append(str(owner_id))
 
 func _aprimoramento_id(src: Dictionary) -> String:
-	var apr = src.get("aprimoramento", src.get("passive", "oportunista"))
+	var apr = src.get("aprimoramento", src.get("passive", ""))
 	if typeof(apr) == TYPE_DICTIONARY:
-		return str(apr.get("id", src.get("passive", "oportunista")))
+		return str(apr.get("id", src.get("passive", "")))
 	return str(apr)
 
 func merge_into_content() -> void:
@@ -76,7 +76,7 @@ func _merge_entity_heroes() -> void:
 			"signature_icon": str(src.get("signature_icon", "")),
 			"row": str(src.get("row", "front")),
 			"passive": _aprimoramento_id(src),
-			"aprimoramento": src.get("aprimoramento", src.get("passive", "oportunista")),
+			"aprimoramento": src.get("aprimoramento", src.get("passive", "")),
 			"grupos": src.get("grupos", []),
 			"biografia": str(src.get("biografia", "")),
 			"iniciais": src.get("iniciais", cards),
@@ -141,7 +141,7 @@ func definition(card_id: String) -> Dictionary:
 
 func is_pack_card(card_id: String) -> bool:
 	var id := str(card_id)
-	return id.begins_with("ms_") or id.begins_with("ent_") or id.begins_with("combo_")
+	return id.begins_with("ms_") or id.begins_with("ent_") or id.begins_with("combo_") or id.begins_with("manobra_")
 
 func play_card(battle: Variant, mode: String, hand_index: int, target_id: int, chain_ids: Array = []) -> bool:
 	if battle == null:
@@ -151,8 +151,14 @@ func play_card(battle: Variant, mode: String, hand_index: int, target_id: int, c
 	if hand_index < 0 or hand_index >= acting_hand.size():
 		return false
 	var card_id: String = str(acting_hand[hand_index].get("id", ""))
-	if mode == "entities" or card_id.begins_with("ent_") or card_id.begins_with("combo_"):
-		return entities.play(battle, hand_index, target_id, chain_ids)
+	# Reanimar / itens: motor principal (ownerless, REVIVE / DEAD_ALLY).
+	if card_id == "reanimar" or card_id.begins_with("item_"):
+		return battle.play(hand_index, target_id, chain_ids)
+	if card_id.begins_with("ent_") or card_id.begins_with("combo_") or card_id.begins_with("manobra_") or mode == "entities":
+		if is_pack_card(card_id) or card_id.begins_with("manobra_"):
+			return entities.play(battle, hand_index, target_id, chain_ids)
+		# mode entities mas carta Content pura (ex.: marca, barreira base)
+		return battle.play(hand_index, target_id, chain_ids)
 	if mode == "external" or card_id.begins_with("ms_"):
 		return external.play(battle, hand_index, target_id, chain_ids)
 	return battle.play(hand_index, target_id, chain_ids)

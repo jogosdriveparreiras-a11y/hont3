@@ -42,6 +42,7 @@ var enemy_exhausted: Array[Dictionary] = []
 var enemy_card_plays := 0
 var enemy_redraws := 0
 var enemy_moves := 0
+var enemy_failed_uids: Dictionary = {}  # uid -> true: IA falhou nesta fase; não reescolher
 var enemy_impulse := 0
 var enemy_combo_used := false
 var request_end_turn := false
@@ -352,6 +353,31 @@ func dead_on_side(side: String) -> Array[Dictionary]:
 		found.append(actor)
 	return found
 
+
+func is_ownerless_card(card: Dictionary, definition: Dictionary = {}) -> bool:
+	var def: Dictionary = definition if not definition.is_empty() else Content.CARDS.get(str(card.get("id", "")), {})
+	if bool(card.get("ownerless", false)) or bool(def.get("ownerless", false)):
+		return true
+	if bool(def.get("item", false)) or str(card.get("id", "")).begins_with("item_"):
+		return true
+	if str(card.get("id", "")) == "reanimar" or str(def.get("id", "")) == "reanimar":
+		return true
+	return false
+
+func resolve_play_source(card: Dictionary, side: String = "") -> Dictionary:
+	# Itens / Reanimar: sem dono — qualquer unidade viva do lado ativo conjura.
+	var acting := side if side != "" else _acting()
+	var def: Dictionary = Content.CARDS.get(str(card.get("id", "")), {})
+	if is_ownerless_card(card, def):
+		var preferred := actor_by_id(int(card.get("owner", -1)))
+		if not preferred.is_empty() and int(preferred.get("hp", 0)) > 0 and str(preferred.get("side", "")) == acting:
+			return preferred
+		var alive := living(acting)
+		if not alive.is_empty():
+			return alive[0]
+		return {}
+	return actor_by_id(int(card.get("owner", -1)))
+
 func _reanimar_host(side: String) -> Dictionary:
 	var alive := living(side)
 	if alive.is_empty():
@@ -379,12 +405,9 @@ func _sync_reanimar(side: String) -> void:
 				removed += 1
 				continue
 			kept = true
-			var owner := actor_by_id(int(card.get("owner", -1)))
-			if owner.is_empty() or int(owner.get("hp", 0)) <= 0 or str(owner.get("side", "")) != side:
-				var host := _reanimar_host(side)
-				if not host.is_empty():
-					card["owner"] = int(host["id"])
-					pile[index] = card
+			card["ownerless"] = true
+			card["owner"] = -1
+			pile[index] = card
 	if dead.is_empty():
 		if removed > 0:
 			_rpt("card", "reanimar_remove", {"side": side, "removed": removed})
@@ -394,14 +417,16 @@ func _sync_reanimar(side: String) -> void:
 	var host := _reanimar_host(side)
 	if host.is_empty():
 		return
-	var fresh := _create_card("reanimar", int(host["id"]))
+	var fresh := _create_card("reanimar", -1)
+	fresh["ownerless"] = true
+	fresh["owner"] = -1
 	var pile_deck := _deck_of(side)
 	var at := 0
 	if not pile_deck.is_empty():
 		at = rng.randi_range(0, pile_deck.size())
 	pile_deck.insert(at, fresh)
 	_log("Reanimar entrou no baralho.")
-	_rpt("card", "reanimar_insert", {"side": side, "owner": int(host["id"]), "deck": pile_deck.size()})
+	_rpt("card", "reanimar_insert", {"side": side, "owner": -1, "ownerless": true, "deck": pile_deck.size()})
 
 func _draw_side(side: String, amount: int) -> void:
 	var pile_hand := _hand_of(side)
@@ -1417,6 +1442,24 @@ func _take_damage(source: Dictionary, target: Dictionary, amount: int, pierce: b
 	if hp_lost > 0: visual.emit("hit", int(source["id"]), int(target["id"]), hp_lost)
 	elif amount > 0: visual.emit("block", int(source["id"]), int(target["id"]), amount)
 	_log("%s sofreu %d de dano (%d Vida)." % [target["name"], amount, target["hp"]])
+	_rpt("battle", "damage", {
+		"source_id": int(source.get("id", -1)),
+		"source": str(source.get("name", "")),
+		"source_side": str(source.get("side", "")),
+		"target_id": int(target.get("id", -1)),
+		"target": str(target.get("name", "")),
+		"target_side": str(target.get("side", "")),
+		"amount": amount,
+		"hp_lost": hp_lost,
+		"hp_before": hp_before,
+		"hp_after": int(target.get("hp", 0)),
+		"max_hp": int(target.get("max_hp", 0)),
+		"pierce": pierce,
+		"area": area,
+		"melee": melee,
+		"from_card": from_card,
+		"same_side": str(source.get("side", "")) == str(target.get("side", "")),
+	})
 	var died: bool = target["hp"] <= 0
 	if died:
 		_log("%s caiu." % target["name"])
@@ -1699,10 +1742,16 @@ func play(hand_index: int, target_id: int, chain_ids: Array = []) -> bool:
 	if hand_index < 0 or hand_index >= acting_hand.size():
 		return false
 	var card: Dictionary = acting_hand[hand_index]
-	var source := actor_by_id(card["owner"])
-	var target := actor_by_id(target_id)
 	var definition: Dictionary = Content.CARDS.get(card["id"], {})
-	if source.is_empty() or target.is_empty() or source["hp"] <= 0 or definition.is_empty() or source.get("side", "") != side:
+	var source := resolve_play_source(card, side)
+	var target := actor_by_id(target_id)
+	if source.is_empty() or target.is_empty() or definition.is_empty() or source.get("side", "") != side:
+		return false
+	if int(source.get("hp", 0)) <= 0 and not is_ownerless_card(card, definition):
+		return false
+	# Reanimar / DEAD_ALLY: alvo pode estar morto; demais cartas exigem alvo vivo (exceto REVIVE).
+	var wants_dead := str(definition.get("target", "")) == "DEAD_ALLY" or definition.get("effects", []).any(func(e): return str(e.get("kind", "")) == "REVIVE")
+	if int(target.get("hp", 0)) <= 0 and not wants_dead:
 		return false
 	# Manobra Combo (duo/trio): exige todos os membros nomeados vivos.
 	var combo_members: Array = definition.get("combo_members", card.get("combo_members", []))
@@ -1999,7 +2048,7 @@ func preview(hand_index: int, target_id: int, chain_ids: Array = []) -> Dictiona
 	var acting_hand := _hand_of(_acting())
 	if hand_index < 0 or hand_index >= acting_hand.size(): return {}
 	var card: Dictionary = acting_hand[hand_index]
-	var source := actor_by_id(card["owner"])
+	var source := resolve_play_source(card)
 	var target := actor_by_id(target_id)
 	if source.is_empty() or target.is_empty(): return {}
 	var definition: Dictionary = Content.CARDS.get(card["id"], {})
@@ -2178,6 +2227,7 @@ func begin_enemy_phase() -> void:
 	_purge_dead_cards()
 	request_end_turn = false
 	phase = "ENEMY"
+	enemy_failed_uids.clear()
 	enemy_card_plays = int(rules["card_plays"])
 	enemy_redraws = int(rules["redraws"])
 	enemy_moves = int(rules["moves"])
@@ -2248,6 +2298,12 @@ func enemy_step() -> bool:
 		return bridge.play_card(self, mode, int(choice["index"]), int(choice["target"]), choice.get("chain", []))
 	return play(int(choice["index"]), int(choice["target"]), choice.get("chain", []))
 
+func mark_enemy_play_failed(card: Dictionary) -> void:
+	var uid := int(card.get("uid", -1))
+	if uid >= 0:
+		enemy_failed_uids[uid] = true
+	_rpt("ai", "enemy_play_failed", {"uid": uid, "id": str(card.get("id", "")), "owner": int(card.get("owner", -1))})
+
 func finish_enemy_phase() -> void:
 	if phase != "ENEMY": return
 	_posture_end_of_side("ENEMY")
@@ -2286,16 +2342,24 @@ func _best_enemy_redraw_index() -> int:
 			break
 	for index in range(enemy_hand.size()):
 		var card: Dictionary = enemy_hand[index]
-		var source := actor_by_id(int(card.get("owner", -1)))
 		var definition: Dictionary = Content.CARDS.get(str(card.get("id", "")), {})
-		if source.is_empty() or int(source.get("hp", 0)) <= 0 or definition.is_empty():
+		var source := resolve_play_source(card, "ENEMY")
+		# Ownerless (Reanimar/itens): não tratar como "morto" só porque owner=-1.
+		if definition.is_empty():
+			return index
+		if source.is_empty() or int(source.get("hp", 0)) <= 0:
+			if is_ownerless_card(card, definition):
+				continue  # sem conjurador vivo agora; tenta outra carta
 			return index
 		if _cost(source, definition) > _get_impulse("ENEMY"):
 			return index
 	if any_unlocked:
 		for index in range(enemy_hand.size()):
 			var card2: Dictionary = enemy_hand[index]
-			var source2 := actor_by_id(int(card2.get("owner", -1)))
+			var def2: Dictionary = Content.CARDS.get(str(card2.get("id", "")), {})
+			if is_ownerless_card(card2, def2):
+				continue
+			var source2 := resolve_play_source(card2, "ENEMY")
 			if _enemy_owner_locked(source2):
 				return index
 		# Dono vivo e livre, mas sem alvo legal (alcance/conceal): tenta recompra.
@@ -2307,13 +2371,15 @@ func diagnose_enemy_hand() -> Array:
 	var rows: Array = []
 	for index in range(enemy_hand.size()):
 		var card: Dictionary = enemy_hand[index]
-		var source := actor_by_id(int(card.get("owner", -1)))
 		var definition: Dictionary = Content.CARDS.get(str(card.get("id", "")), {})
+		var source := resolve_play_source(card, "ENEMY")
 		var reason := ""
 		if definition.is_empty():
 			reason = "no_definition"
+		elif enemy_failed_uids.has(int(card.get("uid", -1))):
+			reason = "failed_this_phase"
 		elif source.is_empty() or int(source.get("hp", 0)) <= 0:
-			reason = "owner_dead"
+			reason = "owner_dead" if not is_ownerless_card(card, definition) else "no_living_caster"
 		elif _enemy_owner_locked(source):
 			reason = "owner_locked"
 		elif _cost(source, definition) > _get_impulse("ENEMY"):
@@ -2358,9 +2424,11 @@ func _best_enemy_play() -> Dictionary:
 	var force_instant := hand_has_playable_instantaneo("ENEMY")
 	for index in range(enemy_hand.size()):
 		var card: Dictionary = enemy_hand[index]
+		if enemy_failed_uids.has(int(card.get("uid", -1))):
+			continue
 		var definition: Dictionary = Content.CARDS.get(card["id"], {})
-		var source := actor_by_id(int(card["owner"]))
-		if source.is_empty() or source.get("hp", 0) <= 0 or definition.is_empty(): continue
+		var source := resolve_play_source(card, "ENEMY")
+		if definition.is_empty() or source.is_empty() or int(source.get("hp", 0)) <= 0: continue
 		if force_instant and not is_instant_card(card, definition):
 			continue
 		if _has_status(source, "stun") or _has_status(source, "bind") or _has_status(source, "bound") or _has_status(source, "dazed") or _has_status(source, "banished") or _has_status(source, "finalized"):

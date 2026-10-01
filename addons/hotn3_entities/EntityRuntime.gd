@@ -569,8 +569,15 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 	var prior_hand: Dictionary = {}
 	for held in acting_hand: prior_hand[int(held["uid"])] = true
 	var def: Dictionary = _runtime_card_def(card)
-	if def.is_empty(): return battle.play(hand_index, target_id, chain_ids)
-	var source: Dictionary = battle.actor_by_id(int(card["owner"]))
+	# Reanimar / ownerless Content (effects, sem actions de pacote) → BattleState.play.
+	var cid0 := str(card.get("id", ""))
+	if def.is_empty() or cid0 == "reanimar" or (bool(def.get("ownerless", false)) and not cid0.begins_with("ent_") and not cid0.begins_with("ms_") and not cid0.begins_with("manobra_")):
+		return battle.play(hand_index, target_id, chain_ids)
+	var source: Dictionary = {}
+	if battle.has_method("resolve_play_source"):
+		source = battle.resolve_play_source(card, _acting_side(battle))
+	else:
+		source = battle.actor_by_id(int(card.get("owner", -1)))
 	var target: Dictionary = battle.actor_by_id(target_id)
 	if source.is_empty() or target.is_empty(): return false
 	if str(source.get("side", "")) != _acting_side(battle): return false
@@ -579,7 +586,8 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 	if battle.has_method("must_play_instantaneo_first") and battle.must_play_instantaneo_first(card, def, _acting_side(battle)):
 		battle._log("Há Instantâneo jogável — jogue-o antes de outras cartas.")
 		return false
-	if int(source.get("hp", 0)) <= 0 and not _has_action(def, "revive_self"): return false
+	var ownerless := bool(def.get("ownerless", false)) or bool(card.get("ownerless", false)) or cid0 == "reanimar" or bool(def.get("item", false))
+	if int(source.get("hp", 0)) <= 0 and not _has_action(def, "revive_self") and not ownerless: return false
 	# Itens com dono explícito: dono precisa estar vivo / no time do conjurador.
 	if bool(def.get("item", false)) and def.has("owner_hero"):
 		var need := str(def["owner_hero"])
@@ -588,7 +596,8 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 			if str(ally.get("archetype", "")) == need:
 				ok = true; break
 		if not ok: return false
-	if int(target.get("hp", 0)) <= 0 and not _has_action(def, "revive_self") and not _has_action(def, "revive_ally"): return false
+	var wants_dead := str(def.get("target", "")) == "DEAD_ALLY" or _has_action(def, "revive_self") or _has_action(def, "revive_ally")
+	if int(target.get("hp", 0)) <= 0 and not wants_dead: return false
 	if not bool(def.get("play_while_disabled", false)):
 		for locked in ["stun", "bind", "bound", "banished", "finalized"]:
 			if battle._has_status(source, locked): return false

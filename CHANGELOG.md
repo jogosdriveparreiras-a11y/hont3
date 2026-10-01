@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-10-01 — Multi-fix combate (Marcus)
+
+- **IA / times:** falha de jogada inimiga não zera mais `enemy_card_plays` (marcava Reanimar inválido e a IA parava de atacar). `mark_enemy_play_failed` + skip por uid.
+- **Reanimar ownerless:** como itens — `owner=-1`, qualquer vivo do lado conjura; `DEAD_ALLY`/`REVIVE` via `BattleState.play` (PackBridge/EntityRuntime não rejeitam mais alvo morto).
+- **Barreira 422:** `block_hp` com valor >1 trata HP absoluto (antes `max_hp * 6`). Pool compartilhado usa `["barrier", rounds, hp]`.
+- **Aprimoramentos:** remove genéricos/`oportunista`/arquétipos filler; mantém só kits desenhados (`escuridao`, `gordura_100`, `naomi_despertar`).
+- **Pool de manobras:** `manobra_*` compartilhado; heróis sem kit custom (Caçadora, Delírio, …) usam só o pool — sem inventar manobras por nome.
+- **HUD Log:** botão Log abre histórico detalhado (compras/jogadas/dano/status) alinhado ao session report.
+
+
 ## 2026-09-30 — Marcell Wine kit redesenhado (pai de Alyssa)
 
 - Lore: Marcell é **pai** de Alyssa (não irmão); biografia e aprimoramento Escuridão alinhados a Alyssa (+1 E ao sofrer dano).
