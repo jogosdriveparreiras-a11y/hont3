@@ -108,7 +108,8 @@ func deploy(battle: Variant, mission_id: String, entity_ids: Array[String], chos
 	var placeholders: Array[String] = []
 	for i in range(n):
 		placeholders.append(pool_ph[i])
-	battle.begin(mission_id, placeholders, {}, seed_value)
+	# auto_open=false: evita mão/log/passiva do placeholder Guerreiro/Mago/Ladino no HUD.
+	battle.begin(mission_id, placeholders, {}, seed_value, {}, {}, false)
 	var slots: Array[Dictionary] = battle.living("ALLY")
 	if slots.size() != n:
 		return false
@@ -171,17 +172,17 @@ func deploy(battle: Variant, mission_id: String, entity_ids: Array[String], chos
 		var pass_id := str(ally.get("passive", ""))
 		if typeof(ally.get("aprimoramento", "")) == TYPE_DICTIONARY:
 			pass_id = str(ally["aprimoramento"].get("id", pass_id))
+		# Passivas de rodada (vanguarda/baluarte/canalizar) aplicam em start_turn com nome real.
 		match pass_id:
-			"vanguarda":
-				if ally["row"] == "front": battle._add_status(ally, "barrier", 1, 2, int(ally["id"]))
-			"baluarte": battle._add_status(ally, "barrier", 1, 2, int(ally["id"]))
 			"gordura_100":
 				pass  # imunidade via _add_status
-			"canalizar": battle.impulse = mini(int(battle.rules["impulse_max"]), int(battle.impulse) + 1)
 			"naomi_despertar":
 				ally["nero_plays"] = 0
 				ally["transformed"] = false
-	battle._draw(int(battle.rules["opening_hand"]))
+	battle._draw_side("ALLY", int(battle.rules["opening_hand"]))
+	battle._draw_side("ENEMY", int(battle.rules["opening_hand"]))
+	battle._log("Missão: %s" % battle.mission["name"])
+	battle.start_turn()
 	for card in battle.hand: on_draw(battle, card)
 	on_turn_start(battle)
 	battle.changed.emit()
@@ -730,6 +731,8 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 		battle._check_end()
 		battle.changed.emit()
 		return true
+	# Antes do resolve: play_stamp de status (Confusão) casa com _after_card_play.
+	battle.played_cards += 1
 	for a in def["actions"]:
 		var op: String = a[0]
 		if acted.has(op) and op in ["quick", "free", "exhaust", "final"]: continue
@@ -1327,7 +1330,6 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 	else: _acting_discard(battle).append(card)
 	if battle.has_method("_notify_card_posture_hooks"):
 		battle._notify_card_posture_hooks(source, def)
-	battle.played_cards += 1
 	# Instantâneo não encerra a fase — só bloqueia Encerrar enquanto na mão.
 	if battle._has_status(source, "invulnerable"):
 		source["statuses"].erase("invulnerable")

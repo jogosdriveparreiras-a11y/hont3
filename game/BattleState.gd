@@ -119,7 +119,7 @@ func _set_plays(side: String, value: int) -> void:
 func _add_plays(side: String, amount: int) -> void:
 	_set_plays(side, _get_plays(side) + amount)
 
-func begin(mission_id: String, team: Array[String], equipped: Dictionary, seed_value: int = 0, card_improvements: Dictionary = {}, selected_items: Dictionary = {}) -> void:
+func begin(mission_id: String, team: Array[String], equipped: Dictionary, seed_value: int = 0, card_improvements: Dictionary = {}, selected_items: Dictionary = {}, auto_open: bool = true) -> void:
 	if not PackBridge.packs_merged:
 		PackBridge.new()
 	rng.seed = seed_value if seed_value != 0 else randi()
@@ -188,6 +188,8 @@ func begin(mission_id: String, team: Array[String], equipped: Dictionary, seed_v
 		spawn_enemy(str(id))
 	_shuffle(deck)
 	_shuffle(enemy_deck)
+	if not auto_open:
+		return
 	_draw_side("ALLY", int(rules["opening_hand"]))
 	_draw_side("ENEMY", int(rules["opening_hand"]))
 	_log("Missão: %s" % mission["name"])
@@ -1164,7 +1166,8 @@ func _add_status(actor: Dictionary, id: String, duration: int, stacks: int, sour
 		state["duration"] = max(int(state["duration"]), duration)
 		state["stacks"] = min(9, int(state["stacks"]) + stacks)
 	state["source"] = source
-	state["play_stamp"] = played_cards if phase == "PLAYER" else -1
+	# Stamp atual: _after_card_play ignora thrash na mesma jogada que aplicou o status (PLAYER e ENEMY).
+	state["play_stamp"] = played_cards
 	if id == "summoning": state["armed"] = false
 	statuses[id] = state
 	_log("%s: %s (%d)." % [actor["name"], id, state["stacks"]])
@@ -1777,10 +1780,14 @@ func _after_card_play() -> void:
 			if state.get("play_stamp", -1) == played_cards: continue
 			state["stacks"] = int(state.get("stacks", 1)) - 1
 			if id == "confused" and not _has_status(actor, "stun") and not _has_status(actor, "bind") and not _has_status(actor, "bound"):
-				var possible := living("ALLY") + living("ENEMY")
-				possible.erase(actor)
+				var self_id := int(actor.get("id", -1))
+				var possible: Array[Dictionary] = []
+				for cand in living("ALLY") + living("ENEMY"):
+					if int(cand.get("id", -1)) != self_id:
+						possible.append(cand)
 				if not possible.is_empty():
 					var victim: Dictionary = possible[rng.randi_range(0, possible.size() - 1)]
+					_log("Confusão: [b]%s[/b] atacou [b]%s[/b]." % [actor.get("name", "?"), victim.get("name", "?")])
 					_take_damage(actor, victim, max(1, int(actor["attack"])), false, false)
 			if int(state.get("stacks", 0)) > 0:
 				statuses[nid] = state

@@ -1,5 +1,11 @@
 ## 2026-10-01 — Remove Assinatura; Arena 1–3; Log HUD pt-BR
 
+## 2026-10-01 — Confusão + log Guerreiro
+
+- **Guerreiro fantasma no HUD**: `EntityRuntime.deploy` chamava `begin` com placeholders (`guerreiro`/`mago`/`ladino`), que compravam a mão inicial e aplicavam passiva *antes* da troca pelos heróis reais → log "[b]Guerreiro[/b] comprou…". Agora `begin(..., auto_open=false)` e o deploy só abre mão/`start_turn` com nomes reais.
+- **Confusão**: (1) `play_stamp` também na fase ENEMY (antes era `-1` e thrashava na carta que aplicava); (2) `EntityRuntime.play` incrementa `played_cards` *antes* do resolve (igual `BattleState.play`); (3) thrash exclui self por `id` + log "Confusão: X atacou Y".
+
+
 - **Assinatura/signature removida** de `entities.json` e de `EntityRuntime.on_turn_start` (sem Barrier/BLOCK automático). Alyssa mantém só Aprimoramento **Escuridão**.
 - **Arena**: equipes incompletas OK (1–3 por lado); botão Limpar nos slots; deploy aceita 1–3.
 - **HUD Log**: português legível com negrito (BBCode); compras/jogadas/alvos; dano com parciais da fórmula (Impacto/Poder − Armadura/Escudo). Sem dump JSON bruto.
