@@ -2664,6 +2664,19 @@ func _choose_target(actor_id: int) -> void:
 		_show_block_popup(why)
 		_render_battle()
 
+
+func _actor_display_sprite(actor: Dictionary) -> String:
+	# Marcell Wine: sprite por stacks de Escuridão (E); usa o E disponível mais próximo.
+	if battle != null and battle.has_method("marcell_wine_sprite_for_e"):
+		if str(actor.get("archetype", "")) == "ent_marcell_wine":
+			var e: int = 0
+			if battle.has_method("_status_stacks"):
+				e = battle._status_stacks(actor, "escuridao")
+			var path := str(battle.marcell_wine_sprite_for_e(e))
+			if path != "":
+				return _sensitive_path(path, "sprite")
+	return _sensitive_path(str(actor.get("sprite", "")), "sprite")
+
 func _render_actors() -> void:
 	unit_sprites.clear()
 	var present := {}
@@ -2682,7 +2695,7 @@ func _render_actors() -> void:
 					if other["id"] == actor["id"]: row_index = row_count
 					row_count += 1
 			var location := _actor_world_pos(side, row, row_index, row_count)
-			var expected_sprite := _sensitive_path(str(actor.get("sprite", "")), "sprite")
+			var expected_sprite := _actor_display_sprite(actor)
 			if actor_nodes.has(id):
 				var existing: Node3D = actor_nodes[id]
 				if str(existing.get_meta("sprite_resource", "")) != expected_sprite:
@@ -2734,7 +2747,7 @@ func _actor_world_pos(side: String, row: String, row_index: int, row_count: int)
 
 func _create_actor_visual(actor: Dictionary) -> Node3D:
 	var body := Node3D.new()
-	body.set_meta("sprite_resource", _sensitive_path(str(actor.get("sprite", "")), "sprite"))
+	body.set_meta("sprite_resource", _actor_display_sprite(actor))
 	units.add_child(body)
 	var ring := MeshInstance3D.new()
 	ring.name = "FloorRing"

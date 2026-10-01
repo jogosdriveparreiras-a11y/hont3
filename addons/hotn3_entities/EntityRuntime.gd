@@ -896,8 +896,12 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 					battle.try_posture_trigger(source, "curador")
 			"sacrifice_minion":
 				for victim in targets:
-					if bool(victim.get("is_summon", false)):
+					if bool(victim.get("is_summon", false)) or bool(victim.get("minion", false)):
 						victim["hp"] = 0
+						if battle.has_method("dismiss_minion"):
+							battle.dismiss_minion(victim, false)
+						elif battle.has_method("purge_owner_cards"):
+							battle.purge_owner_cards(int(victim["id"]))
 						if not kos.has(int(victim["id"])): kos.append(int(victim["id"]))
 			"self_damage_hp":
 				var frac: float = float(a[1]) if a.size() > 1 else 1.0
@@ -1340,7 +1344,9 @@ func on_turn_start(battle: Variant) -> void:
 		if actor.has("summon_until") and int(actor["summon_until"]) < int(battle.turn):
 			if int(actor.get("hp", 0)) > 0:
 				actor["hp"] = 0
-				if battle.has_method("purge_owner_cards"):
+				if battle.has_method("dismiss_minion"):
+					battle.dismiss_minion(actor, false)
+				elif battle.has_method("purge_owner_cards"):
 					battle.purge_owner_cards(int(actor["id"]))
 				battle._log("%s (convocado) expirou." % actor.get("name", "?"))
 	# Assinatura/signature removida: Aprimoramentos (ex. Escuridão) são passivos, sem BLOCK no início do turno.

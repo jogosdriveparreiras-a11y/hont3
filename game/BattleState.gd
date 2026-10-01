@@ -213,6 +213,8 @@ func _create_actor(template: Dictionary, side: String, archetype: String) -> Dic
 	actor["statuses"] = {}
 	actor["pending"] = []
 	actor["phase"] = 1  # só para chefes (fase 2), NÃO turno individual
+	if str(archetype) == "ent_marcell_wine":
+		_refresh_marcell_wine_sprite(actor, 0)
 	actors.append(actor)
 	return actor
 
@@ -241,10 +243,10 @@ func purge_summons_of(summoner_id: int) -> void:
 		if int(actor.get("summoner_id", -1)) != summoner_id:
 			continue
 		if int(actor.get("hp", 0)) <= 0:
-			purge_owner_cards(int(actor["id"]))
+			dismiss_minion(actor, false)
 			continue
 		actor["hp"] = 0
-		purge_owner_cards(int(actor["id"]))
+		dismiss_minion(actor, false)
 		_log("%s dissipou-se com o conjurador." % actor.get("name", "?"))
 		visual.emit("death", summoner_id, int(actor["id"]), 0)
 
@@ -327,13 +329,57 @@ func _summon_leaves_cycle(owner: Dictionary) -> bool:
 		return false
 	return bool(owner.get("is_summon", false)) or bool(owner.get("minion", false))
 
+func dismiss_minion(actor: Dictionary, emit_death: bool = false) -> void:
+	# Lacaio morto: some do campo, cartas fora do ciclo, NÃO injeta Reanimar.
+	if actor.is_empty() or not _summon_leaves_cycle(actor):
+		return
+	actor["hp"] = mini(0, int(actor.get("hp", 0)))
+	# Banido força saída de units_on_field mesmo se flags falharem.
+	var statuses := _ensure_statuses(actor)
+	statuses["banished"] = {"duration": 99, "stacks": 1, "source": int(actor.get("id", -1))}
+	purge_owner_cards(int(actor["id"]))
+	if emit_death:
+		visual.emit("death", int(actor.get("id", -1)), int(actor.get("id", -1)), 0)
+
+
+func marcell_wine_sprite_for_e(stacks: int) -> String:
+	# Edited: "Marcell 0.png"…"Marcell 5.png" → ent_marcell_wine_sprite_eN.png
+	# Sem sprite exato: usa o E disponível mais próximo.
+	var want := maxi(0, stacks)
+	var available: Array[int] = []
+	for i in range(0, 32):
+		var path := "res://assets/cast/ent_marcell_wine_sprite_e%d.png" % i
+		if ResourceLoader.exists(path):
+			available.append(i)
+	if available.is_empty():
+		return "res://assets/cast/ent_marcell_wine_sprite.png"
+	var best: int = available[0]
+	var best_dist: int = absi(best - want)
+	for v in available:
+		var d: int = absi(int(v) - want)
+		if d < best_dist:
+			best = int(v)
+			best_dist = d
+	return "res://assets/cast/ent_marcell_wine_sprite_e%d.png" % best
+
+func _refresh_marcell_wine_sprite(actor: Dictionary, stacks: int = -1) -> void:
+	if actor.is_empty():
+		return
+	if str(actor.get("archetype", "")) != "ent_marcell_wine":
+		return
+	var e: int = stacks if stacks >= 0 else _status_stacks(actor, "escuridao")
+	actor["sprite"] = marcell_wine_sprite_for_e(e)
+
 func units_on_field(side: String) -> Array[Dictionary]:
-	# Vivos e caídos (sprite permanece). Banido sai de cena.
+	# Heróis: vivos e caídos (cadáver cinza permanece). Banido sai de cena.
+	# Lacaios/invocações mortos: somem do campo (sem cadáver).
 	var found: Array[Dictionary] = []
 	for actor in actors:
 		if str(actor.get("side", "")) != side:
 			continue
 		if _has_status(actor, "banished"):
+			continue
+		if int(actor.get("hp", 0)) <= 0 and _summon_leaves_cycle(actor):
 			continue
 		found.append(actor)
 	return found
@@ -385,8 +431,8 @@ func _reanimar_host(side: String) -> Dictionary:
 	return alive[0]
 
 func _sync_reanimar(side: String) -> void:
-	# Uma cópia de Reanimar enquanto houver aliado caído neste lado.
-	# Some de mão, baralho, descarte e exhausted quando ninguém está morto.
+	# Uma cópia de Reanimar enquanto houver herói caído (não-lacaio) neste lado.
+	# Lacaios mortos NÃO contam (dead_on_side). Some quando ninguém está morto.
 	var exhausted_pile := _exhausted_of(side)
 	for index in range(exhausted_pile.size() - 1, -1, -1):
 		if str(exhausted_pile[index].get("id", "")) == "reanimar":
@@ -1100,6 +1146,7 @@ func _add_status(actor: Dictionary, id: String, duration: int, stacks: int, sour
 		# Persistente: acumula ao sofrer dano; não tiqueia stacks.
 		state["duration"] = 99
 		state["stacks"] = mini(20, int(state.get("stacks", 0)) + maxi(1, stacks))
+		_refresh_marcell_wine_sprite(actor, int(state["stacks"]))
 	elif id == "bleed":
 		# Bleed X: dura X rodadas, causa X no tick; stacks = dano restante.
 		var add: int = maxi(1, stacks)
@@ -1487,13 +1534,16 @@ func _take_damage(source: Dictionary, target: Dictionary, amount: int, pierce: b
 		var dead_side := str(target.get("side", ""))
 		for ally in living(dead_side):
 			try_posture_trigger(ally, "vingador")
-		if bool(target.get("is_summon", false)) or bool(target.get("minion", false)):
-			purge_owner_cards(int(target["id"]))
-			_log("%s caiu — cartas removidas do baralho." % target.get("name", "?"))
+		var was_minion := bool(target.get("is_summon", false)) or bool(target.get("minion", false))
+		if was_minion:
+			# Lacaio: remove cadáver, limpa cartas; NÃO injeta Reanimar.
+			dismiss_minion(target, false)
+			_log("%s caiu — lacaio removido do campo (sem Reanimar)." % target.get("name", "?"))
 		# Conjurador (ex.: Nero/Naomi) cai → todos os lacaios invocados caem e perdem cartas.
 		purge_summons_of(int(target["id"]))
-		# Herói morto permanece no campo e no ciclo. Reanimar entra no baralho do lado.
-		_sync_reanimar(str(target.get("side", "")))
+		# Só herói (não-lacaio) caído mantém cadáver e pode inserir Reanimar.
+		if not was_minion:
+			_sync_reanimar(str(target.get("side", "")))
 		visual.emit("death", int(source["id"]), int(target["id"]), 0)
 		var ability_ko: bool = source["id"] != target["id"] and source["side"] != target["side"] and (not environmental or from_card)
 		if ability_ko and _has_status(source, "fury_totem"): _draw(1)

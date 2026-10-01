@@ -465,7 +465,7 @@
       "armor": 26,
       "type": "BRUTO",
       "row": "front",
-      "sprite": "res://assets/cast/ent_marcell_wine_sprite.png",
+      "sprite": "res://assets/cast/ent_marcell_wine_sprite_e0.png",
       "portrait": "res://assets/cast/ent_marcell_wine_portrait.png",
       "signature_icon": "res://assets/cast/ent_marcell_wine_icon.png",
       "passive": "escuridao",

@@ -124,7 +124,7 @@ static var CARDS := {
 	"item_potion": {"name": "Poção", "class": "SKILL", "target": "ALLY", "free": true, "exhaust": true, "item": true, "art": "res://assets/items/potion.png", "effects": [{"kind": "HEAL", "amount": 15}], "anim_self": ["light"], "anim_target": ["Light1"]},
 	"item_antidote": {"name": "Antídoto", "class": "SKILL", "target": "ALLY", "free": true, "exhaust": true, "item": true, "art": "res://assets/items/antidote.png", "effects": [{"kind": "CURE"}], "anim_self": ["Special1"], "anim_target": ["debuff"]},
 	"item_bomb": {"name": "Bomba", "class": "ATTACK", "target": "ENEMY", "reach": true, "free": true, "exhaust": true, "item": true, "art": "res://assets/items/bomb.png", "effects": [{"kind": "DAMAGE", "amount": 40, "stat": "none"}], "anim_self": ["lightning"], "anim_target": ["hit"]},
-	"reanimar": {"name": "Reanimar", "class": "SKILL", "target": "DEAD_ALLY", "cost": 4, "ownerless": true, "text": "Sem dono (como itens). Revive um aliado caído com 25% da Vida máxima e aplica Ferido 1.", "effects": [{"kind": "REVIVE", "fraction": 0.25}, {"kind": "STATUS", "id": "ferido", "duration": 1, "stacks": 1}], "anim_self": ["HeartMark1"], "anim_target": ["Light1"]},
+	"reanimar": {"name": "Reanimar", "class": "SKILL", "target": "DEAD_ALLY", "cost": 4, "ownerless": true, "text": "Sem dono (como itens). Revive um herói aliado caído (não lacaio) com 25% da Vida máxima e aplica Ferido 1.", "effects": [{"kind": "REVIVE", "fraction": 0.25}, {"kind": "STATUS", "id": "ferido", "duration": 1, "stacks": 1}], "anim_self": ["HeartMark1"], "anim_target": ["Light1"]},
 }
 
 const ENEMIES := {
