@@ -1750,7 +1750,13 @@ func play(hand_index: int, target_id: int, chain_ids: Array = []) -> bool:
 	if int(source.get("hp", 0)) <= 0 and not is_ownerless_card(card, definition):
 		return false
 	# Reanimar / DEAD_ALLY: alvo pode estar morto; demais cartas exigem alvo vivo (exceto REVIVE).
-	var wants_dead := str(definition.get("target", "")) == "DEAD_ALLY" or definition.get("effects", []).any(func(e): return str(e.get("kind", "")) == "REVIVE")
+	var wants_dead: bool = str(definition.get("target", "")) == "DEAD_ALLY"
+	if not wants_dead:
+		var effects: Array = definition.get("effects", [])
+		for effect in effects:
+			if str(effect.get("kind", "")) == "REVIVE":
+				wants_dead = true
+				break
 	if int(target.get("hp", 0)) <= 0 and not wants_dead:
 		return false
 	# Manobra Combo (duo/trio): exige todos os membros nomeados vivos.
