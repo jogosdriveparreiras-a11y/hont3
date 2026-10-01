@@ -510,35 +510,33 @@
       "signature_icon": "res://assets/cast/ent_marcell_wine_icon.png",
       "passive": "escuridao",
       "pool": [
-        "ent_marcell_wine_pacto_escuro",
-        "ent_marcell_wine_regeneracao_sombria",
-        "ent_marcell_wine_garras_do_abismo",
-        "ent_marcell_wine_bastao_sombrio",
-        "ent_marcell_wine_manto_de_trevas",
-        "ent_marcell_wine_relampago_negro",
-        "ent_marcell_wine_tempestade_latente",
-        "ent_marcell_wine_presenca_opressora",
-        "ent_marcell_wine_furia_primordial",
-        "ent_marcell_wine_desvantagem_legiao",
-        "ent_marcell_wine_pacto_escuro_plus",
-        "ent_marcell_wine_regeneracao_sombria_plus",
-        "ent_marcell_wine_garras_do_abismo_plus",
-        "ent_marcell_wine_bastao_sombrio_plus",
-        "ent_marcell_wine_manto_de_trevas_plus",
-        "ent_marcell_wine_relampago_negro_plus",
-        "ent_marcell_wine_tempestade_latente_plus",
-        "ent_marcell_wine_presenca_opressora_plus",
-        "ent_marcell_wine_furia_primordial_plus"
+        "ent_marcell_wine_bastao_retratil",
+        "ent_marcell_wine_garras_e_presas",
+        "ent_marcell_wine_premonicao",
+        "ent_marcell_wine_tormenta",
+        "ent_marcell_wine_regeneracao",
+        "ent_marcell_wine_relampago",
+        "ent_marcell_wine_intelecto",
+        "ent_marcell_wine_super_sentidos",
+        "ent_marcell_wine_desvantagem_inimigos",
+        "ent_marcell_wine_bastao_retratil_plus",
+        "ent_marcell_wine_garras_e_presas_plus",
+        "ent_marcell_wine_premonicao_plus",
+        "ent_marcell_wine_tormenta_plus",
+        "ent_marcell_wine_regeneracao_plus",
+        "ent_marcell_wine_relampago_plus",
+        "ent_marcell_wine_intelecto_plus",
+        "ent_marcell_wine_super_sentidos_plus"
       ],
       "cards": [
-        "ent_marcell_wine_pacto_escuro",
-        "ent_marcell_wine_regeneracao_sombria",
-        "ent_marcell_wine_garras_do_abismo",
-        "ent_marcell_wine_bastao_sombrio",
-        "ent_marcell_wine_manto_de_trevas"
+        "ent_marcell_wine_bastao_retratil",
+        "ent_marcell_wine_garras_e_presas",
+        "ent_marcell_wine_premonicao",
+        "ent_marcell_wine_tormenta",
+        "ent_marcell_wine_regeneracao"
       ],
       "signature": {
-        "name": "Eclipse latente",
+        "name": "Tempestade latente",
         "target": "SELF",
         "action": [
           "BLOCK",
@@ -575,38 +573,36 @@
       "aprimoramento": {
         "id": "escuridao",
         "name": "Escuridão",
-        "text": "Sempre ativa. Ao sofrer dano, ganha 1 stack de Escuridão (E). Cartas escalam com E — potencial elite com E alto."
+        "text": "Sempre ativa. Ao sofrer dano, ganha 1 stack de Escuridão (E). Cartas escalam com E."
       },
       "grupos": [
         "Devastador",
         "Desperto",
         "Anomalia"
       ],
-      "biografia": "Marcell Wine — irmão de Alyssa. Compartilha o aprimoramento Escuridão: quanto mais sofre, mais forte fica. Kit focado em buffs Forte/Resistente/Rápido, cura percentual, garras com contra-ataque, relâmpagos em cadeia e a Desvantagem Instantânea Legião das Sombras (reforça o inimigo com E lacaios).",
+      "biografia": "Marcell Wine é o pai de Alyssa Wine. Inumano marcado pela Escuridão: ao sofrer dano ganha E e suas manobras escalam. Kit com Bastão Retrátil, Garras e Presas, Premonição, Tormenta (buff + clima Chuva), Regeneração (cura da Vida faltante), Relâmpago (custo e área por E), Intelecto, Super Sentidos e a Desvantagem Instantânea Inimigos (E lacaios inimigos do mesmo tipo sorteado).",
       "iniciais": [
-        "ent_marcell_wine_pacto_escuro",
-        "ent_marcell_wine_regeneracao_sombria",
-        "ent_marcell_wine_garras_do_abismo",
-        "ent_marcell_wine_bastao_sombrio",
-        "ent_marcell_wine_manto_de_trevas"
+        "ent_marcell_wine_bastao_retratil",
+        "ent_marcell_wine_garras_e_presas",
+        "ent_marcell_wine_premonicao",
+        "ent_marcell_wine_tormenta",
+        "ent_marcell_wine_regeneracao"
       ],
       "evoluidas": [
-        "ent_marcell_wine_relampago_negro",
-        "ent_marcell_wine_tempestade_latente",
-        "ent_marcell_wine_presenca_opressora",
-        "ent_marcell_wine_furia_primordial"
+        "ent_marcell_wine_relampago",
+        "ent_marcell_wine_intelecto",
+        "ent_marcell_wine_super_sentidos"
       ],
-      "desvantagem": "ent_marcell_wine_desvantagem_legiao",
+      "desvantagem": "ent_marcell_wine_desvantagem_inimigos",
       "melhoradas": [
-        "ent_marcell_wine_pacto_escuro_plus",
-        "ent_marcell_wine_regeneracao_sombria_plus",
-        "ent_marcell_wine_garras_do_abismo_plus",
-        "ent_marcell_wine_bastao_sombrio_plus",
-        "ent_marcell_wine_manto_de_trevas_plus",
-        "ent_marcell_wine_relampago_negro_plus",
-        "ent_marcell_wine_tempestade_latente_plus",
-        "ent_marcell_wine_presenca_opressora_plus",
-        "ent_marcell_wine_furia_primordial_plus"
+        "ent_marcell_wine_bastao_retratil_plus",
+        "ent_marcell_wine_garras_e_presas_plus",
+        "ent_marcell_wine_premonicao_plus",
+        "ent_marcell_wine_tormenta_plus",
+        "ent_marcell_wine_regeneracao_plus",
+        "ent_marcell_wine_relampago_plus",
+        "ent_marcell_wine_intelecto_plus",
+        "ent_marcell_wine_super_sentidos_plus"
       ],
       "playable": true,
       "source_sheet": "Marcell_Wine_ficha.json",
@@ -14195,808 +14191,6 @@
       ],
       "anim_timing": "parallel"
     },
-    "ent_marcell_wine_pacto_escuro": {
-      "id": "ent_marcell_wine_pacto_escuro",
-      "name": "Pacto Escuro",
-      "owner": "ent_marcell_wine",
-      "class": "ESTADO",
-      "target": "SELF",
-      "actions": [
-        [
-          "requires_self_status",
-          "escuridao",
-          "1"
-        ],
-        [
-          "forte",
-          "E"
-        ],
-        [
-          "resistente",
-          "E"
-        ],
-        [
-          "rapido",
-          "E"
-        ]
-      ],
-      "reach": false,
-      "stat": "attack",
-      "rarity": "COMMON",
-      "unlock": "starting",
-      "exhaust": false,
-      "gain": 2,
-      "text": "Requer Escuridão 1+. Em si: Forte E, Resistente E, Rápido E.",
-      "tier": "inicial",
-      "anim_self": [
-        "darkness"
-      ],
-      "anim_target": [
-        "buff"
-      ],
-      "anim_timing": "parallel"
-    },
-    "ent_marcell_wine_regeneracao_sombria": {
-      "id": "ent_marcell_wine_regeneracao_sombria",
-      "name": "Regeneração Sombria",
-      "owner": "ent_marcell_wine",
-      "class": "ESTADO",
-      "target": "SELF",
-      "actions": [
-        [
-          "requires_self_status",
-          "escuridao",
-          "1"
-        ],
-        [
-          "heal_pct",
-          "0.1*E"
-        ]
-      ],
-      "reach": false,
-      "stat": "attack",
-      "rarity": "RARE",
-      "unlock": "starting",
-      "exhaust": false,
-      "gain": 2,
-      "text": "Requer Escuridão 1+. Cura 10%×E da Vida máxima.",
-      "tier": "inicial",
-      "anim_self": [
-        "BreathLight"
-      ],
-      "anim_target": [
-        "Light2"
-      ],
-      "anim_timing": "parallel"
-    },
-    "ent_marcell_wine_garras_do_abismo": {
-      "id": "ent_marcell_wine_garras_do_abismo",
-      "name": "Garras do Abismo",
-      "owner": "ent_marcell_wine",
-      "class": "ATTACK",
-      "target": "ENEMY",
-      "actions": [
-        [
-          "requires_self_status",
-          "escuridao",
-          "1"
-        ],
-        [
-          "hit",
-          "1+E"
-        ],
-        [
-          "status",
-          "bleed",
-          "E"
-        ],
-        [
-          "self_status",
-          "counter",
-          "1"
-        ],
-        [
-          "counter_effects",
-          "hit",
-          "E"
-        ]
-      ],
-      "reach": false,
-      "stat": "attack",
-      "rarity": "COMMON",
-      "unlock": "starting",
-      "exhaust": false,
-      "gain": 1,
-      "text": "Requer Escuridão 1+. Impacto 1+E. Bleed E. Contra-ataque: Impacto +E.",
-      "tier": "inicial",
-      "anim_self": [
-        "Special2"
-      ],
-      "anim_target": [
-        "claw"
-      ],
-      "anim_timing": "parallel",
-      "counter_effects": [
-        [
-          "hit",
-          "E"
-        ]
-      ],
-      "counter_mode": "default"
-    },
-    "ent_marcell_wine_bastao_sombrio": {
-      "id": "ent_marcell_wine_bastao_sombrio",
-      "name": "Bastão Sombrio",
-      "owner": "ent_marcell_wine",
-      "class": "ATTACK",
-      "target": "ENEMY",
-      "actions": [
-        [
-          "hit",
-          "1+E"
-        ],
-        [
-          "when_stacks",
-          "escuridao",
-          "2",
-          "extra_random_hit",
-          "1"
-        ]
-      ],
-      "reach": false,
-      "stat": "attack",
-      "rarity": "COMMON",
-      "unlock": "starting",
-      "exhaust": false,
-      "gain": 1,
-      "text": "Impacto 1+E. Escuridão 2+: Chain 1 (alvo extra).",
-      "tier": "inicial",
-      "anim_self": [
-        "lightning"
-      ],
-      "anim_target": [
-        "slash"
-      ],
-      "anim_timing": "parallel"
-    },
-    "ent_marcell_wine_manto_de_trevas": {
-      "id": "ent_marcell_wine_manto_de_trevas",
-      "name": "Manto de Trevas",
-      "owner": "ent_marcell_wine",
-      "class": "ESTADO",
-      "target": "SELF",
-      "actions": [
-        [
-          "protecao",
-          "1+E"
-        ],
-        [
-          "barreira",
-          "1",
-          "6"
-        ]
-      ],
-      "reach": false,
-      "stat": "attack",
-      "rarity": "COMMON",
-      "unlock": "starting",
-      "exhaust": false,
-      "gain": 2,
-      "text": "Proteção 1+E. Barreira 6.",
-      "tier": "inicial",
-      "anim_self": [
-        "cast"
-      ],
-      "anim_target": [
-        "Reflection"
-      ],
-      "anim_timing": "parallel"
-    },
-    "ent_marcell_wine_relampago_negro": {
-      "id": "ent_marcell_wine_relampago_negro",
-      "name": "Relâmpago Negro",
-      "owner": "ent_marcell_wine",
-      "class": "ATTACK",
-      "target": "CHAIN",
-      "actions": [
-        [
-          "requires_self_status",
-          "escuridao",
-          "2"
-        ],
-        [
-          "hit",
-          "1+E"
-        ],
-        [
-          "chain",
-          "1+E"
-        ]
-      ],
-      "reach": true,
-      "stat": "power",
-      "rarity": "RARE",
-      "unlock": "progression",
-      "exhaust": false,
-      "gain": 0,
-      "text": "Requer Escuridão 2+. Poder 1+E. Chain 1+E (cresce com Escuridão).",
-      "tier": "evoluida",
-      "anim_self": [
-        "thunder"
-      ],
-      "anim_target": [
-        "HitSP1"
-      ],
-      "anim_timing": "wait_last",
-      "cost": 2,
-      "chain": 1
-    },
-    "ent_marcell_wine_tempestade_latente": {
-      "id": "ent_marcell_wine_tempestade_latente",
-      "name": "Tempestade Latente",
-      "owner": "ent_marcell_wine",
-      "class": "ATTACK",
-      "target": "ENEMY_ROW",
-      "actions": [
-        [
-          "requires_self_status",
-          "escuridao",
-          "4"
-        ],
-        [
-          "hit",
-          "2*E"
-        ]
-      ],
-      "reach": true,
-      "stat": "power",
-      "rarity": "EPIC",
-      "unlock": "progression",
-      "exhaust": false,
-      "gain": 0,
-      "text": "Requer Escuridão 4+. Poder 2×E. Fileira inimiga. E5: todos os inimigos. E6+: todos os outros.",
-      "tier": "evoluida",
-      "anim_self": [
-        "BreathThunder"
-      ],
-      "anim_target": [
-        "HitSP2"
-      ],
-      "anim_timing": "wait_last",
-      "cost": 3,
-      "target_by_stacks": {
-        "status": "escuridao",
-        "thresholds": [
-          [
-            6,
-            "ALL_OTHERS"
-          ],
-          [
-            5,
-            "ALL_ENEMIES"
-          ],
-          [
-            4,
-            "ENEMY_ROW"
-          ]
-        ]
-      }
-    },
-    "ent_marcell_wine_presenca_opressora": {
-      "id": "ent_marcell_wine_presenca_opressora",
-      "name": "Presença Opressora",
-      "owner": "ent_marcell_wine",
-      "class": "ESTADO",
-      "target": "ALL_ENEMIES",
-      "actions": [
-        [
-          "requires_self_status",
-          "escuridao",
-          "1"
-        ],
-        [
-          "status",
-          "slow",
-          "1"
-        ],
-        [
-          "status",
-          "vulnerable",
-          "E"
-        ]
-      ],
-      "reach": true,
-      "stat": "attack",
-      "rarity": "RARE",
-      "unlock": "progression",
-      "exhaust": false,
-      "gain": 2,
-      "text": "Requer Escuridão 1+. Lento 1 e Vulnerável E em toda a equipe inimiga.",
-      "tier": "evoluida",
-      "anim_self": [
-        "darkness"
-      ],
-      "anim_target": [
-        "debuff"
-      ],
-      "anim_timing": "wait_last"
-    },
-    "ent_marcell_wine_furia_primordial": {
-      "id": "ent_marcell_wine_furia_primordial",
-      "name": "Fúria Primordial",
-      "owner": "ent_marcell_wine",
-      "class": "ESTADO",
-      "target": "SELF",
-      "actions": [
-        [
-          "requires_self_status",
-          "escuridao",
-          "3"
-        ],
-        [
-          "forte",
-          "2*E"
-        ],
-        [
-          "resistente",
-          "E"
-        ],
-        [
-          "rapido",
-          "E"
-        ],
-        [
-          "self_status",
-          "atento",
-          "2"
-        ]
-      ],
-      "reach": false,
-      "stat": "attack",
-      "rarity": "EPIC",
-      "unlock": "progression",
-      "exhaust": false,
-      "gain": 2,
-      "text": "Requer Escuridão 3+. Forte 2×E, Resistente E, Rápido E, Atento 2.",
-      "tier": "evoluida",
-      "anim_self": [
-        "Special1"
-      ],
-      "anim_target": [
-        "buff"
-      ],
-      "anim_timing": "parallel"
-    },
-    "ent_marcell_wine_desvantagem_legiao": {
-      "id": "ent_marcell_wine_desvantagem_legiao",
-      "name": "Legião das Sombras",
-      "owner": "ent_marcell_wine",
-      "class": "DESVANTAGEM",
-      "target": "SELF",
-      "actions": [
-        [
-          "requires_self_status",
-          "escuridao",
-          "1"
-        ],
-        [
-          "instant"
-        ],
-        [
-          "summon_foe",
-          "ent_minion_zumbi",
-          "E"
-        ]
-      ],
-      "reach": false,
-      "stat": "attack",
-      "rarity": "COMMON",
-      "unlock": "starting",
-      "exhaust": false,
-      "gain": 0,
-      "text": "Instantâneo. Requer Escuridão ≥ 1. A equipe inimiga recebe E lacaios Zumbi como reforço. Não pode ser recomprada.",
-      "tier": "desvantagem",
-      "anim_self": [
-        "Darkness2"
-      ],
-      "anim_target": [
-        "banish"
-      ],
-      "anim_timing": "parallel",
-      "cost": 0,
-      "instant": true,
-      "passive_like": false
-    },
-    "ent_marcell_wine_pacto_escuro_plus": {
-      "id": "ent_marcell_wine_pacto_escuro_plus",
-      "name": "Pacto Escuro+",
-      "owner": "ent_marcell_wine",
-      "class": "ESTADO",
-      "target": "SELF",
-      "actions": [
-        [
-          "requires_self_status",
-          "escuridao",
-          "1"
-        ],
-        [
-          "forte",
-          "E"
-        ],
-        [
-          "resistente",
-          "E"
-        ],
-        [
-          "rapido",
-          "E"
-        ]
-      ],
-      "reach": false,
-      "stat": "attack",
-      "rarity": "COMMON",
-      "unlock": "melhorada",
-      "exhaust": false,
-      "gain": 2,
-      "text": "Requer Escuridão 1+. Em si: Forte E, Resistente E, Rápido E. · Melhorada (+).",
-      "tier": "melhorada",
-      "anim_self": [
-        "darkness"
-      ],
-      "anim_target": [
-        "buff"
-      ],
-      "anim_timing": "parallel",
-      "melhorada_de": "ent_marcell_wine_pacto_escuro",
-      "chrome_3d": true
-    },
-    "ent_marcell_wine_regeneracao_sombria_plus": {
-      "id": "ent_marcell_wine_regeneracao_sombria_plus",
-      "name": "Regeneração Sombria+",
-      "owner": "ent_marcell_wine",
-      "class": "ESTADO",
-      "target": "SELF",
-      "actions": [
-        [
-          "requires_self_status",
-          "escuridao",
-          "1"
-        ],
-        [
-          "heal_pct",
-          "0.12*E"
-        ]
-      ],
-      "reach": false,
-      "stat": "attack",
-      "rarity": "RARE",
-      "unlock": "melhorada",
-      "exhaust": false,
-      "gain": 2,
-      "text": "Requer Escuridão 1+. Cura 12%×E da Vida máxima. · Melhorada (+).",
-      "tier": "melhorada",
-      "anim_self": [
-        "BreathLight"
-      ],
-      "anim_target": [
-        "Light2"
-      ],
-      "anim_timing": "parallel",
-      "melhorada_de": "ent_marcell_wine_regeneracao_sombria",
-      "chrome_3d": true
-    },
-    "ent_marcell_wine_garras_do_abismo_plus": {
-      "id": "ent_marcell_wine_garras_do_abismo_plus",
-      "name": "Garras do Abismo+",
-      "owner": "ent_marcell_wine",
-      "class": "ATTACK",
-      "target": "ENEMY",
-      "actions": [
-        [
-          "requires_self_status",
-          "escuridao",
-          "1"
-        ],
-        [
-          "hit",
-          "2+E"
-        ],
-        [
-          "status",
-          "bleed",
-          "E"
-        ],
-        [
-          "self_status",
-          "counter",
-          "1"
-        ],
-        [
-          "counter_effects",
-          "hit",
-          "E"
-        ]
-      ],
-      "reach": false,
-      "stat": "attack",
-      "rarity": "COMMON",
-      "unlock": "melhorada",
-      "exhaust": false,
-      "gain": 1,
-      "text": "Requer Escuridão 1+. Impacto 2+E. Bleed E. Contra-ataque: Impacto +E. · Melhorada (+).",
-      "tier": "melhorada",
-      "anim_self": [
-        "Special2"
-      ],
-      "anim_target": [
-        "claw"
-      ],
-      "anim_timing": "parallel",
-      "counter_effects": [
-        [
-          "hit",
-          "E"
-        ]
-      ],
-      "counter_mode": "default",
-      "melhorada_de": "ent_marcell_wine_garras_do_abismo",
-      "chrome_3d": true
-    },
-    "ent_marcell_wine_bastao_sombrio_plus": {
-      "id": "ent_marcell_wine_bastao_sombrio_plus",
-      "name": "Bastão Sombrio+",
-      "owner": "ent_marcell_wine",
-      "class": "ATTACK",
-      "target": "ENEMY",
-      "actions": [
-        [
-          "hit",
-          "1+E"
-        ],
-        [
-          "when_stacks",
-          "escuridao",
-          "2",
-          "extra_random_hit",
-          "1"
-        ]
-      ],
-      "reach": false,
-      "stat": "attack",
-      "rarity": "COMMON",
-      "unlock": "melhorada",
-      "exhaust": false,
-      "gain": 1,
-      "text": "Impacto 1+E. Escuridão 2+: Chain 1 (alvo extra). · Melhorada (+).",
-      "tier": "melhorada",
-      "anim_self": [
-        "lightning"
-      ],
-      "anim_target": [
-        "slash"
-      ],
-      "anim_timing": "parallel",
-      "melhorada_de": "ent_marcell_wine_bastao_sombrio",
-      "chrome_3d": true
-    },
-    "ent_marcell_wine_manto_de_trevas_plus": {
-      "id": "ent_marcell_wine_manto_de_trevas_plus",
-      "name": "Manto de Trevas+",
-      "owner": "ent_marcell_wine",
-      "class": "ESTADO",
-      "target": "SELF",
-      "actions": [
-        [
-          "protecao",
-          "1+E"
-        ],
-        [
-          "barreira",
-          "1",
-          "10"
-        ]
-      ],
-      "reach": false,
-      "stat": "attack",
-      "rarity": "COMMON",
-      "unlock": "melhorada",
-      "exhaust": false,
-      "gain": 2,
-      "text": "Proteção 1+E. Barreira 10. · Melhorada (+).",
-      "tier": "melhorada",
-      "anim_self": [
-        "cast"
-      ],
-      "anim_target": [
-        "Reflection"
-      ],
-      "anim_timing": "parallel",
-      "melhorada_de": "ent_marcell_wine_manto_de_trevas",
-      "chrome_3d": true
-    },
-    "ent_marcell_wine_relampago_negro_plus": {
-      "id": "ent_marcell_wine_relampago_negro_plus",
-      "name": "Relâmpago Negro+",
-      "owner": "ent_marcell_wine",
-      "class": "ATTACK",
-      "target": "CHAIN",
-      "actions": [
-        [
-          "requires_self_status",
-          "escuridao",
-          "2"
-        ],
-        [
-          "hit",
-          "2+E"
-        ],
-        [
-          "chain",
-          "1+E"
-        ]
-      ],
-      "reach": true,
-      "stat": "power",
-      "rarity": "RARE",
-      "unlock": "melhorada",
-      "exhaust": false,
-      "gain": 0,
-      "text": "Requer Escuridão 2+. Poder 2+E. Chain 1+E (cresce com Escuridão). · Melhorada (+).",
-      "tier": "melhorada",
-      "anim_self": [
-        "thunder"
-      ],
-      "anim_target": [
-        "HitSP1"
-      ],
-      "anim_timing": "wait_last",
-      "cost": 2,
-      "chain": 1,
-      "melhorada_de": "ent_marcell_wine_relampago_negro",
-      "chrome_3d": true
-    },
-    "ent_marcell_wine_tempestade_latente_plus": {
-      "id": "ent_marcell_wine_tempestade_latente_plus",
-      "name": "Tempestade Latente+",
-      "owner": "ent_marcell_wine",
-      "class": "ATTACK",
-      "target": "ENEMY_ROW",
-      "actions": [
-        [
-          "requires_self_status",
-          "escuridao",
-          "4"
-        ],
-        [
-          "hit",
-          "3*E"
-        ]
-      ],
-      "reach": true,
-      "stat": "power",
-      "rarity": "EPIC",
-      "unlock": "melhorada",
-      "exhaust": false,
-      "gain": 0,
-      "text": "Requer Escuridão 4+. Poder 3×E. Fileira inimiga. E5: todos os inimigos. E6+: todos os outros. · Melhorada (+).",
-      "tier": "melhorada",
-      "anim_self": [
-        "BreathThunder"
-      ],
-      "anim_target": [
-        "HitSP2"
-      ],
-      "anim_timing": "wait_last",
-      "cost": 3,
-      "target_by_stacks": {
-        "status": "escuridao",
-        "thresholds": [
-          [
-            6,
-            "ALL_OTHERS"
-          ],
-          [
-            5,
-            "ALL_ENEMIES"
-          ],
-          [
-            4,
-            "ENEMY_ROW"
-          ]
-        ]
-      },
-      "melhorada_de": "ent_marcell_wine_tempestade_latente",
-      "chrome_3d": true
-    },
-    "ent_marcell_wine_presenca_opressora_plus": {
-      "id": "ent_marcell_wine_presenca_opressora_plus",
-      "name": "Presença Opressora+",
-      "owner": "ent_marcell_wine",
-      "class": "ESTADO",
-      "target": "ALL_ENEMIES",
-      "actions": [
-        [
-          "requires_self_status",
-          "escuridao",
-          "1"
-        ],
-        [
-          "status",
-          "slow",
-          "1"
-        ],
-        [
-          "status",
-          "vulnerable",
-          "E"
-        ]
-      ],
-      "reach": true,
-      "stat": "attack",
-      "rarity": "RARE",
-      "unlock": "melhorada",
-      "exhaust": false,
-      "gain": 2,
-      "text": "Requer Escuridão 1+. Lento 1 e Vulnerável E em toda a equipe inimiga. · Melhorada (+).",
-      "tier": "melhorada",
-      "anim_self": [
-        "darkness"
-      ],
-      "anim_target": [
-        "debuff"
-      ],
-      "anim_timing": "wait_last",
-      "melhorada_de": "ent_marcell_wine_presenca_opressora",
-      "chrome_3d": true
-    },
-    "ent_marcell_wine_furia_primordial_plus": {
-      "id": "ent_marcell_wine_furia_primordial_plus",
-      "name": "Fúria Primordial+",
-      "owner": "ent_marcell_wine",
-      "class": "ESTADO",
-      "target": "SELF",
-      "actions": [
-        [
-          "requires_self_status",
-          "escuridao",
-          "3"
-        ],
-        [
-          "forte",
-          "2*E"
-        ],
-        [
-          "resistente",
-          "E"
-        ],
-        [
-          "rapido",
-          "E"
-        ],
-        [
-          "self_status",
-          "atento",
-          "2"
-        ]
-      ],
-      "reach": false,
-      "stat": "attack",
-      "rarity": "EPIC",
-      "unlock": "melhorada",
-      "exhaust": false,
-      "gain": 2,
-      "text": "Requer Escuridão 3+. Forte 2×E, Resistente E, Rápido E, Atento 2. · Melhorada (+).",
-      "tier": "melhorada",
-      "anim_self": [
-        "Special1"
-      ],
-      "anim_target": [
-        "buff"
-      ],
-      "anim_timing": "parallel",
-      "melhorada_de": "ent_marcell_wine_furia_primordial",
-      "chrome_3d": true
-    },
     "ent_cacadora_golpe": {
       "id": "ent_cacadora_golpe",
       "name": "Golpe",
@@ -15568,6 +14762,700 @@
         "Blow1"
       ],
       "anim_timing": "parallel"
+    },
+    "ent_marcell_wine_bastao_retratil": {
+      "id": "ent_marcell_wine_bastao_retratil",
+      "name": "Bastão Retrátil",
+      "owner": "ent_marcell_wine",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1+E"
+        ],
+        [
+          "when_stacks",
+          "escuridao",
+          "1",
+          "extra_random_hit",
+          "1"
+        ],
+        [
+          "when_stacks",
+          "escuridao",
+          "2",
+          "resistente",
+          "E"
+        ],
+        [
+          "when_stacks",
+          "escuridao",
+          "2",
+          "barreira",
+          "E"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "text": "Impacto 1+E. Escuridão 1+: Chain 1 (alvo extra). Escuridão 2+: Resistente E e Barreira E.",
+      "tier": "inicial",
+      "anim_self": [
+        "lightning"
+      ],
+      "anim_target": [
+        "slash"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_marcell_wine_bastao_retratil_plus": {
+      "id": "ent_marcell_wine_bastao_retratil_plus",
+      "name": "Bastão Retrátil+",
+      "owner": "ent_marcell_wine",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "2+E"
+        ],
+        [
+          "when_stacks",
+          "escuridao",
+          "1",
+          "extra_random_hit",
+          "1"
+        ],
+        [
+          "when_stacks",
+          "escuridao",
+          "2",
+          "resistente",
+          "E"
+        ],
+        [
+          "when_stacks",
+          "escuridao",
+          "2",
+          "barreira",
+          "E"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "melhorada",
+      "exhaust": false,
+      "gain": 1,
+      "text": "Impacto 2+E. Escuridão 1+: Chain 1 (alvo extra). Escuridão 2+: Resistente E e Barreira E. · Melhorada (+).",
+      "tier": "melhorada",
+      "anim_self": [
+        "lightning"
+      ],
+      "anim_target": [
+        "slash"
+      ],
+      "anim_timing": "parallel",
+      "melhorada_de": "ent_marcell_wine_bastao_retratil",
+      "chrome_3d": true
+    },
+    "ent_marcell_wine_garras_e_presas": {
+      "id": "ent_marcell_wine_garras_e_presas",
+      "name": "Garras e Presas",
+      "owner": "ent_marcell_wine",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "requires_self_status",
+          "escuridao",
+          "1"
+        ],
+        [
+          "hit",
+          "2*E"
+        ],
+        [
+          "status",
+          "bleed",
+          "E"
+        ],
+        [
+          "status",
+          "wounded",
+          "E"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 1,
+      "text": "Requer Escuridão 1+. Impacto 2×E. Bleed E. Ferido E.",
+      "tier": "inicial",
+      "anim_self": [
+        "Special2"
+      ],
+      "anim_target": [
+        "claw"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_marcell_wine_garras_e_presas_plus": {
+      "id": "ent_marcell_wine_garras_e_presas_plus",
+      "name": "Garras e Presas+",
+      "owner": "ent_marcell_wine",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "requires_self_status",
+          "escuridao",
+          "1"
+        ],
+        [
+          "hit",
+          "2*E"
+        ],
+        [
+          "status",
+          "bleed",
+          "E"
+        ],
+        [
+          "status",
+          "wounded",
+          "E"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "melhorada",
+      "exhaust": false,
+      "gain": 1,
+      "text": "Requer Escuridão 1+. Impacto 2×E. Bleed E. Ferido E. · Melhorada (+).",
+      "tier": "melhorada",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "bleed"
+      ],
+      "anim_timing": "parallel",
+      "melhorada_de": "ent_marcell_wine_garras_e_presas",
+      "chrome_3d": true
+    },
+    "ent_marcell_wine_premonicao": {
+      "id": "ent_marcell_wine_premonicao",
+      "name": "Premonição",
+      "owner": "ent_marcell_wine",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "protecao",
+          "1+E"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 2,
+      "text": "Proteção 1+E. Sem requisito de Escuridão.",
+      "tier": "inicial",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "Reflection"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_marcell_wine_premonicao_plus": {
+      "id": "ent_marcell_wine_premonicao_plus",
+      "name": "Premonição+",
+      "owner": "ent_marcell_wine",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "protecao",
+          "2+E"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "melhorada",
+      "exhaust": false,
+      "gain": 2,
+      "text": "Proteção 2+E. Sem requisito de Escuridão. · Melhorada (+).",
+      "tier": "melhorada",
+      "anim_self": [
+        "cast"
+      ],
+      "anim_target": [
+        "Reflection"
+      ],
+      "anim_timing": "parallel",
+      "melhorada_de": "ent_marcell_wine_premonicao",
+      "chrome_3d": true
+    },
+    "ent_marcell_wine_tormenta": {
+      "id": "ent_marcell_wine_tormenta",
+      "name": "Tormenta",
+      "owner": "ent_marcell_wine",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "requires_self_status",
+          "escuridao",
+          "1"
+        ],
+        [
+          "forte",
+          "E"
+        ],
+        [
+          "resistente",
+          "E"
+        ],
+        [
+          "rapido",
+          "E"
+        ],
+        [
+          "climate",
+          "rain"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 2,
+      "text": "Requer Escuridão 1+. Forte E, Resistente E, Rápido E. Define o clima para Chuva (só um clima ativo).",
+      "tier": "inicial",
+      "anim_self": [
+        "darkness"
+      ],
+      "anim_target": [
+        "buff"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_marcell_wine_tormenta_plus": {
+      "id": "ent_marcell_wine_tormenta_plus",
+      "name": "Tormenta+",
+      "owner": "ent_marcell_wine",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "requires_self_status",
+          "escuridao",
+          "1"
+        ],
+        [
+          "forte",
+          "E"
+        ],
+        [
+          "resistente",
+          "E"
+        ],
+        [
+          "rapido",
+          "E"
+        ],
+        [
+          "protecao",
+          "1"
+        ],
+        [
+          "climate",
+          "rain"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "melhorada",
+      "exhaust": false,
+      "gain": 2,
+      "text": "Requer Escuridão 1+. Forte E, Resistente E, Rápido E e Proteção 1. Clima: Chuva. · Melhorada (+).",
+      "tier": "melhorada",
+      "anim_self": [
+        "darkness"
+      ],
+      "anim_target": [
+        "buff"
+      ],
+      "anim_timing": "parallel",
+      "melhorada_de": "ent_marcell_wine_tormenta",
+      "chrome_3d": true
+    },
+    "ent_marcell_wine_regeneracao": {
+      "id": "ent_marcell_wine_regeneracao",
+      "name": "Regeneração",
+      "owner": "ent_marcell_wine",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "heal_missing_pct",
+          "0.1+0.18*E"
+        ],
+        [
+          "resistente",
+          "E"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "RARE",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 2,
+      "text": "Cura 10%+18%×E da Vida faltante (E5 ≈ cura total do dano). Resistente E. Sem requisito de Escuridão.",
+      "tier": "inicial",
+      "anim_self": [
+        "BreathLight"
+      ],
+      "anim_target": [
+        "Light2"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_marcell_wine_regeneracao_plus": {
+      "id": "ent_marcell_wine_regeneracao_plus",
+      "name": "Regeneração+",
+      "owner": "ent_marcell_wine",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "heal_missing_pct",
+          "0.12+0.2*E"
+        ],
+        [
+          "resistente",
+          "E"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "RARE",
+      "unlock": "melhorada",
+      "exhaust": false,
+      "gain": 2,
+      "text": "Cura 12%+20%×E da Vida faltante. Resistente E. · Melhorada (+).",
+      "tier": "melhorada",
+      "anim_self": [
+        "BreathLight"
+      ],
+      "anim_target": [
+        "Light2"
+      ],
+      "anim_timing": "parallel",
+      "melhorada_de": "ent_marcell_wine_regeneracao",
+      "chrome_3d": true
+    },
+    "ent_marcell_wine_relampago": {
+      "id": "ent_marcell_wine_relampago",
+      "name": "Relâmpago",
+      "owner": "ent_marcell_wine",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "requires_self_status",
+          "escuridao",
+          "1"
+        ],
+        [
+          "hit",
+          "2*E"
+        ]
+      ],
+      "reach": true,
+      "stat": "power",
+      "rarity": "RARE",
+      "unlock": "progression",
+      "exhaust": false,
+      "gain": 0,
+      "text": "Requer Escuridão 1+. Custo INI = min(E, 5). Poder 2×E. E2: Chain. E3: Fileira. E4: todos inimigos. E5+: todos os outros.",
+      "tier": "evoluida",
+      "anim_self": [
+        "thunder"
+      ],
+      "anim_target": [
+        "HitSP1"
+      ],
+      "anim_timing": "wait_last",
+      "cost": 0,
+      "cost_by_stacks": {
+        "status": "escuridao",
+        "max": 5
+      },
+      "chain": 1,
+      "target_by_stacks": {
+        "status": "escuridao",
+        "thresholds": [
+          [
+            5,
+            "ALL_OTHERS"
+          ],
+          [
+            4,
+            "ALL_ENEMIES"
+          ],
+          [
+            3,
+            "ENEMY_ROW"
+          ],
+          [
+            2,
+            "CHAIN"
+          ]
+        ]
+      }
+    },
+    "ent_marcell_wine_relampago_plus": {
+      "id": "ent_marcell_wine_relampago_plus",
+      "name": "Relâmpago+",
+      "owner": "ent_marcell_wine",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "requires_self_status",
+          "escuridao",
+          "1"
+        ],
+        [
+          "hit",
+          "3*E"
+        ]
+      ],
+      "reach": true,
+      "stat": "power",
+      "rarity": "RARE",
+      "unlock": "melhorada",
+      "exhaust": false,
+      "gain": 0,
+      "text": "Requer Escuridão 1+. Custo INI = min(E, 5). Poder 3×E. E2: Chain. E3: Fileira. E4: todos inimigos. E5+: todos os outros. · Melhorada (+).",
+      "tier": "melhorada",
+      "anim_self": [
+        "thunder"
+      ],
+      "anim_target": [
+        "HitSP1"
+      ],
+      "anim_timing": "wait_last",
+      "cost": 0,
+      "cost_by_stacks": {
+        "status": "escuridao",
+        "max": 5
+      },
+      "chain": 1,
+      "target_by_stacks": {
+        "status": "escuridao",
+        "thresholds": [
+          [
+            5,
+            "ALL_OTHERS"
+          ],
+          [
+            4,
+            "ALL_ENEMIES"
+          ],
+          [
+            3,
+            "ENEMY_ROW"
+          ],
+          [
+            2,
+            "CHAIN"
+          ]
+        ]
+      },
+      "melhorada_de": "ent_marcell_wine_relampago",
+      "chrome_3d": true
+    },
+    "ent_marcell_wine_intelecto": {
+      "id": "ent_marcell_wine_intelecto",
+      "name": "Intelecto",
+      "owner": "ent_marcell_wine",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "draw_items"
+        ],
+        [
+          "redraw_actions",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "RARE",
+      "unlock": "progression",
+      "exhaust": false,
+      "gain": 2,
+      "text": "Compra todas as cartas de item do baralho. Ao recomprar esta carta: +1 Ação (funciona mesmo sem itens).",
+      "tier": "evoluida",
+      "anim_self": [
+        "Neutral1"
+      ],
+      "anim_target": [
+        "stun"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_marcell_wine_intelecto_plus": {
+      "id": "ent_marcell_wine_intelecto_plus",
+      "name": "Intelecto+",
+      "owner": "ent_marcell_wine",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "draw_items"
+        ],
+        [
+          "redraw_actions",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "RARE",
+      "unlock": "melhorada",
+      "exhaust": false,
+      "gain": 2,
+      "text": "Compra todas as cartas de item do baralho. Ao recomprar esta carta: +1 Ação (funciona mesmo sem itens). · Melhorada (+).",
+      "tier": "melhorada",
+      "anim_self": [
+        "Special1"
+      ],
+      "anim_target": [
+        "StarsHit"
+      ],
+      "anim_timing": "parallel",
+      "melhorada_de": "ent_marcell_wine_intelecto",
+      "chrome_3d": true
+    },
+    "ent_marcell_wine_super_sentidos": {
+      "id": "ent_marcell_wine_super_sentidos",
+      "name": "Super Sentidos",
+      "owner": "ent_marcell_wine",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "atento",
+          "2"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "EPIC",
+      "unlock": "progression",
+      "exhaust": false,
+      "gain": 2,
+      "text": "Atento 2: ignora desvantagem de arquétipo/tipo e pode ferir Invulnerável.",
+      "tier": "evoluida",
+      "anim_self": [
+        "Neutral2"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel"
+    },
+    "ent_marcell_wine_super_sentidos_plus": {
+      "id": "ent_marcell_wine_super_sentidos_plus",
+      "name": "Super Sentidos+",
+      "owner": "ent_marcell_wine",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "atento",
+          "2"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "EPIC",
+      "unlock": "melhorada",
+      "exhaust": false,
+      "gain": 2,
+      "text": "Atento 2: ignora desvantagem de arquétipo/tipo e pode ferir Invulnerável. · Melhorada (+).",
+      "tier": "melhorada",
+      "anim_self": [
+        "Special1"
+      ],
+      "anim_target": [
+        "debuff"
+      ],
+      "anim_timing": "parallel",
+      "melhorada_de": "ent_marcell_wine_super_sentidos",
+      "chrome_3d": true
+    },
+    "ent_marcell_wine_desvantagem_inimigos": {
+      "id": "ent_marcell_wine_desvantagem_inimigos",
+      "name": "Inimigos",
+      "owner": "ent_marcell_wine",
+      "class": "DESVANTAGEM",
+      "target": "SELF",
+      "actions": [
+        [
+          "requires_self_status",
+          "escuridao",
+          "1"
+        ],
+        [
+          "instant"
+        ],
+        [
+          "summon_foe",
+          "random",
+          "E"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "exhaust": false,
+      "gain": 0,
+      "text": "Instantâneo. Requer Escuridão ≥ 1. A equipe inimiga recebe E lacaios do mesmo tipo (tipo sorteado uma vez por jogada). Não pode ser recomprada.",
+      "tier": "desvantagem",
+      "anim_self": [
+        "Darkness2"
+      ],
+      "anim_target": [
+        "banish"
+      ],
+      "anim_timing": "parallel",
+      "cost": 0,
+      "instant": true,
+      "passive_like": false
     }
   }
 }

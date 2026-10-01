@@ -49,6 +49,24 @@ func _set_ini(battle: Variant, value: int) -> void:
 	else:
 		battle.impulse = value
 
+
+func _resolve_play_cost(battle: Variant, source: Dictionary, def: Dictionary, card: Dictionary) -> int:
+	if card.has("cost_override"):
+		return maxi(0, int(card.get("cost_override", 0)))
+	if battle.has_method("resolve_card_cost"):
+		return maxi(0, int(battle.resolve_card_cost(source, def, card)))
+	if def.has("cost_by_stacks"):
+		var cbs: Dictionary = def["cost_by_stacks"]
+		var st := str(cbs.get("status", "escuridao"))
+		var stacks: int = battle._status_stacks(source, st)
+		var cap: int = int(cbs.get("max", cbs.get("cap", stacks)))
+		return maxi(0, mini(stacks, cap))
+	var raw: Variant = def.get("cost", 0)
+	if typeof(raw) == TYPE_STRING:
+		return maxi(0, int(round(battle.resolve_amount(raw, source))))
+	return maxi(0, int(raw))
+
+
 func _get_plays(battle: Variant) -> int:
 	var side := _acting_side(battle)
 	if battle.has_method("_get_plays"):
@@ -480,7 +498,7 @@ func play_block_reason(battle: Variant, hand_index: int, target_id: int = -1, ch
 		card["warmup"] = warmup
 		if not battle.card_warmup_ready(card, def):
 			return "Esta Manobra ainda está em aquecimento."
-	var cost: int = int(card.get("cost_override", def.get("cost", 0)))
+	var cost: int = _resolve_play_cost(battle, source, def, card)
 	if str(def.get("tier", card.get("tier", ""))) != "combo" and str(def.get("class", card.get("class", ""))) != "DESVANTAGEM":
 		if battle.get("combo_zero_owners") and int(battle.combo_zero_owners.get(int(source.get("id", -1)), 0)) > 0:
 			cost = 0
@@ -579,7 +597,7 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 	if warmup > 0:
 		card["warmup"] = warmup
 		if not battle.card_warmup_ready(card, def): return false
-	var cost: int = int(card.get("cost_override", def.get("cost", 0)))
+	var cost: int = _resolve_play_cost(battle, source, def, card)
 	# Custo gasta Iniciativa (recurso compartilhado do turno) — não existe pool de "Poder".
 	var used_impulso := false
 	if str(def.get("tier", card.get("tier", ""))) != "combo" and str(card.get("class", "")) != "DESVANTAGEM":
@@ -647,8 +665,8 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 		targets.append(target)
 	else:
 		targets = battle._targets(source, target, resolved_def, chain_ids)
-	if def.get("target") == "CHAIN":
-		var chain_count := int(resolved_def["chain"])
+	if str(resolved_def.get("target", def.get("target", ""))) == "CHAIN":
+		var chain_count := int(resolved_def.get("chain", def.get("chain", 1)))
 		if _has_action(def, "chain_hand_owner"):
 			chain_count = maxi(1, _acting_hand(battle).filter(func(c): return c.get("owner") == source["id"]).size())
 		if chain_ids.size() != chain_count or targets.size() != chain_count: return false
@@ -1083,9 +1101,11 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 				var rounds: int = 1
 				var bhp: int = 5
 				if a.size() >= 3:
-					rounds = int(a[1]); bhp = int(a[2])
+					rounds = maxi(1, int(round(battle.resolve_amount(a[1], source))))
+					bhp = maxi(1, int(round(battle.resolve_amount(a[2], source))))
 				elif a.size() >= 2:
-					rounds = 1; bhp = int(a[1])
+					rounds = 1
+					bhp = maxi(1, int(round(battle.resolve_amount(a[1], source))))
 				for victim in targets:
 					battle._add_status(victim, "barrier", maxi(1, rounds), maxi(1, bhp), int(source["id"]))
 			"resistente":
@@ -1114,10 +1134,46 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 							battle.visual.emit("heal", int(source["id"]), int(victim["id"]), int(victim["hp"]) - before_hpct)
 				if any_hpct and battle.has_method("try_posture_trigger"):
 					battle.try_posture_trigger(source, "curador")
+			"heal_missing_pct":
+				# Cura = fração da Vida faltante (max_hp - hp). Ex.: 0.1+0.18*E → E5 ≈ 100%.
+				var frac_m: float = float(battle.resolve_amount(a[1] if a.size() > 1 else 0, source))
+				var any_hm := false
+				for victim in targets:
+					var before_hm := int(victim["hp"])
+					var missing: int = maxi(0, int(victim.get("max_hp", 1)) - int(victim["hp"]))
+					var heal_m: int = maxi(0, roundi(float(missing) * frac_m))
+					victim["hp"] = mini(int(victim["max_hp"]), int(victim["hp"]) + heal_m)
+					if int(victim["hp"]) > before_hm:
+						any_hm = true
+						if battle.has_signal("visual"):
+							battle.visual.emit("heal", int(source["id"]), int(victim["id"]), int(victim["hp"]) - before_hm)
+				if any_hm and battle.has_method("try_posture_trigger"):
+					battle.try_posture_trigger(source, "curador")
+			"climate", "set_climate", "weather":
+				# Um clima ativo por vez; partículas via GameRoot._set_weather.
+				var mode := str(a[1] if a.size() > 1 else "rain").to_lower()
+				if mode not in ["none", "rain", "snow", "leaves", "fog", "heat", "night"]:
+					mode = "rain"
+				if "climate" in battle:
+					battle.climate = mode
+				else:
+					battle.set("climate", mode)
+				var climate_ids := ["none", "rain", "snow", "leaves", "fog", "heat", "night"]
+				var cidx := climate_ids.find(mode)
+				if battle.has_signal("visual"):
+					battle.visual.emit("climate", int(source["id"]), int(source["id"]), maxi(0, cidx))
+				battle._log("Clima: %s." % mode)
 			"summon_foe", "reinforce_enemy":
-				# Invoca N lacaios no time inimigo (Desvantagem: reforços).
+				# Invoca N lacaios no time inimigo. foe_id "random" = um tipo sorteado por jogada.
 				var foe_id := str(a[1] if a.size() > 1 else "ent_minion_zumbi")
 				var foe_n: int = maxi(1, int(round(battle.resolve_amount(a[2] if a.size() > 2 else 1, source))))
+				if foe_id in ["random", "RANDOM", "*"]:
+					var pool_foe: Array[String] = [
+						"ent_minion_zumbi", "ent_minion_fantasma", "ent_minion_esqueleto", "ent_minion_vampiro",
+						"ent_minion_mumia", "ent_minion_ghoul", "ent_minion_banshee", "ent_minion_strigoi",
+						"ent_minion_golem", "ent_minion_lich",
+					]
+					foe_id = pool_foe[battle.rng.randi_range(0, pool_foe.size() - 1)]
 				var foe_side := "ENEMY" if str(source.get("side", "ALLY")) == "ALLY" else "ALLY"
 				for _fi in range(foe_n):
 					_summon_on_side(battle, source, foe_id, 99, foe_side)
@@ -1142,7 +1198,7 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 								for victim in targets:
 									if battle._has_status(victim, "bound"): continue
 									victim["row"] = "back" if sub == "push" else "front"
-							"extra_random_hit":
+							"extra_random_hit", "chain":
 								var extra_n: int = int(round(battle.resolve_amount(a[4] if a.size() > 4 else 1, source)))
 								var opposite := "ENEMY" if source["side"] == "ALLY" else "ALLY"
 								var pool: Array[Dictionary] = []
@@ -1161,6 +1217,27 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 								var sn: int = maxi(1, int(round(battle.resolve_amount(a[5] if a.size() > 5 else 1, source))))
 								for victim in ([source] if sub == "self_status" else targets):
 									battle._add_status(victim, st, sn, sn, int(source["id"]))
+							"resistente":
+								var rx2: int = maxi(1, int(round(battle.resolve_amount(a[4] if a.size() > 4 else 1, source))))
+								battle._add_status(source, "resistente", maxi(1, rx2), rx2, int(source["id"]))
+							"forte", "fortalecido":
+								var fo2: int = maxi(1, int(round(battle.resolve_amount(a[4] if a.size() > 4 else 1, source))))
+								battle._add_status(source, "strengthened", maxi(1, fo2), fo2, int(source["id"]))
+							"rapido", "rápido":
+								var ra2: int = maxi(1, int(round(battle.resolve_amount(a[4] if a.size() > 4 else 1, source))))
+								battle._add_status(source, "fast", maxi(1, ra2), ra2, int(source["id"]))
+							"protecao", "protection":
+								var px2: int = maxi(1, int(round(battle.resolve_amount(a[4] if a.size() > 4 else 1, source))))
+								battle._add_status(source, "protecao", maxi(1, px2), px2, int(source["id"]))
+							"barreira", "barrier":
+								var br2: int = 1
+								var bh2: int = 5
+								if a.size() >= 6:
+									br2 = maxi(1, int(round(battle.resolve_amount(a[4], source))))
+									bh2 = maxi(1, int(round(battle.resolve_amount(a[5], source))))
+								elif a.size() >= 5:
+									bh2 = maxi(1, int(round(battle.resolve_amount(a[4], source))))
+								battle._add_status(source, "barrier", maxi(1, br2), maxi(1, bh2), int(source["id"]))
 							_:
 								pass
 			"draw_items":

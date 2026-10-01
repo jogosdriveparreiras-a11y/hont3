@@ -45,6 +45,7 @@ var enemy_moves := 0
 var enemy_impulse := 0
 var enemy_combo_used := false
 var request_end_turn := false
+var climate := "none"  # none|rain|snow|leaves|fog|heat|night — um por vez (efeito visual)
 var pending_recover: Dictionary = {}  # {count, owner_id} owner_id -1 = qualquer
 const NEGATIVE := ["weak", "vulnerable", "marked", "stun", "bind", "bound", "fragil", "poison", "bleed", "burn", "silence", "blind", "slow", "wounded", "corrupted", "confused", "banished", "webbed_up", "taunted", "berserk_enemy", "feeding_frenzy", "drop", "overload", "spike_bomb"]
 ## Posturas: status exclusivo (só 1) + classe de carta POSTURA. INI gain capped 1×/postura/rodada.
@@ -136,6 +137,7 @@ func begin(mission_id: String, team: Array[String], equipped: Dictionary, seed_v
 	played_cards = 0
 	turn = 0
 	impulse = 0
+	climate = "none"
 	enemy_impulse = 0
 	enemy_card_plays = 0
 	enemy_redraws = 0
@@ -767,10 +769,23 @@ func resolve_amount(raw: Variant, actor: Dictionary) -> float:
 			continue
 		expr = expr.replace(token, str(int(vars[k])))
 	# Only digits and + - * / . left
+	# Preserve min/max/clamp identifiers for Expression builtins.
 	var cleaned := ""
-	for ch in expr:
-		if ch in "0123456789+-*/.()":
+	var i := 0
+	while i < expr.length():
+		var matched := false
+		for fn in ["clamp", "min", "max"]:
+			if expr.substr(i, fn.length()) == fn:
+				cleaned += fn
+				i += fn.length()
+				matched = true
+				break
+		if matched:
+			continue
+		var ch := expr[i]
+		if ch in "0123456789+-*/.,()":
 			cleaned += ch
+		i += 1
 	if cleaned.is_empty():
 		return 0.0
 	if cleaned.is_valid_float():
@@ -1616,9 +1631,24 @@ func _revive_unit(source: Dictionary, target: Dictionary, fraction: float) -> vo
 		"side": str(target.get("side", "")),
 	})
 
+func resolve_card_cost(source: Dictionary, definition: Dictionary, card: Dictionary = {}) -> int:
+	# Custo base: cost_override > cost_by_stacks > cost (int ou fórmula).
+	if card.has("cost_override"):
+		return maxi(0, int(card.get("cost_override", 0)))
+	if definition.has("cost_by_stacks"):
+		var cbs: Dictionary = definition["cost_by_stacks"]
+		var st := str(cbs.get("status", "escuridao"))
+		var stacks: int = _status_stacks(source, st)
+		var cap: int = int(cbs.get("max", cbs.get("cap", stacks)))
+		return maxi(0, mini(stacks, cap))
+	var raw: Variant = definition.get("cost", 0)
+	if typeof(raw) == TYPE_STRING:
+		return maxi(0, int(round(resolve_amount(raw, source))))
+	return maxi(0, int(raw))
+
 func _cost(source: Dictionary, definition: Dictionary) -> int:
 	# Único recurso de turno compartilhado: Iniciativa (impulse). Sem pool de "Poder".
-	var cost: int = int(definition.get("cost", 0))
+	var cost: int = resolve_card_cost(source, definition)
 	if int(combo_zero_owners.get(int(source.get("id", -1)), 0)) > 0:
 		if str(definition.get("tier", "")) != "combo" and str(definition.get("class", "")) != "COMBO":
 			return 0

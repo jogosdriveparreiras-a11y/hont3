@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-30 — Marcell Wine kit redesenhado (pai de Alyssa)
+
+- Lore: Marcell é **pai** de Alyssa (não irmão); biografia e aprimoramento Escuridão alinhados a Alyssa (+1 E ao sofrer dano).
+- Kit novo (17 ids): Bastão Retrátil, Garras e Presas, Premonição (Proteção 1+E), Tormenta (buff + clima Chuva), Regeneração (cura % da Vida *faltante*), Relâmpago (custo min(E,5) + área por E), Intelecto, Super Sentidos, Desvantagem **Inimigos** (E lacaios do mesmo tipo aleatório).
+- Runtime: `heal_missing_pct`, `climate`/`set_climate` (um clima ativo + partículas), `barreira` com fórmula E, `cost_by_stacks`, `summon_foe` random, `when_stacks` (resistente/barreira/chain).
+- Removidos: Pacto Escuro, Regeneração Sombria, Garras do Abismo, Bastão Sombrio, Manto, Relâmpago Negro, Tempestade Latente, Presença Opressora, Fúria Primordial, Legião das Sombras.
+
+
 
 ## 2026-09-30 — Manobras Combo de grupo (duo/trio)
 

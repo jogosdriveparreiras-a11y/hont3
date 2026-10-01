@@ -1984,11 +1984,21 @@ func _on_visual(kind: String, source_id: int, target_id: int, amount: int) -> vo
 		_show_actor_portrait(target_id, true)
 		if battle_view_mode == "lateral":
 			_lateral_focus_actor(target_id, cinematic_zoom)
+	elif kind == "climate":
+		var climate_ids := ["none", "rain", "snow", "leaves", "fog", "heat", "night"]
+		var mode := climate_ids[clampi(amount, 0, climate_ids.size() - 1)]
+		_set_weather(mode)
 	elif kind in ["cast", "hit", "heal", "death", "status", "block", "guard"]:
 		_show_actor_portrait(source_id, true)
 		if target_id != source_id: _show_actor_portrait(target_id, true)
 
 func _on_finished(won: bool) -> void:
+	# Restaura clima de configuração (clima de combate é temporário).
+	var cfg := ConfigFile.new()
+	if cfg.load("user://hotn3.cfg") == OK:
+		var wm := str(cfg.get_value("settings", "weather_mode", "none"))
+		if wm in ["none", "rain", "snow", "leaves", "fog", "heat", "night"]:
+			_set_weather(wm)
 	if session_report != null:
 		session_report.log_battle("finished", {"won": won, "mission": mission_id, "turn": int(battle.turn) if battle != null else -1})
 	if won: sound.cue("victory")
@@ -3527,10 +3537,29 @@ func _card_spec(card: Dictionary, definition: Dictionary, owner: Dictionary) -> 
 		"stat_color": readout["color"],
 		"rules": _effect_short_bbcode(definition, card),
 		"gain": int(definition.get("gain", 0)),
-		"cost": int(definition.get("cost", 0)),
+		"cost": _card_ini_cost(definition, card, owner),
 		"dead": dead,
 		"shield_icon": _load_tex("res://assets/ui/impact_shield_sword.png")
 	}
+
+
+func _card_ini_cost(definition: Dictionary, card: Dictionary = {}, source: Dictionary = {}) -> int:
+	if definition.has("cost_by_stacks"):
+		var cbs: Dictionary = definition["cost_by_stacks"]
+		var st := str(cbs.get("status", "escuridao"))
+		var stacks := 0
+		if not source.is_empty() and battle != null and battle.has_method("_status_stacks"):
+			stacks = battle._status_stacks(source, st)
+		var cap: int = int(cbs.get("max", cbs.get("cap", stacks)))
+		return maxi(0, mini(stacks, cap)) if not source.is_empty() else maxi(0, cap)
+	if card.has("cost_override"):
+		return maxi(0, int(card.get("cost_override", 0)))
+	var raw: Variant = definition.get("cost", 0)
+	if typeof(raw) == TYPE_STRING:
+		if not source.is_empty() and battle != null and battle.has_method("resolve_amount"):
+			return maxi(0, int(round(battle.resolve_amount(raw, source))))
+		return 0
+	return maxi(0, int(raw))
 
 func _resource_line(side: String) -> String:
 	var plays: int = battle.card_plays if side == "ALLY" else battle.enemy_card_plays
@@ -4128,8 +4157,15 @@ func _effect_glossary_lines(definition: Dictionary, card: Dictionary = {}) -> Pa
 				line2 = "Rápido %s (cartas custam −1 INI)." % (action[1] if action.size() > 1 else "1")
 			"heal_pct":
 				line2 = "Cura %s da Vida máxima." % (action[1] if action.size() > 1 else "?")
+			"heal_missing_pct":
+				line2 = "Cura %s da Vida faltante." % (action[1] if action.size() > 1 else "?")
+			"climate", "set_climate", "weather":
+				line2 = "Clima: %s." % (action[1] if action.size() > 1 else "chuva")
 			"summon_foe", "reinforce_enemy":
-				line2 = "Reforços inimigos ×%s." % (action[2] if action.size() > 2 else "1")
+				var foe_lbl = str(action[1]) if action.size() > 1 else "zumbi"
+				if foe_lbl in ["random", "RANDOM", "*"]:
+					foe_lbl = "tipo aleatório"
+				line2 = "Reforços inimigos (%s) ×%s." % [foe_lbl, (action[2] if action.size() > 2 else "1")]
 			"heal":
 				line2 = "Recupera %s de Vida." % (action[1] if action.size() > 1 else "?")
 			"push":
@@ -4573,7 +4609,11 @@ func _card_description(definition: Dictionary, card: Dictionary = {}) -> String:
 	if definition.get("ephemeral", false): parts.append("EFÊMERO")
 	if int(definition.get("warmup", 0)) > 0: parts.append("AQUECIMENTO %d" % int(definition["warmup"]))
 	if definition.get("chain", 0) > 0: parts.append("CHAIN %d" % definition["chain"])
-	if definition.get("cost", 0) > 0: parts.append("−%d Iniciativa" % definition["cost"])
+	if definition.has("cost_by_stacks"):
+		var cbs2: Dictionary = definition["cost_by_stacks"]
+		parts.append("−min(%s, %d) Iniciativa" % [str(cbs2.get("status", "E")), int(cbs2.get("max", cbs2.get("cap", 5)))])
+	elif int(definition.get("cost", 0)) > 0:
+		parts.append("−%d Iniciativa" % int(definition["cost"]))
 	if definition.get("gain", 0) > 0: parts.append("+%d Iniciativa" % definition["gain"])
 	for action_line in packs.describe_actions(definition):
 		parts.append(action_line)
@@ -5520,7 +5560,7 @@ func _card_unusable_reason(hand_index: int, target_id: int = -1) -> String:
 	if battle.has_method("must_play_instantaneo_first") and battle.must_play_instantaneo_first(card, definition, "ALLY"):
 		return "Há Instantâneo jogável — jogue um Instantâneo antes de outras cartas."
 	# Slow/Fast só modificam custo base > 0 (custo 0 / Instantâneo free permanece 0).
-	var cost := int(card.get("cost_override", definition.get("cost", 0)))
+	var cost := _card_ini_cost(definition, card, source)
 	if (not is_combo) and str(definition.get("class", "")) != "DESVANTAGEM":
 		if int(battle.combo_zero_owners.get(int(source.get("id", -1)), 0)) > 0:
 			cost = 0
