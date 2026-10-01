@@ -166,7 +166,18 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 						multiplier *= _archetype_mult(source, victim)
 					last_hit = maxi(1, roundi(base * multiplier) - defense)
 					var keep_stun: bool = bool(def.get("lethargic", false)) or _has_action(def, "lethargic")
-					if battle._take_damage(source, victim, last_hit, penetrating, true, false, targets.size() > 1, not bool(def.get("reach", false)), _is_damage_card(def), true, not keep_stun):
+					var formula := {
+						"card_amt": card_amt,
+						"offense": float(_offense(source, def)),
+						"bonus": bonus,
+						"base": base,
+						"multiplier": multiplier,
+						"defense": defense,
+						"stat": damage_stat,
+						"penetrating": penetrating,
+						"final": last_hit,
+					}
+					if battle._take_damage(source, victim, last_hit, penetrating, true, false, targets.size() > 1, not bool(def.get("reach", false)), _is_damage_card(def), true, not keep_stun, formula):
 						if not kos.has(victim["id"]): kos.append(victim["id"])
 					if _has_action(def, "block_from_hit"): source["block"] += last_hit  # legado
 					if _has_action(def, "barrier_from_hit") and last_hit > 0:

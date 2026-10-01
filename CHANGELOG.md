@@ -1,3 +1,9 @@
+## 2026-10-01 — Remove Assinatura; Arena 1–3; Log HUD pt-BR
+
+- **Assinatura/signature removida** de `entities.json` e de `EntityRuntime.on_turn_start` (sem Barrier/BLOCK automático). Alyssa mantém só Aprimoramento **Escuridão**.
+- **Arena**: equipes incompletas OK (1–3 por lado); botão Limpar nos slots; deploy aceita 1–3.
+- **HUD Log**: português legível com negrito (BBCode); compras/jogadas/alvos; dano com parciais da fórmula (Impacto/Poder − Armadura/Escudo). Sem dump JSON bruto.
+
 # Changelog
 
 ## 2026-10-01 — Multi-fix combate (Marcus)

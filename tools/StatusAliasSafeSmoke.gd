@@ -1,5 +1,5 @@
 extends SceneTree
-## Regression: dazed→stun alias must not []-crash; minions without signature skip safely.
+## Regression: dazed→stun alias must not []-crash; on_turn_start sem signature.
 
 const Battle = preload("res://game/BattleState.gd")
 const PackBridge = preload("res://game/PackBridge.gd")
@@ -18,7 +18,7 @@ func _initialize() -> void:
 	b.played_cards = 99
 	b._after_card_play()  # must not crash (dazed removed from play-tick list)
 	assert(b._has_status(ally, "stun"), "stun still present after after_card_play")
-	# Minion without signature — on_turn_start must skip (was 'signature' Invalid access).
+	# Minion / herói sem signature — on_turn_start não aplica Assinatura (removida).
 	var runtime = EntityRuntime.new()
 	runtime.catalog = packs.entities.catalog
 	var minion := {

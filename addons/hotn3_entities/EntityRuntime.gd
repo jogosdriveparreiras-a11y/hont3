@@ -92,17 +92,26 @@ func _foes(battle: Variant, source: Dictionary) -> Array:
 
 
 func deploy(battle: Variant, mission_id: String, entity_ids: Array[String], chosen_decks: Dictionary = {}, seed_value: int = 0) -> bool:
-	# An isolated adapter for the existing HotNBattle. No changes to Content.gd.
-	if entity_ids.size() != 3 or entity_ids[0] == entity_ids[1] or entity_ids[0] == entity_ids[2] or entity_ids[1] == entity_ids[2]:
+	# Adapter HotNBattle. Aceita 1–3 heróis únicos (Arena incompleta OK; missões seguem 3).
+	var n := entity_ids.size()
+	if n < 1 or n > 3:
 		return false
+	var seen_ids: Dictionary = {}
 	for id in entity_ids:
-		if catalog.hero(id).is_empty(): return false
-	# begin() creates legal actor slots, mission enemies and turn state. Reuse its
-	# three actor IDs, replacing only their runtime dictionaries.
-	var placeholders: Array[String] = ["guerreiro", "mago", "ladino"]
+		if seen_ids.has(id):
+			return false
+		seen_ids[id] = true
+		if catalog.hero(id).is_empty():
+			return false
+	# begin() cria slots aliados = tamanho da equipe + inimigos da missão.
+	var pool_ph: Array[String] = ["guerreiro", "mago", "ladino"]
+	var placeholders: Array[String] = []
+	for i in range(n):
+		placeholders.append(pool_ph[i])
 	battle.begin(mission_id, placeholders, {}, seed_value)
 	var slots: Array[Dictionary] = battle.living("ALLY")
-	if slots.size() != 3: return false
+	if slots.size() != n:
+		return false
 	battle.deck.clear()
 	battle.hand.clear()
 	battle.discard.clear()
@@ -111,7 +120,7 @@ func deploy(battle: Variant, mission_id: String, entity_ids: Array[String], chos
 	battle.impulse = 0
 	var owner_map: Dictionary = {}
 	var selection: Dictionary = {}
-	for i in range(3):
+	for i in range(n):
 		var id: String = entity_ids[i]
 		var target: Dictionary = slots[i]
 		var original_id := int(target["id"])
@@ -685,7 +694,7 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 	_set_plays(battle, _get_plays(battle) - plays)
 	if owner_free: _consume(source, "free_owner")
 	_set_ini(battle, clampi(spent_impulse - cost + int(def.get("gain", 0)) * (2 if battle._has_status(source, "double_gain") else 1), 0, int(battle.rules["impulse_max"])))
-	battle._log("%s usou %s." % [source.get("name", "?"), def.get("name", card.get("id", "?"))])
+	battle._log("[b]%s[/b] jogou [b]%s[/b] em [b]%s[/b]." % [source.get("name", "?"), def.get("name", card.get("id", "?")), target.get("name", "?")])
 	if battle.has_signal("visual"):
 		battle.visual.emit("cast", int(source["id"]), int(target["id"]), 0)
 	# Combo jogado → Impulso 1 nos membros (próxima Manobra de cada um custa 0 INI neste round)
@@ -770,7 +779,18 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 						multiplier *= _archetype_mult(source, victim)
 					last_hit = maxi(1, roundi(base * multiplier) - defense)
 					var keep_stun: bool = bool(def.get("lethargic", false)) or _has_action(def, "lethargic")
-					if battle._take_damage(source, victim, last_hit, penetrating, true, false, targets.size() > 1, not bool(def.get("reach", false)), _is_damage_card(def), true, not keep_stun):
+					var formula := {
+						"card_amt": card_amt,
+						"offense": float(_offense(source, def)),
+						"bonus": bonus,
+						"base": base,
+						"multiplier": multiplier,
+						"defense": defense,
+						"stat": damage_stat,
+						"penetrating": penetrating,
+						"final": last_hit,
+					}
+					if battle._take_damage(source, victim, last_hit, penetrating, true, false, targets.size() > 1, not bool(def.get("reach", false)), _is_damage_card(def), true, not keep_stun, formula):
 						if not kos.has(victim["id"]): kos.append(victim["id"])
 					if _has_action(def, "block_from_hit"): source["block"] += last_hit  # legado
 					if _has_action(def, "barrier_from_hit") and last_hit > 0:
@@ -1323,35 +1343,7 @@ func on_turn_start(battle: Variant) -> void:
 				if battle.has_method("purge_owner_cards"):
 					battle.purge_owner_cards(int(actor["id"]))
 				battle._log("%s (convocado) expirou." % actor.get("name", "?"))
-	for ally in battle.living("ALLY"):
-		var hero: Dictionary = catalog.hero(str(ally.get("archetype", "")))
-		if hero.is_empty(): continue
-		var key := "passive:%d" % int(ally["id"])
-		if int(memory.get(key, -1)) == int(battle.turn): continue
-		memory[key] = int(battle.turn)
-		# Minions / incomplete heroes may lack signature — never [] on missing key (GDScript 4).
-		var signature: Variant = hero.get("signature", {})
-		if typeof(signature) != TYPE_DICTIONARY or signature.is_empty():
-			continue
-		var sig_action: Variant = signature.get("action", [])
-		if typeof(sig_action) != TYPE_ARRAY or sig_action.is_empty():
-			continue
-		var receiver: Dictionary = ally
-		match str(signature.get("target", "SELF")):
-			"LOWEST_ALLY":
-				var allies: Array[Dictionary] = battle.living("ALLY")
-				allies.sort_custom(func(a, b): return float(a["hp"]) / maxi(1, int(a["max_hp"])) < float(b["hp"]) / maxi(1, int(b["max_hp"])))
-				if not allies.is_empty(): receiver = allies[0]
-			"FIRST_ENEMY":
-				var foes: Array[Dictionary] = battle.living("ENEMY")
-				if foes.is_empty(): continue
-				receiver = foes[0]
-		var action: Array = sig_action
-		match str(action[0]):
-			"BLOCK": battle._add_status(receiver, "barrier", 1, maxi(1, int(action[1])), int(receiver.get("id", 0)))
-			"HEAL": receiver["hp"] = mini(int(receiver["max_hp"]), int(receiver["hp"]) + int(action[1]))
-			"IMPULSE": battle.impulse = mini(int(battle.rules["impulse_max"]), int(battle.impulse) + int(action[1]))
-			"STATUS": battle._add_status(receiver, str(action[1]), 1, int(action[2]), int(ally["id"]))
+	# Assinatura/signature removida: Aprimoramentos (ex. Escuridão) são passivos, sem BLOCK no início do turno.
 	for card in battle.hand:
 		if catalog.definition(str(card.get("id", ""))).is_empty(): continue
 		if card.has("cost_override_until") and int(card["cost_override_until"]) < int(battle.turn):

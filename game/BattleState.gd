@@ -481,8 +481,12 @@ func _draw_side(side: String, amount: int) -> void:
 		if not owner.is_empty():
 			owner_id = int(owner["id"])
 		visual.emit("draw", owner_id, owner_id, 1)
+		var card_name := str(Content.CARDS.get(str(card.get("id", "")), {}).get("name", card.get("id", "?")))
+		var who := str(owner.get("name", "Time")) if not owner.is_empty() else ("Aliados" if side == "ALLY" else "Inimigos")
+		_log("[b]%s[/b] comprou [b]%s[/b]." % [who, card_name])
 		_rpt("card", "draw", {
 			"side": side, "card": _card_brief(card),
+			"name": card_name,
 			"owner_name": str(owner.get("name", "")),
 			"owner_dead": int(owner.get("hp", 0)) <= 0 and not owner.is_empty(),
 			"hand_size": pile_hand.size(),
@@ -1342,7 +1346,7 @@ func _archetype_multiplier(source: Dictionary, target: Dictionary) -> float:
 		return 0.75
 	return 1.0
 
-func _take_damage(source: Dictionary, target: Dictionary, amount: int, pierce: bool = false, counter_allowed: bool = true, environmental: bool = false, area: bool = false, melee: bool = false, attack_card: bool = false, from_card: bool = false, remove_stun: bool = true) -> bool:
+func _take_damage(source: Dictionary, target: Dictionary, amount: int, pierce: bool = false, counter_allowed: bool = true, environmental: bool = false, area: bool = false, melee: bool = false, attack_card: bool = false, from_card: bool = false, remove_stun: bool = true, formula: Dictionary = {}) -> bool:
 	if target["hp"] <= 0:
 		return false
 	if amount > 0 and source["id"] != target["id"]:
@@ -1441,8 +1445,9 @@ func _take_damage(source: Dictionary, target: Dictionary, amount: int, pierce: b
 		for id in ["binary", "bloodlust"]: target["statuses"].erase(id)
 	if hp_lost > 0: visual.emit("hit", int(source["id"]), int(target["id"]), hp_lost)
 	elif amount > 0: visual.emit("block", int(source["id"]), int(target["id"]), amount)
-	_log("%s sofreu %d de dano (%d Vida)." % [target["name"], amount, target["hp"]])
-	_rpt("battle", "damage", {
+	var dmg_line := _format_damage_log(source, target, amount, hp_lost, hp_before, formula)
+	_log(dmg_line)
+	var dmg_detail := {
 		"source_id": int(source.get("id", -1)),
 		"source": str(source.get("name", "")),
 		"source_side": str(source.get("side", "")),
@@ -1459,7 +1464,10 @@ func _take_damage(source: Dictionary, target: Dictionary, amount: int, pierce: b
 		"melee": melee,
 		"from_card": from_card,
 		"same_side": str(source.get("side", "")) == str(target.get("side", "")),
-	})
+	}
+	if not formula.is_empty():
+		dmg_detail["formula"] = formula.duplicate(true)
+	_rpt("battle", "damage", dmg_detail)
 	var died: bool = target["hp"] <= 0
 	if died:
 		_log("%s caiu." % target["name"])
@@ -1797,7 +1805,7 @@ func play(hand_index: int, target_id: int, chain_ids: Array = []) -> bool:
 	_set_plays(side, _get_plays(side) - plays)
 	var gained: int = int(definition.get("gain", 0)) + (1 if card.get("mod", "") == "impulse" else 0)
 	_set_impulse(side, clampi(_get_impulse(side) - cost + gained, 0, int(rules["impulse_max"])))
-	_log("%s usou %s." % [source["name"], definition["name"]])
+	_log("[b]%s[/b] jogou [b]%s[/b] em [b]%s[/b]." % [source["name"], definition["name"], target.get("name", "?")])
 	visual.emit("cast", int(source["id"]), int(target["id"]), 0)
 	if is_party_combo and not combo_members.is_empty():
 		var actor_ids: Array = []
@@ -2608,6 +2616,36 @@ func _check_end() -> void:
 	if victory:
 		phase = "FINISHED"
 		finished.emit(true)
+
+
+func _format_damage_log(source: Dictionary, target: Dictionary, amount: int, hp_lost: int, hp_before: int, formula: Dictionary = {}) -> String:
+	var src := str(source.get("name", "?"))
+	var tgt := str(target.get("name", "?"))
+	var hp_after := int(target.get("hp", 0))
+	if formula.is_empty():
+		if int(source.get("id", -1)) == int(target.get("id", -2)):
+			return "[b]%s[/b] sofreu [b]%d[/b] de dano · Vida %d→%d." % [tgt, amount, hp_before, hp_after]
+		return "[b]%s[/b] causou [b]%d[/b] em [b]%s[/b] · Vida %d→%d." % [src, amount, tgt, hp_before, hp_after]
+	var stat := str(formula.get("stat", "attack"))
+	var atk_label := "Poder" if stat == "power" else "Impacto"
+	var def_label := "Escudo" if stat == "power" else "Armadura"
+	var card_amt := float(formula.get("card_amt", 0))
+	var offense := float(formula.get("offense", 0))
+	var bonus := float(formula.get("bonus", 0))
+	var mult := float(formula.get("multiplier", 1.0))
+	var defense := int(formula.get("defense", 0))
+	var parts: PackedStringArray = []
+	parts.append("%s %d" % [atk_label, int(round(offense))])
+	if card_amt != 0.0:
+		parts.append("carta %+d" % int(round(card_amt)))
+	if bonus != 0.0:
+		parts.append("bônus %+d" % int(round(bonus)))
+	var base_txt := " + ".join(parts) if parts.size() > 1 else (parts[0] if not parts.is_empty() else "0")
+	if absf(mult - 1.0) > 0.001:
+		base_txt = "(%s) ×%.2f" % [base_txt, mult]
+	var pen := " (Penetrante)" if bool(formula.get("penetrating", false)) else ""
+	var formula_txt := "%s − %s %d%s" % [base_txt, def_label, defense, pen]
+	return "[b]%s[/b] → [b]%s[/b]: [b]%d[/b] dano (%s) · Vida %d→%d." % [src, tgt, int(formula.get("final", amount)), formula_txt, hp_before, hp_after]
 
 func _log(message: String) -> void:
 	event.emit(message)

@@ -1032,27 +1032,49 @@ func _anim_test_play() -> void:
 		session_report.log_ui("anim_test_play", {"card": anim_test_card, "caster": anim_test_caster, "target": anim_test_target, "dur": dur})
 
 
+func _arena_filled(side_ids: Array) -> Array[String]:
+	var out: Array[String] = []
+	for id in side_ids:
+		var s := str(id)
+		if s != "" and Content.HEROES.has(s):
+			out.append(s)
+	return out
+
 func _show_arena() -> void:
 	if arena_allies.is_empty():
-		arena_allies = team.duplicate() if team.size() == 3 else (["ent_alyssa_wine", "ent_adam", "ent_madelyn"] as Array[String])
+		if team.size() >= 1 and team.size() <= 3:
+			arena_allies = team.duplicate()
+		else:
+			arena_allies = ["ent_alyssa_wine", "ent_adam", "ent_madelyn"] as Array[String]
 	if arena_enemies.is_empty():
 		arena_enemies = ["ent_akuji", "ent_fate", "ent_evelyn_graves"] as Array[String]
 	_clear_ui()
 	var menu := _center_panel("ARENA")
-	menu.add_child(_label("Escolha 3 aliados e 3 inimigos. Combate livre (sem missões).", 17, Color("9aa6bf")))
-	menu.add_child(_label("Aliados", 20, Color("6dffa3")))
+	menu.add_child(_label("Equipes incompletas OK: 1 a 3 por lado. Combate livre (sem missões).", 17, Color("9aa6bf")))
+	var ally_n := _arena_filled(arena_allies).size()
+	var enemy_n := _arena_filled(arena_enemies).size()
+	menu.add_child(_label("Aliados · %d/3" % ally_n, 20, Color("6dffa3")))
 	for i in range(3):
 		var cur := arena_allies[i] if i < arena_allies.size() else ""
 		var name := str(Content.HEROES.get(cur, {}).get("name", cur if cur != "" else "(vazio)"))
-		menu.add_child(_button("Aliado %d: %s" % [i + 1, name], _arena_pick_slot.bind("ally", i)))
-	menu.add_child(_label("Inimigos", 20, Color("ff8a8a")))
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 6)
+		row.add_child(_button("Aliado %d: %s" % [i + 1, name], _arena_pick_slot.bind("ally", i)))
+		if cur != "":
+			row.add_child(_button("Limpar", _arena_clear_slot.bind("ally", i)))
+		menu.add_child(row)
+	menu.add_child(_label("Inimigos · %d/3" % enemy_n, 20, Color("ff8a8a")))
 	for i in range(3):
 		var cur2 := arena_enemies[i] if i < arena_enemies.size() else ""
 		var name2 := str(Content.HEROES.get(cur2, {}).get("name", cur2 if cur2 != "" else "(vazio)"))
-		menu.add_child(_button("Inimigo %d: %s" % [i + 1, name2], _arena_pick_slot.bind("enemy", i)))
-	var ready := arena_allies.size() == 3 and arena_enemies.size() == 3
-	ready = ready and arena_allies[0] != "" and arena_enemies[0] != ""
-	var fight := _button("Iniciar combate", _start_arena_battle)
+		var row2 := HBoxContainer.new()
+		row2.add_theme_constant_override("separation", 6)
+		row2.add_child(_button("Inimigo %d: %s" % [i + 1, name2], _arena_pick_slot.bind("enemy", i)))
+		if cur2 != "":
+			row2.add_child(_button("Limpar", _arena_clear_slot.bind("enemy", i)))
+		menu.add_child(row2)
+	var ready := ally_n >= 1 and enemy_n >= 1
+	var fight := _button("Iniciar combate (%dv%d)" % [ally_n, enemy_n], _start_arena_battle)
 	fight.disabled = not ready
 	menu.add_child(fight)
 	menu.add_child(_button("Voltar", _show_menu))
@@ -1094,31 +1116,40 @@ func _arena_set_slot(side: String, slot: int, hero_id: String) -> void:
 		arena_enemies[slot] = hero_id
 	_show_arena()
 
+func _arena_clear_slot(side: String, slot: int) -> void:
+	if side == "ally":
+		while arena_allies.size() <= slot:
+			arena_allies.append("")
+		arena_allies[slot] = ""
+	else:
+		while arena_enemies.size() <= slot:
+			arena_enemies.append("")
+		arena_enemies[slot] = ""
+	_show_arena()
+
 func _start_arena_battle() -> void:
-	if arena_allies.size() != 3 or arena_enemies.size() != 3:
+	var allies := _arena_filled(arena_allies)
+	var enemies := _arena_filled(arena_enemies)
+	if allies.is_empty() or enemies.is_empty():
 		return
-	for id in arena_allies:
-		if id == "" or not Content.HEROES.has(id):
-			return
-	for id in arena_enemies:
-		if id == "" or not Content.HEROES.has(id):
-			return
-	team = arena_allies.duplicate()
+	if allies.size() > 3 or enemies.size() > 3:
+		return
+	team = allies
 	mission_id = "arena"
-	# Missão sintética temporária
 	if not Content.MISSIONS.has("arena"):
 		Content.MISSIONS["arena"] = {
 			"name": "Arena",
 			"objective": "ELIMINATE",
 			"arena": "street_night",
-			"enemies": arena_enemies.duplicate(),
+			"enemies": enemies.duplicate(),
 			"reinforcements": {},
 			"environment": [],
 		}
 	else:
-		Content.MISSIONS["arena"]["enemies"] = arena_enemies.duplicate()
+		Content.MISSIONS["arena"]["enemies"] = enemies.duplicate()
 	if not Content.CAMPAIGN.has("arena"):
-		Content.CAMPAIGN["arena"] = {"requires": [], "par": 3, "brief": "Combate livre na Arena.", "goal": "Elimine os adversários."}
+		Content.CAMPAIGN["arena"] = {"requires": [], "par": 3, "brief": "Combate livre na Arena (1–3 por lado).", "goal": "Elimine os adversários."}
+	# Missão arena: CAMPAIGN.requires=[] → desbloqueada; aceita 1–3 via _start_mission.
 	_start_mission()
 
 
@@ -1863,7 +1894,12 @@ func _start_mission() -> void:
 	if not _mission_unlocked(mission_id):
 		_show_missions()
 		return
-	if team.size() != int(Content.RULES["team_size"]):
+	if mission_id == "arena":
+		if team.is_empty() or team.size() > int(Content.RULES["team_size"]):
+			feedback = "Arena: escolha de 1 a 3 heróis."
+			_show_arena()
+			return
+	elif team.size() != int(Content.RULES["team_size"]):
 		feedback = "Escolha três heróis para entrar na missão."
 		_show_team()
 		return
@@ -2084,8 +2120,7 @@ func _render_battle() -> void:
 	left.add_child(_label("LOG", 18, Color("e9c891")))
 	var log_slice: Array = event_history.slice(max(0, event_history.size() - 12))
 	for entry in log_slice:
-		var line := _label(str(entry), 13, Color("d5deea"))
-		line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		var line := _rich_log_line(str(entry), 13, Color("d5deea"))
 		line.custom_minimum_size.x = 218
 		left.add_child(line)
 	if extra != "":
@@ -5330,27 +5365,127 @@ func _apply_weather_fx() -> void:
 			root.add_child(_make_weather_particles(40, 1.6, Vector3(10, 0.2, 8), Vector3(0, 7.5, 0), Vector3(0, -0.2, 0.1), 40.0, 0.4, 1.2, Vector3(0, -0.4, 0), Color(1, 1, 1, 0.3), null))
 
 
+func _rich_log_line(bbcode: String, size: int = 13, color: Color = Color("d5deea")) -> RichTextLabel:
+	var lab := RichTextLabel.new()
+	lab.bbcode_enabled = true
+	lab.fit_content = true
+	lab.scroll_active = false
+	lab.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	lab.add_theme_font_size_override("normal_font_size", size)
+	lab.add_theme_font_size_override("bold_font_size", size)
+	lab.add_theme_color_override("default_color", color)
+	lab.text = bbcode
+	return lab
+
+func _side_pt(side: String) -> String:
+	return "Aliados" if side == "ALLY" else ("Inimigos" if side == "ENEMY" else side)
+
+func _card_name_from_detail(detail: Dictionary) -> String:
+	if detail.has("name") and str(detail.get("name", "")) != "":
+		return str(detail["name"])
+	if detail.has("card") and typeof(detail["card"]) == TYPE_DICTIONARY:
+		var cid := str(detail["card"].get("id", ""))
+		if Content.CARDS.has(cid):
+			return str(Content.CARDS[cid].get("name", cid))
+		return cid
+	var id := str(detail.get("id", ""))
+	if id != "" and Content.CARDS.has(id):
+		return str(Content.CARDS[id].get("name", id))
+	return id if id != "" else "?"
+
+func _format_formula_pt(formula: Dictionary) -> String:
+	if formula.is_empty():
+		return ""
+	var stat := str(formula.get("stat", "attack"))
+	var atk_label := "Poder" if stat == "power" else "Impacto"
+	var def_label := "Escudo" if stat == "power" else "Armadura"
+	var card_amt := float(formula.get("card_amt", 0))
+	var offense := float(formula.get("offense", 0))
+	var bonus := float(formula.get("bonus", 0))
+	var mult := float(formula.get("multiplier", 1.0))
+	var defense := int(formula.get("defense", 0))
+	var parts: PackedStringArray = []
+	parts.append("%s %d" % [atk_label, int(round(offense))])
+	if card_amt != 0.0:
+		parts.append("carta %+d" % int(round(card_amt)))
+	if bonus != 0.0:
+		parts.append("bônus %+d" % int(round(bonus)))
+	var base_txt := " + ".join(parts)
+	if absf(mult - 1.0) > 0.001:
+		base_txt = "(%s) ×%.2f" % [base_txt, mult]
+	var pen := " · Penetrante" if bool(formula.get("penetrating", false)) else ""
+	return "%s − %s %d%s" % [base_txt, def_label, defense, pen]
+
 func _format_detail_line(entry: Dictionary) -> String:
 	var kind := str(entry.get("kind", ""))
 	var action := str(entry.get("action", ""))
 	var detail: Dictionary = entry.get("detail", {}) if typeof(entry.get("detail", {})) == TYPE_DICTIONARY else {}
 	if kind == "log" or action == "log":
 		return str(entry.get("text", detail.get("text", "")))
-	var bits: PackedStringArray = []
-	if kind != "":
-		bits.append(kind)
-	if action != "":
-		bits.append(action)
-	# Campos comuns de debug
-	for key in ["side", "card", "id", "name", "owner", "owner_name", "target", "source", "actor_id", "damage", "amount", "hp", "max_hp", "formula", "base", "offense", "defense", "raw", "status", "stacks", "reason", "hand_size", "deck_left"]:
-		if detail.has(key):
-			bits.append("%s=%s" % [key, str(detail[key])])
-	# Sub-detalhe de carta
-	if detail.has("card") and typeof(detail["card"]) == TYPE_DICTIONARY:
-		var c: Dictionary = detail["card"]
-		bits.append("card_id=%s" % str(c.get("id", "")))
-		bits.append("card_owner=%s" % str(c.get("owner", "")))
-	return " · ".join(bits)
+	# Eventos estruturados → português legível (sem dump JSON).
+	match "%s/%s" % [kind, action]:
+		"card/draw":
+			var who := str(detail.get("owner_name", ""))
+			if who == "":
+				who = _side_pt(str(detail.get("side", "")))
+			return "[b]%s[/b] comprou [b]%s[/b]." % [who, _card_name_from_detail(detail)]
+		"card/redraw":
+			return "[b]%s[/b] recomprou [b]%s[/b]." % [str(detail.get("owner_name", _side_pt(str(detail.get("side", ""))))), _card_name_from_detail(detail)]
+		"battle/damage":
+			var src := str(detail.get("source", "?"))
+			var tgt := str(detail.get("target", "?"))
+			var amt := int(detail.get("amount", detail.get("hp_lost", 0)))
+			var hp_b := int(detail.get("hp_before", 0))
+			var hp_a := int(detail.get("hp_after", 0))
+			var ftxt := ""
+			if detail.has("formula") and typeof(detail["formula"]) == TYPE_DICTIONARY:
+				ftxt = _format_formula_pt(detail["formula"])
+			if ftxt != "":
+				return "[b]%s[/b] → [b]%s[/b]: [b]%d[/b] dano (%s) · Vida %d→%d." % [src, tgt, amt, ftxt, hp_b, hp_a]
+			return "[b]%s[/b] causou [b]%d[/b] em [b]%s[/b] · Vida %d→%d." % [src, amt, tgt, hp_b, hp_a]
+		"battle/death":
+			return "[b]%s[/b] caiu." % str(detail.get("name", "?"))
+		"battle/revive":
+			return "[b]%s[/b] foi reanimado." % str(detail.get("name", detail.get("target", "?")))
+		"battle/phase":
+			var ph := str(detail.get("phase", ""))
+			var turn_n := int(detail.get("turn", 0))
+			if ph == "PLAYER":
+				return "[b]Rodada %d[/b] — sua vez." % turn_n
+			if ph == "ENEMY":
+				return "[b]Rodada %d[/b] — vez dos adversários." % turn_n
+			return "[b]Fase[/b]: %s (rodada %d)." % [ph, turn_n]
+		"battle/draw_batch":
+			return "%s compraram %d carta(s)." % [_side_pt(str(detail.get("side", ""))), int(detail.get("drawn", 0))]
+		"battle/reshuffle":
+			return "%s embaralharam o descarte (fadiga)." % _side_pt(str(detail.get("side", "")))
+		"battle/status_add":
+			return "[b]%s[/b]: %s (%s)." % [str(detail.get("name", detail.get("actor", "?"))), str(detail.get("status", detail.get("id", "?"))), str(detail.get("stacks", detail.get("amount", "")))]
+		"battle/posture_trigger":
+			return "[b]%s[/b]: postura +%s Iniciativa." % [str(detail.get("name", "?")), str(detail.get("amount", detail.get("gain", "")))]
+		"ai/enemy_play_failed":
+			return "IA não conseguiu jogar %s." % _card_name_from_detail(detail)
+		"card/reanimar_insert":
+			return "Reanimar entrou no baralho (%s)." % _side_pt(str(detail.get("side", "")))
+		"card/reanimar_remove":
+			return "Reanimar removido do baralho (%s)." % _side_pt(str(detail.get("side", "")))
+		_:
+			pass
+	# Fallback curto e legível — nunca dump bruto de dicionário.
+	var label := ""
+	match kind:
+		"card": label = "Carta"
+		"battle": label = "Combate"
+		"ai": label = "IA"
+		_: label = kind.capitalize() if kind != "" else "Evento"
+	var act_pt := action.replace("_", " ")
+	var who := str(detail.get("owner_name", detail.get("source", detail.get("name", detail.get("target", "")))))
+	var what := _card_name_from_detail(detail) if detail.has("card") or detail.has("id") or detail.has("name") else ""
+	if who != "" and what != "" and what != "?":
+		return "[b]%s[/b]: %s — %s (%s)." % [label, who, act_pt, what]
+	if who != "":
+		return "[b]%s[/b]: %s — %s." % [label, who, act_pt]
+	return "[b]%s[/b]: %s." % [label, act_pt if act_pt != "" else "atualização"]
 
 func _add_battle_log_overlay(viewport_size: Vector2) -> void:
 	var wrap := Control.new()
@@ -5383,7 +5518,7 @@ func _add_battle_log_overlay(viewport_size: Vector2) -> void:
 	col.add_theme_constant_override("separation", 8)
 	panel.add_child(col)
 	col.add_child(_label("HISTÓRICO DETALHADO", 24, Color("f0c27a")))
-	col.add_child(_label("Compras, jogadas, alvos, dano e status — também gravados no session report.", 13, Color("9aa7b8")))
+	col.add_child(_label("Quem comprou, quem jogou em quem, dano com fórmula — em português.", 13, Color("9aa7b8")))
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.custom_minimum_size = Vector2(0, panel.custom_minimum_size.y - 120.0)
@@ -5400,8 +5535,7 @@ func _add_battle_log_overlay(viewport_size: Vector2) -> void:
 	var start := maxi(0, rows.size() - 120)
 	for i in range(start, rows.size()):
 		var entry: Dictionary = rows[i]
-		var line := _label(_format_detail_line(entry), 12, Color("d5deea"))
-		line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		var line := _rich_log_line(_format_detail_line(entry), 13, Color("d5deea"))
 		line.custom_minimum_size.x = panel.custom_minimum_size.x - 48.0
 		lines.add_child(line)
 	var row := HBoxContainer.new()

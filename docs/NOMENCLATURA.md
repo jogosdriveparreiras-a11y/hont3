@@ -35,10 +35,11 @@ Cartas negativas (`class: DESVANTAGEM`, `tier: desvantagem`). **Uma por personag
 ## Aprimoramentos
 
 **Aprimoramentos** = passivas sempre ativas (estilo Ability de Pokémon).  
-Substitui os termos antigos: **recurso**, **passive**, **assinatura** (como conceito de design).
+Substitui os termos antigos: **recurso**, **passive**, **assinatura/signature**.
 
 - Campo preferido: `aprimoramento` (string id ou objeto `{id, name, text}`).
-- Compatibilidade: `passive` e `signature` continuam lidos como aliases no runtime/editor.
+- Compatibilidade: `passive` ainda é lido como alias no runtime/editor.
+- **Assinatura/signature foi removida** — não há mais efeito automático no início do turno (BLOCK/etc.).
 - Um personagem tem um (ou lista de) efeitos sempre ativos.
 
 Exemplo Alyssa: aprimoramento **Escuridão** (`escuridao`).

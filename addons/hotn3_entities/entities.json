@@ -35,14 +35,6 @@
         "ent_adam_puxar_para_tras",
         "ent_adam_abrigo_rapido"
       ],
-      "signature": {
-        "name": "Olho de sobrevivente",
-        "target": "LOWEST_ALLY",
-        "action": [
-          "BLOCK",
-          "3"
-        ]
-      },
       "tags": [
         {
           "name": "Preparo",
@@ -126,14 +118,6 @@
         "ent_akuji_forma_de_cinzas",
         "ent_akuji_chama_sem_luz"
       ],
-      "signature": {
-        "name": "Cinzas vigilantes",
-        "target": "SELF",
-        "action": [
-          "BLOCK",
-          "3"
-        ]
-      },
       "tags": [
         {
           "name": "Canhão",
@@ -225,14 +209,6 @@
         "ent_alexis_reunir_o_grupo",
         "ent_alexis_escapar_para_cobertura"
       ],
-      "signature": {
-        "name": "Alerta insistente",
-        "target": "LOWEST_ALLY",
-        "action": [
-          "BLOCK",
-          "2"
-        ]
-      },
       "tags": [
         {
           "name": "Encantador",
@@ -312,14 +288,6 @@
         "ent_alistair_desafio_da_vanguarda",
         "ent_alistair_esconjuro"
       ],
-      "signature": {
-        "name": "Guardar a frente",
-        "target": "SELF",
-        "action": [
-          "BLOCK",
-          "4"
-        ]
-      },
       "tags": [
         {
           "name": "Vanguarda",
@@ -418,14 +386,6 @@
         "ent_alyssa_wine_a_filha_dele",
         "ent_alyssa_wine_regeneracao"
       ],
-      "signature": {
-        "name": "Tempestade latente",
-        "target": "SELF",
-        "action": [
-          "BLOCK",
-          "2"
-        ]
-      },
       "tags": [
         {
           "name": "Retaliador",
@@ -535,14 +495,6 @@
         "ent_marcell_wine_tormenta",
         "ent_marcell_wine_regeneracao"
       ],
-      "signature": {
-        "name": "Tempestade latente",
-        "target": "SELF",
-        "action": [
-          "BLOCK",
-          "3"
-        ]
-      },
       "tags": [
         {
           "name": "Devastador",
@@ -642,15 +594,6 @@
         "ent_ashlee_kit_medico",
         "ent_ashlee_isolar_alvo"
       ],
-      "signature": {
-        "name": "Varredura de Soma",
-        "target": "FIRST_ENEMY",
-        "action": [
-          "STATUS",
-          "marked",
-          "1"
-        ]
-      },
       "tags": [
         {
           "name": "Preparo",
@@ -738,15 +681,6 @@
         "ent_daeva_passo_despercebido",
         "ent_daeva_cobertura_de_corredor"
       ],
-      "signature": {
-        "name": "Saída preparada",
-        "target": "SELF",
-        "action": [
-          "STATUS",
-          "protecao",
-          "1"
-        ]
-      },
       "tags": [
         {
           "name": "Furtivo",
@@ -830,14 +764,6 @@
         "ent_damian_alrosa_pocao_negociada",
         "ent_damian_alrosa_ritual_condicionado"
       ],
-      "signature": {
-        "name": "Recurso de reserva",
-        "target": "SELF",
-        "action": [
-          "IMPULSE",
-          "1"
-        ]
-      },
       "tags": [
         {
           "name": "Calculista",
@@ -922,14 +848,6 @@
         "ent_dominika_seur_rolar",
         "ent_dominika_seur_eu_sou_a_vitima"
       ],
-      "signature": {
-        "name": "Recuperação de massa",
-        "target": "SELF",
-        "action": [
-          "HEAL",
-          "2"
-        ]
-      },
       "tags": [
         {
           "name": "Inabalável",
@@ -1017,14 +935,6 @@
         "ent_dylan_versos_de_coragem",
         "ent_dylan_atrair_atencao"
       ],
-      "signature": {
-        "name": "Primeiro cuidado",
-        "target": "LOWEST_ALLY",
-        "action": [
-          "HEAL",
-          "2"
-        ]
-      },
       "tags": [
         {
           "name": "Encantador",
@@ -1100,15 +1010,6 @@
         "ent_evelyn_graves_eco_invocado",
         "ent_evelyn_graves_arrastar_consciencia"
       ],
-      "signature": {
-        "name": "Eco perturbador",
-        "target": "FIRST_ENEMY",
-        "action": [
-          "STATUS",
-          "weak",
-          "1"
-        ]
-      },
       "tags": [
         {
           "name": "Marionetista",
@@ -1192,15 +1093,6 @@
         "ent_fate_passo_de_fronteira",
         "ent_fate_dever_da_alfandega"
       ],
-      "signature": {
-        "name": "A guarda não cede",
-        "target": "SELF",
-        "action": [
-          "STATUS",
-          "counter",
-          "1"
-        ]
-      },
       "tags": [
         {
           "name": "Velocista",
@@ -1284,14 +1176,6 @@
         "ent_hynda_valdtagen_chuva_de_glifos",
         "ent_hynda_valdtagen_pocao_adaptativa"
       ],
-      "signature": {
-        "name": "Glifo de reserva",
-        "target": "SELF",
-        "action": [
-          "IMPULSE",
-          "1"
-        ]
-      },
       "tags": [
         {
           "name": "Acrobata",
@@ -1379,15 +1263,6 @@
         "ent_kabuki_salto_de_contencao",
         "ent_kabuki_evasao_calculada"
       ],
-      "signature": {
-        "name": "Evasão programada",
-        "target": "SELF",
-        "action": [
-          "STATUS",
-          "protecao",
-          "1"
-        ]
-      },
       "tags": [
         {
           "name": "Acrobata",
@@ -1483,14 +1358,6 @@
         "ent_konrad_ferida_aberta",
         "ent_konrad_ilusao_de_cobertura"
       ],
-      "signature": {
-        "name": "Cobertura de penumbra",
-        "target": "SELF",
-        "action": [
-          "BLOCK",
-          "3"
-        ]
-      },
       "tags": [
         {
           "name": "Furtivo",
@@ -1570,14 +1437,6 @@
         "ent_leona_regenerar_pelo_consumo",
         "ent_leona_doenca_lembrada"
       ],
-      "signature": {
-        "name": "Corpo faminto",
-        "target": "SELF",
-        "action": [
-          "HEAL",
-          "2"
-        ]
-      },
       "tags": [
         {
           "name": "Carniceiro",
@@ -1665,14 +1524,6 @@
         "ent_lust_fluxo_de_energia",
         "ent_lust_transferencia_runica"
       ],
-      "signature": {
-        "name": "Soma compartilhado",
-        "target": "LOWEST_ALLY",
-        "action": [
-          "BLOCK",
-          "3"
-        ]
-      },
       "tags": [
         {
           "name": "Encantador",
@@ -1756,14 +1607,6 @@
         "ent_madelyn_frenesi_de_palco",
         "ent_madelyn_sombra_mentirosa"
       ],
-      "signature": {
-        "name": "Improviso frenético",
-        "target": "SELF",
-        "action": [
-          "IMPULSE",
-          "1"
-        ]
-      },
       "tags": [
         {
           "name": "Frenético",
@@ -1847,15 +1690,6 @@
         "ent_mingau_o_feiticeiro_encantar_subordinado",
         "ent_mingau_o_feiticeiro_salto_impossivel"
       ],
-      "signature": {
-        "name": "Corpo intangível",
-        "target": "SELF",
-        "action": [
-          "STATUS",
-          "protecao",
-          "1"
-        ]
-      },
       "tags": [
         {
           "name": "Anomalia",
@@ -1943,14 +1777,6 @@
         "ent_mutante_generico_carga_instavel",
         "ent_mutante_generico_barreira_condensada"
       ],
-      "signature": {
-        "name": "Carga elemental",
-        "target": "SELF",
-        "action": [
-          "IMPULSE",
-          "1"
-        ]
-      },
       "tags": [
         {
           "name": "Canhão",
@@ -2027,14 +1853,6 @@
         "ent_nero_invocar_zumbi",
         "ent_nero_invocar_fantasma"
       ],
-      "signature": {
-        "name": "Presença funerária",
-        "target": "LOWEST_ALLY",
-        "action": [
-          "BLOCK",
-          "3"
-        ]
-      },
       "tags": [
         {
           "name": "Invocador",
@@ -2130,15 +1948,6 @@
         "ent_niu_valdtagen_sumir_no_corredor",
         "ent_niu_valdtagen_passo_de_fuga"
       ],
-      "signature": {
-        "name": "Sorte improvável",
-        "target": "SELF",
-        "action": [
-          "STATUS",
-          "protecao",
-          "1"
-        ]
-      },
       "tags": [
         {
           "name": "Furtivo",
@@ -2210,15 +2019,6 @@
         "ent_pesadelo_vivo_frenesi_subito",
         "ent_pesadelo_vivo_eco_mental"
       ],
-      "signature": {
-        "name": "Medo persistente",
-        "target": "FIRST_ENEMY",
-        "action": [
-          "STATUS",
-          "weak",
-          "1"
-        ]
-      },
       "tags": [
         {
           "name": "Frenético",
@@ -2306,14 +2106,6 @@
         "ent_pietro_caos_garras_de_ceifador",
         "ent_pietro_caos_sabotar_sistema"
       ],
-      "signature": {
-        "name": "Regeneração caótica",
-        "target": "SELF",
-        "action": [
-          "HEAL",
-          "2"
-        ]
-      },
       "tags": [
         {
           "name": "Desperto",
@@ -2413,15 +2205,6 @@
         "ent_quasar_riso_provocador",
         "ent_quasar_percepcao_relampago"
       ],
-      "signature": {
-        "name": "Reflexo treinado",
-        "target": "SELF",
-        "action": [
-          "STATUS",
-          "counter",
-          "1"
-        ]
-      },
       "tags": [
         {
           "name": "Duelista",
@@ -2509,14 +2292,6 @@
         "ent_taylor_asas_projetadas",
         "ent_taylor_lamina_psiquica"
       ],
-      "signature": {
-        "name": "Fortaleza psíquica",
-        "target": "SELF",
-        "action": [
-          "BLOCK",
-          "4"
-        ]
-      },
       "tags": [
         {
           "name": "Marionetista",
@@ -2600,15 +2375,6 @@
         "ent_techna_varredura_de_alvos",
         "ent_techna_sabotar_arma"
       ],
-      "signature": {
-        "name": "Mira de contenção",
-        "target": "FIRST_ENEMY",
-        "action": [
-          "STATUS",
-          "marked",
-          "1"
-        ]
-      },
       "tags": [
         {
           "name": "Preparo",
@@ -2999,14 +2765,6 @@
         "manobra_finisher"
       ],
       "desvantagem": "",
-      "signature": {
-        "name": "Reserva",
-        "target": "SELF",
-        "action": [
-          "BLOCK",
-          "2"
-        ]
-      },
       "tags": [
         {
           "name": "Genérico",
@@ -3073,14 +2831,6 @@
         "manobra_finisher"
       ],
       "desvantagem": "",
-      "signature": {
-        "name": "Reserva",
-        "target": "SELF",
-        "action": [
-          "BLOCK",
-          "2"
-        ]
-      },
       "tags": [
         {
           "name": "Genérico",
@@ -3147,14 +2897,6 @@
         "manobra_finisher"
       ],
       "desvantagem": "",
-      "signature": {
-        "name": "Reserva",
-        "target": "SELF",
-        "action": [
-          "BLOCK",
-          "2"
-        ]
-      },
       "tags": [
         {
           "name": "Genérico",
@@ -3221,14 +2963,6 @@
         "manobra_finisher"
       ],
       "desvantagem": "",
-      "signature": {
-        "name": "Reserva",
-        "target": "SELF",
-        "action": [
-          "BLOCK",
-          "2"
-        ]
-      },
       "tags": [
         {
           "name": "Genérico",
@@ -3295,14 +3029,6 @@
         "manobra_finisher"
       ],
       "desvantagem": "",
-      "signature": {
-        "name": "Reserva",
-        "target": "SELF",
-        "action": [
-          "BLOCK",
-          "2"
-        ]
-      },
       "tags": [
         {
           "name": "Genérico",
@@ -3369,14 +3095,6 @@
         "manobra_finisher"
       ],
       "desvantagem": "",
-      "signature": {
-        "name": "Reserva",
-        "target": "SELF",
-        "action": [
-          "BLOCK",
-          "2"
-        ]
-      },
       "tags": [
         {
           "name": "Genérico",
@@ -3443,14 +3161,6 @@
         "manobra_finisher"
       ],
       "desvantagem": "",
-      "signature": {
-        "name": "Reserva",
-        "target": "SELF",
-        "action": [
-          "BLOCK",
-          "2"
-        ]
-      },
       "tags": [
         {
           "name": "Genérico",
