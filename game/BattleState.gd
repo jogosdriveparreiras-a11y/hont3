@@ -765,7 +765,7 @@ func _status_state(actor: Dictionary, id: String) -> Dictionary:
 	## Normalized, safe status entry. Empty dict if missing / wrong type.
 	id = _normalize_status_id(id)
 	if id in REMOVED_STATUSES:
-		return
+		return {}
 	var statuses: Variant = actor.get("statuses", {})
 	if typeof(statuses) != TYPE_DICTIONARY:
 		return {}
