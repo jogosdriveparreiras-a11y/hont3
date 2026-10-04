@@ -12,6 +12,7 @@ const CombatRules = preload("res://game/CombatRules.gd")
 var rng := RandomNumberGenerator.new()
 var rules: Dictionary = Content.RULES.duplicate(true)
 var mission: Dictionary = {}
+var campaign_criteria: Array = []
 var actors: Array[Dictionary] = []
 var deck: Array[Dictionary] = []
 var hand: Array[Dictionary] = []
@@ -106,11 +107,14 @@ func _set_plays(side: String, value: int) -> void:
 func _add_plays(side: String, amount: int) -> void:
 	_set_plays(side, _get_plays(side) + amount)
 
-func begin(mission_id: String, team: Array[String], equipped: Dictionary, seed_value: int = 0, card_improvements: Dictionary = {}, selected_items: Dictionary = {}, auto_open: bool = true) -> void:
+func begin(mission_id: String, team: Array[String], equipped: Dictionary, seed_value: int = 0, card_improvements: Dictionary = {}, selected_items: Dictionary = {}, auto_open: bool = true, mission_override: Dictionary = {}) -> void:
 	if not PackBridge.packs_merged:
 		PackBridge.new()
 	rng.seed = seed_value if seed_value != 0 else randi()
-	mission = Content.MISSIONS[mission_id].duplicate(true)
+	mission = mission_override.duplicate(true) if not mission_override.is_empty() else Content.MISSIONS.get(mission_id, {}).duplicate(true)
+	if mission.is_empty():
+		mission = {"name": mission_id, "objective": "ELIMINATE", "enemies": []}
+	campaign_criteria = mission.get("campaign_criteria", []).duplicate(true)
 	actors.clear()
 	deck.clear()
 	hand.clear()
@@ -288,6 +292,71 @@ func spawn_enemy(enemy_id: String) -> void:
 		if Content.CARDS.has(str(card_id)):
 			enemy_deck.append(_create_card(str(card_id), int(enemy["id"])))
 	_log("%s entrou na arena." % enemy["name"])
+
+func add_campaign_extra_cards(entries: Array) -> void:
+	for raw in entries:
+		if typeof(raw) != TYPE_DICTIONARY:
+			continue
+		var entry: Dictionary = raw
+		var card_id := str(entry.get("card_id", entry.get("card", "")))
+		var definition: Dictionary = Content.CARDS.get(card_id, {})
+		if card_id == "" or definition.is_empty():
+			_log("Carta extra ignorada: %s não existe no catálogo." % card_id)
+			continue
+		var side := "ENEMY" if str(entry.get("side", "enemy")).to_lower() in ["enemy", "inimigo", "inimigos"] else "ALLY"
+		var owner_id := str(entry.get("owner_id", entry.get("owner", "")))
+		var owner_actor: Dictionary = {}
+		for actor in living(side):
+			if owner_id == "" or owner_id == str(actor.get("archetype", "")):
+				owner_actor = actor
+				break
+		if owner_actor.is_empty():
+			_log("Carta extra %s ignorada: dono %s não está no lado %s." % [card_id, owner_id, side])
+			continue
+		var destination := enemy_deck if side == "ENEMY" else deck
+		for _copy in range(clampi(int(entry.get("count", 1)), 1, 99)):
+			destination.append(_create_card(card_id, int(owner_actor["id"])))
+		_shuffle(destination)
+
+func _campaign_criterion_state(criterion: Dictionary) -> int:
+	var kind := str(criterion.get("type", "eliminate_all"))
+	var target := str(criterion.get("target", ""))
+	var value := int(criterion.get("value", 0))
+	match kind:
+		"eliminate_all":
+			var waiting: bool = not mission.get("reinforcements", {}).keys().all(func(t): return int(t) <= turn)
+			return 0 if waiting or not living("ENEMY").is_empty() else 1
+		"eliminate_target":
+			var scheduled := false
+			for actor in actors:
+				if actor["side"] != "ENEMY" or str(actor.get("archetype", "")) != target: continue
+				if int(actor.get("hp", 0)) > 0: return 0
+			for wave_turn in mission.get("reinforcements", {}).keys():
+				if int(wave_turn) > turn and mission.get("reinforcements", {})[wave_turn].has(target): scheduled = true
+			return 0 if scheduled else (-1 if actors.all(func(a): return a["side"] != "ENEMY" or str(a.get("archetype", "")) != target) else 1)
+		"survive_rounds":
+			return 1 if turn >= maxi(1, value) else 0
+		"protect_ally":
+			for actor in actors:
+				if actor["side"] == "ALLY" and str(actor.get("archetype", "")) == target:
+					return 1 if int(actor.get("hp", 0)) > 0 else -1
+			return -1
+		"protect_hp":
+			return 1 if protect_hp >= value else (-1 if protect_hp <= 0 else 0)
+		_:
+			return 0
+
+func _campaign_criteria_result() -> int:
+	if campaign_criteria.is_empty():
+		return 0
+	var result := _campaign_criterion_state(campaign_criteria[0])
+	for i in range(1, campaign_criteria.size()):
+		var next := _campaign_criterion_state(campaign_criteria[i])
+		if str(campaign_criteria[i].get("combine", "and")).to_lower() == "or":
+			result = 1 if result == 1 or next == 1 else (-1 if result == -1 and next == -1 else 0)
+		else:
+			result = -1 if result == -1 or next == -1 else (1 if result == 1 and next == 1 else 0)
+	return result
 
 func actor_by_id(id: int) -> Dictionary:
 	for actor in actors:
@@ -2750,6 +2819,12 @@ func _check_end() -> void:
 	if not actors.any(func(a): return a["side"] == "ALLY" and a["hp"] > 0) or mission.get("objective", "") == "PROTECT" and protect_hp <= 0:
 		phase = "FINISHED"
 		finished.emit(false)
+		return
+	if not campaign_criteria.is_empty():
+		var criteria_result := _campaign_criteria_result()
+		if criteria_result != 0:
+			phase = "FINISHED"
+			finished.emit(criteria_result > 0)
 		return
 	var objective: String = mission.get("objective", "ELIMINATE")
 	var victory := false

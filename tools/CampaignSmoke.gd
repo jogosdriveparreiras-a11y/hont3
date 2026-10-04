@@ -3,6 +3,7 @@ extends SceneTree
 const Content = preload("res://game/Content.gd")
 const Battle = preload("res://game/BattleState.gd")
 const PackBridge = preload("res://game/PackBridge.gd")
+const CampaignRoot = preload("res://addons/hotn3_campaign/CampaignRoot.gd")
 
 func _initialize() -> void:
 	call_deferred("_run")
@@ -40,5 +41,25 @@ func _run() -> void:
 				battle.phase = "ENEMY"
 				battle._check_end()
 		assert(battle.phase == "FINISHED", "Mission must complete according to its objective: " + mission_id)
-	print("OK: mission objectives, reinforcement gate and boss completion (%d missions)" % Content.MISSIONS.size())
+	# O schema do editor deve ser carregável pelo runtime e seus critérios
+	# substituem o objetivo genérico da missão.
+	var mission_id := str(Content.MISSIONS.keys()[0])
+	var custom_mission: Dictionary = Content.MISSIONS[mission_id].duplicate(true)
+	custom_mission["campaign_criteria"] = [{"type": "survive_rounds", "value": 2}]
+	var scripted: HotNBattle = Battle.new()
+	scripted.begin(mission_id, team, {}, 20261004, {}, {}, false, custom_mission)
+	var extra_card := str(Content.CARDS.keys()[0])
+	scripted.add_campaign_extra_cards([{"side": "enemy", "card_id": extra_card, "count": 2}])
+	assert(scripted.enemy_deck.filter(func(card): return str(card.get("id", "")) == extra_card).size() == 2, "Campaign enemy cards must enter the enemy deck")
+	scripted.turn = 2
+	scripted._check_end()
+	assert(scripted.phase == "FINISHED", "Campaign survive criterion must finish the battle")
+	var campaign: Node = CampaignRoot.new()
+	campaign._read_story()
+	assert(not campaign.campaign_story.is_empty(), "Campaign story must load in the game runtime")
+	var battle_config: Dictionary = campaign._battle_config({"mission": mission_id, "party_size": 3, "criteria": [{"type": "survive_rounds", "value": 2}], "extra_cards": [{"side": "enemy", "card_id": extra_card}]})
+	assert(battle_config["mission_data"]["campaign_criteria"].size() == 1, "Editor criteria must reach the runtime mission")
+	assert(battle_config["extra_cards"].size() == 1, "Editor extra cards must reach the runtime battle")
+	campaign.free()
+	print("OK: %d missions, custom criteria, campaign script loading and extra battle cards" % Content.MISSIONS.size())
 	quit(0)

@@ -4,6 +4,8 @@ signal next_line
 signal option_selected(option: Dictionary)
 signal team_selected(ids: Array)
 signal card_selected(option: Dictionary)
+signal reward_bundle_continue
+signal load_campaign
 signal exit_campaign
 signal retry_battle
 
@@ -75,6 +77,7 @@ func _ready() -> void:
 	padding.add_theme_constant_override("margin_bottom", 12)
 	text_panel.add_child(padding)
 	body = RichTextLabel.new()
+	body.bbcode_enabled = true
 	body.add_theme_font_size_override("normal_font_size", 24)
 	body.add_theme_color_override("default_color", Color("f1ece5"))
 	body.scroll_active = false
@@ -149,6 +152,8 @@ func _portrait_frame(start: float, stop: float) -> PanelContainer:
 	return panel
 
 func _portrait(hero_id: String) -> Texture2D:
+	if hero_id.begins_with("res://") and ResourceLoader.exists(hero_id):
+		return load(hero_id) as Texture2D
 	var hero: Dictionary = Content.HEROES.get(hero_id, {})
 	var path := str(hero.get("portrait", ""))
 	if path == "" or not ResourceLoader.exists(path):
@@ -160,17 +165,19 @@ func _set_right(hero_id: String) -> void:
 	right_portrait.texture = _portrait(hero_id) if hero_id != "" else null
 	right_frame.visible = right_portrait.texture != null
 
-func show_line(title: String, entry: Dictionary, text_value: String, right_id: String, weather_name: String) -> void:
+func show_line(title: String, entry: Dictionary, text_value: String, right_id: String, weather_name: String, left_id: String = "ent_alyssa_wine") -> void:
 	show()
 	mode = "line"
 	_set_weather(weather_name)
 	heading.text = title
-	left_portrait.texture = _portrait("ent_alyssa_wine")
+	left_portrait.texture = _portrait(left_id)
 	_set_right(right_id)
 	var speaker := str(entry.get("speaker", "NARRADOR"))
-	namebox.text = speaker
-	left_frame.modulate = Color.WHITE if speaker == "ALYSSA" else Color(0.38, 0.42, 0.52, 0.80)
-	right_frame.modulate = Color.WHITE if _right_is_speaking(speaker, right_id) else Color(0.38, 0.42, 0.52, 0.80)
+	namebox.text = str(entry.get("display_name", speaker))
+	var active := str(entry.get("active_portrait", ""))
+	if active == "": active = "right" if _right_is_speaking(speaker, right_id) else "left"
+	left_frame.modulate = Color.WHITE if active == "left" else Color(0.38, 0.42, 0.52, 0.80)
+	right_frame.modulate = Color.WHITE if active == "right" and right_id != "" else Color(0.38, 0.42, 0.52, 0.80)
 	text_panel.show()
 	_full_text = text_value
 	body.text = text_value
@@ -271,13 +278,26 @@ func show_reward(options: Array) -> void:
 		action_list.add_child(_button(label_text, _select_card.bind(option), hint))
 	text_panel.hide()
 
+func show_reward_bundle(title: String, rewards: Array) -> void:
+	_clear_actions(title, "Recompensas recebidas")
+	for raw in rewards:
+		if typeof(raw) != TYPE_DICTIONARY: continue
+		var reward: Dictionary = raw
+		var kind := str(reward.get("type", "item"))
+		var id := str(reward.get("id", ""))
+		var label := str(reward.get("label", id if id != "" else "Sorteio"))
+		action_list.add_child(_label("%s · %s ×%d" % [kind.capitalize(), label, maxi(1, int(reward.get("amount", 1)))], 18, Color("dad5d3")))
+	action_list.add_child(_button("Receber e continuar", func(): reward_bundle_continue.emit()))
+	text_panel.hide()
+
 func _select_card(option: Dictionary) -> void:
 	card_selected.emit(option)
 
-func show_defeat(battle_name: String) -> void:
+func show_defeat(battle_name: String, game_over: String = "none") -> void:
 	_clear_actions("Retirada · " + battle_name, "A história retorna à preparação desta luta. Nenhuma carta é concedida pela derrota.")
-	action_list.add_child(_button("Editar equipe e tentar novamente", _retry))
-	action_list.add_child(_button("Voltar ao menu", _exit))
+	if game_over != "title": action_list.add_child(_button("Editar equipe e tentar novamente", _retry))
+	if game_over == "load": action_list.add_child(_button("Carregar campanha salva", func(): load_campaign.emit()))
+	action_list.add_child(_button("Ir para a tela inicial", _exit))
 	text_panel.hide()
 
 func show_ending() -> void:

@@ -8,6 +8,8 @@ const Lead := "ent_alyssa_wine"
 
 var campaign_story: Dictionary = {}
 var campaign_flags: Dictionary = {}
+var campaign_id := ""
+var campaign_unlocked: Dictionary = {}
 var campaign_team: Array[String] = [Lead, "ent_madelyn", "ent_ashlee"]
 var battle_team: Array[String] = []
 var campaign_scene := "prologue"
@@ -18,6 +20,9 @@ var campaign_active := false
 var right_portrait_id := ""
 var reward_offers: Array = []
 var active_battle: Dictionary = {}
+var reward_return := "battle"
+var pending_reward_bundle: Array = []
+var pending_reward_draw := false
 var campaign_view: CampaignView
 var original_music: AudioStream
 var _boot_open_campaign := true
@@ -32,7 +37,7 @@ func _ready() -> void:
 func _show_menu() -> void:
 	# Após change_scene a partir do título do GameRoot, não remontar o menu 3D —
 	# isso fazia Campanha "voltar ao título". Entra direto na VN uma vez.
-	if _boot_open_campaign and not campaign_story.is_empty():
+	if _boot_open_campaign and not campaign_story.is_empty() and campaign_story.get("campaigns", []).size() == 1:
 		_boot_open_campaign = false
 		battle_menu_open = false
 		if battle != null:
@@ -43,7 +48,7 @@ func _show_menu() -> void:
 		if sound != null and original_music == null:
 			original_music = sound.music.stream
 		_teardown_title_screen()
-		_open_campaign()
+		_open_campaign(campaign_id)
 		return
 	_boot_open_campaign = false
 	super._show_menu()
@@ -63,15 +68,24 @@ func _read_story() -> void:
 	var parsed: Variant = JSON.parse_string(file.get_as_text())
 	if typeof(parsed) == TYPE_DICTIONARY and parsed.has("scenes"):
 		campaign_story = parsed
+		if campaign_story.get("adventures", {}).is_empty():
+			campaign_story["adventures"] = {"aventura_principal": {"id": "aventura_principal", "title": str(campaign_story.get("title", "Aventura")), "scene_ids": campaign_story["scenes"].keys()}}
+		if campaign_story.get("campaigns", []).is_empty():
+			campaign_story["campaigns"] = [{"id": "campanha_principal", "title": str(campaign_story.get("title", "Campanha")), "required_party": [str(campaign_story.get("protagonist", Lead))], "party_size": 3, "adventures": campaign_story["adventures"].keys()}]
+		campaign_id = str(campaign_story.get("start_campaign", campaign_story["campaigns"][0].get("id", "campanha_principal")))
 	else:
 		push_error("Roteiro da campanha inválido")
 
 func _add_campaign_menu_button(menu: VBoxContainer) -> void:
-	# Não chama super: o botão base troca de cena; aqui a VN abre no próprio CampaignRoot.
-	var title := "Campanha · rever final" if campaign_phase == "complete" else ("Campanha · continuar" if campaign_phase != "new" else "Campanha")
-	menu.add_child(_button(title, _open_campaign, "A Fenda das Três Vigílias · três capítulos"))
+	# Cada entrada escolhe uma campanha do roteiro; o save da campanha em curso continua separado.
+	for raw in campaign_story.get("campaigns", []):
+		var definition: Dictionary = raw
+		var id := str(definition.get("id", ""))
+		var title := str(definition.get("title", id))
+		var label := title + (" · continuar" if campaign_id == id and campaign_phase != "new" else "")
+		menu.add_child(_button(label, _open_campaign.bind(id), "Iniciar ou continuar esta campanha"))
 	if campaign_phase != "new":
-		menu.add_child(_button("Reiniciar narrativa", _new_campaign, "Recomeça as cenas; mantém cartas já conquistadas."))
+		menu.add_child(_button("Reiniciar narrativa", _new_campaign.bind(campaign_id), "Recomeça as cenas; mantém cartas já conquistadas."))
 
 func _build_arena(theme: String = "default") -> void:
 	if not theme.begins_with("campaign_"):
@@ -93,17 +107,23 @@ func _view() -> CampaignView:
 	campaign_view.option_selected.connect(_choose_option)
 	campaign_view.team_selected.connect(_confirm_team)
 	campaign_view.card_selected.connect(_claim_card)
+	campaign_view.reward_bundle_continue.connect(_claim_reward_bundle)
+	campaign_view.load_campaign.connect(_load_campaign_from_defeat)
 	campaign_view.retry_battle.connect(_prepare_team)
 	campaign_view.exit_campaign.connect(_exit_campaign)
 	return campaign_view
 
-func _new_campaign() -> void:
+func _new_campaign(id: String = "") -> void:
+	if id != "": campaign_id = id
 	campaign_flags.clear()
-	campaign_team = _default_team()
+	campaign_unlocked.clear()
+	for required_id in _campaign_definition().get("required_party", []): campaign_unlocked[str(required_id)] = true
+	campaign_team = _default_campaign_team()
 	battle_team.clear()
 	reward_offers.clear()
 	active_battle.clear()
-	campaign_scene = str(campaign_story.get("start_scene", "prologue"))
+	var configured_start := str(campaign_story.get("start_scene", ""))
+	campaign_scene = configured_start if _scene_belongs_to_campaign(configured_start) else _first_scene_in_campaign()
 	scene_step = 0
 	battle_index = 0
 	campaign_phase = "story"
@@ -111,10 +131,12 @@ func _new_campaign() -> void:
 	_save_campaign()
 	_enter_scene()
 
-func _open_campaign() -> void:
+func _open_campaign(id: String = "") -> void:
 	if campaign_story.is_empty(): return
+	if id != "" and id != campaign_id:
+		_load_campaign(id)
 	if campaign_phase == "new":
-		_new_campaign()
+		_new_campaign(campaign_id)
 		return
 	campaign_active = true
 	if campaign_phase == "reward" and not reward_offers.is_empty():
@@ -125,10 +147,97 @@ func _open_campaign() -> void:
 	else:
 		_enter_scene()
 
+func _campaign_definition() -> Dictionary:
+	for raw in campaign_story.get("campaigns", []):
+		var definition: Dictionary = raw
+		if str(definition.get("id", "")) == campaign_id: return definition
+	return {}
+
+func _first_scene_in_campaign() -> String:
+	var definition := _campaign_definition()
+	for raw in definition.get("adventures", []):
+		var adventure: Dictionary = campaign_story.get("adventures", {}).get(str(raw), {})
+		for scene_id in adventure.get("scene_ids", []):
+			if campaign_story.get("scenes", {}).has(str(scene_id)) and _condition_passes(adventure) and _condition_passes(campaign_story["scenes"][str(scene_id)]):
+				return str(scene_id)
+	return ""
+
+func _scene_belongs_to_campaign(scene_id: String) -> bool:
+	if scene_id == "" or not campaign_story.get("scenes", {}).has(scene_id): return false
+	for adventure_id in _campaign_definition().get("adventures", []):
+		var adventure: Dictionary = campaign_story.get("adventures", {}).get(str(adventure_id), {})
+		if adventure.get("scene_ids", []).has(scene_id): return true
+	return false
+
+func _condition_passes(data: Dictionary) -> bool:
+	var need := str(data.get("if", ""))
+	var exclude := str(data.get("unless", ""))
+	if need != "" and not _as_bool(campaign_flags.get(need, false)): return false
+	if exclude != "" and _as_bool(campaign_flags.get(exclude, false)): return false
+	return true
+
+func _as_bool(value: Variant) -> bool:
+	if typeof(value) == TYPE_STRING:
+		return str(value).to_lower() not in ["", "0", "false", "off", "no"]
+	return bool(value)
+
+func _scene_available(scene_id: String) -> bool:
+	var data: Dictionary = campaign_story.get("scenes", {}).get(scene_id, {})
+	if data.is_empty() or not _condition_passes(data): return false
+	for raw in _campaign_definition().get("adventures", []):
+		var adventure: Dictionary = campaign_story.get("adventures", {}).get(str(raw), {})
+		if adventure.get("scene_ids", []).has(scene_id): return _condition_passes(adventure)
+	return true
+
+func _next_ordered_scene() -> String:
+	var definition := _campaign_definition()
+	var adventure_ids: Array = definition.get("adventures", [])
+	var found := false
+	for adventure_index in range(adventure_ids.size()):
+		var adventure: Dictionary = campaign_story.get("adventures", {}).get(str(adventure_ids[adventure_index]), {})
+		var scene_ids: Array = adventure.get("scene_ids", [])
+		var start_at := 0
+		if not found and scene_ids.has(campaign_scene):
+			found = true
+			start_at = scene_ids.find(campaign_scene) + 1
+		elif not found:
+			continue
+		if not _condition_passes(adventure): continue
+		for index in range(start_at, scene_ids.size()):
+			var candidate := str(scene_ids[index])
+			var scene_data: Dictionary = campaign_story.get("scenes", {}).get(candidate, {})
+			if not scene_data.is_empty() and _scene_available(candidate): return candidate
+	return ""
+
+func _advance_scene(destination: String = "") -> void:
+	var next := destination
+	if next != "" and (not campaign_story.get("scenes", {}).has(next) or not _scene_available(next)):
+		next = ""
+	if next == "":
+		var scene_data: Dictionary = campaign_story.get("scenes", {}).get(campaign_scene, {})
+		var explicit := str(scene_data.get("next", ""))
+		if explicit != "" and campaign_story.get("scenes", {}).has(explicit) and _scene_available(explicit):
+			next = explicit
+		else:
+			next = _next_ordered_scene()
+	if next == "":
+		campaign_phase = "complete"
+		_save_campaign()
+		_view().show_ending()
+		return
+	campaign_scene = next
+	scene_step = 0
+	active_battle.clear()
+	campaign_phase = "story"
+	_save_campaign()
+	_enter_scene()
+
 func _enter_scene() -> void:
 	if campaign_story.is_empty(): return
 	var data: Dictionary = campaign_story["scenes"].get(campaign_scene, {})
-	if data.is_empty(): return
+	if data.is_empty() or not _scene_available(campaign_scene):
+		_advance_scene()
+		return
 	campaign_active = true
 	campaign_phase = "story"
 	right_portrait_id = ""
@@ -148,20 +257,26 @@ func _show_step() -> void:
 	var steps: Array = data.get("steps", [])
 	while scene_step < steps.size():
 		var entry: Dictionary = steps[scene_step]
-		if entry.has("if") and not bool(campaign_flags.get(str(entry["if"]), false)):
-			scene_step += 1
-			continue
-		if entry.has("unless") and bool(campaign_flags.get(str(entry["unless"]), false)):
+		if not _condition_passes(entry):
 			scene_step += 1
 			continue
 		match str(entry.get("type", "line")):
 			"line":
-				if entry.has("right"):
-					right_portrait_id = str(entry["right"])
-				campaign_view.show_line(str(data.get("title", "Campanha")), entry, _format_text(str(entry.get("text", ""))), right_portrait_id, str(data.get("weather", "rain")))
+				if entry.has("right_portrait") or entry.has("right"):
+					right_portrait_id = _resolve_portrait_id(str(entry.get("right_portrait", entry.get("right", ""))))
+				var left_id := _resolve_portrait_id(str(entry.get("left_portrait", "")))
+				if left_id == "": left_id = Lead
+				var line := entry.duplicate(true)
+				line["speaker"] = _format_text(str(entry.get("speaker", "NARRADOR")))
+				line["display_name"] = _format_text(str(entry.get("display_name", line["speaker"])))
+				campaign_view.show_line(str(data.get("title", "Campanha")), line, _format_text(str(entry.get("text", ""))), right_portrait_id, str(data.get("weather", "rain")), left_id)
 				return
 			"choice":
-				campaign_view.show_choices(entry.get("options", []))
+				var options := _available_choice_options(entry.get("options", []))
+				if options.is_empty():
+					scene_step += 1
+					continue
+				campaign_view.show_choices(options)
 				return
 			"battle":
 				active_battle = _battle_config(entry, data)
@@ -169,7 +284,7 @@ func _show_step() -> void:
 				return
 			"jump":
 				var destination := str(entry.get("scene", ""))
-				if campaign_story["scenes"].has(destination):
+				if campaign_story["scenes"].has(destination) and _scene_available(destination):
 					campaign_scene = destination
 					scene_step = 0
 					_enter_scene()
@@ -180,10 +295,25 @@ func _show_step() -> void:
 				_save_campaign()
 				campaign_view.show_ending()
 				return
+			"reward":
+				_begin_story_reward(entry)
+				return
 			_:
 				scene_step += 1
-	# Um roteiro sem encerramento explícito não inicia outra luta por acidente.
-	push_error("Fim inesperado da cena de campanha: " + campaign_scene)
+	_advance_scene()
+
+func _resolve_portrait_id(value: String) -> String:
+	if value == "{ally1}": return campaign_team[1] if campaign_team.size() > 1 else Lead
+	if value == "{ally2}": return campaign_team[2] if campaign_team.size() > 2 else Lead
+	return value
+
+func _available_choice_options(options: Array) -> Array:
+	var result: Array = []
+	for raw in options:
+		if typeof(raw) != TYPE_DICTIONARY: continue
+		var option: Dictionary = raw
+		if _condition_passes(option): result.append(option)
+	return result
 
 func _format_text(value: String) -> String:
 	var result := value
@@ -203,34 +333,90 @@ func _choose_option(option: Dictionary) -> void:
 	var data: Dictionary = campaign_story["scenes"].get(campaign_scene, {})
 	var steps: Array = data.get("steps", [])
 	if scene_step >= steps.size() or str(steps[scene_step].get("type", "")) != "choice": return
-	if not steps[scene_step].get("options", []).has(option): return
+	if not _available_choice_options(steps[scene_step].get("options", [])).has(option): return
 	var flag := str(option.get("flag", ""))
-	if flag != "": campaign_flags[flag] = option.get("value", true)
+	if flag != "": campaign_flags[flag] = _as_bool(option.get("value", true))
+	var should_draw := _apply_story_effects(option.get("effects", []))
 	var destination := str(option.get("goto", ""))
-	if destination != "" and campaign_story["scenes"].has(destination):
-		campaign_scene = destination
-		scene_step = 0
+	if should_draw:
+		scene_step += 1
+		reward_return = "story"
+		reward_offers = _reward_cards()
+		campaign_phase = "reward"
 		_save_campaign()
-		_enter_scene()
+		_show_reward()
+		return
+	if destination != "" and campaign_story["scenes"].has(destination):
+		_advance_scene(destination)
 		return
 	scene_step += 1
 	_save_campaign()
 	_show_step()
 
+func _apply_story_effects(effects: Array) -> bool:
+	var draw := false
+	for raw in effects:
+		if typeof(raw) != TYPE_DICTIONARY: continue
+		var effect: Dictionary = raw
+		var kind := str(effect.get("type", ""))
+		var id := str(effect.get("id", ""))
+		var amount := maxi(1, int(effect.get("amount", 1)))
+		match kind:
+			"set_flag":
+				if id != "": campaign_flags[id] = _as_bool(effect.get("value", true))
+			"add_hero":
+				if Content.HEROES.has(id):
+					campaign_unlocked[id] = true
+					if not campaign_team.has(id) and campaign_team.size() < int(_campaign_definition().get("party_size", 3)): campaign_team.append(id)
+			"remove_hero":
+				if id not in _campaign_definition().get("required_party", []): campaign_team.erase(id)
+			"give_item":
+				if id != "": loadout[id] = int(loadout.get(id, 0)) + amount
+			"give_card":
+				var owner := str(effect.get("owner", Lead))
+				if Content.CARDS.has(id) and Content.HEROES.has(owner): _grant_owned_card(owner, id)
+			"draw_card":
+				draw = true
+	_save_config()
+	_save_campaign()
+	return draw
+
 func _battle_config(entry: Dictionary, scene: Dictionary = {}) -> Dictionary:
-	var mission := str(entry.get("mission", ""))
-	if mission == "":
-		var legacy := ["road", "ritual", "eclipse"]
-		mission = str(legacy[clampi(int(entry.get("index", 0)), 0, legacy.size() - 1)])
-	var required: Array = entry.get("required_party", [Lead])
-	if required.is_empty(): required = [Lead]
-	var party_size := maxi(required.size(), int(entry.get("party_size", 3)))
+	var mission := str(entry.get("mission", "campaign_custom"))
+	var mission_data: Dictionary = Content.MISSIONS.get(mission, {"name": mission, "objective": "ELIMINATE", "enemies": []}).duplicate(true)
+	mission_data["name"] = str(mission_data.get("name", mission))
+	if entry.has("enemies") and not entry.get("enemies", []).is_empty(): mission_data["enemies"] = entry["enemies"].duplicate()
+	if entry.has("reinforcements"): mission_data["reinforcements"] = entry["reinforcements"].duplicate(true)
+	var criteria: Array = entry.get("criteria", []).duplicate(true)
+	mission_data["campaign_criteria"] = criteria
+	mission_data["extra_cards"] = entry.get("extra_cards", []).duplicate(true)
+	if entry.has("protect_hp_start"):
+		mission_data["protect_hp"] = maxi(0, int(entry["protect_hp_start"]))
+		if int(mission_data["protect_hp"]) > 0: mission_data["objective"] = "PROTECT"
+	var required: Array = _campaign_definition().get("required_party", [Lead]).duplicate()
+	for required_id in entry.get("required_party", []):
+		if not required.has(required_id): required.append(required_id)
+	for criterion in criteria:
+		if str(criterion.get("type", "")) == "protect_ally":
+			var protected_id := str(criterion.get("target", ""))
+			if protected_id != "" and not required.has(protected_id): required.append(protected_id)
+	var party_size := clampi(int(entry.get("party_size", _campaign_definition().get("party_size", 3))), maxi(1, required.size()), 3)
+	var ordered_next := str(entry.get("next", scene.get("next", _next_ordered_scene())))
 	return {
 		"mission": mission,
+		"mission_data": mission_data,
 		"required_party": required,
 		"party_size": party_size,
+		"enemies": mission_data.get("enemies", []),
 		"enemy_pool": entry.get("enemy_pool", []),
-		"next": str(entry.get("next", scene.get("next", ""))),
+		"extra_cards": entry.get("extra_cards", []),
+		"criteria": criteria,
+		"victory_flags": entry.get("victory_flags", []).duplicate(),
+		"defeat_flags": entry.get("defeat_flags", []).duplicate(),
+		"game_over": str(entry.get("game_over", "none")),
+		"draw_reward": bool(entry.get("draw_reward", true)),
+		"reward_type": str(entry.get("reward_type", "either")),
+		"next": ordered_next,
 		"arena": str(entry.get("arena", scene.get("arena", "campaign_road"))),
 		"bgm": str(entry.get("battle_bgm", "")),
 		"reward_count": maxi(1, int(entry.get("reward_count", 3)))
@@ -238,36 +424,70 @@ func _battle_config(entry: Dictionary, scene: Dictionary = {}) -> Dictionary:
 
 func _enemy_roster() -> Dictionary:
 	var banned := {}
-	for raw in active_battle.get("enemy_pool", []): banned[str(raw)] = true
-	if not banned.is_empty(): return banned
-	var mission: Dictionary = Content.MISSIONS.get(str(active_battle.get("mission", "")), {})
-	for enemy_id in mission.get("enemies", []): banned[str(enemy_id)] = true
-	for wave in mission.get("reinforcements", {}).values():
-		for enemy_id in wave: banned[str(enemy_id)] = true
+	var campaign := _campaign_definition()
+	for adventure_id in campaign.get("adventures", []):
+		var adventure: Dictionary = campaign_story.get("adventures", {}).get(str(adventure_id), {})
+		for scene_id in adventure.get("scene_ids", []):
+			var data: Dictionary = campaign_story.get("scenes", {}).get(str(scene_id), {})
+			for entry in data.get("steps", []):
+				if str(entry.get("type", "")) != "battle": continue
+				for enemy_id in entry.get("enemies", []): banned[str(enemy_id)] = true
+				for enemy_id in entry.get("enemy_pool", []): banned[str(enemy_id)] = true
+				var mission: Dictionary = Content.MISSIONS.get(str(entry.get("mission", "")), {})
+				for enemy_id in mission.get("enemies", []): banned[str(enemy_id)] = true
+				for wave in mission.get("reinforcements", {}).values():
+					for enemy_id in wave: banned[str(enemy_id)] = true
 	return banned
 
 func _default_team() -> Array[String]:
 	var result: Array[String] = []
-	for raw in active_battle.get("required_party", [Lead]):
+	var required: Array = active_battle.get("required_party", _campaign_definition().get("required_party", [Lead]))
+	for raw in required:
 		var id := str(raw)
-		if Content.HEROES.has(id) and not result.has(id): result.append(id)
+		if Content.HEROES.has(id) and not result.has(id):
+			result.append(id)
+			campaign_unlocked[id] = true
 	var blocked := _enemy_roster()
-	var need := int(active_battle.get("party_size", 3))
+	var need := int(active_battle.get("party_size", _campaign_definition().get("party_size", 3)))
 	for id in Content.HEROES:
 		if result.size() >= need: break
 		var hero: Dictionary = Content.HEROES[id]
-		if bool(hero.get("playable", true)) and not blocked.has(str(id)) and not result.has(str(id)):
+		if _hero_available(str(id)) and not blocked.has(str(id)) and not result.has(str(id)):
 			result.append(str(id))
 	return result
 
+func _default_campaign_team() -> Array[String]:
+	var result: Array[String] = []
+	var definition := _campaign_definition()
+	for raw in definition.get("required_party", []):
+		var id := str(raw)
+		if Content.HEROES.has(id) and not result.has(id):
+			campaign_unlocked[id] = true
+			result.append(id)
+	var blocked := _enemy_roster()
+	var size := clampi(int(definition.get("party_size", 3)), maxi(1, result.size()), 3)
+	for raw in Content.HEROES.keys():
+		var id := str(raw)
+		if result.size() >= size: break
+		if _hero_available(id) and not blocked.has(id) and not result.has(id): result.append(id)
+	return result
+
+func _hero_available(id: String) -> bool:
+	return Content.HEROES.has(id) and (bool(Content.HEROES[id].get("playable", true)) or bool(campaign_unlocked.get(id, false)))
+
+func _available_hero_roster() -> Dictionary:
+	var roster: Dictionary = Content.HEROES.duplicate(true)
+	for id in campaign_unlocked:
+		if roster.has(str(id)): roster[str(id)]["playable"] = true
+	return roster
+
 func _team_is_valid(ids: Array[String]) -> bool:
 	if ids.size() != int(active_battle.get("party_size", 3)): return false
-	var required: Array = active_battle.get("required_party", [Lead])
+	var required: Array = active_battle.get("required_party", _campaign_definition().get("required_party", [Lead]))
 	var banned := _enemy_roster()
 	var seen := {}
 	for id in ids:
-		if seen.has(id) or banned.has(id) or not Content.HEROES.has(id): return false
-		if not bool(Content.HEROES[id].get("playable", true)): return false
+		if seen.has(id) or banned.has(id) or not _hero_available(id): return false
 		seen[id] = true
 	for raw in required:
 		if not ids.has(str(raw)): return false
@@ -294,11 +514,11 @@ func _prepare_team() -> void:
 	var scene: Dictionary = campaign_story.get("scenes", {}).get(campaign_scene, {})
 	_play_campaign_music(str(scene.get("bgm", "")))
 	if not _team_is_valid(campaign_team): campaign_team = _default_team()
-	var mission: Dictionary = Content.MISSIONS.get(str(active_battle.get("mission", "")), {})
+	var mission: Dictionary = active_battle.get("mission_data", {})
 	var name := str(mission.get("name", active_battle.get("mission", "Batalha")))
 	var overlay := _view()
 	overlay.set_meta("battle_name", name)
-	overlay.show_team(Content.HEROES, campaign_team, _enemy_roster(), name, active_battle.get("required_party", [Lead]), int(active_battle.get("party_size", 3)))
+	overlay.show_team(_available_hero_roster(), campaign_team, _enemy_roster(), name, active_battle.get("required_party", _campaign_definition().get("required_party", [Lead])), int(active_battle.get("party_size", _campaign_definition().get("party_size", 3))))
 	_save_campaign()
 
 func _confirm_team(ids: Array) -> void:
@@ -315,7 +535,8 @@ func _start_campaign_battle() -> void:
 	if not _team_is_valid(team) or active_battle.is_empty(): return
 	campaign_phase = "battle"
 	mission_id = str(active_battle.get("mission", ""))
-	if not Content.MISSIONS.has(mission_id): return
+	if mission_id == "": return
+	var mission_override: Dictionary = active_battle.get("mission_data", {})
 	pack_mode = "default"
 	_ensure_owned_cards()
 	equipped = _build_equipped_from_owned()
@@ -327,15 +548,25 @@ func _start_campaign_battle() -> void:
 		pack_mode = "entities"
 		var ids: Array[String] = []
 		for id in team: ids.append(str(id))
-		if not packs.entities.deploy(battle, mission_id, ids, equipped, 0):
+		if not packs.entities.deploy(battle, mission_id, ids, equipped, 0, mission_override):
 			pack_mode = "default"
-			battle.begin(mission_id, team, equipped, 0, improvements, loadout)
+			battle.begin(mission_id, team, equipped, 0, improvements, loadout, false, mission_override)
+			_start_campaign_battle_turn()
 	else:
-		battle.begin(mission_id, team, equipped, 0, improvements, loadout)
+		battle.begin(mission_id, team, equipped, 0, improvements, loadout, false, mission_override)
+		_start_campaign_battle_turn()
 	_apply_accessibility()
 	_play_campaign_music(str(active_battle.get("bgm", "")))
 	_save_campaign()
 	_render_battle()
+
+func _start_campaign_battle_turn() -> void:
+	battle.add_campaign_extra_cards(active_battle.get("extra_cards", []))
+	battle._shuffle(battle.deck)
+	battle._draw_side("ALLY", int(battle.rules["opening_hand"]))
+	battle._draw_side("ENEMY", int(battle.rules["opening_hand"]))
+	battle._log("Missão: %s" % battle.mission.get("name", mission_id))
+	battle.start_turn()
 
 func _on_finished(won: bool) -> void:
 	if not campaign_active or campaign_phase != "battle":
@@ -343,34 +574,47 @@ func _on_finished(won: bool) -> void:
 		return
 	if won:
 		sound.cue("victory")
-		_award_victory(_mission_stars())
+		_apply_campaign_flags(active_battle.get("victory_flags", []))
+		if Content.MISSIONS.has(mission_id): _award_victory(_mission_stars())
 		_save_config()
-		reward_offers = _reward_cards()
-		campaign_phase = "reward"
-		_save_campaign()
-		_show_reward()
+		if bool(active_battle.get("draw_reward", true)):
+			reward_return = "battle"
+			reward_offers = _reward_cards()
+			campaign_phase = "reward"
+			_save_campaign()
+			_show_reward()
+		else:
+			_finalize_victory()
 	else:
 		sound.cue("death")
+		_apply_campaign_flags(active_battle.get("defeat_flags", []))
 		campaign_phase = "defeat"
 		_save_campaign()
 		_clear_ui()
-		_view().show_defeat(str(Content.MISSIONS.get(mission_id, {}).get("name", mission_id)))
+		_view().show_defeat(str(active_battle.get("mission_data", {}).get("name", Content.MISSIONS.get(mission_id, {}).get("name", mission_id))), str(active_battle.get("game_over", "none")))
+
+func _apply_campaign_flags(flags: Array) -> void:
+	for raw in flags:
+		var flag := str(raw)
+		if flag != "": campaign_flags[flag] = true
 
 func _reward_cards() -> Array:
 	_ensure_owned_cards()
 	var options: Array = []
 	var eligible: Dictionary = {}
-	for hero_id in battle_team:
+	var reward_type := str(active_battle.get("reward_type", "either"))
+	var participants: Array = battle_team if not battle_team.is_empty() else campaign_team
+	for hero_id in participants:
 		var hero: Dictionary = Content.HEROES.get(hero_id, {})
 		var list: Array = []
-		for raw in hero.get("evoluidas", []): list.append(str(raw))
-		for raw in hero.get("pool", hero.get("cards", [])):
-			if not list.has(str(raw)): list.append(str(raw))
+		if reward_type in ["either", "evolved"]:
+			for raw in hero.get("evoluidas", []): list.append(str(raw))
 		# Uma carta Melhorada só é elegível quando sua base já pertence ao jogador.
-		for raw in hero.get("melhoradas", []):
-			var improved := str(raw)
-			var base := str(Content.CARDS.get(improved, {}).get("melhorada_de", ""))
-			if base != "" and owned_cards.get(hero_id, []).has(base): list.append(improved)
+		if reward_type in ["either", "upgraded"]:
+			for raw in hero.get("melhoradas", []):
+				var improved := str(raw)
+				var base := str(Content.CARDS.get(improved, {}).get("melhorada_de", ""))
+				if base != "" and owned_cards.get(hero_id, []).has(base): list.append(improved)
 		var available: Array = []
 		var already: Array = owned_cards.get(hero_id, [])
 		for raw in list:
@@ -380,7 +624,7 @@ func _reward_cards() -> Array:
 			available.append(cid)
 		eligible[hero_id] = available
 	# Primeiro oferece uma carta nova de cada combatente.
-	for hero_id in battle_team:
+	for hero_id in participants:
 		var cards: Array = eligible.get(hero_id, [])
 		if not cards.is_empty():
 			var chosen := str(cards[options.size() % cards.size()])
@@ -390,7 +634,7 @@ func _reward_cards() -> Array:
 	# restritas às cartas dos três integrantes desta batalha.
 	while options.size() < int(active_battle.get("reward_count", 3)):
 		var grew := false
-		for hero_id in battle_team:
+		for hero_id in participants:
 			var cards: Array = eligible.get(hero_id, [])
 			if cards.is_empty(): continue
 			options.append({"owner": hero_id, "card": cards.pop_front()})
@@ -404,9 +648,11 @@ func _show_reward() -> void:
 	_clear_combat_visuals()
 	var overlay := _view()
 	if reward_offers.is_empty():
-		# Só ocorre se todas as cartas elegíveis dos combatentes já estão na coleção.
-		overlay.show_reward([])
-		_finalize_victory()
+		if reward_return == "battle": _finalize_victory()
+		else:
+			campaign_phase = "story"
+			_save_campaign()
+			_show_step()
 	else:
 		overlay.show_reward(reward_offers)
 
@@ -414,26 +660,90 @@ func _claim_card(option: Dictionary) -> void:
 	if campaign_phase != "reward" or not reward_offers.has(option): return
 	var owner_id := str(option.get("owner", ""))
 	var cid := str(option.get("card", ""))
-	if not battle_team.has(owner_id) or not Content.CARDS.has(cid): return
+	if (not battle_team.has(owner_id) and not campaign_team.has(owner_id)) or not Content.CARDS.has(cid): return
 	_grant_owned_card(owner_id, cid)
 	_save_config()
-	_finalize_victory()
+	if reward_return == "battle":
+		_finalize_victory()
+	else:
+		reward_offers.clear()
+		campaign_phase = "story"
+		_save_campaign()
+		_show_step()
 
 func _finalize_victory() -> void:
 	reward_offers.clear()
 	battle_index += 1
 	var destination := str(active_battle.get("next", ""))
-	if destination == "" or not campaign_story.get("scenes", {}).has(destination):
-		campaign_phase = "complete"
+	_advance_scene(destination)
+
+func _begin_story_reward(entry: Dictionary) -> void:
+	var rewards: Array = entry.get("rewards", [])
+	var static_rewards: Array = []
+	var has_draw := false
+	for raw in rewards:
+		if typeof(raw) != TYPE_DICTIONARY: continue
+		if str(raw.get("type", "")) == "draw": has_draw = true
+		else: static_rewards.append(raw)
+	scene_step += 1
+	pending_reward_bundle = static_rewards
+	pending_reward_draw = has_draw
+	reward_return = "story"
+	if bool(entry.get("window", true)) and not static_rewards.is_empty():
+		campaign_phase = "reward_bundle"
 		_save_campaign()
-		_view().show_ending()
+		_view().show_reward_bundle(str(entry.get("title", "Recompensas")), static_rewards)
 		return
-	campaign_scene = destination
-	scene_step = 0
-	campaign_phase = "story"
-	active_battle.clear()
+	_apply_reward_bundle(static_rewards)
+	if has_draw:
+		_open_story_card_draw()
+	else:
+		campaign_phase = "story"
+		_save_campaign()
+		_show_step()
+
+func _claim_reward_bundle() -> void:
+	if campaign_phase != "reward_bundle": return
+	_apply_reward_bundle(pending_reward_bundle)
+	pending_reward_bundle.clear()
+	if pending_reward_draw:
+		pending_reward_draw = false
+		_open_story_card_draw()
+	else:
+		campaign_phase = "story"
+		_save_campaign()
+		_show_step()
+
+func _apply_reward_bundle(rewards: Array) -> void:
+	for raw in rewards:
+		if typeof(raw) != TYPE_DICTIONARY: continue
+		var reward: Dictionary = raw
+		var id := str(reward.get("id", ""))
+		var amount := maxi(1, int(reward.get("amount", 1)))
+		match str(reward.get("type", "")):
+			"character":
+				if Content.HEROES.has(id): campaign_unlocked[id] = true
+			"item":
+				if id != "": loadout[id] = int(loadout.get(id, 0)) + amount
+			"card":
+				var owner := str(reward.get("owner", Lead))
+				if Content.CARDS.has(id) and Content.HEROES.has(owner): _grant_owned_card(owner, id)
+	_save_config()
 	_save_campaign()
-	_enter_scene()
+
+func _open_story_card_draw() -> void:
+	reward_return = "story"
+	active_battle["reward_count"] = 3
+	active_battle["reward_type"] = "either"
+	reward_offers = _reward_cards()
+	campaign_phase = "reward"
+	_save_campaign()
+	_show_reward()
+
+func _load_campaign_from_defeat() -> void:
+	_load_campaign(campaign_id)
+	_restore_active_battle()
+	_prepare_team()
 
 func _play_campaign_music(path: String) -> void:
 	if sound == null or sound.music == null or not ResourceLoader.exists(path): return
@@ -456,32 +766,61 @@ func _exit_campaign() -> void:
 
 func _save_campaign() -> void:
 	var config := ConfigFile.new()
-	config.set_value("story", "scene", campaign_scene)
-	config.set_value("story", "step", scene_step)
-	config.set_value("story", "battle", battle_index)
-	config.set_value("story", "phase", campaign_phase)
-	config.set_value("story", "flags", campaign_flags)
-	config.set_value("story", "team", campaign_team)
-	config.set_value("story", "battle_team", battle_team)
-	config.set_value("story", "offers", reward_offers)
-	config.set_value("story", "active_battle", active_battle)
+	config.load(SavePath)
+	var section := "campaign_" + campaign_id if campaign_id != "" else "story"
+	config.set_value("settings", "current_campaign", campaign_id)
+	config.set_value(section, "scene", campaign_scene)
+	config.set_value(section, "step", scene_step)
+	config.set_value(section, "battle", battle_index)
+	config.set_value(section, "phase", campaign_phase)
+	config.set_value(section, "flags", campaign_flags)
+	config.set_value(section, "unlocked", campaign_unlocked)
+	config.set_value(section, "team", campaign_team)
+	config.set_value(section, "battle_team", battle_team)
+	config.set_value(section, "offers", reward_offers)
+	config.set_value(section, "active_battle", active_battle)
+	config.set_value(section, "reward_return", reward_return)
+	config.set_value(section, "pending_reward_bundle", pending_reward_bundle)
+	config.set_value(section, "pending_reward_draw", pending_reward_draw)
 	config.save(SavePath)
 
-func _load_campaign() -> void:
+func _load_campaign(id: String = "") -> void:
+	if id != "": campaign_id = id
 	var config := ConfigFile.new()
-	if config.load(SavePath) != OK: return
-	var scene_id := str(config.get_value("story", "scene", campaign_story.get("start_scene", "prologue")))
-	if campaign_story.get("scenes", {}).has(scene_id): campaign_scene = scene_id
-	scene_step = maxi(0, int(config.get_value("story", "step", 0)))
-	battle_index = maxi(0, int(config.get_value("story", "battle", 0)))
-	campaign_phase = str(config.get_value("story", "phase", "new"))
-	campaign_flags = config.get_value("story", "flags", {})
-	var stored_team: Array = config.get_value("story", "team", [])
+	if config.load(SavePath) != OK:
+		campaign_phase = "new"
+		campaign_scene = _first_scene_in_campaign()
+		campaign_team = _default_campaign_team()
+		battle_team.clear()
+		campaign_flags.clear()
+		campaign_unlocked.clear()
+		for required_id in _campaign_definition().get("required_party", []): campaign_unlocked[str(required_id)] = true
+		return
+	if id == "": campaign_id = str(config.get_value("settings", "current_campaign", campaign_story.get("start_campaign", campaign_id)))
+	if _campaign_definition().is_empty(): campaign_id = str(campaign_story.get("start_campaign", campaign_id))
+	var section := "campaign_" + campaign_id if config.has_section("campaign_" + campaign_id) else "story"
+	if section == "story" and str(campaign_story.get("start_campaign", "")) != campaign_id:
+		campaign_phase = "new"
+		campaign_scene = _first_scene_in_campaign()
+		return
+	var scene_id := str(config.get_value(section, "scene", _first_scene_in_campaign()))
+	if _scene_belongs_to_campaign(scene_id): campaign_scene = scene_id
+	else: campaign_scene = _first_scene_in_campaign()
+	scene_step = maxi(0, int(config.get_value(section, "step", 0)))
+	battle_index = maxi(0, int(config.get_value(section, "battle", 0)))
+	campaign_phase = str(config.get_value(section, "phase", "new"))
+	campaign_flags = config.get_value(section, "flags", {})
+	campaign_unlocked = config.get_value(section, "unlocked", {})
+	var stored_team: Array = config.get_value(section, "team", [])
 	if not stored_team.is_empty():
 		campaign_team.clear()
-		for id in stored_team: campaign_team.append(str(id))
-	var stored_battle_team: Array = config.get_value("story", "battle_team", [])
-	for id in stored_battle_team: battle_team.append(str(id))
-	reward_offers = config.get_value("story", "offers", [])
-	active_battle = config.get_value("story", "active_battle", {})
+		for hero_id in stored_team: campaign_team.append(str(hero_id))
+	var stored_battle_team: Array = config.get_value(section, "battle_team", [])
+	battle_team.clear()
+	for hero_id in stored_battle_team: battle_team.append(str(hero_id))
+	reward_offers = config.get_value(section, "offers", [])
+	active_battle = config.get_value(section, "active_battle", {})
+	reward_return = str(config.get_value(section, "reward_return", "battle"))
+	pending_reward_bundle = config.get_value(section, "pending_reward_bundle", [])
+	pending_reward_draw = bool(config.get_value(section, "pending_reward_draw", false))
 	if campaign_phase == "battle": campaign_phase = "team"

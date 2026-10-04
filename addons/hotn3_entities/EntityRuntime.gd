@@ -92,7 +92,7 @@ func _foes(battle: Variant, source: Dictionary) -> Array:
 	return battle.living("ALLY" if side == "ENEMY" else "ENEMY")
 
 
-func deploy(battle: Variant, mission_id: String, entity_ids: Array[String], chosen_decks: Dictionary = {}, seed_value: int = 0) -> bool:
+func deploy(battle: Variant, mission_id: String, entity_ids: Array[String], chosen_decks: Dictionary = {}, seed_value: int = 0, mission_override: Dictionary = {}) -> bool:
 	# Adapter HotNBattle. Aceita 1–3 heróis únicos (Arena incompleta OK; missões seguem 3).
 	var n := entity_ids.size()
 	if n < 1 or n > 3:
@@ -110,7 +110,7 @@ func deploy(battle: Variant, mission_id: String, entity_ids: Array[String], chos
 	for i in range(n):
 		placeholders.append(pool_ph[i])
 	# auto_open=false: evita mão/log/passiva do placeholder Guerreiro/Mago/Ladino no HUD.
-	battle.begin(mission_id, placeholders, {}, seed_value, {}, {}, false)
+	battle.begin(mission_id, placeholders, {}, seed_value, {}, {}, false, mission_override)
 	var slots: Array[Dictionary] = battle.living("ALLY")
 	if slots.size() != n:
 		return false
@@ -166,6 +166,9 @@ func deploy(battle: Variant, mission_id: String, entity_ids: Array[String], chos
 			target["passive_derretimento"] = "1"
 	install(battle, owner_map, selection)
 	append_combo_cards(battle, entity_ids, owner_map)
+	# Cartas de roteiro entram antes da mão inicial para já poderem ser sorteadas
+	# nesta batalha (inclui cartas extras de inimigos).
+	battle.add_campaign_extra_cards(mission_override.get("extra_cards", []))
 	battle._shuffle(battle.deck)
 	for ally in slots:
 		var pass_id := str(ally.get("passive", ""))
