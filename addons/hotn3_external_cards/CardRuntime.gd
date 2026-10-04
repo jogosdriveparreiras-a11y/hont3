@@ -48,8 +48,8 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 		if not ok: return false
 	if int(target.get("hp", 0)) <= 0 and not _has_action(def, "revive_self"): return false
 	if not bool(def.get("play_while_disabled", false)):
-	for locked in ["stun", "bind", "bound", "banished", "finalized"]:
-		if battle._has_status(source, locked) and not (locked in ["bind", "bound"] and bool(def.get("reach", false))): return false
+		for locked in ["stun", "bind", "bound", "banished", "finalized"]:
+			if battle._has_status(source, locked) and not (locked in ["bind", "bound"] and bool(def.get("reach", false))): return false
 	if battle._has_status(source, "taunted") and not _is_damage_card(def): return false
 	var prior_hand: Dictionary = {}
 	for held in battle.hand: prior_hand[int(held["uid"])] = true

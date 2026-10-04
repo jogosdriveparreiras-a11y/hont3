@@ -608,8 +608,8 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 	var wants_dead := str(def.get("target", "")) == "DEAD_ALLY" or _has_action(def, "revive_self") or _has_action(def, "revive_ally")
 	if int(target.get("hp", 0)) <= 0 and not wants_dead: return false
 	if not bool(def.get("play_while_disabled", false)):
-	for locked in ["stun", "bind", "bound", "banished", "finalized"]:
-		if battle._has_status(source, locked) and not (locked in ["bind", "bound"] and bool(def.get("reach", false))): return false
+		for locked in ["stun", "bind", "bound", "banished", "finalized"]:
+			if battle._has_status(source, locked) and not (locked in ["bind", "bound"] and bool(def.get("reach", false))): return false
 	if battle._has_status(source, "taunted") and not _is_damage_card(def): return false
 	var warmup: int = int(def.get("warmup", 0))
 	if _has_action(def, "warmup"): warmup = int(_action(def, "warmup")[1])
