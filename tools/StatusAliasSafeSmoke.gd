@@ -23,7 +23,7 @@ func _initialize() -> void:
 	runtime.catalog = packs.entities.catalog
 	var minion := {
 		"id": 99, "name": "Zumbi", "hp": 1, "max_hp": 1, "side": "ALLY", "row": "front",
-		"archetype": "ent_minion_zumbi", "attack": 1, "statuses": {}, "block": 0, "shield": 0
+		"archetype": "ent_minion_zumbi", "attack": 1, "statuses": {}
 	}
 	b.actors.append(minion)
 	b.phase = "PLAYER"

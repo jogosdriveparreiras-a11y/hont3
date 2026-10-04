@@ -85,7 +85,12 @@ func _merge_entity_heroes() -> void:
 			"desvantagem": str(src.get("desvantagem", "")),
 			"playable": bool(src.get("playable", not bool(src.get("minion", false)))),
 			"minion": bool(src.get("minion", false)),
+			# Some summons, such as Ragnar's elementals, are full combat units.
+			# Preserve this opt-in so EntityRuntime does not reduce them to 1 HP.
+			"keep_summon_hp": bool(src.get("keep_summon_hp", false)),
 			"repeatable": bool(src.get("repeatable", src.get("minion", false))),
+			"woman": int(src.get("woman", 0)),
+			"man": int(src.get("man", 0)),
 			"pool": pool,
 			"cards": cards,
 		}
@@ -221,19 +226,17 @@ func describe_actions(definition: Dictionary) -> Array[String]:
 			continue
 		var op := str(action[0])
 		match op:
-			"hit", "hit_per_impulse", "hit_per_hand", "hit_from_block", "hit_from_protecao", "hit_from_barrier", "roulette_hit":
+			"collision":
+				parts.append("Colisão: empurrões e puxões atingem unidades na fileira de destino")
+			"hit", "hit_per_impulse", "hit_per_hand", "hit_from_protecao", "hit_from_barrier", "roulette_hit":
 				if op == "hit_from_protecao":
 					parts.append("Dano = stacks de Proteção")
 				elif op == "hit_from_barrier":
 					parts.append("Dano = HP da Barreira")
-				elif op == "hit_from_block":
-					parts.append("Dano = Bloqueio legado")
 				else:
 					parts.append("Dano base %s (+Impacto−Armadura / +Poder−Escudo)" % str(action[1] if action.size() > 1 else "0"))
 			"heal", "heal_all", "full_heal":
 				parts.append("Cura %s Vida" % str(action[1] if action.size() > 1 else ""))
-			"block", "block_hp":
-				parts.append("Barreira (via bloqueio legado)")
 			"barreira_hp":
 				parts.append("Barreira %s rodadas / %% Vida" % str(action[1] if action.size() > 1 else "1"))
 			"protecao", "protection":
@@ -263,8 +266,6 @@ func describe_actions(definition: Dictionary) -> Array[String]:
 				parts.append("Reforços inimigos ×%s (%s)" % [str(action[2] if action.size() > 2 else 1), str(action[1] if action.size() > 1 else "?")])
 			"fragil":
 				parts.append("Frágil %s" % str(action[1] if action.size() > 1 else "1"))
-			"invulneravel", "invulnerable":
-				parts.append("Invulnerável %s" % str(action[1] if action.size() > 1 else "1"))
 			"status", "self_status", "chance_status", "roulette_status":
 				var st_name := str(action[1] if action.size() > 1 else "")
 				var posture_ids := ["tanque", "furioso", "curador", "empatico", "atirador", "drenador", "controlador", "garra", "vingador", "executor", "indomavel", "sobrevivente", "intocavel", "preparo", "vitima"]

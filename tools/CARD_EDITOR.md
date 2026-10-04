@@ -74,7 +74,7 @@ Cartas/heróis `ent_*` em `addons/hotn3_entities/entities.json`; `PackBridge` in
 | `ephemeral` | Efêmero | Se ainda na mão no fim da rodada, descarta. |
 | `warmup` X | Aquecimento | Indisponível por X rodadas após comprar (`drawn_turn + X`). |
 
-**Não implementar no editor (ainda):** Voar; aba dicionário de status/flags/ops.
+**Voar:** status configurável pelo editor. Evita dano de área; ataques diretos que alcançam o alvo derrubam e somam 10% da Vida máxima ao dano. Colisões causam impacto dobrado e derrubam os voadores.
 
 ## Nomenclatura (2026-09)
 
@@ -112,3 +112,7 @@ Por personagem o editor mostra:
 - **inicial**: Iniciais + Desvantagem
 - **deck final**: Iniciais + Evoluídas + Desvantagem (Melhoradas substituem base)
 - **final+**: versões melhoradas quando existirem
+
+## Prévia simultânea do deck
+
+Na aba **Personagens**, a seção **Prévia do deck** exibe todas as cartas do personagem em uma grade, sem precisar abrir uma por vez. Use os botões **Inicial**, **Final** e **Final+** para comparar as composições. Cada miniatura mostra tipo, alvo, pontuação e os primeiros efeitos; clique nela para abrir a carta no editor.

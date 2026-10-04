@@ -961,13 +961,13 @@ func _spawn_anim_test_actors() -> void:
 		"id": 1, "name": caster_hero.get("name", anim_test_caster), "side": "ALLY", "row": "front",
 		"hp": int(caster_hero.get("hp", 20)), "max_hp": int(caster_hero.get("hp", 20)),
 		"sprite": caster_hero.get("sprite", ""), "portrait": caster_hero.get("portrait", ""),
-		"type": caster_hero.get("type", ""), "block": 0, "shield": 0, "statuses": {},
+		"type": caster_hero.get("type", ""), "statuses": {},
 	}
 	var target_actor := {
 		"id": 2, "name": target_hero.get("name", anim_test_target), "side": "ENEMY", "row": "front",
 		"hp": int(target_hero.get("hp", 20)), "max_hp": int(target_hero.get("hp", 20)),
 		"sprite": target_hero.get("sprite", ""), "portrait": target_hero.get("portrait", ""),
-		"type": target_hero.get("type", ""), "block": 0, "shield": 0, "statuses": {},
+		"type": target_hero.get("type", ""), "statuses": {},
 	}
 	var cpos := Vector3(-2.4, 0, 0)
 	var tpos := Vector3(2.4, 0, 0)
@@ -1413,8 +1413,6 @@ func _refresh_actor_hp_bars() -> void:
 func _status_icon_glyph(status_id: String) -> String:
 	match str(status_id).to_lower():
 		"bleed", "sangrando", "sangramento": return "🩸"
-		"burn", "queimadura": return "🔥"
-		"poison", "veneno": return "☠️"
 		"stun", "atordoado": return "💫"
 		"slow", "lento": return "🐢"
 		"weak", "fraco": return "⬇️"
@@ -1430,7 +1428,6 @@ func _status_icon_glyph(status_id: String) -> String:
 		"wounded", "ferido": return "🩹"
 		"regen": return "💚"
 		"blind", "cego": return "🙈"
-		"invulneravel", "invulnerável", "invulnerable": return "✨"
 		"marked", "marcado": return "🎯"
 		_: return "◆"
 
@@ -2018,7 +2015,7 @@ func _on_event(message: String) -> void:
 		session_report.log_battle("log", {"text": message})
 
 func _on_visual(kind: String, source_id: int, target_id: int, amount: int) -> void:
-	if session_report != null and kind in ["cast", "hit", "heal", "death", "status", "block", "guard", "immune", "resist", "transform", "ini_gain", "draw", "redraw", "move", "counter"]:
+	if session_report != null and kind in ["cast", "hit", "heal", "death", "status", "immune", "resist", "transform", "ini_gain", "draw", "redraw", "move", "counter"]:
 		session_report.log_battle("visual", {"kind": kind, "source": source_id, "target": target_id, "amount": amount})
 	if presentation != null: presentation.show_action(kind, source_id, target_id, amount)
 	if kind == "transform":
@@ -2039,7 +2036,7 @@ func _on_visual(kind: String, source_id: int, target_id: int, amount: int) -> vo
 		var climate_ids := ["none", "rain", "snow", "leaves", "fog", "heat", "night"]
 		var mode: String = climate_ids[clampi(amount, 0, climate_ids.size() - 1)]
 		_set_weather(mode)
-	elif kind in ["cast", "hit", "heal", "death", "status", "block", "guard"]:
+	elif kind in ["cast", "hit", "heal", "death", "status"]:
 		_show_actor_portrait(source_id, true)
 		if target_id != source_id: _show_actor_portrait(target_id, true)
 
@@ -2250,7 +2247,6 @@ func _build_hero_hud(viewport_size: Vector2) -> void:
 	var hp_lbl := _label("%s %d/%d" % [_type_icon(str(actor.get("type", ""))), hp, max_hp], 16, Color("f4f1ea"))
 	hp_lbl.position = Vector2(350, 72)
 	hero_hud.add_child(hp_lbl)
-	var defend := int(actor.get("block", 0)) + int(actor.get("shield", 0))
 	var bar_hp := 0
 	if battle != null and battle.has_method("_barrier_hp"):
 		bar_hp = int(battle._barrier_hp(actor))
@@ -2258,11 +2254,8 @@ func _build_hero_hud(viewport_size: Vector2) -> void:
 		var bs: Dictionary = actor["statuses"]["barrier"]
 		bar_hp = int(bs.get("barrier_hp", bs.get("stacks", 0)))
 	var state_y := 100.0
-	if defend > 0 or bar_hp > 0:
-		var def_txt := "DEF +%d" % defend if defend > 0 else ""
-		if bar_hp > 0:
-			def_txt = (def_txt + " · " if def_txt != "" else "") + "Barreira %d" % bar_hp
-		var def_lbl := _label(def_txt, 14, Color("8fd6ff"))
+	if bar_hp > 0:
+		var def_lbl := _label("Barreira %d" % bar_hp, 14, Color("8fd6ff"))
 		def_lbl.position = Vector2(122, state_y)
 		hero_hud.add_child(def_lbl)
 		state_y += 18.0
@@ -2350,7 +2343,6 @@ func _refresh_hero_hud() -> void:
 	var hp_lbl := _label("%s %d/%d" % [_type_icon(str(actor.get("type", ""))), hp, max_hp], 16, Color("f4f1ea"))
 	hp_lbl.position = Vector2(340, 72)
 	hero_hud.add_child(hp_lbl)
-	var defend := int(actor.get("block", 0)) + int(actor.get("shield", 0))
 	var bar_hp := 0
 	if battle != null and battle.has_method("_barrier_hp"):
 		bar_hp = int(battle._barrier_hp(actor))
@@ -2358,11 +2350,8 @@ func _refresh_hero_hud() -> void:
 		var bs: Dictionary = actor["statuses"]["barrier"]
 		bar_hp = int(bs.get("barrier_hp", bs.get("stacks", 0)))
 	var state_y := 100.0
-	if defend > 0 or bar_hp > 0:
-		var def_txt := "DEF +%d" % defend if defend > 0 else ""
-		if bar_hp > 0:
-			def_txt = (def_txt + " · " if def_txt != "" else "") + "Barreira %d" % bar_hp
-		var def_lbl := _label(def_txt, 14, Color("8fd6ff"))
+	if bar_hp > 0:
+		var def_lbl := _label("Barreira %d" % bar_hp, 14, Color("8fd6ff"))
 		def_lbl.position = Vector2(122, state_y)
 		hero_hud.add_child(def_lbl)
 		state_y += 18.0
@@ -2559,7 +2548,7 @@ func _start_move_action() -> void:
 	_render_battle()
 
 func _add_actor_button(parent: VBoxContainer, actor: Dictionary) -> void:
-	var text_value := "%s [%s] %d/%d Vida +%d" % [actor["name"], "F" if actor["row"] == "front" else "T", actor["hp"], actor["max_hp"], actor["block"] + actor["shield"]]
+	var text_value := "%s [%s] %d/%d Vida" % [actor["name"], "F" if actor["row"] == "front" else "T", actor["hp"], actor["max_hp"]]
 	var line := _label(text_value, 16)
 	line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	parent.add_child(line)
@@ -2715,6 +2704,7 @@ func _render_actors() -> void:
 			var avatar: Sprite3D = actor_nodes[id].get_node_or_null("Avatar")
 			if avatar != null:
 				avatar.set_meta("actor_id", id)
+				avatar.modulate.a = 0.5 if battle._has_status(actor, "conceal") else 1.0
 				unit_sprites.append(avatar)
 				presentation.bind_actor(id, avatar, location)
 			var nameplate: Label3D = actor_nodes[id].get_node("Nameplate")
@@ -3234,7 +3224,7 @@ func _stat_readout(owner: Dictionary, definition: Dictionary) -> Dictionary:
 	for action in definition.get("actions", []):
 		if typeof(action) != TYPE_ARRAY or action.is_empty():
 			continue
-		if str(action[0]) in ["hit", "hit_per_impulse", "hit_per_hand", "hit_from_block", "roulette_hit"]:
+		if str(action[0]) in ["hit", "hit_per_impulse", "hit_per_hand", "roulette_hit"]:
 			flat = int(round(float(action[1]))) if action.size() > 1 else flat
 			break
 	var archetype := str(owner.get("archetype", ""))
@@ -3274,7 +3264,7 @@ func _card_has_damage(definition: Dictionary) -> bool:
 	for action in definition.get("actions", []):
 		if typeof(action) != TYPE_ARRAY or action.is_empty():
 			continue
-		if str(action[0]) in ["hit", "hit_per_impulse", "hit_per_hand", "hit_from_block", "roulette_hit"]:
+		if str(action[0]) in ["hit", "hit_per_impulse", "hit_per_hand", "roulette_hit"]:
 			return true
 	return false
 
@@ -3287,8 +3277,6 @@ func _status_label(status_id: String) -> String:
 		"barreira": "Barreira",
 		"resistente": "Resistente",
 		"fragil": "Frágil",
-		"invulnerable": "Invulnerável",
-		"invulneravel": "Invulnerável",
 		"stun": "Atordoado",
 		"dazed": "Atordoado",
 		"resist": "Proteção",
@@ -3297,12 +3285,13 @@ func _status_label(status_id: String) -> String:
 		"bleed": "Sangrando",
 		"sangrando": "Sangrando",
 		"sangramento": "Sangrando",
-		"burn": "Queimadura",
 		"weak": "Fraco",
 		"vulnerable": "Vulnerável",
 		"marked": "Marcado",
 		"conceal": "Oculto",
 		"counter": "Contra-ataque",
+		"flying": "Voar",
+		"voar": "Voar",
 		"vitima": "Tanque",
 		"tanque": "Tanque",
 		"furioso": "Furioso",
@@ -3327,9 +3316,6 @@ func _status_label(status_id: String) -> String:
 		"slow": "Lento",
 		"bind": "Prisão",
 		"bound": "Preso",
-		"poison": "Veneno",
-		"block": "Bloqueio",
-		"shield": "Escudo",
 		"escuridao": "Escuridão",
 		"atento": "Atento",
 		"wounded": "Ferido",
@@ -3400,15 +3386,13 @@ func _effect_short_bbcode(definition: Dictionary, card: Dictionary = {}) -> Stri
 			bits.append("Limpa")
 		elif kind == "DRAW":
 			bits.append("Compra %d" % int(effect.get("amount", 1)))
-		elif kind == "BLOCK" or kind == "SHIELD":
-			bits.append("Barreira %d" % int(effect.get("amount", 0)))
 	# Actions pack: status/heal/protecao com escala E
 	var status_bits: Array[String] = []
 	for action in definition.get("actions", []):
 		if typeof(action) != TYPE_ARRAY or action.is_empty():
 			continue
 		var op := str(action[0])
-		if op in ["hit", "hit_per_impulse", "hit_per_hand", "roulette_hit", "hit_from_block", "hit_from_protecao", "hit_from_barrier", "requires_self_status", "requires_status", "when_stacks"]:
+		if op in ["hit", "hit_per_impulse", "hit_per_hand", "roulette_hit", "hit_from_protecao", "hit_from_barrier", "requires_self_status", "requires_status", "when_stacks"]:
 			continue
 		elif op == "status":
 			var sid2 := str(action[1]) if action.size() > 1 else "?"
@@ -3487,18 +3471,14 @@ func _rules_bbcode(definition: Dictionary, card: Dictionary) -> String:
 		keywords.append("[color=#e15b5b][b]Exaustão[/b][/color]")
 	if not keywords.is_empty():
 		lines.append(" · ".join(PackedStringArray(keywords)))
-	var harmful := ["weak", "vulnerable", "bleed", "poison", "burn", "stun", "bind", "bound", "wound", "wounded", "blind", "silence", "fragil", "confused", "corrupted", "drop"]
+	var harmful := ["weak", "vulnerable", "bleed", "stun", "bind", "bound", "wound", "wounded", "blind", "silence", "fragil", "confused", "corrupted", "drop"]
 	var effect_lines: Array[String] = []
 	for effect in definition.get("effects", []):
 		var kind := str(effect.get("kind", ""))
 		if kind == "DAMAGE":
-			continue  # damage lives on the shield readout
+			continue  # damage lives on the attack/power readout
 		elif kind == "HEAL":
 			effect_lines.append("Cura %d" % int(effect.get("amount", 0)))
-		elif kind == "BLOCK":
-			effect_lines.append("[b]Barreira[/b] %d" % int(effect.get("amount", 0)))
-		elif kind == "SHIELD":
-			effect_lines.append("[b]Escudo[/b] %d" % int(effect.get("amount", 0)))
 		elif kind == "DRAW":
 			effect_lines.append("Compra %d" % int(effect.get("amount", 1)))
 		elif kind == "CURE" or kind == "CLEANSE":
@@ -3526,7 +3506,7 @@ func _rules_bbcode(definition: Dictionary, card: Dictionary) -> String:
 		if typeof(action) != TYPE_ARRAY or action.is_empty():
 			continue
 		var op := str(action[0])
-		if op in ["hit", "hit_per_impulse", "hit_per_hand", "roulette_hit", "hit_from_block", "hit_from_protecao", "hit_from_barrier"]:
+		if op in ["hit", "hit_per_impulse", "hit_per_hand", "roulette_hit", "hit_from_protecao", "hit_from_barrier"]:
 			continue
 		elif op in ["self_damage", "self_damage_hp"]:
 			effect_lines.append("[color=#e15b5b]Dano a si[/color]")
@@ -3536,8 +3516,6 @@ func _rules_bbcode(definition: Dictionary, card: Dictionary) -> String:
 			effect_lines.append("[color=#e15b5b][b]Exaustão[/b][/color]")
 		elif op in ["heal", "heal_all", "full_heal"]:
 			effect_lines.append("Cura")
-		elif op in ["block", "block_hp"]:
-			effect_lines.append("[b]Barreira[/b] (legado)")
 		elif op in ["protecao", "protection"]:
 			effect_lines.append("[b]Proteção[/b]")
 		elif op in ["barreira", "barrier", "barreira_hp"]:
@@ -4135,10 +4113,6 @@ func _status_plain(id: String, stacks: int = 1) -> String:
 			return "Atordoado — não pode jogar Manobras enquanto durar."
 		"bleed", "sangramento", "sangrando":
 			return "[b]Sangrando[/b]: Causa dano no fim da rodada. Diminui com o tempo."
-		"poison", "veneno":
-			return "Veneno %d — dano contínuo de veneno a cada turno." % n
-		"burn", "queimadura":
-			return "Queimadura %d — dano de fogo no início do turno." % n
 		"blind", "cego":
 			return "Cego — erra ou reduz a precisão das próximas ações."
 		"marked", "marcado":
@@ -4159,8 +4133,8 @@ func _status_plain(id: String, stacks: int = 1) -> String:
 			return "Resistente %d — reduz o dano recebido." % n
 		"fragil", "frágil":
 			return "Frágil — sofre mais dano até o efeito acabar."
-		"invulneravel", "invulnerável":
-			return "Invulnerável — ignora dano até jogar uma Manobra."
+		"conceal", "oculto":
+			return "Oculto — não pode ser escolhido como alvo direto. Atento e cartas que ignoram Oculto podem alcançá-lo; dano em área ainda o atinge."
 		_:
 			return "%s %d" % [str(id).capitalize(), n]
 
@@ -4692,8 +4666,6 @@ func _card_description(definition: Dictionary, card: Dictionary = {}) -> String:
 			"STATUS": parts.append("%s (%d turno(s), %d carga(s))" % [str(effect["id"]).replace("_", " ").capitalize(), effect.get("duration", 1), effect.get("stacks", 1)])
 			"DAMAGE": parts.append("Dano base %d + atributo" % int(effect.get("amount", 0)))
 			"HEAL": parts.append("Cura %d" % int(effect.get("amount", 0)))
-			"BLOCK", "SHIELD": parts.append("Barreira %d" % int(effect.get("amount", 0)))
-			"SHIELD": parts.append("Escudo %d" % int(effect.get("amount", 0)))
 			"DRAW": parts.append("Compra %d" % int(effect.get("amount", 1)))
 			"GENERATE": parts.append("Cria %s (temporária)" % _card_def(str(effect.get("id", ""))).get("name", "carta"))
 			"PUSH": parts.append("Empurra%s" % (" com força" if effect.get("forceful", false) else ""))
@@ -4832,6 +4804,10 @@ func _process(delta: float) -> void:
 			_apply_corpse_look(spr, true)
 			continue
 		_apply_corpse_look(spr, false)
+		# Oculto é uma defesa de seleção: a transparência comunica o estado no campo.
+		if battle != null and aid >= 0:
+			var displayed_actor: Dictionary = battle.actor_by_id(aid)
+			spr.modulate.a = 0.5 if not displayed_actor.is_empty() and battle._has_status(displayed_actor, "conceal") else 1.0
 		# Idle breath: pin feet (bottom), stretch only the upper portion gently.
 		var wave := sin(Time.get_ticks_msec() * 0.0022 + float(i) * 1.7)
 		var sy := 1.0 + wave * 0.038

@@ -1,5 +1,11 @@
-# Licenças e atribuições de recursos
+# Licenças dos recursos
 
-O inventário com origem, hash e estado de cada arquivo está em `ASSETS.md`. Os oito PNGs vieram da cópia local do HotN2, mas seus autores e licenças originais não constam nos arquivos recebidos. Portanto não há comprovação de licença para redistribuição pública. Eles precisam ser substituídos por recursos documentados ou autorizados pelos respectivos titulares antes de uma publicação.
+O projeto contém três grupos de recursos:
 
-Música, ambiente, interface, cartas e efeitos sonoros são sintetizados e desenhados por código neste projeto. Fontes e música do HotN2 sem proveniência documentada foram removidas. Não há imagens ou áudio extraídos de *Marvel's Midnight Suns* nem arte gerada por IA neste pacote.
+1. Arte e conteúdo próprios do universo HotN em `assets/cast/` e nos pacotes JSON.
+2. Recursos de DLC do RPG Maker MZ em `assets/fx/`, `assets/audio/bgm/` e parte de `assets/cast_sensitive/`. O usuário confirmou que possui as licenças dos DLCs em 2026-09-27. O uso e qualquer distribuição devem obedecer aos termos dessas licenças; os arquivos não devem ser redistribuídos separadamente como um pacote de recursos.
+3. Interface, cartas, arenas, placeholders, partículas geradas pelo runtime e efeitos sonoros sintetizados pelo código do projeto.
+
+Os oito sprites antigos herdados do HotN2, que não tinham autor ou licença comprovados, foram removidos do conteúdo efetivo. Os mesmos nomes de arquivo agora contêm cópias verificadas de imagens do DLC MZ, conforme a tabela e os hashes em `ASSETS.md`.
+
+Antes de uma publicação, confirme se a plataforma e o formato da distribuição respeitam os termos específicos do RPG Maker MZ e dos DLCs. O verificador automatizado garante proveniência e integridade dos arquivos; ele não substitui uma revisão jurídica dos contratos de licença.

@@ -123,7 +123,7 @@ func _run() -> void:
 	if self_idx >= 0:
 		var owner_id: int = int(battle.hand[self_idx].get("owner", -1))
 		var owner_before: Dictionary = battle.actor_by_id(owner_id)
-		var block_before: int = int(owner_before.get("block", 0)) + int(owner_before.get("shield", 0))
+		var barrier_before: int = battle._barrier_hp(owner_before)
 		var hand_self_before: int = battle.hand.size()
 		game.set("inspected_card", -1)
 		game.set("inspect_open", false)
@@ -139,11 +139,11 @@ func _run() -> void:
 			await process_frame
 		_save(dirs, "playtest_hotn3_playflow_self_auto.png")
 		var owner_after: Dictionary = battle.actor_by_id(owner_id)
-		var block_after: int = int(owner_after.get("block", 0)) + int(owner_after.get("shield", 0))
+		var barrier_after: int = battle._barrier_hp(owner_after)
 		var hand_self_after: int = battle.hand.size()
-		_assert(hand_self_after < hand_self_before or block_after > block_before or not bool(game.get("card_confirmed")), "SELF did not auto-resolve after confirm")
+		_assert(hand_self_after < hand_self_before or barrier_after > barrier_before or not bool(game.get("card_confirmed")), "SELF did not auto-resolve after confirm")
 		_assert(int(game.get("selected_card")) < 0 or not bool(game.get("card_confirmed")), "SELF left targeting pending")
-		print("PLAYFLOW self-auto OK hand %d→%d block+shield %d→%d" % [hand_self_before, hand_self_after, block_before, block_after])
+		print("PLAYFLOW self-auto OK hand %d→%d barrier %d→%d" % [hand_self_before, hand_self_after, barrier_before, barrier_after])
 
 	# --- Auto ALL_ALLIES / RANDOM after confirm ---
 	if battle.phase == "PLAYER":

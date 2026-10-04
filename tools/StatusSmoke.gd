@@ -42,10 +42,8 @@ func _initialize() -> void:
 	var source: Dictionary = allies[2]
 	for ally in allies: second._add_status(ally, "soulbound", 1, 1, int(source["id"]))
 	allies[0]["hp"] = 0
-	allies[1]["block"] = 11
 	second._tick_statuses()
 	assert(allies[0]["hp"] > 0, "Soulbound deve reviver mesmo na última rodada")
-	assert(allies[1]["block"] == 11, "Block não deve desaparecer antes da próxima ação inimiga")
 	second._add_status(source, "overload", 1, 1, int(source["id"]))
 	second._add_status(source, "drop", 1, 1, int(source["id"]))
 	second._cleanse(source)
@@ -68,6 +66,11 @@ func _initialize() -> void:
 	fourth.begin("road", rogue_team, {}, 79)
 	var enemy_source: Dictionary = fourth.living("ENEMY")[0]
 	var front: Array[Dictionary] = [fourth.living("ALLY")[0], fourth.living("ALLY")[1]]
+	# Fúria Fatal aplica Ferido apenas aos sobreviventes. Mantenha os alvos
+	# vivos para testar a regra, independentemente do balanceamento atual.
+	for target in front:
+		target["hp"] = 999
+		target["max_hp"] = 999
 	fourth._add_status(enemy_source, "fatal_fury", 1, 1, int(enemy_source["id"]))
 	fourth._resolve(enemy_source, front, {}, Content.ENEMY_CARDS["sweep"])
 	assert(not fourth._has_status(enemy_source, "fatal_fury"), "Fatal Fury consome a ação inteira")
@@ -80,12 +83,11 @@ func _initialize() -> void:
 	fifth._add_status(spreader, "corrupted", 2, 1, int(opposite["id"]))
 	fifth._tick_statuses()
 	assert(fifth._has_status(opposite, "corrupted"), "Corrupted deve atingir unidades próximas de qualquer lado")
-	spreader["block"] = 30
 	fifth._add_status(spreader, "protecao", 2, 2, int(spreader["id"]))
 	fifth._add_status(spreader, "bleed", 2, 1, int(opposite["id"]))
 	var bleeding_hp: int = spreader["hp"]
 	fifth._tick_statuses()
-	assert(spreader["hp"] < bleeding_hp and spreader["block"] == 30 and fifth._has_status(spreader, "protecao") and int(spreader["statuses"]["protecao"]["stacks"]) == 1, "Bleed ignora Bloqueio e Proteção (−1 stack/rodada)")
+	assert(spreader["hp"] < bleeding_hp and fifth._has_status(spreader, "protecao") and int(spreader["statuses"]["protecao"]["stacks"]) == 1, "Bleed ignora Proteção (−1 stack/rodada)")
 	var sixth = Battle.new()
 	sixth.begin("road", team, {}, 89)
 	var pusher: Dictionary = sixth.living("ALLY")[0]
@@ -152,8 +154,6 @@ func _initialize() -> void:
 
 	foe["statuses"].erase("invulnerable")
 	foe["statuses"].erase("protecao")
-	foe["block"] = 0
-	foe["shield"] = 0
 	defb._add_status(foe, "barrier", 2, 8, int(foe["id"]))
 	var hp1: int = int(foe["hp"])
 	assert(defb._barrier_hp(foe) == 8, "Barreira inicia com 8 HP")
@@ -164,8 +164,6 @@ func _initialize() -> void:
 
 	# Penetrante ignora Barreira por completo (não gasta HP da barreira).
 	foe["statuses"].erase("barrier")
-	foe["block"] = 0
-	foe["shield"] = 0
 	defb._add_status(foe, "barrier", 2, 8, int(foe["id"]))
 	var hp_pierce: int = int(foe["hp"])
 	defb._take_damage(tank, foe, 5, true)
@@ -191,6 +189,50 @@ func _initialize() -> void:
 	assert(inst.play(0, enemy_id), "Jogar Instantâneo")
 	assert(not inst.request_end_turn, "Instantâneo NÃO pede fim de turno")
 	assert(inst.can_end_turn(), "Sem Instantâneo na mão, pode encerrar")
+
+	# --- Voar: área, ataque direto e colisão ---
+	var flight = Battle.new()
+	flight.begin("road", team, {}, 303)
+	var flyer: Dictionary = flight.living("ENEMY")[0]
+	var attacker: Dictionary = flight.living("ALLY")[0]
+	flyer["hp"] = 100
+	flyer["max_hp"] = 100
+	flyer["statuses"].clear()
+	flight._add_status(flyer, "voar", 2, 1, int(attacker["id"]))
+	flyer["row"] = "front"
+	attacker["row"] = "front"
+	var hp_area := int(flyer["hp"])
+	flight._take_damage(attacker, flyer, 20, false, false, false, true)
+	assert(int(flyer["hp"]) == hp_area and flight._has_status(flyer, "flying"), "Voar evita dano de qualquer ataque em área")
+	for area_kind in ["ENEMY_ROW", "ALLY_ROW", "ROW", "FRONT_ROW", "BACK_ROW", "ADJACENT", "ALL_ENEMIES", "ALL_ALLIES", "ALL_OTHERS"]:
+		assert(flight.is_area_target(area_kind), "Classifica área: %s" % area_kind)
+	assert(not flight.can_reach(attacker, flyer, {"target": "ENEMY", "reach": false}), "Alvo voador exige Alcance")
+	assert(flight.can_reach(attacker, flyer, {"target": "ENEMY", "reach": true}), "Alcance permite ataque direto contra Voar")
+	flight._add_status(attacker, "voar", 2, 1, int(attacker["id"]))
+	assert(flight.can_reach(attacker, flyer, {"target": "ENEMY", "reach": false}), "Atacante voando alcança alvo voador")
+	attacker["statuses"].erase("flying")
+	flight.hand.clear()
+	flight.hand.append(flight._create_card("tempestade", int(attacker["id"])))
+	var area_preview: Dictionary = flight.preview(0, int(flyer["id"]))
+	assert(int(area_preview["targets"][flyer["id"]]["damage"]) == 0 and not area_preview["targets"][flyer["id"]]["statuses"].has("stun"), "Prévia de área omite dano e estados contra Voar")
+	flight._take_damage(attacker, flyer, 10, false, false, false, false, false)
+	assert(int(flyer["hp"]) == 80 and not flight._has_status(flyer, "voar"), "Ataque direto não corpo a corpo derruba Voar e soma 10% da Vida máxima")
+	var collision = Battle.new()
+	collision.begin("road", team, {}, 307)
+	var collision_target: Dictionary = collision.living("ENEMY")[0]
+	var collision_partner: Dictionary = collision.living("ENEMY")[1]
+	var collision_source: Dictionary = collision.living("ALLY")[0]
+	collision_target["row"] = "front"
+	collision_partner["row"] = "back"
+	for unit in [collision_target, collision_partner]:
+		unit["hp"] = 100
+		unit["max_hp"] = 100
+		unit["statuses"].clear()
+		collision._add_status(unit, "flying", 2, 1, int(collision_source["id"]))
+	collision.reposition(collision_source, collision_target, "push", true)
+	assert(int(collision_target["hp"]) == 50 and int(collision_partner["hp"]) == 50, "Colisão duplica o impacto em cada unidade voadora")
+	assert(not collision._has_status(collision_target, "voar") and not collision._has_status(collision_partner, "voar"), "Colisão derruba ambos os voadores")
+	assert(not flight.actors[0].has("block") and not flight.actors[0].has("shield"), "Atores não carregam pools legados de Bloqueio/Escudo")
 
 	print("OK: estados, Chain, Soulbound, impacto, prévia, alvos especiais e KO próprio")
 	quit(0)

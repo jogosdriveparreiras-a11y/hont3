@@ -35,6 +35,7 @@ def run(*command, timeout=240, capture_godot=False):
 
 
 run(sys.executable, "tools/lint_gd.py")
+run(sys.executable, "tools/verify_effect_catalog.py")
 run(sys.executable, "tools/verify_content.py")
 run(sys.executable, "tools/verify_assets.py")
 engine = args.godot or shutil.which("godot") or shutil.which("godot4")

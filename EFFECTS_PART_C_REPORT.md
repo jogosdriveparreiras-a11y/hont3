@@ -10,13 +10,13 @@ Ordem efetiva:
    `game/BattleState.gd` ~457–460.
 2. **Resist** (`resist`, se não `pierce`): consome 1 stack e cancela a instância. ~461–468.
 3. Ajustes ambientais / minion.
-4. **Escudo temporário de carta** (`shield`) depois **Bloqueio** (`block`), se não `pierce`. ~477–481.  
+4. **Proteção** absorve hits individualmente; **Barreira** absorve um pool de HP antes da Vida. `pierce` ignora ambos.
    (Passiva `baluarte` e efeitos `SHIELD` enchem `shield`; `BLOCK` / guarda enchem `block`.)
 5. Resto vai para **Vida** (`hp`).
 6. Se perdeu Vida (`hp_lost > 0`): remove **stun** (salvo Letárgico — ver Part C); pode aplicar lifesteal/bleed hooks.
 
 **Protegido** (`protected`): não é imunidade a dano — impede **seleção** de alvo (e área) em `can_reach` / `_targets` (~312–354).  
-**Barreira** (`barrier`): em `can_reach`, bloqueia alvo sem `reach` (~319–320).  
+**Barreira** (`barrier`): pool de HP temporário; não bloqueia seleção de alvo.
 **Armor (status stacks)**: em `_defense_for_stat`, soma `2 * stacks` à Armadura permanente no caminho Impacto (~431–435).  
 **Armadura (stat)** vs **Escudo (stat `escudo`)**: Impacto → Armadura (+ stacks); Poder → Escudo permanente. Distintos do `shield` temporário de carta.
 
@@ -59,7 +59,7 @@ Impacto/Poder 1–7, Combo=Chain, Alcance/Área/Invocar, Proteção/Invulneráve
 
 | Efeito | Chave | Onde |
 |---|---|---|
-| Penetrante | `penetrating` flag/action | Ignora block+shield (`pierce`); defesa Armadura/Escudo × 0,5 |
+| Penetrante | `penetrating` flag/action | Ignora Proteção/Barreira (`pierce`); defesa Armadura/Escudo × 0,5 |
 | Letárgico | `lethargic` | `_take_damage(..., remove_stun=false)` |
 | Counter | — | Documentado; OK |
 | Ações | `actions` N / status `next_turn_plays` | +N jogadas no próximo turno |
@@ -75,7 +75,7 @@ Impacto/Poder 1–7, Combo=Chain, Alcance/Área/Invocar, Proteção/Invulneráve
 
 Arquivos: `BattleState.gd`, `EntityRuntime.gd`, `CardRuntime.gd`, `PackBridge.gd`, `GameRoot.gd`, `tools/card_editor.html`, `tools/CARD_EDITOR.md`, `CHANGELOG.md`.
 
-**Depois (só mencionar):** Voar; aba dicionário de status/flags/ops no editor.
+**Atualização 2026-10:** Voar passou a ser status configurável, com esquiva de ataques em área, derrubada por ataques diretos que alcancem o alvo e impacto dobrado em colisões. O editor agora descreve a regra.
 
 ---
 

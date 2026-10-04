@@ -52,7 +52,7 @@ missions = dictionary("MISSIONS")
 campaign = dictionary("CAMPAIGN")
 hero_lore = dictionary("HERO_LORE")
 allowed_effects = {
-    "DAMAGE", "HEAL", "BLOCK", "SHIELD", "STATUS", "CLEANSE", "DISPEL",
+    "DAMAGE", "HEAL", "STATUS", "CLEANSE", "DISPEL",
     "PUSH", "PULL", "MOVE", "DRAW", "GENERATE", "CARD_PLAY", "SUMMON",
     "CURE", "NEXT_TURN", "INFECT",
 }
@@ -66,7 +66,7 @@ opportunist overload overpowered perfect_aim poison portal protected protecting
 ravenous regen resist resistente fragil protecao protection barreira
 slow soulbound spike_bomb strengthened strongest_there_is
 stun summoning symbiote_skin taunt taunted unleashed vampiric_essence
-vulnerable weak webbed_up wounded invulneravel vitima escuridao atento
+vulnerable weak webbed_up wounded invulneravel vitima escuridao atento voar flying
 """.split())
 
 for hero_id, hero in heroes.items():
@@ -117,6 +117,35 @@ for hero_id, hero in entity_pack.items():
         assert (ROOT / art.removeprefix("res://")).is_file(), (hero_id, art)
 assert any(hero.get("boss") and not hero.get("playable", True) for hero in heroes.values())
 assert any(hero.get("minion") and not hero.get("playable", True) for hero in heroes.values())
+
+# Defense legacy actions are rejected at the data boundary; current content
+# must use Proteção or Barreira and no temporary actor pool.
+legacy_actions = {"block", "block_hp", "hit_from_block", "spend_all_block", "spend_block", "block_from_hit", "bonus_block", "hand_block", "block_on_hit"}
+for pack_name, pack in (("entities", entity_data), ("external cards", {"cards": external_cards})):
+    def check_actions(value, location="root"):
+        if isinstance(value, dict):
+            for key, child in value.items():
+                if key in {"actions", "naomi_actions"} and isinstance(child, list):
+                    for index, action in enumerate(child):
+                        if isinstance(action, list) and action:
+                            assert str(action[0]).lower() not in legacy_actions, (pack_name, location, action)
+                check_actions(child, f"{location}.{key}")
+        elif isinstance(value, list):
+            for index, child in enumerate(value):
+                check_actions(child, f"{location}[{index}]")
+    check_actions(pack)
+
+editor = (ROOT / "tools/card_editor.html").read_text(encoding="utf-8")
+dictionary_rows = re.findall(r'\{cat:"([^"]+)", id:"([^"]+)", name:"([^"]+)", rule:"([^"]+)"\}', editor)
+assert dictionary_rows and all(name and rule.strip() for _, _, name, rule in dictionary_rows)
+assert len({entry_id for _, entry_id, _, _ in dictionary_rows}) == len(dictionary_rows), "Duplicate effect catalog IDs"
+assert not any(category == "Legado" for category, _, _, _ in dictionary_rows)
+voar_rule = [rule for _, entry_id, _, rule in dictionary_rows if entry_id == "voar"]
+assert len(voar_rule) == 1 and all(term in voar_rule[0] for term in ("área", "Alcance", "Colisão"))
+combat_rules = (ROOT / "game/CombatRules.gd").read_text(encoding="utf-8")
+assert '"voar": {"landing_damage_max_hp_fraction": 0.10, "movement_damage_multiplier": 2.0}' in combat_rules
+status_smoke = (ROOT / "tools/StatusSmoke.gd").read_text(encoding="utf-8")
+assert all(marker in status_smoke for marker in ("Voar evita dano", "Ataque direto derruba Voar", "Colisão duplica"))
 
 for enemy_id, enemy in enemies.items():
     assert (ROOT / enemy["sprite"].removeprefix("res://")).is_file(), enemy_id
@@ -174,8 +203,15 @@ for document in ("README.md", "ARCHITECTURE.md", "GAME_DESIGN.md", "BALANCE.md",
     assert (ROOT / document).is_file(), document
 assert 'platform="Web"' in (ROOT / "export_presets.cfg").read_text(encoding="utf-8")
 for source_file in [ROOT / "project.godot", *sorted((ROOT / "game").glob("*.gd")), ROOT / "game/GameRoot.tscn"]:
-    for resource in re.findall(r"res://[^\"']+", source_file.read_text(encoding="utf-8")):
-        assert (ROOT / resource.removeprefix("res://")).exists(), (source_file, resource)
+    source_text = "\n".join(
+        line for line in source_file.read_text(encoding="utf-8").splitlines()
+        if not line.lstrip().startswith("#")
+    )
+    for resource in re.findall(r"res://[^\"']+", source_text):
+        relative = Path(resource.removeprefix("res://"))
+        if "%" in resource or not relative.suffix:
+            continue  # Caminho formado em runtime ou diretório criado pelo jogo.
+        assert (ROOT / relative).exists(), (source_file, resource)
 assert len(heroes) >= 6 and len(cards) >= 48
 for target_kind in ("ADJACENT", "RANDOM", "FRONT_ROW", "BACK_ROW", "ANY_UNIT"):
     assert any(card["target"] == target_kind for card in cards.values()), target_kind

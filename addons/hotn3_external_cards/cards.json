@@ -248,11 +248,6 @@
         [
           "hit",
           "5"
-        ],
-        [
-          "self_status",
-          "vulnerable",
-          "1"
         ]
       ],
       "rarity": "UNVERIFIED",
@@ -403,11 +398,6 @@
           "5"
         ],
         [
-          "status",
-          "vulnerable",
-          "1"
-        ],
-        [
           "final"
         ]
       ],
@@ -437,7 +427,7 @@
           "5"
         ],
         [
-          "hand_block",
+          "hand_protecao",
           "0.1"
         ]
       ],
@@ -489,13 +479,7 @@
       "name": "Mindbreaker",
       "class": "ESTADO",
       "target": "ENEMY",
-      "actions": [
-        [
-          "status",
-          "berserk_enemy",
-          "2"
-        ]
-      ],
+      "actions": [],
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
@@ -611,13 +595,7 @@
       "name": "Call To Arms",
       "class": "ESTADO",
       "target": "SELF",
-      "actions": [
-        [
-          "self_status",
-          "double_gain",
-          "2"
-        ]
-      ],
+      "actions": [],
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
@@ -777,11 +755,6 @@
       "target": "SELF",
       "actions": [
         [
-          "self_status",
-          "retain_next",
-          "1"
-        ],
-        [
           "exhaust"
         ]
       ],
@@ -858,11 +831,6 @@
       "actions": [
         [
           "critical_hand"
-        ],
-        [
-          "self_status",
-          "critical_draw",
-          "2"
         ]
       ],
       "rarity": "UNVERIFIED",
@@ -946,11 +914,6 @@
         [
           "draw_owner",
           "1"
-        ],
-        [
-          "self_status",
-          "make_em_bleed",
-          "2"
         ]
       ],
       "rarity": "UNVERIFIED",
@@ -1066,7 +1029,7 @@
           "5"
         ],
         [
-          "bonus_block",
+          "bonus_defense",
           "1"
         ]
       ],
@@ -1336,13 +1299,7 @@
       "name": "The Best Defense",
       "class": "ESTADO",
       "target": "SELF",
-      "actions": [
-        [
-          "self_status",
-          "block_on_hit",
-          "2"
-        ]
-      ],
+      "actions": [],
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
@@ -1774,11 +1731,6 @@
       "target": "SELF",
       "actions": [
         [
-          "self_status",
-          "binary",
-          "1"
-        ],
-        [
           "barreira_hp",
           "1",
           "0.5"
@@ -2195,13 +2147,7 @@
       "name": "Hellmouth",
       "class": "ESTADO",
       "target": "ENEMY",
-      "actions": [
-        [
-          "status",
-          "drop",
-          "2"
-        ]
-      ],
+      "actions": [],
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
@@ -2220,13 +2166,7 @@
       "name": "Immolate",
       "class": "ESTADO",
       "target": "SELF",
-      "actions": [
-        [
-          "self_status",
-          "ko_explosion",
-          "2"
-        ]
-      ],
+      "actions": [],
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
@@ -2396,18 +2336,7 @@
       "name": "Straight to Hell",
       "class": "ESTADO",
       "target": "SELF",
-      "actions": [
-        [
-          "self_status",
-          "banished",
-          "1"
-        ],
-        [
-          "status",
-          "drop",
-          "1"
-        ]
-      ],
+      "actions": [],
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
@@ -2548,11 +2477,6 @@
           "status",
           "marked",
           "2"
-        ],
-        [
-          "status",
-          "vulnerable",
-          "2"
         ]
       ],
       "rarity": "UNVERIFIED",
@@ -2574,11 +2498,6 @@
       "class": "ESTADO",
       "target": "SELF",
       "actions": [
-        [
-          "self_status",
-          "retain_next",
-          "1"
-        ],
         [
           "free"
         ]
@@ -2829,11 +2748,6 @@
       "target": "SELF",
       "actions": [
         [
-          "self_status",
-          "portal",
-          "1"
-        ],
-        [
           "free"
         ]
       ],
@@ -2856,13 +2770,7 @@
       "name": "Limbo's Grasp",
       "class": "ESTADO",
       "target": "SELF",
-      "actions": [
-        [
-          "self_status",
-          "limbos_grasp",
-          "2"
-        ]
-      ],
+      "actions": [],
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
@@ -2909,18 +2817,7 @@
       "name": "Banish",
       "class": "ESTADO",
       "target": "ANY_UNIT",
-      "actions": [
-        [
-          "status",
-          "banished",
-          "1"
-        ],
-        [
-          "status",
-          "drop",
-          "1"
-        ]
-      ],
+      "actions": [],
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
@@ -2974,7 +2871,7 @@
         ],
         [
           "self_status",
-          "invulnerable",
+          "conceal",
           "1"
         ]
       ],
@@ -3395,13 +3292,7 @@
       "name": "Chaos Field",
       "class": "ESTADO",
       "target": "SELF",
-      "actions": [
-        [
-          "self_status",
-          "chaos_field",
-          "2"
-        ]
-      ],
+      "actions": [],
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
@@ -3420,13 +3311,7 @@
       "name": "Unleashed",
       "class": "ESTADO",
       "target": "SELF",
-      "actions": [
-        [
-          "self_status",
-          "unleashed",
-          "2"
-        ]
-      ],
+      "actions": [],
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
@@ -3494,13 +3379,7 @@
       "name": "Hex Charge",
       "class": "ESTADO",
       "target": "ENEMY",
-      "actions": [
-        [
-          "status",
-          "overload",
-          "1"
-        ]
-      ],
+      "actions": [],
       "rarity": "UNVERIFIED",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
@@ -3548,13 +3427,7 @@
       "name": "Infernal Spider",
       "class": "ESTADO",
       "target": "SELF",
-      "actions": [
-        [
-          "self_status",
-          "free_owner",
-          "3"
-        ]
-      ],
+      "actions": [],
       "rarity": "LEGENDARY",
       "source_url": "https://marvels-midnight-suns.fandom.com/wiki/All_Cards",
       "reach": true,
@@ -3727,11 +3600,6 @@
       "class": "ESTADO",
       "target": "SELF",
       "actions": [
-        [
-          "self_status",
-          "opportunist",
-          "2"
-        ],
         [
           "moves",
           "2"
@@ -3918,11 +3786,6 @@
         [
           "push",
           "1"
-        ],
-        [
-          "status",
-          "vulnerable",
-          "1"
         ]
       ],
       "rarity": "UNVERIFIED",
@@ -3980,11 +3843,6 @@
         [
           "draw_owner",
           "2"
-        ],
-        [
-          "self_status",
-          "berserk_lifesteal",
-          "1"
         ]
       ],
       "rarity": "UNVERIFIED",
@@ -4132,7 +3990,7 @@
           "2"
         ],
         [
-          "bonus_block",
+          "bonus_defense",
           "1"
         ]
       ],
@@ -4494,11 +4352,6 @@
         [
           "draw_en_fuego",
           "1"
-        ],
-        [
-          "self_status",
-          "all_together_now",
-          "2"
         ]
       ],
       "rarity": "UNVERIFIED",
@@ -4795,11 +4648,6 @@
       "target": "SELF",
       "actions": [
         [
-          "self_status",
-          "bloodlust",
-          "2"
-        ],
-        [
           "barreira_hp",
           "1",
           "0.25"
@@ -4985,11 +4833,6 @@
           "1"
         ],
         [
-          "self_status",
-          "next_attack_boost",
-          "1"
-        ],
-        [
           "exhaust"
         ]
       ],
@@ -5137,11 +4980,6 @@
       "class": "ESTADO",
       "target": "SELF",
       "actions": [
-        [
-          "self_status",
-          "assimilation",
-          "1"
-        ],
         [
           "exhaust"
         ]
@@ -5310,11 +5148,6 @@
       "actions": [
         [
           "draw_attack_heroic",
-          "1"
-        ],
-        [
-          "self_status",
-          "preserve_ravenous",
           "1"
         ]
       ],

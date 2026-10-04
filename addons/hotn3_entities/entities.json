@@ -82,7 +82,9 @@
         "ent_adam_nao_vou_deixar",
         "ent_adam_rota_de_fuga",
         "ent_adam_ultima_linha"
-      ]
+      ],
+      "woman": 0,
+      "man": 3
     },
     "ent_akuji": {
       "id": "ent_akuji",
@@ -173,7 +175,9 @@
         "ent_akuji_incendio_dirigido",
         "ent_akuji_cinzas_retornam",
         "ent_akuji_noite_em_combustao"
-      ]
+      ],
+      "woman": 0,
+      "man": 4
     },
     "ent_alexis": {
       "id": "ent_alexis",
@@ -252,7 +256,9 @@
         "ent_alexis_proteger_um_amigo",
         "ent_alexis_colecao_improvavel",
         "ent_alexis_coragem_tardia"
-      ]
+      ],
+      "woman": 0,
+      "man": 0
     },
     "ent_alistair": {
       "id": "ent_alistair",
@@ -343,7 +349,9 @@
         "ent_alistair_liga_ouro_aco",
         "ent_alistair_espada_sagrada",
         "ent_alistair_muralha_luminosa"
-      ]
+      ],
+      "woman": 0,
+      "man": 3
     },
     "ent_alyssa_wine": {
       "id": "ent_alyssa_wine",
@@ -450,7 +458,9 @@
         "ent_alyssa_wine_relampago_plus",
         "ent_alyssa_wine_intelecto_plus",
         "ent_alyssa_wine_super_sentidos_plus"
-      ]
+      ],
+      "woman": 5,
+      "man": 0
     },
     "ent_marcell_wine": {
       "id": "ent_marcell_wine",
@@ -558,7 +568,9 @@
       ],
       "playable": true,
       "source_sheet": "Marcell_Wine_ficha.json",
-      "source_page": "Marcell_Wine.md"
+      "source_page": "Marcell_Wine.md",
+      "woman": 0,
+      "man": 0
     },
     "ent_ashlee": {
       "id": "ent_ashlee",
@@ -645,7 +657,9 @@
         "ent_ashlee_compartilhar_equipamento",
         "ent_ashlee_analise_completa",
         "ent_ashlee_quarentena_total"
-      ]
+      ],
+      "woman": 3,
+      "man": 0
     },
     "ent_daeva": {
       "id": "ent_daeva",
@@ -728,7 +742,9 @@
         "ent_daeva_lealdade_teimosa",
         "ent_daeva_saida_calculada",
         "ent_daeva_todos_para_fora"
-      ]
+      ],
+      "woman": 3,
+      "man": 0
     },
     "ent_damian_alrosa": {
       "id": "ent_damian_alrosa",
@@ -811,7 +827,9 @@
         "ent_damian_alrosa_renegociar_termos",
         "ent_damian_alrosa_preco_da_promessa",
         "ent_damian_alrosa_pacto_irrevogavel"
-      ]
+      ],
+      "woman": 0,
+      "man": 3
     },
     "ent_dominika_seur": {
       "id": "ent_dominika_seur",
@@ -899,7 +917,9 @@
         "ent_dominika_seur_abalo_sismico",
         "ent_dominika_seur_presenca"
       ],
-      "desvantagem": "ent_dominika_seur_desvantagem_derretimento"
+      "desvantagem": "ent_dominika_seur_desvantagem_derretimento",
+      "woman": 4,
+      "man": 0
     },
     "ent_dylan": {
       "id": "ent_dylan",
@@ -974,7 +994,9 @@
         "ent_dylan_ficar_junto",
         "ent_dylan_guardar_a_porta",
         "ent_dylan_nao_abandonar_ninguem"
-      ]
+      ],
+      "woman": 0,
+      "man": 2
     },
     "ent_evelyn_graves": {
       "id": "ent_evelyn_graves",
@@ -1057,7 +1079,9 @@
         "ent_evelyn_graves_ruptura_psiquica",
         "ent_evelyn_graves_teatro_da_mente",
         "ent_evelyn_graves_reino_escancarado"
-      ]
+      ],
+      "woman": 4,
+      "man": 0
     },
     "ent_fate": {
       "id": "ent_fate",
@@ -1140,7 +1164,9 @@
         "ent_fate_golpe_de_custodia",
         "ent_fate_fenda_de_aco",
         "ent_fate_julgamento_da_fronteira"
-      ]
+      ],
+      "woman": 0,
+      "man": 3
     },
     "ent_hynda_valdtagen": {
       "id": "ent_hynda_valdtagen",
@@ -1227,7 +1253,9 @@
         "ent_hynda_valdtagen_transmutacao_de_emergencia",
         "ent_hynda_valdtagen_circulo_planar",
         "ent_hynda_valdtagen_meteoro_continental"
-      ]
+      ],
+      "woman": 3,
+      "man": 0
     },
     "ent_kabuki": {
       "id": "ent_kabuki",
@@ -1322,7 +1350,9 @@
         "ent_kabuki_palco_de_sombras",
         "ent_kabuki_danca_cibernetica",
         "ent_kabuki_operacao_fantasma"
-      ]
+      ],
+      "woman": 0,
+      "man": 3
     },
     "ent_konrad": {
       "id": "ent_konrad",
@@ -1401,7 +1431,9 @@
         "ent_konrad_desmontagem",
         "ent_konrad_isca_cruel",
         "ent_konrad_corte_de_armagedom"
-      ]
+      ],
+      "woman": 0,
+      "man": 4
     },
     "ent_leona": {
       "id": "ent_leona",
@@ -1488,7 +1520,9 @@
         "ent_leona_fome_contagiosa",
         "ent_leona_cabelos_famintos",
         "ent_leona_banquete_de_marbas"
-      ]
+      ],
+      "woman": 4,
+      "man": 0
     },
     "ent_lust": {
       "id": "ent_lust",
@@ -1571,7 +1605,9 @@
         "ent_lust_encanto_de_area",
         "ent_lust_corpo_de_projecao",
         "ent_lust_runa_compartilhada"
-      ]
+      ],
+      "woman": 5,
+      "man": 0
     },
     "ent_madelyn": {
       "id": "ent_madelyn",
@@ -1654,7 +1690,9 @@
         "ent_madelyn_improviso_perigoso",
         "ent_madelyn_cortina_de_fumaca",
         "ent_madelyn_ultimo_ato"
-      ]
+      ],
+      "woman": 3,
+      "man": 0
     },
     "ent_mingau_o_feiticeiro": {
       "id": "ent_mingau_o_feiticeiro",
@@ -1741,7 +1779,9 @@
         "ent_mingau_o_feiticeiro_sabotagem_felina",
         "ent_mingau_o_feiticeiro_transformacao_em_cadeia",
         "ent_mingau_o_feiticeiro_reinado_da_varinha"
-      ]
+      ],
+      "woman": 0,
+      "man": 2
     },
     "ent_mutante_generico": {
       "id": "ent_mutante_generico",
@@ -1816,7 +1856,9 @@
         "ent_mutante_generico_ruptura_de_terreno",
         "ent_mutante_generico_massa_elemental",
         "ent_mutante_generico_descarga_total"
-      ]
+      ],
+      "woman": 0,
+      "man": 0
     },
     "ent_nero": {
       "id": "ent_nero",
@@ -1912,7 +1954,9 @@
       "desvantagem": "ent_nero_desvantagem_solidao",
       "transform_name": "Naomi",
       "transform_sprite": "res://assets/cast/ent_naomi_sprite.png",
-      "transform_portrait": "res://assets/cast/ent_naomi_portrait.png"
+      "transform_portrait": "res://assets/cast/ent_naomi_portrait.png",
+      "woman": 0,
+      "man": 3
     },
     "ent_niu_valdtagen": {
       "id": "ent_niu_valdtagen",
@@ -1983,7 +2027,9 @@
         "ent_niu_valdtagen_plano_improvisado",
         "ent_niu_valdtagen_encontrar_saida",
         "ent_niu_valdtagen_coincidencia_impossivel"
-      ]
+      ],
+      "woman": 3,
+      "man": 0
     },
     "ent_pesadelo_vivo": {
       "id": "ent_pesadelo_vivo",
@@ -2070,7 +2116,9 @@
         "ent_pesadelo_vivo_sombra_desperta",
         "ent_pesadelo_vivo_estilhacar_realidade",
         "ent_pesadelo_vivo_pesadelo_sem_fim"
-      ]
+      ],
+      "woman": 0,
+      "man": 0
     },
     "ent_pietro_caos": {
       "id": "ent_pietro_caos",
@@ -2169,7 +2217,9 @@
         "ent_pietro_caos_regeneracao_selvagem",
         "ent_pietro_caos_arrebentar_a_linha",
         "ent_pietro_caos_caos_completo"
-      ]
+      ],
+      "woman": 0,
+      "man": 3
     },
     "ent_quasar": {
       "id": "ent_quasar",
@@ -2256,7 +2306,9 @@
         "ent_quasar_golpe_de_abertura",
         "ent_quasar_assalto_de_vanguarda",
         "ent_quasar_impacto_de_quasar"
-      ]
+      ],
+      "woman": 0,
+      "man": 3
     },
     "ent_taylor": {
       "id": "ent_taylor",
@@ -2339,7 +2391,9 @@
         "ent_taylor_voo_de_cobertura",
         "ent_taylor_comando_remoto",
         "ent_taylor_nave_mae"
-      ]
+      ],
+      "woman": 3,
+      "man": 0
     },
     "ent_techna": {
       "id": "ent_techna",
@@ -2422,7 +2476,9 @@
         "ent_techna_cacada_inteligente",
         "ent_techna_armadura_de_bloqueio",
         "ent_techna_protocolo_nocaute"
-      ]
+      ],
+      "woman": 3,
+      "man": 0
     },
     "ent_minion_zumbi": {
       "id": "ent_minion_zumbi",
@@ -2450,7 +2506,9 @@
       "portrait": "res://assets/cast/ent_minion_zumbi_portrait.png",
       "signature_icon": "res://assets/cast/ent_minion_zumbi_icon.png",
       "aprimoramento": "",
-      "evoluidas": []
+      "evoluidas": [],
+      "woman": 0,
+      "man": 0
     },
     "ent_minion_fantasma": {
       "id": "ent_minion_fantasma",
@@ -2478,7 +2536,9 @@
       "portrait": "res://assets/cast/ent_minion_fantasma_portrait.png",
       "signature_icon": "res://assets/cast/ent_minion_fantasma_icon.png",
       "aprimoramento": "",
-      "evoluidas": []
+      "evoluidas": [],
+      "woman": 0,
+      "man": 0
     },
     "ent_minion_esqueleto": {
       "id": "ent_minion_esqueleto",
@@ -2506,7 +2566,9 @@
       "portrait": "res://assets/cast/ent_minion_esqueleto_portrait.png",
       "signature_icon": "res://assets/cast/ent_minion_esqueleto_icon.png",
       "aprimoramento": "",
-      "evoluidas": []
+      "evoluidas": [],
+      "woman": 0,
+      "man": 0
     },
     "ent_minion_vampiro": {
       "id": "ent_minion_vampiro",
@@ -2534,7 +2596,9 @@
       "portrait": "res://assets/cast/ent_minion_vampiro_portrait.png",
       "signature_icon": "res://assets/cast/ent_minion_vampiro_icon.png",
       "aprimoramento": "",
-      "evoluidas": []
+      "evoluidas": [],
+      "woman": 0,
+      "man": 0
     },
     "ent_minion_mumia": {
       "id": "ent_minion_mumia",
@@ -2562,7 +2626,9 @@
       "portrait": "res://assets/cast/ent_minion_mumia_portrait.png",
       "signature_icon": "res://assets/cast/ent_minion_mumia_icon.png",
       "aprimoramento": "",
-      "evoluidas": []
+      "evoluidas": [],
+      "woman": 0,
+      "man": 0
     },
     "ent_minion_ghoul": {
       "id": "ent_minion_ghoul",
@@ -2592,7 +2658,9 @@
       ],
       "portrait": "res://assets/cast/ent_minion_ghoul_portrait.png",
       "signature_icon": "res://assets/cast/ent_minion_ghoul_icon.png",
-      "aprimoramento": ""
+      "aprimoramento": "",
+      "woman": 0,
+      "man": 0
     },
     "ent_minion_banshee": {
       "id": "ent_minion_banshee",
@@ -2622,7 +2690,9 @@
       ],
       "portrait": "res://assets/cast/ent_minion_banshee_portrait.png",
       "signature_icon": "res://assets/cast/ent_minion_banshee_icon.png",
-      "aprimoramento": ""
+      "aprimoramento": "",
+      "woman": 0,
+      "man": 0
     },
     "ent_minion_strigoi": {
       "id": "ent_minion_strigoi",
@@ -2652,7 +2722,9 @@
       ],
       "portrait": "res://assets/cast/ent_minion_strigoi_portrait.png",
       "signature_icon": "res://assets/cast/ent_minion_strigoi_icon.png",
-      "aprimoramento": ""
+      "aprimoramento": "",
+      "woman": 0,
+      "man": 0
     },
     "ent_minion_golem": {
       "id": "ent_minion_golem",
@@ -2682,7 +2754,9 @@
       ],
       "portrait": "res://assets/cast/ent_minion_golem_portrait.png",
       "signature_icon": "res://assets/cast/ent_minion_golem_icon.png",
-      "aprimoramento": ""
+      "aprimoramento": "",
+      "woman": 0,
+      "man": 0
     },
     "ent_minion_lich": {
       "id": "ent_minion_lich",
@@ -2712,7 +2786,9 @@
       ],
       "portrait": "res://assets/cast/ent_minion_lich_portrait.png",
       "signature_icon": "res://assets/cast/ent_minion_lich_icon.png",
-      "aprimoramento": ""
+      "aprimoramento": "",
+      "woman": 0,
+      "man": 0
     },
     "ent_dr_espantalho": {
       "id": "ent_dr_espantalho",
@@ -2778,7 +2854,9 @@
       ],
       "biografia": "Dr. Espantalho — personagem novo importado do Cast Edited (kit genérico).",
       "playable": true,
-      "source_sheet": "edited_cast"
+      "source_sheet": "edited_cast",
+      "woman": 0,
+      "man": 3
     },
     "ent_patrulheiro_rosa": {
       "id": "ent_patrulheiro_rosa",
@@ -2844,7 +2922,9 @@
       ],
       "biografia": "Patrulheiro Rosa — personagem novo importado do Cast Edited (kit genérico).",
       "playable": true,
-      "source_sheet": "edited_cast"
+      "source_sheet": "edited_cast",
+      "woman": 0,
+      "man": 2
     },
     "ent_pauline": {
       "id": "ent_pauline",
@@ -2910,7 +2990,9 @@
       ],
       "biografia": "Pauline — personagem novo importado do Cast Edited (kit genérico).",
       "playable": true,
-      "source_sheet": "edited_cast"
+      "source_sheet": "edited_cast",
+      "woman": 3,
+      "man": 0
     },
     "ent_siren": {
       "id": "ent_siren",
@@ -2976,7 +3058,9 @@
       ],
       "biografia": "Siren — personagem novo importado do Cast Edited (kit genérico).",
       "playable": true,
-      "source_sheet": "edited_cast"
+      "source_sheet": "edited_cast",
+      "woman": 4,
+      "man": 0
     },
     "ent_delirio": {
       "id": "ent_delirio",
@@ -3042,7 +3126,9 @@
       ],
       "biografia": "Delirio — personagem novo importado do Cast Edited (kit genérico).",
       "playable": true,
-      "source_sheet": "edited_cast"
+      "source_sheet": "edited_cast",
+      "woman": 3,
+      "man": 0
     },
     "ent_cacadora": {
       "id": "ent_cacadora",
@@ -3108,7 +3194,9 @@
       ],
       "biografia": "Caçadora — personagem novo importado do Cast Edited (kit genérico).",
       "playable": true,
-      "source_sheet": "edited_cast"
+      "source_sheet": "edited_cast",
+      "woman": 3,
+      "man": 0
     },
     "ent_pessoa_planta": {
       "id": "ent_pessoa_planta",
@@ -3174,7 +3262,303 @@
       ],
       "biografia": "Pessoa Planta — personagem novo importado do Cast Edited (kit genérico).",
       "playable": true,
-      "source_sheet": "edited_cast"
+      "source_sheet": "edited_cast",
+      "woman": 0,
+      "man": 0
+    },
+    "ent_ragnar_kaiju_minion_isabella": {
+      "id": "ent_ragnar_kaiju_minion_isabella",
+      "name": "Isabella, Elemental de fogo",
+      "archetype": "Invocação",
+      "species": "Elemental",
+      "level_reference": 1,
+      "power_reference": 60,
+      "hp": 28,
+      "attack": 25,
+      "power": 25,
+      "armor": 18,
+      "type": "BRUTO",
+      "row": "front",
+      "sprite": "res://assets/cast/ent_nero_sprite.png",
+      "passive": "",
+      "playable": false,
+      "minion": true,
+      "keep_summon_hp": true,
+      "pool": [
+        "ent_ragnar_kaiju_minion_isabella_golpe"
+      ],
+      "cards": [
+        "ent_ragnar_kaiju_minion_isabella_golpe"
+      ],
+      "iniciais": [
+        "ent_ragnar_kaiju_minion_isabella_golpe"
+      ],
+      "evoluidas": [],
+      "woman": 3,
+      "man": 0
+    },
+    "ent_ragnar_kaiju_minion_marina": {
+      "id": "ent_ragnar_kaiju_minion_marina",
+      "name": "Marina, Elemental de água",
+      "archetype": "Invocação",
+      "species": "Elemental",
+      "level_reference": 1,
+      "power_reference": 60,
+      "hp": 28,
+      "attack": 25,
+      "power": 25,
+      "armor": 18,
+      "type": "QUIMICO",
+      "row": "front",
+      "sprite": "res://assets/cast/ent_nero_sprite.png",
+      "passive": "",
+      "playable": false,
+      "minion": true,
+      "keep_summon_hp": true,
+      "pool": [
+        "ent_ragnar_kaiju_minion_marina_golpe"
+      ],
+      "cards": [
+        "ent_ragnar_kaiju_minion_marina_golpe"
+      ],
+      "iniciais": [
+        "ent_ragnar_kaiju_minion_marina_golpe"
+      ],
+      "evoluidas": [],
+      "woman": 3,
+      "man": 0
+    },
+    "ent_ragnar_kaiju_minion_aurelia": {
+      "id": "ent_ragnar_kaiju_minion_aurelia",
+      "name": "Aurélia, Elemental de ar",
+      "archetype": "Invocação",
+      "species": "Elemental",
+      "level_reference": 1,
+      "power_reference": 60,
+      "hp": 28,
+      "attack": 25,
+      "power": 25,
+      "armor": 18,
+      "type": "PROJETIVO",
+      "row": "front",
+      "sprite": "res://assets/cast/ent_nero_sprite.png",
+      "passive": "",
+      "playable": false,
+      "minion": true,
+      "keep_summon_hp": true,
+      "pool": [
+        "ent_ragnar_kaiju_minion_aurelia_golpe"
+      ],
+      "cards": [
+        "ent_ragnar_kaiju_minion_aurelia_golpe"
+      ],
+      "iniciais": [
+        "ent_ragnar_kaiju_minion_aurelia_golpe"
+      ],
+      "evoluidas": [],
+      "woman": 3,
+      "man": 0
+    },
+    "ent_ragnar_kaiju_minion_gaia": {
+      "id": "ent_ragnar_kaiju_minion_gaia",
+      "name": "Gaia, Elemental de terra",
+      "archetype": "Invocação",
+      "species": "Elemental",
+      "level_reference": 1,
+      "power_reference": 60,
+      "hp": 28,
+      "attack": 25,
+      "power": 25,
+      "armor": 18,
+      "type": "BRUTO",
+      "row": "front",
+      "sprite": "res://assets/cast/ent_nero_sprite.png",
+      "passive": "",
+      "playable": false,
+      "minion": true,
+      "keep_summon_hp": true,
+      "pool": [
+        "ent_ragnar_kaiju_minion_gaia_golpe"
+      ],
+      "cards": [
+        "ent_ragnar_kaiju_minion_gaia_golpe"
+      ],
+      "iniciais": [
+        "ent_ragnar_kaiju_minion_gaia_golpe"
+      ],
+      "evoluidas": [],
+      "woman": 3,
+      "man": 0
+    },
+    "ent_ragnar_kaiju_minion_lucia": {
+      "id": "ent_ragnar_kaiju_minion_lucia",
+      "name": "Lúcia, Elemental de luz",
+      "archetype": "Invocação",
+      "species": "Elemental",
+      "level_reference": 1,
+      "power_reference": 60,
+      "hp": 28,
+      "attack": 25,
+      "power": 25,
+      "armor": 18,
+      "type": "MENTAL",
+      "row": "front",
+      "sprite": "res://assets/cast/ent_nero_sprite.png",
+      "passive": "",
+      "playable": false,
+      "minion": true,
+      "keep_summon_hp": true,
+      "pool": [
+        "ent_ragnar_kaiju_minion_lucia_golpe"
+      ],
+      "cards": [
+        "ent_ragnar_kaiju_minion_lucia_golpe"
+      ],
+      "iniciais": [
+        "ent_ragnar_kaiju_minion_lucia_golpe"
+      ],
+      "evoluidas": [],
+      "woman": 3,
+      "man": 0
+    },
+    "ent_ragnar_kaiju_minion_nyx": {
+      "id": "ent_ragnar_kaiju_minion_nyx",
+      "name": "Nyx, Elemental de trevas",
+      "archetype": "Invocação",
+      "species": "Elemental",
+      "level_reference": 1,
+      "power_reference": 60,
+      "hp": 28,
+      "attack": 25,
+      "power": 25,
+      "armor": 18,
+      "type": "TECNICO",
+      "row": "front",
+      "sprite": "res://assets/cast/ent_nero_sprite.png",
+      "passive": "",
+      "playable": false,
+      "minion": true,
+      "keep_summon_hp": true,
+      "pool": [
+        "ent_ragnar_kaiju_minion_nyx_golpe"
+      ],
+      "cards": [
+        "ent_ragnar_kaiju_minion_nyx_golpe"
+      ],
+      "iniciais": [
+        "ent_ragnar_kaiju_minion_nyx_golpe"
+      ],
+      "evoluidas": [],
+      "woman": 3,
+      "man": 0
+    },
+    "ent_ragnar_kaiju_minion_celeste": {
+      "id": "ent_ragnar_kaiju_minion_celeste",
+      "name": "Celeste, Elemental de cósmico",
+      "archetype": "Invocação",
+      "species": "Elemental",
+      "level_reference": 1,
+      "power_reference": 60,
+      "hp": 28,
+      "attack": 25,
+      "power": 25,
+      "armor": 18,
+      "type": "PSICOLOGICO",
+      "row": "front",
+      "sprite": "res://assets/cast/ent_nero_sprite.png",
+      "passive": "",
+      "playable": false,
+      "minion": true,
+      "keep_summon_hp": true,
+      "pool": [
+        "ent_ragnar_kaiju_minion_celeste_golpe"
+      ],
+      "cards": [
+        "ent_ragnar_kaiju_minion_celeste_golpe"
+      ],
+      "iniciais": [
+        "ent_ragnar_kaiju_minion_celeste_golpe"
+      ],
+      "evoluidas": [],
+      "woman": 3,
+      "man": 0
+    },
+    "ent_ragnar_kaiju": {
+      "id": "ent_ragnar_kaiju",
+      "name": "Ragnar Kaiju",
+      "archetype": "Invocador",
+      "species": "Humano",
+      "level_reference": 6,
+      "power_reference": 210,
+      "hp": 108,
+      "attack": 35,
+      "power": 35,
+      "armor": 24,
+      "type": "MENTAL",
+      "row": "back",
+      "sprite": "res://assets/cast/ent_nero_sprite.png",
+      "portrait": "res://assets/cast/ent_nero_portrait.png",
+      "signature_icon": "res://assets/cast/ent_nero_icon.png",
+      "passive": "forma_bestial",
+      "aprimoramento": {
+        "id": "forma_bestial",
+        "name": "Forma Bestial",
+        "text": "Uma vez por combate, ao atingir 1/3 da Vida, transforma-se por 3 rodadas. Não pode cair abaixo de 1 Vida e seu kit vira uma única carta Garras e Presas. Depois, o kit normal retorna."
+      },
+      "pool": [
+        "ent_ragnar_kaiju_invocar_isabella",
+        "ent_ragnar_kaiju_invocar_marina",
+        "ent_ragnar_kaiju_invocar_aurelia",
+        "ent_ragnar_kaiju_invocar_gaia",
+        "ent_ragnar_kaiju_invocar_lucia",
+        "ent_ragnar_kaiju_invocar_nyx",
+        "ent_ragnar_kaiju_invocar_celeste",
+        "ent_ragnar_kaiju_garras_e_presas",
+        "ent_ragnar_kaiju_sentidos_agucados"
+      ],
+      "cards": [
+        "ent_ragnar_kaiju_invocar_isabella",
+        "ent_ragnar_kaiju_invocar_marina",
+        "ent_ragnar_kaiju_invocar_aurelia",
+        "ent_ragnar_kaiju_invocar_gaia",
+        "ent_ragnar_kaiju_invocar_lucia",
+        "ent_ragnar_kaiju_invocar_nyx",
+        "ent_ragnar_kaiju_invocar_celeste",
+        "ent_ragnar_kaiju_garras_e_presas",
+        "ent_ragnar_kaiju_sentidos_agucados"
+      ],
+      "iniciais": [
+        "ent_ragnar_kaiju_invocar_isabella",
+        "ent_ragnar_kaiju_invocar_marina",
+        "ent_ragnar_kaiju_invocar_aurelia",
+        "ent_ragnar_kaiju_invocar_gaia",
+        "ent_ragnar_kaiju_invocar_lucia",
+        "ent_ragnar_kaiju_invocar_nyx",
+        "ent_ragnar_kaiju_invocar_celeste",
+        "ent_ragnar_kaiju_garras_e_presas",
+        "ent_ragnar_kaiju_sentidos_agucados"
+      ],
+      "evoluidas": [],
+      "melhoradas": [
+        "ent_ragnar_kaiju_invocar_isabella_plus",
+        "ent_ragnar_kaiju_invocar_marina_plus",
+        "ent_ragnar_kaiju_invocar_aurelia_plus",
+        "ent_ragnar_kaiju_invocar_gaia_plus",
+        "ent_ragnar_kaiju_invocar_lucia_plus",
+        "ent_ragnar_kaiju_invocar_nyx_plus",
+        "ent_ragnar_kaiju_invocar_celeste_plus",
+        "ent_ragnar_kaiju_garras_e_presas_plus",
+        "ent_ragnar_kaiju_sentidos_agucados_plus"
+      ],
+      "desvantagem": "ent_ragnar_kaiju_desvantagem_erro_terrivel",
+      "grupos": [
+        "Invocador",
+        "Feral",
+        "Elemental"
+      ],
+      "biografia": "Ragnar Kaiju chama sete elementais e, perto da morte, assume uma forma de pantera monstruosa.",
+      "woman": 0,
+      "man": 4
     }
   },
   "cards": {
@@ -3491,7 +3875,12 @@
         ],
         [
           "status",
-          "burn",
+          "wounded",
+          "1"
+        ],
+        [
+          "status",
+          "weak",
           "1"
         ]
       ],
@@ -3551,7 +3940,12 @@
         ],
         [
           "status",
-          "burn",
+          "wounded",
+          "2"
+        ],
+        [
+          "status",
+          "weak",
           "2"
         ]
       ],
@@ -3670,11 +4064,6 @@
       "target": "SELF",
       "actions": [
         [
-          "self_status",
-          "unleashed",
-          "2"
-        ],
-        [
           "draw",
           "1"
         ]
@@ -3707,7 +4096,12 @@
         ],
         [
           "status",
-          "burn",
+          "wounded",
+          "1"
+        ],
+        [
+          "status",
+          "weak",
           "1"
         ]
       ],
@@ -3770,7 +4164,12 @@
         ],
         [
           "status",
-          "burn",
+          "wounded",
+          "2"
+        ],
+        [
+          "status",
+          "weak",
           "2"
         ],
         [
@@ -4344,11 +4743,6 @@
         [
           "hit",
           "10"
-        ],
-        [
-          "status",
-          "vulnerable",
-          "1"
         ]
       ],
       "reach": true,
@@ -4658,11 +5052,6 @@
           "status",
           "marked",
           "2"
-        ],
-        [
-          "status",
-          "vulnerable",
-          "1"
         ]
       ],
       "reach": true,
@@ -5148,11 +5537,6 @@
         [
           "status",
           "bind",
-          "1"
-        ],
-        [
-          "status",
-          "vulnerable",
           "1"
         ]
       ],
@@ -5779,13 +6163,7 @@
       "owner": "ent_evelyn_graves",
       "class": "ESTADO",
       "target": "ENEMY",
-      "actions": [
-        [
-          "status",
-          "banished",
-          "1"
-        ]
-      ],
+      "actions": [],
       "reach": true,
       "stat": "power",
       "rarity": "RARE",
@@ -5811,11 +6189,6 @@
         [
           "hit",
           "0"
-        ],
-        [
-          "status",
-          "vulnerable",
-          "1"
         ]
       ],
       "reach": true,
@@ -5903,11 +6276,6 @@
         [
           "hit",
           "8"
-        ],
-        [
-          "status",
-          "banished",
-          "1"
         ],
         [
           "exhaust"
@@ -6004,7 +6372,7 @@
           "5"
         ],
         [
-          "bonus_block",
+          "bonus_defense",
           "1"
         ]
       ],
@@ -6211,11 +6579,6 @@
           "10"
         ],
         [
-          "status",
-          "vulnerable",
-          "1"
-        ],
-        [
           "exhaust"
         ]
       ],
@@ -6298,11 +6661,6 @@
       "class": "ESTADO",
       "target": "SELF",
       "actions": [
-        [
-          "self_status",
-          "portal",
-          "1"
-        ],
         [
           "draw",
           "1"
@@ -6390,11 +6748,6 @@
       "class": "ESTADO",
       "target": "ENEMY",
       "actions": [
-        [
-          "status",
-          "drop",
-          "1"
-        ],
         [
           "draw",
           "1"
@@ -6485,11 +6838,6 @@
         [
           "hit",
           "0"
-        ],
-        [
-          "status",
-          "banished",
-          "1"
         ]
       ],
       "reach": true,
@@ -7116,11 +7464,6 @@
       "actions": [
         [
           "status",
-          "vulnerable",
-          "2"
-        ],
-        [
-          "status",
           "weak",
           "1"
         ]
@@ -7397,13 +7740,7 @@
       "owner": "ent_leona",
       "class": "ESTADO",
       "target": "ENEMY_ROW",
-      "actions": [
-        [
-          "status",
-          "corrupted",
-          "1"
-        ]
-      ],
+      "actions": [],
       "reach": true,
       "stat": "power",
       "rarity": "EPIC",
@@ -8193,13 +8530,7 @@
       "owner": "ent_mingau_o_feiticeiro",
       "class": "ESTADO",
       "target": "ENEMY",
-      "actions": [
-        [
-          "status",
-          "berserk_enemy",
-          "1"
-        ]
-      ],
+      "actions": [],
       "reach": true,
       "stat": "power",
       "rarity": "COMMON",
@@ -8256,11 +8587,6 @@
         [
           "hit",
           "0"
-        ],
-        [
-          "status",
-          "vulnerable",
-          "1"
         ]
       ],
       "reach": true,
@@ -8509,7 +8835,12 @@
         ],
         [
           "status",
-          "burn",
+          "wounded",
+          "1"
+        ],
+        [
+          "status",
+          "weak",
           "1"
         ]
       ],
@@ -9187,13 +9518,7 @@
       "owner": "ent_pesadelo_vivo",
       "class": "ESTADO",
       "target": "ENEMY",
-      "actions": [
-        [
-          "status",
-          "vulnerable",
-          "2"
-        ]
-      ],
+      "actions": [],
       "reach": true,
       "stat": "attack",
       "rarity": "RARE",
@@ -9279,11 +9604,6 @@
         [
           "hit",
           "10"
-        ],
-        [
-          "status",
-          "banished",
-          "1"
         ],
         [
           "exhaust"
@@ -9490,13 +9810,7 @@
       "owner": "ent_pietro_caos",
       "class": "ESTADO",
       "target": "ALL_ENEMIES",
-      "actions": [
-        [
-          "status",
-          "vulnerable",
-          "1"
-        ]
-      ],
+      "actions": [],
       "reach": true,
       "stat": "attack",
       "rarity": "RARE",
@@ -9583,11 +9897,6 @@
         [
           "hit",
           "10"
-        ],
-        [
-          "status",
-          "corrupted",
-          "1"
         ],
         [
           "exhaust"
@@ -9833,11 +10142,6 @@
         [
           "hit",
           "0"
-        ],
-        [
-          "status",
-          "vulnerable",
-          "1"
         ]
       ],
       "reach": false,
@@ -10047,7 +10351,7 @@
           "0"
         ],
         [
-          "bonus_block",
+          "bonus_defense",
           "1"
         ]
       ],
@@ -10824,7 +11128,7 @@
       "unlock": "progression",
       "exhaust": false,
       "gain": 2,
-      "text": "Atento 2: ignora desvantagem de arquétipo/tipo e pode ferir Invulnerável.",
+      "text": "Atento 2: ignora desvantagem de arquétipo/tipo e pode atingir Oculto.",
       "tier": "evoluida",
       "anim_self": [
         "Neutral2"
@@ -11170,7 +11474,7 @@
       "unlock": "melhorada",
       "exhaust": false,
       "gain": 2,
-      "text": "Atento 2: ignora desvantagem de arquétipo/tipo e pode ferir Invulnerável. · Melhorada (+).",
+      "text": "Atento 2: ignora desvantagem de arquétipo/tipo e pode atingir Oculto. · Melhorada (+).",
       "tier": "melhorada",
       "melhorada_de": "ent_alyssa_wine_super_sentidos",
       "chrome_3d": true,
@@ -15087,7 +15391,7 @@
       "unlock": "progression",
       "exhaust": false,
       "gain": 2,
-      "text": "Atento 2: ignora desvantagem de arquétipo/tipo e pode ferir Invulnerável.",
+      "text": "Atento 2: ignora desvantagem de arquétipo/tipo e pode atingir Oculto.",
       "tier": "evoluida",
       "anim_self": [
         "Neutral2"
@@ -15116,7 +15420,7 @@
       "unlock": "melhorada",
       "exhaust": false,
       "gain": 2,
-      "text": "Atento 2: ignora desvantagem de arquétipo/tipo e pode ferir Invulnerável. · Melhorada (+).",
+      "text": "Atento 2: ignora desvantagem de arquétipo/tipo e pode atingir Oculto. · Melhorada (+).",
       "tier": "melhorada",
       "anim_self": [
         "Special1"
@@ -15455,6 +15759,825 @@
       ],
       "anim_timing": "parallel",
       "shared_pool": true
+    },
+    "ent_ragnar_kaiju_minion_isabella_golpe": {
+      "id": "ent_ragnar_kaiju_minion_isabella_golpe",
+      "name": "Toque de fogo",
+      "owner": "ent_ragnar_kaiju_minion_isabella",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "HitSP1"
+      ],
+      "anim_timing": "parallel",
+      "text": "Impacto elemental de Isabella."
+    },
+    "ent_ragnar_kaiju_invocar_isabella": {
+      "id": "ent_ragnar_kaiju_invocar_isabella",
+      "name": "Invocar Isabella",
+      "owner": "ent_ragnar_kaiju",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "summon_unique",
+          "ent_ragnar_kaiju_minion_isabella",
+          "99"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "RARE",
+      "unlock": "starting",
+      "exhaust": false,
+      "cost": 4,
+      "tier": "inicial",
+      "anim_self": [
+        "summon"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel",
+      "text": "Custo 4 INI. Invoca Isabella, Elemental de fogo. Se ela já estiver em campo: +2 INI.",
+      "ragnar_summon": true
+    },
+    "ent_ragnar_kaiju_invocar_isabella_plus": {
+      "id": "ent_ragnar_kaiju_invocar_isabella_plus",
+      "name": "Invocar Isabella+",
+      "owner": "ent_ragnar_kaiju",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "summon_unique",
+          "ent_ragnar_kaiju_minion_isabella",
+          "99"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "RARE",
+      "unlock": "melhorada",
+      "exhaust": false,
+      "cost": 4,
+      "tier": "melhorada",
+      "anim_self": [
+        "summon"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel",
+      "text": "Custo 4 INI. Invoca Isabella com Forte e Resistente. Se ela já estiver em campo: +2 INI. · Melhorada (+).",
+      "melhorada_de": "ent_ragnar_kaiju_invocar_isabella",
+      "chrome_3d": true,
+      "summon_blessed": true,
+      "ragnar_summon": true
+    },
+    "ent_ragnar_kaiju_minion_marina_golpe": {
+      "id": "ent_ragnar_kaiju_minion_marina_golpe",
+      "name": "Toque de água",
+      "owner": "ent_ragnar_kaiju_minion_marina",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "HitSP1"
+      ],
+      "anim_timing": "parallel",
+      "text": "Impacto elemental de Marina."
+    },
+    "ent_ragnar_kaiju_invocar_marina": {
+      "id": "ent_ragnar_kaiju_invocar_marina",
+      "name": "Invocar Marina",
+      "owner": "ent_ragnar_kaiju",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "summon_unique",
+          "ent_ragnar_kaiju_minion_marina",
+          "99"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "RARE",
+      "unlock": "starting",
+      "exhaust": false,
+      "cost": 4,
+      "tier": "inicial",
+      "anim_self": [
+        "summon"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel",
+      "text": "Custo 4 INI. Invoca Marina, Elemental de água. Se ela já estiver em campo: +2 INI.",
+      "ragnar_summon": true
+    },
+    "ent_ragnar_kaiju_invocar_marina_plus": {
+      "id": "ent_ragnar_kaiju_invocar_marina_plus",
+      "name": "Invocar Marina+",
+      "owner": "ent_ragnar_kaiju",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "summon_unique",
+          "ent_ragnar_kaiju_minion_marina",
+          "99"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "RARE",
+      "unlock": "melhorada",
+      "exhaust": false,
+      "cost": 4,
+      "tier": "melhorada",
+      "anim_self": [
+        "summon"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel",
+      "text": "Custo 4 INI. Invoca Marina com Forte e Resistente. Se ela já estiver em campo: +2 INI. · Melhorada (+).",
+      "melhorada_de": "ent_ragnar_kaiju_invocar_marina",
+      "chrome_3d": true,
+      "summon_blessed": true,
+      "ragnar_summon": true
+    },
+    "ent_ragnar_kaiju_minion_aurelia_golpe": {
+      "id": "ent_ragnar_kaiju_minion_aurelia_golpe",
+      "name": "Toque de ar",
+      "owner": "ent_ragnar_kaiju_minion_aurelia",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ]
+      ],
+      "reach": true,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "HitSP1"
+      ],
+      "anim_timing": "parallel",
+      "text": "Impacto elemental de Aurélia."
+    },
+    "ent_ragnar_kaiju_invocar_aurelia": {
+      "id": "ent_ragnar_kaiju_invocar_aurelia",
+      "name": "Invocar Aurélia",
+      "owner": "ent_ragnar_kaiju",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "summon_unique",
+          "ent_ragnar_kaiju_minion_aurelia",
+          "99"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "RARE",
+      "unlock": "starting",
+      "exhaust": false,
+      "cost": 4,
+      "tier": "inicial",
+      "anim_self": [
+        "summon"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel",
+      "text": "Custo 4 INI. Invoca Aurélia, Elemental de ar. Se ela já estiver em campo: +2 INI.",
+      "ragnar_summon": true
+    },
+    "ent_ragnar_kaiju_invocar_aurelia_plus": {
+      "id": "ent_ragnar_kaiju_invocar_aurelia_plus",
+      "name": "Invocar Aurélia+",
+      "owner": "ent_ragnar_kaiju",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "summon_unique",
+          "ent_ragnar_kaiju_minion_aurelia",
+          "99"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "RARE",
+      "unlock": "melhorada",
+      "exhaust": false,
+      "cost": 4,
+      "tier": "melhorada",
+      "anim_self": [
+        "summon"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel",
+      "text": "Custo 4 INI. Invoca Aurélia com Forte e Resistente. Se ela já estiver em campo: +2 INI. · Melhorada (+).",
+      "melhorada_de": "ent_ragnar_kaiju_invocar_aurelia",
+      "chrome_3d": true,
+      "summon_blessed": true,
+      "ragnar_summon": true
+    },
+    "ent_ragnar_kaiju_minion_gaia_golpe": {
+      "id": "ent_ragnar_kaiju_minion_gaia_golpe",
+      "name": "Toque de terra",
+      "owner": "ent_ragnar_kaiju_minion_gaia",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "HitSP1"
+      ],
+      "anim_timing": "parallel",
+      "text": "Impacto elemental de Gaia."
+    },
+    "ent_ragnar_kaiju_invocar_gaia": {
+      "id": "ent_ragnar_kaiju_invocar_gaia",
+      "name": "Invocar Gaia",
+      "owner": "ent_ragnar_kaiju",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "summon_unique",
+          "ent_ragnar_kaiju_minion_gaia",
+          "99"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "RARE",
+      "unlock": "starting",
+      "exhaust": false,
+      "cost": 4,
+      "tier": "inicial",
+      "anim_self": [
+        "summon"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel",
+      "text": "Custo 4 INI. Invoca Gaia, Elemental de terra. Se ela já estiver em campo: +2 INI.",
+      "ragnar_summon": true
+    },
+    "ent_ragnar_kaiju_invocar_gaia_plus": {
+      "id": "ent_ragnar_kaiju_invocar_gaia_plus",
+      "name": "Invocar Gaia+",
+      "owner": "ent_ragnar_kaiju",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "summon_unique",
+          "ent_ragnar_kaiju_minion_gaia",
+          "99"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "RARE",
+      "unlock": "melhorada",
+      "exhaust": false,
+      "cost": 4,
+      "tier": "melhorada",
+      "anim_self": [
+        "summon"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel",
+      "text": "Custo 4 INI. Invoca Gaia com Forte e Resistente. Se ela já estiver em campo: +2 INI. · Melhorada (+).",
+      "melhorada_de": "ent_ragnar_kaiju_invocar_gaia",
+      "chrome_3d": true,
+      "summon_blessed": true,
+      "ragnar_summon": true
+    },
+    "ent_ragnar_kaiju_minion_lucia_golpe": {
+      "id": "ent_ragnar_kaiju_minion_lucia_golpe",
+      "name": "Toque de luz",
+      "owner": "ent_ragnar_kaiju_minion_lucia",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ]
+      ],
+      "reach": true,
+      "stat": "power",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "HitSP1"
+      ],
+      "anim_timing": "parallel",
+      "text": "Impacto elemental de Lúcia."
+    },
+    "ent_ragnar_kaiju_invocar_lucia": {
+      "id": "ent_ragnar_kaiju_invocar_lucia",
+      "name": "Invocar Lúcia",
+      "owner": "ent_ragnar_kaiju",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "summon_unique",
+          "ent_ragnar_kaiju_minion_lucia",
+          "99"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "RARE",
+      "unlock": "starting",
+      "exhaust": false,
+      "cost": 4,
+      "tier": "inicial",
+      "anim_self": [
+        "summon"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel",
+      "text": "Custo 4 INI. Invoca Lúcia, Elemental de luz. Se ela já estiver em campo: +2 INI.",
+      "ragnar_summon": true
+    },
+    "ent_ragnar_kaiju_invocar_lucia_plus": {
+      "id": "ent_ragnar_kaiju_invocar_lucia_plus",
+      "name": "Invocar Lúcia+",
+      "owner": "ent_ragnar_kaiju",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "summon_unique",
+          "ent_ragnar_kaiju_minion_lucia",
+          "99"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "RARE",
+      "unlock": "melhorada",
+      "exhaust": false,
+      "cost": 4,
+      "tier": "melhorada",
+      "anim_self": [
+        "summon"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel",
+      "text": "Custo 4 INI. Invoca Lúcia com Forte e Resistente. Se ela já estiver em campo: +2 INI. · Melhorada (+).",
+      "melhorada_de": "ent_ragnar_kaiju_invocar_lucia",
+      "chrome_3d": true,
+      "summon_blessed": true,
+      "ragnar_summon": true
+    },
+    "ent_ragnar_kaiju_minion_nyx_golpe": {
+      "id": "ent_ragnar_kaiju_minion_nyx_golpe",
+      "name": "Toque de trevas",
+      "owner": "ent_ragnar_kaiju_minion_nyx",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "HitSP1"
+      ],
+      "anim_timing": "parallel",
+      "text": "Impacto elemental de Nyx."
+    },
+    "ent_ragnar_kaiju_invocar_nyx": {
+      "id": "ent_ragnar_kaiju_invocar_nyx",
+      "name": "Invocar Nyx",
+      "owner": "ent_ragnar_kaiju",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "summon_unique",
+          "ent_ragnar_kaiju_minion_nyx",
+          "99"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "RARE",
+      "unlock": "starting",
+      "exhaust": false,
+      "cost": 4,
+      "tier": "inicial",
+      "anim_self": [
+        "summon"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel",
+      "text": "Custo 4 INI. Invoca Nyx, Elemental de trevas. Se ela já estiver em campo: +2 INI.",
+      "ragnar_summon": true
+    },
+    "ent_ragnar_kaiju_invocar_nyx_plus": {
+      "id": "ent_ragnar_kaiju_invocar_nyx_plus",
+      "name": "Invocar Nyx+",
+      "owner": "ent_ragnar_kaiju",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "summon_unique",
+          "ent_ragnar_kaiju_minion_nyx",
+          "99"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "RARE",
+      "unlock": "melhorada",
+      "exhaust": false,
+      "cost": 4,
+      "tier": "melhorada",
+      "anim_self": [
+        "summon"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel",
+      "text": "Custo 4 INI. Invoca Nyx com Forte e Resistente. Se ela já estiver em campo: +2 INI. · Melhorada (+).",
+      "melhorada_de": "ent_ragnar_kaiju_invocar_nyx",
+      "chrome_3d": true,
+      "summon_blessed": true,
+      "ragnar_summon": true
+    },
+    "ent_ragnar_kaiju_minion_celeste_golpe": {
+      "id": "ent_ragnar_kaiju_minion_celeste_golpe",
+      "name": "Toque de cósmico",
+      "owner": "ent_ragnar_kaiju_minion_celeste",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "0"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "HitSP1"
+      ],
+      "anim_timing": "parallel",
+      "text": "Impacto elemental de Celeste."
+    },
+    "ent_ragnar_kaiju_invocar_celeste": {
+      "id": "ent_ragnar_kaiju_invocar_celeste",
+      "name": "Invocar Celeste",
+      "owner": "ent_ragnar_kaiju",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "summon_unique",
+          "ent_ragnar_kaiju_minion_celeste",
+          "99"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "RARE",
+      "unlock": "starting",
+      "exhaust": false,
+      "cost": 4,
+      "tier": "inicial",
+      "anim_self": [
+        "summon"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel",
+      "text": "Custo 4 INI. Invoca Celeste, Elemental de cósmico. Se ela já estiver em campo: +2 INI.",
+      "ragnar_summon": true
+    },
+    "ent_ragnar_kaiju_invocar_celeste_plus": {
+      "id": "ent_ragnar_kaiju_invocar_celeste_plus",
+      "name": "Invocar Celeste+",
+      "owner": "ent_ragnar_kaiju",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "summon_unique",
+          "ent_ragnar_kaiju_minion_celeste",
+          "99"
+        ]
+      ],
+      "reach": false,
+      "stat": "power",
+      "rarity": "RARE",
+      "unlock": "melhorada",
+      "exhaust": false,
+      "cost": 4,
+      "tier": "melhorada",
+      "anim_self": [
+        "summon"
+      ],
+      "anim_target": [
+        "status"
+      ],
+      "anim_timing": "parallel",
+      "text": "Custo 4 INI. Invoca Celeste com Forte e Resistente. Se ela já estiver em campo: +2 INI. · Melhorada (+).",
+      "melhorada_de": "ent_ragnar_kaiju_invocar_celeste",
+      "chrome_3d": true,
+      "summon_blessed": true,
+      "ragnar_summon": true
+    },
+    "ent_ragnar_kaiju_garras_e_presas": {
+      "id": "ent_ragnar_kaiju_garras_e_presas",
+      "name": "Garras e Presas",
+      "owner": "ent_ragnar_kaiju",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "status",
+          "bleed",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "RARE",
+      "unlock": "starting",
+      "gain": 1,
+      "tier": "inicial",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "SlashSP1"
+      ],
+      "anim_timing": "parallel",
+      "text": "Impacto +1. Sangramento 1."
+    },
+    "ent_ragnar_kaiju_sentidos_agucados": {
+      "id": "ent_ragnar_kaiju_sentidos_agucados",
+      "name": "Sentidos Aguçados",
+      "owner": "ent_ragnar_kaiju",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "atento",
+          "2"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "EPIC",
+      "unlock": "starting",
+      "gain": 2,
+      "tier": "inicial",
+      "anim_self": [
+        "Special1"
+      ],
+      "anim_target": [
+        "debuff"
+      ],
+      "anim_timing": "parallel",
+      "text": "Atento 2: ignora desvantagem de arquétipo/tipo e pode atingir Oculto."
+    },
+    "ent_ragnar_kaiju_garras_ferais": {
+      "id": "ent_ragnar_kaiju_garras_ferais",
+      "name": "Garras e Presas · Feral",
+      "owner": "ent_ragnar_kaiju",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "2"
+        ],
+        [
+          "status",
+          "bleed",
+          "2"
+        ],
+        [
+          "status",
+          "wounded",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "EPIC",
+      "unlock": "special",
+      "gain": 1,
+      "tier": "especial",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "SlashSP1"
+      ],
+      "anim_timing": "parallel",
+      "text": "Forma Bestial. Impacto +2, Sangramento 2 e Ferido 1."
+    },
+    "ent_ragnar_kaiju_garras_e_presas_plus": {
+      "id": "ent_ragnar_kaiju_garras_e_presas_plus",
+      "name": "Garras e Presas+",
+      "owner": "ent_ragnar_kaiju",
+      "class": "ATTACK",
+      "target": "ENEMY",
+      "actions": [
+        [
+          "hit",
+          "1"
+        ],
+        [
+          "status",
+          "bleed",
+          "1"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "RARE",
+      "unlock": "melhorada",
+      "gain": 1,
+      "tier": "melhorada",
+      "anim_self": [
+        "Special3"
+      ],
+      "anim_target": [
+        "SlashSP1"
+      ],
+      "anim_timing": "parallel",
+      "text": "Impacto +1. Sangramento 1. · Melhorada (+).",
+      "melhorada_de": "ent_ragnar_kaiju_garras_e_presas",
+      "chrome_3d": true
+    },
+    "ent_ragnar_kaiju_sentidos_agucados_plus": {
+      "id": "ent_ragnar_kaiju_sentidos_agucados_plus",
+      "name": "Sentidos Aguçados+",
+      "owner": "ent_ragnar_kaiju",
+      "class": "ESTADO",
+      "target": "SELF",
+      "actions": [
+        [
+          "self_status",
+          "atento",
+          "2"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "EPIC",
+      "unlock": "melhorada",
+      "gain": 2,
+      "tier": "melhorada",
+      "anim_self": [
+        "Special1"
+      ],
+      "anim_target": [
+        "debuff"
+      ],
+      "anim_timing": "parallel",
+      "text": "Atento 2: ignora desvantagem de arquétipo/tipo e pode atingir Oculto. · Melhorada (+).",
+      "melhorada_de": "ent_ragnar_kaiju_sentidos_agucados",
+      "chrome_3d": true
+    },
+    "ent_ragnar_kaiju_desvantagem_erro_terrivel": {
+      "id": "ent_ragnar_kaiju_desvantagem_erro_terrivel",
+      "name": "Erro Terrível",
+      "owner": "ent_ragnar_kaiju",
+      "class": "DESVANTAGEM",
+      "target": "SELF",
+      "actions": [
+        [
+          "instant"
+        ]
+      ],
+      "reach": false,
+      "stat": "attack",
+      "rarity": "COMMON",
+      "unlock": "starting",
+      "gain": 0,
+      "tier": "desvantagem",
+      "instant": true,
+      "passive_like": true,
+      "anim_self": [
+        "ice"
+      ],
+      "anim_target": [
+        "blow"
+      ],
+      "anim_timing": "parallel",
+      "text": "Fora da Forma Bestial, ao atacar ou ser atacado sem Alcance por personagem com gênero “woman”, recebe Atordoado 1."
     }
   }
 }

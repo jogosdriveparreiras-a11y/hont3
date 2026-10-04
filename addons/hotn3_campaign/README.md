@@ -14,7 +14,9 @@ O módulo estende `game/GameRoot.gd`. Usa `BattleState` e `PackBridge` para inic
 
 Após cada vitória, o módulo oferece três cartas ainda não possuídas, priorizando uma Evoluída de cada personagem que lutou. Uma escolha entra em `owned_cards` pelo mesmo método do jogo e no mesmo save `user://hotn3.cfg`. Quando um herói já possui todas as cartas elegíveis, outras cartas novas dos participantes preenchem as três opções. Caso a coleção inteira dos três esteja esgotada, a história prossegue sem uma concessão repetida. Derrotas retornam à seleção do time sem premiar cartas.
 
-O roteiro editável em `story.json` contém as cenas de abertura, dois intervalos, o epílogo e três escolhas com consequências no diálogo final. A interface mostra retratos do elenco, escurece o personagem que não está falando, nome do orador, texto gradual, música distinta por capítulo, chuva/cinzas/partículas de eclipse e diálogos que mencionam Alyssa e os dois companheiros selecionados. O save independente `user://hotn3_campaign.cfg` guarda capítulo, escolhas, equipe e ofertas de carta para retomar entre batalhas. Uma luta interrompida é reiniciada desde a preparação.
+O roteiro editável em `story.json` é um grafo: qualquer quantidade de cenas pode levar a qualquer outra por escolha ou salto. Uma batalha declara sua missão, os personagens fixos, o tamanho do grupo, o pool de inimigos opcional, a próxima cena e o número de ofertas de carta. O jogador preenche as vagas com personagens possuídos que não pertencem ao pool inimigo do encontro. Ao vencer, escolhe entre Evoluídas ainda não possuídas e Melhoradas das cartas-base que já possui. A interface mostra retratos do elenco, escurece o personagem que não está falando, nome do orador, texto gradual, música distinta por cena, chuva/cinzas/partículas de eclipse e diálogos que mencionam os aliados selecionados. O save independente `user://hotn3_campaign.cfg` guarda cena, escolhas, equipe e ofertas de carta para retomar entre batalhas.
+
+Use `tools/vn_editor.html` para montar e pré-visualizar o roteiro sem editar JSON manualmente. Ele importa e exporta o `story.json` compatível com este módulo.
 
 ## Verificar
 

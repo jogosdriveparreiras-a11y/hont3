@@ -71,7 +71,7 @@ func clear_actors() -> void:
 	shake_time = 0.0
 
 func show_action(kind: String, source_id: int, target_id: int, amount: int) -> void:
-	var cues := {"draw": "draw", "redraw": "redraw", "cast": "cast", "counter": "cast", "hit": "hit", "block": "block", "guard": "block", "heal": "heal", "status": "status", "death": "death", "resist": "resist", "immune": "resist", "move": "move", "transform": "cast", "ini_gain": "heal"}
+	var cues := {"draw": "draw", "redraw": "redraw", "cast": "cast", "counter": "cast", "hit": "hit", "heal": "heal", "status": "status", "death": "death", "resist": "resist", "immune": "resist", "move": "move", "transform": "cast", "ini_gain": "heal"}
 	if cues.has(kind): sound.cue(cues[kind])
 	if kind == "draw" or kind == "redraw": return
 	if kind == "transform":
@@ -113,8 +113,8 @@ func show_action(kind: String, source_id: int, target_id: int, amount: int) -> v
 			_float_heal(target_id, amount)
 		_burst(target_id, Color("82d9af"))
 		_animate_sprite(target_id, "heal")
-	elif kind in ["block", "guard", "immune", "resist"]:
-		_float_text(target_id, "RESISTIU" if kind in ["resist", "immune"] else "BLOQUEIO", Color("a9d5f4"))
+	elif kind in ["immune", "resist"]:
+		_float_text(target_id, "RESISTIU", Color("a9d5f4"))
 		_animate_sprite(target_id, "guard")
 	elif kind == "status":
 		_burst(target_id, Color("ba9dea"))
@@ -147,8 +147,8 @@ func show_action(kind: String, source_id: int, target_id: int, amount: int) -> v
 		_play_preset("heal", target_id)
 	elif kind in ["cast", "counter"]:
 		_play_preset("cast", source_id)
-	elif kind in ["block", "guard"]:
-		_play_preset("guard", target_id)
+	elif kind in ["immune", "resist"]:
+		_play_preset("resist", target_id)
 
 func _animate_sprite(id: int, kind: String) -> void:
 	if not sprites.has(id): return

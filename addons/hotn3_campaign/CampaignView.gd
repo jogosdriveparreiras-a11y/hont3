@@ -202,15 +202,23 @@ func show_choices(options: Array) -> void:
 func _select_option(option: Dictionary) -> void:
 	option_selected.emit(option)
 
-func show_team(roster: Dictionary, selection: Array[String], forbidden: Dictionary, battle_name: String) -> void:
+func show_team(roster: Dictionary, selection: Array[String], forbidden: Dictionary, battle_name: String, required_party: Array = ["ent_alyssa_wine"], party_size: int = 3) -> void:
 	_roster = roster
 	_forbidden = forbidden
+	set_meta("required_party", required_party)
+	set_meta("party_size", party_size)
 	chosen = selection.duplicate()
-	if not chosen.has("ent_alyssa_wine"): chosen.push_front("ent_alyssa_wine")
+	for raw in required_party:
+		var id := str(raw)
+		if not chosen.has(id): chosen.push_front(id)
 	_draw_team(battle_name)
 
 func _draw_team(battle_name: String) -> void:
-	_clear_actions("Equipe · %s" % battle_name, "Alyssa Wine é obrigatória. Escolha mais duas pessoas. Você pode mudar a equipe antes de cada luta.")
+	var required: Array = get_meta("required_party", [])
+	var party_size := int(get_meta("party_size", 3))
+	var names := PackedStringArray()
+	for id in required: names.append(str(_roster.get(str(id), {}).get("name", id)))
+	_clear_actions("Equipe · %s" % battle_name, "%s é obrigatório. Complete %d vaga(s) com personagens da sua coleção." % [", ".join(names), party_size - required.size()])
 	var selected_names := PackedStringArray()
 	for id in chosen: selected_names.append(str(_roster.get(id, {}).get("name", id)))
 	action_list.add_child(_label("Na equipe: " + ", ".join(selected_names), 18, Color("d4c7e4")))
@@ -228,25 +236,27 @@ func _draw_team(battle_name: String) -> void:
 	for id in ids:
 		var hero: Dictionary = _roster[id]
 		var entry := _button(("✓ " if chosen.has(id) else "+ ") + str(hero.get("name", id)) + " · %d Vida" % int(hero.get("hp", 0)), _toggle_team_member.bind(id))
-		entry.disabled = id == "ent_alyssa_wine"
+		entry.disabled = required.has(id)
 		all.add_child(entry)
 	action_list.add_child(_label("Adversários dos três capítulos não podem entrar na equipe.", 15, Color("d9a29b")))
-	var confirm := _button("Entrar na batalha · %d/3" % chosen.size(), _confirm_team)
-	confirm.disabled = chosen.size() != 3
+	var confirm := _button("Entrar na batalha · %d/%d" % [chosen.size(), party_size], _confirm_team)
+	confirm.disabled = chosen.size() != party_size
 	action_list.add_child(confirm)
 	action_list.add_child(_button("Voltar ao menu", _exit))
 	text_panel.hide()
 
 func _toggle_team_member(id: String) -> void:
-	if id == "ent_alyssa_wine" or _forbidden.has(id): return
+	var required: Array = get_meta("required_party", [])
+	var party_size := int(get_meta("party_size", 3))
+	if required.has(id) or _forbidden.has(id): return
 	if chosen.has(id):
 		chosen.erase(id)
-	elif chosen.size() < 3:
+	elif chosen.size() < party_size:
 		chosen.append(id)
 	_draw_team(str(get_meta("battle_name", "Missão")))
 
 func _confirm_team() -> void:
-	if chosen.size() == 3: team_selected.emit(chosen.duplicate())
+	if chosen.size() == int(get_meta("party_size", 3)): team_selected.emit(chosen.duplicate())
 
 func show_reward(options: Array) -> void:
 	_clear_actions("Escolha uma carta", "Vitória. Uma carta nova entra na coleção; as outras duas continuam disponíveis em missões futuras.")

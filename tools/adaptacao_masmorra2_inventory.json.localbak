@@ -1,0 +1,4905 @@
+{
+  "generated": "2026-09-29T16:13:42",
+  "timezone": "America/Sao_Paulo",
+  "sources": {
+    "xlsx": "masmorra2.xlsx",
+    "h4": "HERORGASM 4 (DOCX 5e2e2179…)",
+    "godot_a": "HotN Godot Edition A (DOCX aa573632…)",
+    "godot_b": "HotN Mecânicas (DOCX 964fd7ef…)",
+    "h5": "HERORGASM 5 (DOCX e771f0d4…)"
+  },
+  "extraction_counts": {
+    "lista_personagens": 21,
+    "fichas3_blocks": 8,
+    "manobras_labels": 16,
+    "inimigos_xlsx": 46,
+    "h4_race_table_names": 29,
+    "h4_students": 22,
+    "h4_villains": 6,
+    "godot_a_paras": 937,
+    "godot_b_paras": 763,
+    "h5_impura_lines": 20,
+    "h5_enemies_table": 6,
+    "h5_char_tables": 4,
+    "h5_narrative_elites": 7
+  },
+  "total_entities": 141,
+  "entities": [
+    {
+      "name": "Isabella Lancaster",
+      "aliases": [
+        "Aluna de Magia"
+      ],
+      "sources": [
+        "docx:HotN Godot Edition A (DOCX aa573632…)",
+        "docx:HotN Mecânicas (DOCX 964fd7ef…)"
+      ],
+      "role": "playable",
+      "alterego": "Aluna de Magia",
+      "stats": {
+        "nivel": "Nível 10",
+        "attrs_pct": "VID 75 VIG 125 IMP 75 ARM 75 POD 125 ESC 125 VEL 100 PRE 125",
+        "raca": "Meio-Sangue"
+      },
+      "kits": [
+        {
+          "source": "docx:HotN Mecânicas (DOCX 964fd7ef…)",
+          "manobras": [
+            "Oral Irresistível",
+            "A Magia de Sangue",
+            "Oral Irresistível",
+            "Oral Especialista",
+            "Oral Arrebatador",
+            "Fase Adulta",
+            "Primeiro Ano"
+          ]
+        }
+      ],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Oral Irresistível",
+          "tipo": "Manobra",
+          "carta_sugerida": "Oral Irresistível",
+          "classe": "ESTADO",
+          "efeitos": "Atordoado → stun",
+          "flags": "—",
+          "status": "proposta (HotN Godot)"
+        },
+        {
+          "name": "A Magia de Sangue",
+          "tipo": "Manobra",
+          "carta_sugerida": "A Magia de Sangue",
+          "classe": "ATTACK",
+          "efeitos": "Crash e Difícil",
+          "flags": "—",
+          "status": "proposta (HotN Godot)"
+        },
+        {
+          "name": "Oral Especialista",
+          "tipo": "Manobra",
+          "carta_sugerida": "Oral Especialista",
+          "classe": "ESTADO",
+          "efeitos": "custo INI",
+          "flags": "—",
+          "status": "proposta (HotN Godot)"
+        },
+        {
+          "name": "Oral Arrebatador",
+          "tipo": "Manobra",
+          "carta_sugerida": "Oral Arrebatador",
+          "classe": "ESTADO",
+          "efeitos": "+rounds ou área",
+          "flags": "—",
+          "status": "proposta (HotN Godot)"
+        },
+        {
+          "name": "Fase Adulta",
+          "tipo": "Postura",
+          "carta_sugerida": "Fase Adulta",
+          "classe": "ESTADO",
+          "efeitos": "Postura/Skin: Buff maior parâmetros",
+          "flags": "—",
+          "status": "proposta (HotN Godot)"
+        },
+        {
+          "name": "Primeiro Ano",
+          "tipo": "Postura",
+          "carta_sugerida": "Primeiro Ano",
+          "classe": "ESTADO",
+          "efeitos": "Postura/Skin: Debuff parâmetros",
+          "flags": "—",
+          "status": "proposta (HotN Godot)"
+        },
+        {
+          "name": "Sede de Sangue",
+          "tipo": "Desvantagem",
+          "carta_sugerida": "Sede de Sangue",
+          "classe": "ESTADO",
+          "efeitos": "Após usar Magia de Sangue, recebe Frágil 1 ou perde Escudo",
+          "flags": "—",
+          "status": "proposta"
+        }
+      ],
+      "notes": "PERSONAGEM SEPARADA de Isabel/Impura. Isabella Lancaster = Aluna de Magia (HotN Godot), Meio-Sangue, magia de sangue / oral."
+    },
+    {
+      "name": "Akio\nAlexey\nMotzolop",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/raça"
+      ],
+      "role": "npc",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Alana\nHomem-Fera",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/raça"
+      ],
+      "role": "npc",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Alduin\nAlinhamento: Caótico e Maligno\nCodinome: Wyvern\nRaça: Monstro\nFraquezas: \nReputação: Herói (+6)\nAparência: Sedutor (+5)\nAtributos\nPRE 11 VID 15+20 IMP 10 ARM 14 POD 16 ESC 14 VEL 11\nManobras\nRegeneração\nEscudo de Asas\nGolpe de Calda\nBafo de Fogo\nVoo",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/alunos"
+      ],
+      "role": "playable",
+      "alterego": "",
+      "stats": {
+        "nivel": 20,
+        "attrs": "PRE 11 VID 15+20 IMP 10 ARM 14 POD 16 ESC 14 VEL 11"
+      },
+      "kits": [
+        {
+          "source": "docx:HERORGASM4",
+          "manobras": [
+            "Regeneração"
+          ]
+        }
+      ],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Regeneração",
+          "tipo": "DOCX",
+          "carta_sugerida": "Regeneração",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Alraune",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Alyssa",
+      "aliases": [],
+      "sources": [
+        "xlsx:FICHAS - Manobras"
+      ],
+      "role": "playable",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": true,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Alyssa Wine",
+      "aliases": [
+        "Titânio"
+      ],
+      "sources": [
+        "xlsx:Lista de Personagens",
+        "xlsx:Fichas 3",
+        "docx:HERORGASM5/fichas"
+      ],
+      "role": "playable",
+      "alterego": "Titânio",
+      "stats": {
+        "raca": "Humano",
+        "vida": "d8 2",
+        "velocidade": "7 passos"
+      },
+      "kits": [
+        {
+          "source": "xlsx:Fichas 3",
+          "manobras": [
+            "Garras e Presas",
+            "Bastão Retrátil",
+            "Escuridão",
+            "Premonição",
+            "A Filha Dele",
+            "Regeneração",
+            "Bastão Retrátil",
+            "Intelecto",
+            "Super-Sentidos: Imune Critico",
+            "Relâmpago",
+            "Tormenta"
+          ]
+        }
+      ],
+      "in_hotn3": true,
+      "suggested_cards": [
+        {
+          "name": "Garras e Presas",
+          "tipo": "1- Inicial",
+          "carta_sugerida": "Garras e Presas",
+          "classe": "ATTACK",
+          "efeitos": "Impacto, Ferido 1, Massivo 1",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Bastão Retrátil",
+          "tipo": "1- Inicial",
+          "carta_sugerida": "Bastão Retrátil",
+          "classe": "ATTACK",
+          "efeitos": "Impacto",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Escuridão",
+          "tipo": "1- Inicial",
+          "carta_sugerida": "Escuridão",
+          "classe": "ESTADO",
+          "efeitos": "Instantâneo, Sustentável",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Premonição",
+          "tipo": "1- Inicial",
+          "carta_sugerida": "Premonição",
+          "classe": "ESTADO",
+          "efeitos": "Escudo, Proteção 1, Prioridade",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "A Filha Dele",
+          "tipo": "1- Inicial",
+          "carta_sugerida": "A Filha Dele",
+          "classe": "ESTADO",
+          "efeitos": "Ações 1, Grátis",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Regeneração",
+          "tipo": "2- Evoluída",
+          "carta_sugerida": "Regeneração",
+          "classe": "ESTADO",
+          "efeitos": "Armadura, Escudo, Cura 1",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Intelecto",
+          "tipo": "2- Evoluída",
+          "carta_sugerida": "Intelecto",
+          "classe": "ESTADO",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Super-Sentidos: Imune Critico",
+          "tipo": "2- Evoluída",
+          "carta_sugerida": "Super-Sentidos: Imune Critico",
+          "classe": "ESTADO",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Relâmpago",
+          "tipo": "3- Melhoria",
+          "carta_sugerida": "Relâmpago",
+          "classe": "ATTACK",
+          "efeitos": "Massivo 2, Poder, Aquecimento, Final, Área 1",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Tormenta",
+          "tipo": "4- Desvantagem",
+          "carta_sugerida": "Tormenta",
+          "classe": "ESTADO",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Apagador\nHibiki\nDominika",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/raça"
+      ],
+      "role": "npc",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Arachne",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Adjacente 1",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Adjacente 1",
+          "classe": "ATTACK",
+          "efeitos": "Adjacente 1",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Aya Nakamura\nAdão Prime\nHomem-Fera",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/raça"
+      ],
+      "role": "npc",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Babli\nAlinhamento: Leal e Bondosa\nCodinome: Vibro\nRaça: Mutante\nFraquezas: \nIdentidade: Secreta (mas ainda não possui suit)\nReputação: Comum (+1)\nAparência: Levemente sedutora (+3)\nAtributos\nPRE 4 VID 6+8 IMP 4 ARM 5 POD 6 ESC 6 VEL 5\nManobras\nGolpe Sônico: Vibro pode utilizar o som para aumentar a potência de seus golpes físicos, criando uma onda sonora explosiva que causa dano adicional ao impacto.\nDisparo Sônico: Vibro pode concentrar ondas sonoras em um ponto e dispará-las como um projétil de alta velocidade. O impacto dessas ondas pode causar danos físicos nos alvos.\nVibração de Frequência: Vibro pode criar ondas sonoras de frequências específicas que afetam a mente ou o corpo de seus alvos, causando confusão, vertigem ou outros efeitos adversos.\nAssobio Distrativo: Vibro pode produzir um assobio de alta frequência que desorienta seus oponentes, tornando difícil para eles mirar e atacar com precisão.\nPropulsão Sonora: Vibro pode usar ondas sonoras para criar uma propulsão que a impulsiona pelo ar, permitindo que ela se mova rapidamente pelo campo de batalha.",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/alunos"
+      ],
+      "role": "playable",
+      "alterego": "",
+      "stats": {
+        "nivel": 8,
+        "attrs": "PRE 4 VID 6+8 IMP 4 ARM 5 POD 6 ESC 6 VEL 5"
+      },
+      "kits": [
+        {
+          "source": "docx:HERORGASM4",
+          "manobras": [
+            "Golpe Sônico"
+          ]
+        }
+      ],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Golpe Sônico",
+          "tipo": "DOCX",
+          "carta_sugerida": "Golpe Sônico",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Basil Darkheart\nAlinhamento: Leal e Neutro\nCodinome: Especialista\nRaça: Humano\nFraquezas: Nenhuma\nIdentidade: Secreta\nReputação: Herói (+6)\nAparência: Sedutor (+5)\nAtributos\nPRE 11 VID 8+16 IMP 11 ARM 11 POD 11 ESC 11 VEL 12\nManobras\nDuas espadas (Físico, Crítico, Duplo)\nEscopeta (Especial, Heroico, Rolar)\nSuper-Sentidos (Passivo, Pressão, Rolar)\nLeitura Corporal (Passivo, Superior, Esquiva)",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/alunos"
+      ],
+      "role": "playable",
+      "alterego": "",
+      "stats": {
+        "nivel": 16,
+        "attrs": "PRE 11 VID 8+16 IMP 11 ARM 11 POD 11 ESC 11 VEL 12"
+      },
+      "kits": [
+        {
+          "source": "docx:HERORGASM4",
+          "manobras": [
+            "Duas espadas (Físico, Crítico, Duplo)"
+          ]
+        }
+      ],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Duas espadas (Físico, Crítico, Duplo)",
+          "tipo": "DOCX",
+          "carta_sugerida": "Duas espadas (Físico, Crítico, Duplo)",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Basilisco",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Rápido 2",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Rápido 2",
+          "classe": "ATTACK",
+          "efeitos": "Rápido 2",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Bola de Ferro",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM5/narrativa"
+      ],
+      "role": "elite",
+      "alterego": "",
+      "stats": {
+        "note": "Elite; gangue vs Culto"
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Golpe de Ferro",
+          "tipo": "Elite",
+          "carta_sugerida": "Golpe de Ferro",
+          "classe": "ATTACK",
+          "efeitos": "Impacto pesado (proposta temática)",
+          "flags": "—",
+          "status": "proposta"
+        },
+        {
+          "name": "Tortura",
+          "tipo": "Elite",
+          "carta_sugerida": "Tortura",
+          "classe": "ATTACK",
+          "efeitos": "Aplica Ferido / Atordoado",
+          "flags": "—",
+          "status": "proposta"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Bonny\nAlinhamento: Neutra e Maligna\nCodinome: \nRaça: Monstro (Coelho - Al-mi'raj)\nFraquezas: Prata\nIdentidade: Pública\nReputação: Heroína Iniciante (+4)\nAparência: Muito Sedutora (+7)\nAtributos\nPRE 9 VID 12+12 IMP 11 ARM 9 POD 6 ESC 9 VEL 13\nManobras\nFeromônios (Físico, Crítico, Atordoar): Se o oponente faz um Ataque Físico, recebe Atordoado\nNove Vidas (Passivo, Superior, Esquiva): Se o oponente rolar um [1], não recebe dano\nSiga-me (Estado, Provocar): \nGarras Afiadas (Físico, Crítico, Ferir): \nSuper Salto: \nAudição e Olfato Superior: \nSuper Fecundidade:\nChutes de Coelho: habilidade de desferir chutes poderosos com suas pernas musculosas de coelho para causar dano físico de perto.\nFeromônios: habilidade de liberar feromônios para confundir e desorientar o oponente em combate de perto.\nReflexos: habilidade de se mover rapidamente e esquivar de ataques à distância.\nEscavação: habilidade de cavar rapidamente no solo ou em superfícies macias, permitindo que Marshmallow se mova rapidamente ou se esconda de inimigos.",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/vilões"
+      ],
+      "role": "elite",
+      "alterego": "",
+      "stats": {
+        "nivel": 15,
+        "attrs": "PRE 9 VID 12+12 IMP 11 ARM 9 POD 6 ESC 9 VEL 13"
+      },
+      "kits": [
+        {
+          "source": "docx:HERORGASM4/vilões",
+          "manobras": [
+            "Feromônios (Físico, Crítico, Atordoar)"
+          ]
+        }
+      ],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Feromônios (Físico, Crítico, Atordoar)",
+          "tipo": "DOCX",
+          "carta_sugerida": "Feromônios (Físico, Crítico, Atordoar)",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4 vilão)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Bruxa",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes",
+        "docx:HERORGASM5/narrativa"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4,
+        "note": "Vampira nas docas (narrativa H5); também lacaio na planilha"
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Combo 1",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Combo 1",
+          "classe": "ATTACK",
+          "efeitos": "Combo 1",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Bruxa\nNahia\nMarbas\nSabrina\nMãe",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/raça"
+      ],
+      "role": "npc",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Bugbear",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Tacabe",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Tacabe",
+          "classe": "ATTACK",
+          "efeitos": "Tacabe (Impacto, Dano 2)",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        },
+        {
+          "name": "Proteção 1",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Proteção 1",
+          "classe": "ATTACK",
+          "efeitos": "Proteção 1",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Capanga (Faca)",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM5/inimigos"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaios",
+        "vida": "1",
+        "passos": "5"
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Facada",
+          "tipo": "Lacaios",
+          "carta_sugerida": "Facada",
+          "classe": "ATTACK",
+          "efeitos": "Facada (Impacto, Dano 1, Ferido 1)",
+          "flags": "—",
+          "status": "proposta (H5 inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Capanga (Pistola)",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM5/inimigos"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaios",
+        "vida": "1",
+        "passos": "5"
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Pistola",
+          "tipo": "Lacaios",
+          "carta_sugerida": "Pistola",
+          "classe": "ATTACK",
+          "efeitos": "Pistola (Poder, Dano 1, Alcance 1)",
+          "flags": "—",
+          "status": "proposta (H5 inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Cavaleiro\nAxel\nBasil\nHendryk",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/raça"
+      ],
+      "role": "npc",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Chase Quinn\nAlinhamento: Neutro e Maligno\nCodinome: Patrulheiro Vermelho\nRaça: Andróide\nFraquezas: \nIdentidade: Secreta\nReputação: Herói iniciante (+4)\nAparência: Levemente assustador (+2)\nAtributos\nPRE 6 VID 9+14 IMP 8 ARM 10 POD 11 ESC 9 VEL 9\nManobras\nCorte Duplo (Físico, Crítico, Duplo)\nTiranossauro (Físico, Revanche, Recarga, Massivo, Ferir)\nBlade Blaster (Especial, Carga, Massivo)\nPower Sword:\nPower Suit:\nArma de Feixe: \nPower Moto:\nDormitório M",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/alunos"
+      ],
+      "role": "playable",
+      "alterego": "",
+      "stats": {
+        "nivel": 14,
+        "attrs": "PRE 6 VID 9+14 IMP 8 ARM 10 POD 11 ESC 9 VEL 9"
+      },
+      "kits": [
+        {
+          "source": "docx:HERORGASM4",
+          "manobras": [
+            "Corte Duplo (Físico, Crítico, Duplo)"
+          ]
+        }
+      ],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Corte Duplo (Físico, Crítico, Duplo)",
+          "tipo": "DOCX",
+          "carta_sugerida": "Corte Duplo (Físico, Crítico, Duplo)",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Cila",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Contra-Ataque",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Contra-Ataque",
+          "classe": "ATTACK",
+          "efeitos": "Contra-Ataque",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Cockatrice",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Chefe",
+        "vida": 8,
+        "passos": 8
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Bicada",
+          "tipo": "Chefe",
+          "carta_sugerida": "Bicada",
+          "classe": "ATTACK",
+          "efeitos": "Bicada (Impacto, Dano 1)",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        },
+        {
+          "name": "Atordoado",
+          "tipo": "Chefe",
+          "carta_sugerida": "Atordoado",
+          "classe": "ATTACK",
+          "efeitos": "Atordoado",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Cão do Inferno",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Bafo de Fogo",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Bafo de Fogo",
+          "classe": "ATTACK",
+          "efeitos": "Bafo de Fogo (Poder, Dano 2)",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        },
+        {
+          "name": "Poder",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Poder",
+          "classe": "ATTACK",
+          "efeitos": "Poder",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Danilo\nCodinome: Maldito\nRaça: Meio-Sangue\nFraquezas: \nReputação: \nAparência: \nAtributos\nPRE  VID 9+11 IMP 10 ARM 8 POD 5 ESC 7 VEL 5\nAtributos (com o Anel de Sindar)\nPRE  VID 10+14 IMP 11 ARM 9 POD 12 ESC 8 VEL 6\nManobras\n\nPossessão (Estado, Singular)\nGarras Demoníacas (Físico, Massivo, Recuo)\n\nVômito Corrosivo (Especial, Atordoar, Recarga)\nIlusões Mentais (Passivo, Pressão, Atordoar) \n\nParticipação importante nas Aventuras Caos pt1 e pt2.",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/vilões"
+      ],
+      "role": "elite",
+      "alterego": "",
+      "stats": {
+        "nivel": 14,
+        "attrs": "PRE  VID 9+11 IMP 10 ARM 8 POD 5 ESC 7 VEL 5"
+      },
+      "kits": [
+        {
+          "source": "docx:HERORGASM4/vilões",
+          "manobras": [
+            "Possessão (Estado, Singular)",
+            "Vômito Corrosivo (Especial, Atordoar, Recarga)",
+            "Participação importante nas Aventuras Caos pt1 e pt2."
+          ]
+        }
+      ],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Possessão (Estado, Singular)",
+          "tipo": "DOCX",
+          "carta_sugerida": "Possessão (Estado, Singular)",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4 vilão)"
+        },
+        {
+          "name": "Vômito Corrosivo (Especial, Atordoar, Recarga)",
+          "tipo": "DOCX",
+          "carta_sugerida": "Vômito Corrosivo (Especial, Atordoar, Recarga)",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4 vilão)"
+        },
+        {
+          "name": "Participação importante nas Aventuras Caos pt1 e pt2.",
+          "tipo": "DOCX",
+          "carta_sugerida": "Participação importante nas Aventuras Caos pt1 e pt2.",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4 vilão)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Delevingne",
+      "aliases": [
+        "Techna"
+      ],
+      "sources": [
+        "xlsx:Lista de Personagens",
+        "xlsx:Fichas 3",
+        "docx:HERORGASM5/fichas"
+      ],
+      "role": "playable",
+      "alterego": "Techna",
+      "stats": {
+        "raca": "Meio-Alien",
+        "vida": "d6 1",
+        "velocidade": "5 passos"
+      },
+      "kits": [
+        {
+          "source": "xlsx:Fichas 3",
+          "manobras": []
+        }
+      ],
+      "in_hotn3": true,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Delia\nAlinhamento: \nCodinome: Sprite\nRaça: Mutante\nFraquezas: Instabilidade emocional desestabiliza os poderes\nIdentidade: Secreta\nReputação: Herói iniciante (+4)\nAparência: Muito sedutora (+7)\nAtributos\nPRE 11 VID 9+13 IMP 5 ARM 10 POD 10 ESC 10 VEL 8\nManobras\nCanhão Cromático (Especial, Crítico, Atordoar): \nClones Perfeitos (Passivo, Superior, Esquiva): Cria duplicatas que confundem o alvo\nTransformação (Estado, Revanche, Único, Super): Quando a Vida de Delia está menor que um terço (VID 7), ela abre suas Asas de Luz, recebendo +2 em IMP, ARM, POD, ESC e VEL.\nConvergência (Passivo, Singular, Massivo): Se Delia lutar ao lado de outra Winx, as duas fundem seus poderes e causam +2 de dano.",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/alunos"
+      ],
+      "role": "playable",
+      "alterego": "",
+      "stats": {
+        "nivel": 13,
+        "attrs": "PRE 11 VID 9+13 IMP 5 ARM 10 POD 10 ESC 10 VEL 8"
+      },
+      "kits": [
+        {
+          "source": "docx:HERORGASM4",
+          "manobras": [
+            "Canhão Cromático (Especial, Crítico, Atordoar)"
+          ]
+        }
+      ],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Canhão Cromático (Especial, Crítico, Atordoar)",
+          "tipo": "DOCX",
+          "carta_sugerida": "Canhão Cromático (Especial, Crítico, Atordoar)",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Dominika",
+      "aliases": [],
+      "sources": [
+        "xlsx:Lista de Personagens",
+        "xlsx:FICHAS - Manobras"
+      ],
+      "role": "playable",
+      "alterego": "",
+      "stats": {},
+      "kits": [
+        {
+          "source": "xlsx:FICHAS - Manobras",
+          "manobras": [
+            "Manobra com Impacto",
+            "Manobra com Poder",
+            "Manobra de Armadura",
+            "Manobra de Escudo"
+          ]
+        }
+      ],
+      "in_hotn3": true,
+      "suggested_cards": [
+        {
+          "name": "Manobra com Impacto",
+          "tipo": "Manobras",
+          "carta_sugerida": "Manobra com Impacto",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        },
+        {
+          "name": "Manobra com Poder",
+          "tipo": "Manobras",
+          "carta_sugerida": "Manobra com Poder",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        },
+        {
+          "name": "Manobra de Armadura",
+          "tipo": "Manobras",
+          "carta_sugerida": "Manobra de Armadura",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        },
+        {
+          "name": "Manobra de Escudo",
+          "tipo": "Manobras",
+          "carta_sugerida": "Manobra de Escudo",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Dominika\nAlinhamento: Leal e Bondosa\nCodinome: Gelatina\nRaça: Inumana\nFraquezas: Água (dissolve)\nIdentidade: Pública\nReputação: Muito popular (+3)\nAparência: Sedutora (+5)\nAtributos\nPRE 8 VID 7+11 IMP 8 ARM 10 POD 5 ESC 9 VEL 5\nManobras\nBarrigada (Físico, Crítico, Atordoar): Se Dominika rolar [6] em um Ataque Físico, o alvo é jogado longe e recebe Atordoado por um turno.\nRicochete (Passivo, Superior, Refletir): Quando Dominika recebe um Ataque Especial que rola [1], o projétil é propelido na direção de um alvo a escolha dela.\nGolpe do Corpo: Dominika pode usar todo o peso de seu corpo para desferir um soco, chute ou peitada.\nResiliência de Gordura: Dominika é capaz de absorver e resistir a ataques físicos facilmente.\nAbalo Sísmico: Dominika pode pular e acertar o chão com força derrubando oponentes à distância. \nRolamento Defensivo: Dominika pode rolar rapidamente como uma bola, desviando de ataques inimigos. Além disso, ela pode aproveitar esse movimento para chegar rapidamente até seu oponente.\nEsmagar: Dominika pode usar seu peso para prender oponentes no chão sentando em cima deles\nEspremer: Dominika não tem ossos e pode se espremer e passar por frestas pequenas.\n\nDormitório 21B",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/alunos"
+      ],
+      "role": "playable",
+      "alterego": "",
+      "stats": {
+        "nivel": 11,
+        "attrs": "PRE 8 VID 7+11 IMP 8 ARM 10 POD 5 ESC 9 VEL 5"
+      },
+      "kits": [
+        {
+          "source": "docx:HERORGASM4",
+          "manobras": [
+            "Barrigada (Físico, Crítico, Atordoar)",
+            "Dormitório 21B"
+          ]
+        }
+      ],
+      "in_hotn3": true,
+      "suggested_cards": [
+        {
+          "name": "Barrigada (Físico, Crítico, Atordoar)",
+          "tipo": "DOCX",
+          "carta_sugerida": "Barrigada (Físico, Crítico, Atordoar)",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4)"
+        },
+        {
+          "name": "Dormitório 21B",
+          "tipo": "DOCX",
+          "carta_sugerida": "Dormitório 21B",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Doppelganger",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Lento 1",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Lento 1",
+          "classe": "ATTACK",
+          "efeitos": "Lento 1",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Dragão",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Bafo de Fogo",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Bafo de Fogo",
+          "classe": "ATTACK",
+          "efeitos": "Bafo de Fogo (Poder, Dano 4)",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        },
+        {
+          "name": "Vida",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Vida",
+          "classe": "ATTACK",
+          "efeitos": "Vida",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Duende",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Armadilha",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Armadilha",
+          "classe": "ATTACK",
+          "efeitos": "Armadilha",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Dusk",
+      "aliases": [],
+      "sources": [
+        "xlsx:Lista de Personagens",
+        "xlsx:FICHAS - Manobras"
+      ],
+      "role": "playable",
+      "alterego": "",
+      "stats": {},
+      "kits": [
+        {
+          "source": "xlsx:FICHAS - Manobras",
+          "manobras": [
+            "Manobra com Impacto",
+            "Manobra com Poder",
+            "Manobra de Armadura",
+            "Manobra de Escudo"
+          ]
+        }
+      ],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Manobra com Impacto",
+          "tipo": "Manobras",
+          "carta_sugerida": "Manobra com Impacto",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        },
+        {
+          "name": "Manobra com Poder",
+          "tipo": "Manobras",
+          "carta_sugerida": "Manobra com Poder",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        },
+        {
+          "name": "Manobra de Armadura",
+          "tipo": "Manobras",
+          "carta_sugerida": "Manobra de Armadura",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        },
+        {
+          "name": "Manobra de Escudo",
+          "tipo": "Manobras",
+          "carta_sugerida": "Manobra de Escudo",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Duz'Har",
+      "aliases": [],
+      "sources": [
+        "xlsx:Lista de Personagens",
+        "xlsx:FICHAS - Manobras"
+      ],
+      "role": "playable",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Duz’Har\nAlinhamento: Neutra e Bondosa\nCodinome: Orquisa\nRaça: Monstro\nFraquezas: Frenesi\nIdentidade: Secreta (usa máscara; as pessoas sabem seu primeiro nome mas não seu rosto)\nReputação: Impopular (+0)\nAparência: Muito Sedutora (+7)\nAtributos\nPRE 7 VID 8+10 IMP 8 ARM 8 POD 4 ESC 6 VEL 6\nManobras\nSofrimento Infinito (Passivo, Singular, Cura): Sempre que Duz recebe Atordoado ou Ferido, ela recupera 3 de VIDA. \nGolpes Destruidores: Duz é mestre em usar seus dois machados em conjunto para desferir golpes pesados e destruidores.\nTolerância a Dor: Duz já passou por todo tipo de tortura e é capaz de suportar o pior dos ferimentos, usando sua determinação imbatível para se manter de pé e continuar lutando.\nRugido de Guerra: Duz ruge toda sua força, desestabilizando oponentes a distância.\nPernas Fortes: Duz tem pernas enormes capazes de pular longas distâncias e esquivar dos ataques inimigos com facilidade.\nIncansável: Duz é muito resistente e rápida, e pode correr todo o tempo de luta sem se cansar.",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/alunos"
+      ],
+      "role": "playable",
+      "alterego": "",
+      "stats": {
+        "nivel": 10,
+        "attrs": "PRE 7 VID 8+10 IMP 8 ARM 8 POD 4 ESC 6 VEL 6"
+      },
+      "kits": [
+        {
+          "source": "docx:HERORGASM4",
+          "manobras": [
+            "Sofrimento Infinito (Passivo, Singular, Cura)"
+          ]
+        }
+      ],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Sofrimento Infinito (Passivo, Singular, Cura)",
+          "tipo": "DOCX",
+          "carta_sugerida": "Sofrimento Infinito (Passivo, Singular, Cura)",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Dylan Zumbi\nAlduin\nDuz’Har\nMarshmallow\nBaishunpu\nNikki",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/raça"
+      ],
+      "role": "npc",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": true,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Espantalho\nRadical Blast",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/raça"
+      ],
+      "role": "npc",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": true,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Esqueleto",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": true,
+      "suggested_cards": [
+        {
+          "name": "Forte 2",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Forte 2",
+          "classe": "ATTACK",
+          "efeitos": "Forte 2",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Evelyn",
+      "aliases": [
+        "Sombria"
+      ],
+      "sources": [
+        "xlsx:Lista de Personagens",
+        "xlsx:Fichas 3"
+      ],
+      "role": "playable",
+      "alterego": "Sombria",
+      "stats": {
+        "raca": "Ciborgue",
+        "vida": "d8 2",
+        "velocidade": "7 passos"
+      },
+      "kits": [
+        {
+          "source": "xlsx:Fichas 3",
+          "manobras": [
+            "Garras Oníricas",
+            "Aikido",
+            "Sedução",
+            "Bons Sonhos",
+            "Reino Quebrado",
+            "Sonambulismo",
+            "Sonhos Eróticos",
+            "Sonhar Acordado",
+            "Invocar Pesadelos",
+            "Hora de Acordar",
+            "Garras Oníricas+",
+            "Aikido+",
+            "Sedução+",
+            "Bons Sonhos+",
+            "Reino Quebrado+",
+            "Sonambulismo+",
+            "Sonhos Eróticos+",
+            "Sonhar Acordado+",
+            "Invocar Pesadelos+",
+            "Hora de Acordar+",
+            "Munição"
+          ]
+        }
+      ],
+      "in_hotn3": true,
+      "suggested_cards": [
+        {
+          "name": "Garras Oníricas",
+          "tipo": "1- Inicial",
+          "carta_sugerida": "Garras Oníricas",
+          "classe": "ATTACK",
+          "efeitos": "Impacto 2",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Aikido",
+          "tipo": "1- Inicial",
+          "carta_sugerida": "Aikido",
+          "classe": "ESTADO",
+          "efeitos": "Reação, Prioridade, Armadura 1, Frágil 1",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Sedução",
+          "tipo": "1- Inicial",
+          "carta_sugerida": "Sedução",
+          "classe": "ESTADO",
+          "efeitos": "Grátis, Impulso",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Bons Sonhos",
+          "tipo": "1- Inicial",
+          "carta_sugerida": "Bons Sonhos",
+          "classe": "ESTADO",
+          "efeitos": "Atordoado 1, Alcance 1, Área 1, Seletivo",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Reino Quebrado",
+          "tipo": "1- Inicial",
+          "carta_sugerida": "Reino Quebrado",
+          "classe": "ATTACK",
+          "efeitos": "Poder 1, Alcance 1, Área 2, Seletivo, Letárgico",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Sonambulismo",
+          "tipo": "2- Evoluída",
+          "carta_sugerida": "Sonambulismo",
+          "classe": "ESTADO",
+          "efeitos": "Deslocamento 1, Letárgico",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Sonhos Eróticos",
+          "tipo": "2- Evoluída",
+          "carta_sugerida": "Sonhos Eróticos",
+          "classe": "ESTADO",
+          "efeitos": "Grátis, Forte 1, Fraco 1, Sonho",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Sonhar Acordado",
+          "tipo": "2- Evoluída",
+          "carta_sugerida": "Sonhar Acordado",
+          "classe": "ESTADO",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Invocar Pesadelos",
+          "tipo": "2- Evoluída",
+          "carta_sugerida": "Invocar Pesadelos",
+          "classe": "ESTADO",
+          "efeitos": "Invocar Lacaio 1",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Hora de Acordar",
+          "tipo": "2- Evoluída",
+          "carta_sugerida": "Hora de Acordar",
+          "classe": "ESTADO",
+          "efeitos": "Alcance 2, Área 2, Grátis, Seletivo",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Munição",
+          "tipo": "4- Desvantagem",
+          "carta_sugerida": "Munição",
+          "classe": "ESTADO",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Evelyn Graves",
+      "aliases": [
+        "Sombria"
+      ],
+      "sources": [
+        "docx:HERORGASM5/fichas"
+      ],
+      "role": "playable",
+      "alterego": "Sombria",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": true,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Fada\nJakub",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/raça"
+      ],
+      "role": "npc",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Fantasma",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": true,
+      "suggested_cards": [
+        {
+          "name": "Resistente 1",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Resistente 1",
+          "classe": "ATTACK",
+          "efeitos": "Resistente 1",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Gakko Chikara",
+      "aliases": [],
+      "sources": [
+        "docx:HotN Godot Edition A (DOCX aa573632…)",
+        "docx:HotN Mecânicas (DOCX 964fd7ef…)"
+      ],
+      "role": "npc",
+      "alterego": "",
+      "stats": {
+        "note": "Citado no cast HotN Godot junto a Isabella / Sombria (Ajudante)"
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "(kit incompleto)",
+          "tipo": "Manobra",
+          "carta_sugerida": "(kit incompleto)",
+          "classe": "ESTADO",
+          "efeitos": "sem poderes no DOCX",
+          "flags": "—",
+          "status": "lacuna"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Garota Fantasma\nGata Púrpura\nCarmesin",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/raça"
+      ],
+      "role": "npc",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Ghoul",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": true,
+      "suggested_cards": [
+        {
+          "name": "Área 1",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Área 1",
+          "classe": "ATTACK",
+          "efeitos": "Área 1",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Goblin",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Arco Curto",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Arco Curto",
+          "classe": "ATTACK",
+          "efeitos": "Arco Curto (Poder, Dano 1)",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        },
+        {
+          "name": "Alcance 1",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Alcance 1",
+          "classe": "ATTACK",
+          "efeitos": "Alcance 1",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Golem",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": true,
+      "suggested_cards": [
+        {
+          "name": "Cura 2",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Cura 2",
+          "classe": "ATTACK",
+          "efeitos": "Cura 2",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Gwen",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/raça"
+      ],
+      "role": "npc",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Górgona",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Escamas",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Escamas",
+          "classe": "ATTACK",
+          "efeitos": "Escamas (Impacto, Dano 1)",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        },
+        {
+          "name": "Armadura",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Armadura",
+          "classe": "ATTACK",
+          "efeitos": "Armadura",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Harpia",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Garras",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Garras",
+          "classe": "ATTACK",
+          "efeitos": "Garras (Impacto, Dano 1)",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        },
+        {
+          "name": "Voar",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Voar",
+          "classe": "ATTACK",
+          "efeitos": "Voar",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Haru",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM5/narrativa"
+      ],
+      "role": "elite",
+      "alterego": "",
+      "stats": {
+        "note": "Braço direito de Kevin; Caldo-Gama monstro"
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Caldo-Gama",
+          "tipo": "Elite",
+          "carta_sugerida": "Caldo-Gama",
+          "classe": "ATTACK",
+          "efeitos": "Forte, Resistente, transformação",
+          "flags": "—",
+          "status": "proposta"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Hazel",
+      "aliases": [],
+      "sources": [
+        "xlsx:Lista de Personagens",
+        "xlsx:FICHAS - Manobras"
+      ],
+      "role": "playable",
+      "alterego": "",
+      "stats": {},
+      "kits": [
+        {
+          "source": "xlsx:FICHAS - Manobras",
+          "manobras": [
+            "Garras",
+            "Reflexos",
+            "Sentidos Aguçados",
+            "Intimidação",
+            "Eu sou o Alfa",
+            "Frenesi",
+            "Chamado da Selva",
+            "Ataque Selvagem",
+            "Investida Letal",
+            "Golpe Poderoso",
+            "Berserk",
+            "Eviscerar",
+            "Especial da Meia-Noite",
+            "Corte Perfurante",
+            "Cura Rápida",
+            "Regeneração Rápida",
+            "Fedor do Medo",
+            "Cheiro",
+            "Final",
+            "Maldição",
+            "Aquecimento",
+            "Provocar (Inimigos)",
+            "Marcado (Inimigo)"
+          ]
+        }
+      ],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Garras",
+          "tipo": "Manobras",
+          "carta_sugerida": "Garras",
+          "classe": "ATTACK",
+          "efeitos": "Impacto. Rápido.",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        },
+        {
+          "name": "Reflexos",
+          "tipo": "Manobras",
+          "carta_sugerida": "Reflexos",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        },
+        {
+          "name": "Sentidos Aguçados",
+          "tipo": "Manobras",
+          "carta_sugerida": "Sentidos Aguçados",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        },
+        {
+          "name": "Intimidação",
+          "tipo": "Manobras",
+          "carta_sugerida": "Intimidação",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        },
+        {
+          "name": "Eu sou o Alfa",
+          "tipo": "Manobras",
+          "carta_sugerida": "Eu sou o Alfa",
+          "classe": "ATTACK",
+          "efeitos": "Não pode ser atacado por lacaios",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        },
+        {
+          "name": "Frenesi",
+          "tipo": "Manobras",
+          "carta_sugerida": "Frenesi",
+          "classe": "ATTACK",
+          "efeitos": "Forte. Compre 2 Manobras de Hazel.",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        },
+        {
+          "name": "Chamado da Selva",
+          "tipo": "Manobras",
+          "carta_sugerida": "Chamado da Selva",
+          "classe": "ATTACK",
+          "efeitos": "Compre um Lobo, Urso, Tigre, Crocodilo ou Águia.",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        },
+        {
+          "name": "Ataque Selvagem",
+          "tipo": "Manobras",
+          "carta_sugerida": "Ataque Selvagem",
+          "classe": "ATTACK",
+          "efeitos": "Combo",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        },
+        {
+          "name": "Investida Letal",
+          "tipo": "Manobras",
+          "carta_sugerida": "Investida Letal",
+          "classe": "ATTACK",
+          "efeitos": "Chain 2. Full Combo: ganha 1 Strengthened.",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        },
+        {
+          "name": "Golpe Poderoso",
+          "tipo": "Manobras",
+          "carta_sugerida": "Golpe Poderoso",
+          "classe": "ATTACK",
+          "efeitos": "Knockback. Aplica 1 Vulnerable.",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        },
+        {
+          "name": "Berserk",
+          "tipo": "Manobras",
+          "carta_sugerida": "Berserk",
+          "classe": "ATTACK",
+          "efeitos": "Compra 2 cartas do Wolverine. Cartas do Wolverine ganham Lifesteal por 1 turno.",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        },
+        {
+          "name": "Eviscerar",
+          "tipo": "Manobras",
+          "carta_sugerida": "Eviscerar",
+          "classe": "ATTACK",
+          "efeitos": "Chain 4. Taunt. Se qualquer alvo for nocauteado, ganha 1 Counter.",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        },
+        {
+          "name": "Especial da Meia-Noite",
+          "tipo": "Manobras",
+          "carta_sugerida": "Especial da Meia-Noite",
+          "classe": "ATTACK",
+          "efeitos": "Consome todo o Heroísmo para causar dano a inimigos aleatórios X vezes (1 para cada Heroísmo). Dano aumenta em [25% Offense] a cada ataque. Exhaust.",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        },
+        {
+          "name": "Corte Perfurante",
+          "tipo": "Manobras",
+          "carta_sugerida": "Corte Perfurante",
+          "classe": "ATTACK",
+          "efeitos": "Se o alvo tiver Block, +[100% Offense] de dano.",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        },
+        {
+          "name": "Cura Rápida",
+          "tipo": "Manobras",
+          "carta_sugerida": "Cura Rápida",
+          "classe": "ATTACK",
+          "efeitos": "Restaura [50% da Vida Máxima] de Wolverine. Cure. Jogável quando Wolverine está incapacitado.",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        },
+        {
+          "name": "Regeneração Rápida",
+          "tipo": "Manobras",
+          "carta_sugerida": "Regeneração Rápida",
+          "classe": "ATTACK",
+          "efeitos": "Revive Wolverine com 50% de Vida. Free.",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        },
+        {
+          "name": "Fedor do Medo",
+          "tipo": "Manobras",
+          "carta_sugerida": "Fedor do Medo",
+          "classe": "ATTACK",
+          "efeitos": "Taunt em cada inimigo em uma área. Ganha 1 Counter.",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        },
+        {
+          "name": "Cheiro",
+          "tipo": "Manobras",
+          "carta_sugerida": "Cheiro",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        },
+        {
+          "name": "Final",
+          "tipo": "Manobras",
+          "carta_sugerida": "Final",
+          "classe": "ATTACK",
+          "efeitos": "última manobra da rodada",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        },
+        {
+          "name": "Maldição",
+          "tipo": "Manobras",
+          "carta_sugerida": "Maldição",
+          "classe": "ATTACK",
+          "efeitos": "Descarte uma manobra",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        },
+        {
+          "name": "Aquecimento",
+          "tipo": "Manobras",
+          "carta_sugerida": "Aquecimento",
+          "classe": "ATTACK",
+          "efeitos": "Não pode jogar quando compra",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        },
+        {
+          "name": "Provocar (Inimigos)",
+          "tipo": "Manobras",
+          "carta_sugerida": "Provocar (Inimigos)",
+          "classe": "ATTACK",
+          "efeitos": "Tem que atacar aquele inimigo primeiro",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        },
+        {
+          "name": "Marcado (Inimigo)",
+          "tipo": "Manobras",
+          "carta_sugerida": "Marcado (Inimigo)",
+          "classe": "ATTACK",
+          "efeitos": "Adc Marcador. Herói com marcador tem que ser derrotado primeiro.",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Hibiki",
+      "aliases": [],
+      "sources": [
+        "xlsx:Lista de Personagens",
+        "xlsx:FICHAS - Manobras"
+      ],
+      "role": "playable",
+      "alterego": "",
+      "stats": {},
+      "kits": [
+        {
+          "source": "xlsx:FICHAS - Manobras",
+          "manobras": [
+            "Manobra com Impacto",
+            "Manobra com Poder",
+            "Manobra de Armadura",
+            "Manobra de Escudo"
+          ]
+        }
+      ],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Manobra com Impacto",
+          "tipo": "Manobras",
+          "carta_sugerida": "Manobra com Impacto",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        },
+        {
+          "name": "Manobra com Poder",
+          "tipo": "Manobras",
+          "carta_sugerida": "Manobra com Poder",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        },
+        {
+          "name": "Manobra de Armadura",
+          "tipo": "Manobras",
+          "carta_sugerida": "Manobra de Armadura",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        },
+        {
+          "name": "Manobra de Escudo",
+          "tipo": "Manobras",
+          "carta_sugerida": "Manobra de Escudo",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Hibiki\nAlinhamento: Neutro e Bondoso\nCodinome: Gold\nRaça: Inumano\nFraquezas: \nIdentidade: Pública\nReputação: Comum (+1)\nAparência: Comum (+0)\nAtributos\nPRE 1 VID 9+12 IMP 6 ARM 10 POD 6 ESC 11 VEL 6\nManobras\nEu Escolho Você! (Estado, Singular): Hibiki invoca um dos seus monstros. Enquanto invocados, Hibiki não pode atacar ou agir, apenas falar, desinvocar ou trocar de monstro. Invocar um monstro usa uma rodada e o monstro só entra na Lista de Iniciativa na rodada seguinte. Trocar o monstro usa a rodada do Hibiki, não do monstro. Todos os monstros e Hibiki compartilham a mesma VIDA atual e máxima.\nAzul (Azurill)\nPRE 8 VID 9+12 IMP 12 ARM 7 POD 7 ESC 7 VEL 6\nAqua Míssil (Físico, Prioridade, Recuo): Ao custo de 1 de VID, ganha Prioridade\nFera Aligator (Feraligator)\nPRE 8 VID 9+12 IMP 9 ARM 7 POD 7 ESC 7 VEL 9 \nChefão (Passivo, Revanche, Único, Cura 2): Quando Fera Aligator tem menos de um terço da VIDA (VID 6 ou menos), ele recupera 6 de VID.\nGolpe (Especial, Crítico, Ferir): Rola [6] com Atq Esp causa Ferido\nAtributos (Suporte)\nPRE 8 VID 9+12 IMP 6 ARM 10 POD 6 ESC 11 VEL 6\nCura (Estado, Cura): Cura 1d6 de VID\n\nHibiki era um jovem pesquisador japonês que trabalhava como assistente da renomada Professora Elowen, uma estrangeira que havia dedicado a vida inteira ao estudo de monstros de outra dimensão conhecida como a Dimensão Dourada. Segundo Elowen, esses monstros haviam invadido o mundo mortal em ocasiões passadas, causando destruição e caos. Ela acreditava que essas criaturas possuíam uma mente coletiva e que era possível criar um dispositivo para controlá-las ou até mesmo contê-las.\nHibiki e Elowen passaram anos trabalhando juntos na construção de um aparelho que pudesse se conectar à Dimensão Dourada e controlar os monstros. Finalmente, depois de muito esforço e dedicação, eles conseguiram completar o projeto. No entanto, durante os testes finais, algo deu errado e ambos foram expostos à radiação. Enquanto Elowen não sobreviveu ao acidente, Hibiki foi afetado de uma maneira inesperada: ele se tornou um Inumano, capaz de invocar e controlar os monstros da Dimensão Dourada.\nEnquanto Hibiki tentava se adaptar aos seus novos poderes, ele também foi confrontado com outra complicação: a Princesa Yumi, uma jovem japonesa que possuía os mesmos poderes de Hibiki e que estava loucamente apaixonada por ele. Yumi se tornou uma vilã, cujo único objetivo era obrigar Hibiki a se casar com ela. Ela acreditava que, juntos, eles poderiam controlar os monstros da Dimensão Dourada e governar o mundo. Hibiki, no entanto, não compartilhava os mesmos sentimentos de Yumi e tentava de todas as maneiras se afastar dela.",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/alunos"
+      ],
+      "role": "playable",
+      "alterego": "",
+      "stats": {
+        "nivel": 12,
+        "attrs": "PRE 1 VID 9+12 IMP 6 ARM 10 POD 6 ESC 11 VEL 6"
+      },
+      "kits": [
+        {
+          "source": "docx:HERORGASM4",
+          "manobras": [
+            "Eu Escolho Você! (Estado, Singular)"
+          ]
+        }
+      ],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Eu Escolho Você! (Estado, Singular)",
+          "tipo": "DOCX",
+          "carta_sugerida": "Eu Escolho Você! (Estado, Singular)",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Homúnculo",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Garras",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Garras",
+          "classe": "ATTACK",
+          "efeitos": "Garras (Impacto, Dano 1)",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        },
+        {
+          "name": "Rápido 1",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Rápido 1",
+          "classe": "ATTACK",
+          "efeitos": "Rápido 1",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Hunter",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/raça"
+      ],
+      "role": "npc",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Ifrit",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Exaustão",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Exaustão",
+          "classe": "ATTACK",
+          "efeitos": "Exaustão",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Imp",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Travessuras",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Travessuras",
+          "classe": "ATTACK",
+          "efeitos": "Travessuras (Poder, Dano 1)",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        },
+        {
+          "name": "Fraco 1",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Fraco 1",
+          "classe": "ATTACK",
+          "efeitos": "Fraco 1",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Imparável\nAnimancer",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/raça"
+      ],
+      "role": "npc",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Inccubu",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Chibata",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Chibata",
+          "classe": "ATTACK",
+          "efeitos": "Chibata (Impacto, Dano 1)",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        },
+        {
+          "name": "Presença",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Presença",
+          "classe": "ATTACK",
+          "efeitos": "Presença",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Irwin\nAlinhamento: \nCodinome: Fobia\nRaça: Inumano\nFraquezas: \nIdentidade: Secreta (usa um suit e máscara)\nReputação: Comum (+1)\nAparência: Muito assustador (+6)\nAtributos\nPRE 7 VID 8+10 IMP 4 ARM 8 POD 4 ESC 8 VEL 8\nManobras\nPior Pesadelo (Físico ou Especial*, Crítico, Atordoar): Irwin pode se transformar no pior medo do seu alvo. Seus atributos são redistribuídos a cada forma, e esse Movimento passa a ser físico ou especial dependendo da forma.",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/alunos"
+      ],
+      "role": "playable",
+      "alterego": "",
+      "stats": {
+        "nivel": 10,
+        "attrs": "PRE 7 VID 8+10 IMP 4 ARM 8 POD 4 ESC 8 VEL 8"
+      },
+      "kits": [
+        {
+          "source": "docx:HERORGASM4",
+          "manobras": [
+            "Pior Pesadelo (Físico ou Especial*, Crítico, Atordoar)"
+          ]
+        }
+      ],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Pior Pesadelo (Físico ou Especial*, Crítico, Atordoar)",
+          "tipo": "DOCX",
+          "carta_sugerida": "Pior Pesadelo (Físico ou Especial*, Crítico, Atordoar)",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Isabel",
+      "aliases": [
+        "Impura"
+      ],
+      "sources": [
+        "xlsx:Fichas 3",
+        "docx:HERORGASM4/narrativa",
+        "docx:HERORGASM5/Impura"
+      ],
+      "role": "playable",
+      "alterego": "Impura",
+      "stats": {
+        "raca": "Meio-Sangue",
+        "vida": "d10",
+        "velocidade": "7 passos",
+        "alinhamento": "Meio-Sangue, Neutra e Maligna",
+        "vida_h5": "Vida: 8 | Passos: 6"
+      },
+      "kits": [
+        {
+          "source": "xlsx:Fichas 3",
+          "manobras": [
+            "Garras de Atavus",
+            "(defesa)",
+            "Chuva de Sangue",
+            "Grito",
+            "Intimidação",
+            "Monstro do Pântano",
+            "Aniquilação",
+            "Vínculo",
+            "ERP",
+            "Caldo Negro",
+            "Garras de Atavus+",
+            "(defesa)+",
+            "Chuva de Sangue +",
+            "Grito+",
+            "Intimidação+",
+            "Monstro do Pântano+",
+            "Aniquilação+",
+            "Vínculo+",
+            "ERP +",
+            "Caldo Negro+",
+            "Munição",
+            "Katana Enferrujada",
+            "Pistola",
+            "Rapidez",
+            "Premonição"
+          ]
+        },
+        {
+          "source": "docx:HERORGASM5/Impura",
+          "manobras": [
+            "Vida: 8 | Passos: 6",
+            "Garras de Atavus",
+            "Garras de Atavus+",
+            "Chuva de Sangue",
+            "Invocar a Tormenta+",
+            "Intimidação",
+            "Monstro do Pântano",
+            "Grito",
+            "Quando aliado é ferido",
+            "Aniquilação",
+            "Aniquilação+",
+            "Vínculo",
+            "Reflexo, Prioridade",
+            "Caldo Negro",
+            "Caldo Negro+",
+            "Tormento"
+          ]
+        }
+      ],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Garras de Atavus",
+          "tipo": "1- Inicial",
+          "carta_sugerida": "Garras de Atavus",
+          "classe": "ATTACK",
+          "efeitos": "Impacto 2",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "(defesa)",
+          "tipo": "1- Inicial",
+          "carta_sugerida": "(defesa)",
+          "classe": "ESTADO",
+          "efeitos": "Reação, Prioridade, Armadura 1, Frágil 1",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Chuva de Sangue",
+          "tipo": "1- Inicial",
+          "carta_sugerida": "Chuva de Sangue",
+          "classe": "ESTADO",
+          "efeitos": "Grátis, Impulso",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Grito",
+          "tipo": "1- Inicial",
+          "carta_sugerida": "Grito",
+          "classe": "ESTADO",
+          "efeitos": "Atordoado 1, Alcance 1, Área 1, Seletivo",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Intimidação",
+          "tipo": "1- Inicial",
+          "carta_sugerida": "Intimidação",
+          "classe": "ATTACK",
+          "efeitos": "Poder 1, Alcance 1, Área 2, Seletivo, Letárgico",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Monstro do Pântano",
+          "tipo": "2- Evoluída",
+          "carta_sugerida": "Monstro do Pântano",
+          "classe": "ESTADO",
+          "efeitos": "Deslocamento 1, Letárgico",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Aniquilação",
+          "tipo": "2- Evoluída",
+          "carta_sugerida": "Aniquilação",
+          "classe": "ESTADO",
+          "efeitos": "Grátis, Forte 1, Fraco 1, Sonho",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Vínculo",
+          "tipo": "2- Evoluída",
+          "carta_sugerida": "Vínculo",
+          "classe": "ESTADO",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "ERP",
+          "tipo": "2- Evoluída",
+          "carta_sugerida": "ERP",
+          "classe": "ESTADO",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Caldo Negro",
+          "tipo": "2- Evoluída",
+          "carta_sugerida": "Caldo Negro",
+          "classe": "ESTADO",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Munição",
+          "tipo": "4- Desvantagem",
+          "carta_sugerida": "Munição",
+          "classe": "ESTADO",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Katana Enferrujada",
+          "tipo": "1- Inicial",
+          "carta_sugerida": "Katana Enferrujada",
+          "classe": "ATTACK",
+          "efeitos": "Impacto 1, Ferido 1",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Pistola",
+          "tipo": "1- Inicial",
+          "carta_sugerida": "Pistola",
+          "classe": "ATTACK",
+          "efeitos": "Poder 1, Alcance 1, Ferido 1",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Rapidez",
+          "tipo": "1- Inicial",
+          "carta_sugerida": "Rapidez",
+          "classe": "ESTADO",
+          "efeitos": "Reação, Prioridade, Armadura 1",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Premonição",
+          "tipo": "1- Inicial",
+          "carta_sugerida": "Premonição",
+          "classe": "ESTADO",
+          "efeitos": "Reação, Prioridade, Escudo 1",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Vida: 8 | Passos: 6",
+          "tipo": "DOCX H5",
+          "carta_sugerida": "Vida: 8 | Passos: 6",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM5)"
+        },
+        {
+          "name": "Invocar a Tormenta+",
+          "tipo": "DOCX H5",
+          "carta_sugerida": "Invocar a Tormenta+",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM5)"
+        },
+        {
+          "name": "Quando aliado é ferido",
+          "tipo": "DOCX H5",
+          "carta_sugerida": "Quando aliado é ferido",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM5)"
+        },
+        {
+          "name": "Reflexo, Prioridade",
+          "tipo": "DOCX H5",
+          "carta_sugerida": "Reflexo, Prioridade",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM5)"
+        },
+        {
+          "name": "Tormento",
+          "tipo": "DOCX H5",
+          "carta_sugerida": "Tormento",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM5)"
+        }
+      ],
+      "notes": "PERSONAGEM SEPARADA de Isabella Lancaster. Isabel = Impura, líder do Culto, irmã de Danilo/Maldito."
+    },
+    {
+      "name": "Jakub\nAlinhamento: Caótico e Neutro\nCodinome: Neblina\nRaça: Mutante\nFraquezas: \nReputação: Popular (+2)\nAparência: Comum (+0)\nAtributos\nPRE 2 VID 5+8 IMP 4 ARM 5 POD 6 ESC 7 VEL 5\nManobras\nCortina de Fumaça\nEntoxicar",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/alunos"
+      ],
+      "role": "playable",
+      "alterego": "",
+      "stats": {
+        "nivel": 8,
+        "attrs": "PRE 2 VID 5+8 IMP 4 ARM 5 POD 6 ESC 7 VEL 5"
+      },
+      "kits": [
+        {
+          "source": "docx:HERORGASM4",
+          "manobras": [
+            "Cortina de Fumaça"
+          ]
+        }
+      ],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Cortina de Fumaça",
+          "tipo": "DOCX",
+          "carta_sugerida": "Cortina de Fumaça",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "John Doe\nCodinome: Silent Soldier\nRaça: Humano\nFraquezas: \nReputação: \nAparência: \nAtributos\nPRE  VID 4+8 IMP 4 ARM 4 POD 6 ESC 5 VEL 5\nManobras\nGranada sem Som\nLança-chamas de Metano\nLuta com Rifle\n\nSilent Soldier, antes conhecido como John Doe, nasceu em uma pequena cidade do Leste Europeu. Seu pai era um ex-militar e sua mãe, uma enfermeira. Desde cedo, John mostrou habilidades incríveis de tiro e estratégia, tornando-se um jovem promissor nas forças armadas de seu país. No entanto, após anos de combate em missões secretas e controversas, ele se tornou cínico e desencantado com a política do governo e as ordens que recebia.\nDepois de desertar e ser procurado pelas autoridades, John mudou sua identidade e se tornou o lendário mercenário conhecido como Silent Soldier. Ele agora aceita contratos de qualquer lado, desde que sejam bem pagos e não envolvam crianças ou inocentes. Sua habilidade com armas e técnicas de furtar tornaram-no um dos mais procurados e respeitados mercenários do mundo.\nO lança-chamas de metano é sua arma favorita, pois permite que ele execute suas missões sem ser detectado. Além disso, sua visão noturna oculta permite que ele se mova sem ser visto em áreas sombrias. Silent Soldier acredita que suas ações são justas, pois acredita que as guerras apenas descarregam sofrimento e destruição na população. Ele busca equilibrar o jogo de poder e influência entre os países, para que a paz prevaleça.\nSeu objetivo final é reunir uma grande quantidade de dinheiro para financiar uma organização secreta que atue contra a corrupção e o abuso de poder em nível mundial. Ele acredita que a única forma de mudar o sistema é agindo de forma independente e sem se preocupar com as leis. Para Silent Soldier, ele é o herói dos oprimidos e o justiçador dos desfavorecidos.",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/vilões"
+      ],
+      "role": "elite",
+      "alterego": "",
+      "stats": {
+        "nivel": 7,
+        "attrs": "PRE  VID 4+8 IMP 4 ARM 4 POD 6 ESC 5 VEL 5"
+      },
+      "kits": [
+        {
+          "source": "docx:HERORGASM4/vilões",
+          "manobras": [
+            "Granada sem Som"
+          ]
+        }
+      ],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Granada sem Som",
+          "tipo": "DOCX",
+          "carta_sugerida": "Granada sem Som",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4 vilão)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Jun Genesis",
+      "aliases": [
+        "Asura"
+      ],
+      "sources": [
+        "xlsx:Lista de Personagens",
+        "xlsx:FICHAS - Manobras"
+      ],
+      "role": "playable",
+      "alterego": "Asura",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Kalel",
+      "aliases": [
+        "Patrulheiro Azul"
+      ],
+      "sources": [
+        "xlsx:Lista de Personagens",
+        "xlsx:Fichas 3"
+      ],
+      "role": "playable",
+      "alterego": "Patrulheiro Azul",
+      "stats": {
+        "raca": "Meio-Sangue",
+        "vida": "d8 +1",
+        "velocidade": "6 passos"
+      },
+      "kits": [
+        {
+          "source": "xlsx:Fichas 3",
+          "manobras": [
+            "Morfador",
+            "Garras de Atavus",
+            "(defesa)",
+            "Chuva de Sangue",
+            "Grito"
+          ]
+        }
+      ],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Morfador",
+          "tipo": "4- Desvantagem",
+          "carta_sugerida": "Morfador",
+          "classe": "ESTADO",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Garras de Atavus",
+          "tipo": "1- Inicial",
+          "carta_sugerida": "Garras de Atavus",
+          "classe": "ATTACK",
+          "efeitos": "Impacto 2",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "(defesa)",
+          "tipo": "1- Inicial",
+          "carta_sugerida": "(defesa)",
+          "classe": "ESTADO",
+          "efeitos": "Reação, Prioridade, Armadura 1, Frágil 1",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Chuva de Sangue",
+          "tipo": "1- Inicial",
+          "carta_sugerida": "Chuva de Sangue",
+          "classe": "ESTADO",
+          "efeitos": "Grátis, Impulso",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Grito",
+          "tipo": "1- Inicial",
+          "carta_sugerida": "Grito",
+          "classe": "ESTADO",
+          "efeitos": "Atordoado 1, Alcance 1, Área 1, Seletivo",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Kappa",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Kendra\nKevin",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/raça"
+      ],
+      "role": "npc",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Kevin",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM5/narrativa"
+      ],
+      "role": "elite",
+      "alterego": "",
+      "stats": {
+        "note": "Líder gangue / Caldo-Gama"
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "(kit incompleto)",
+          "tipo": "Elite",
+          "carta_sugerida": "(kit incompleto)",
+          "classe": "ATTACK",
+          "efeitos": "sem manobras explícitas",
+          "flags": "—",
+          "status": "lacuna"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Kobold",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Konrad",
+      "aliases": [
+        "Amargedom",
+        "Sicário"
+      ],
+      "sources": [
+        "xlsx:Lista de Personagens",
+        "xlsx:Fichas 3",
+        "xlsx:FICHAS - Manobras",
+        "docx:HERORGASM5/fichas"
+      ],
+      "role": "playable",
+      "alterego": "Sicário",
+      "stats": {
+        "raca": "Inumana",
+        "vida": "d8 2",
+        "velocidade": "7 passos"
+      },
+      "kits": [
+        {
+          "source": "xlsx:Fichas 3",
+          "manobras": [
+            "Garras e Presas",
+            "Bastão Retrátil",
+            "Escuridão",
+            "Premonição",
+            "A Filha Dele"
+          ]
+        }
+      ],
+      "in_hotn3": true,
+      "suggested_cards": [
+        {
+          "name": "Garras e Presas",
+          "tipo": "1- Inicial",
+          "carta_sugerida": "Garras e Presas",
+          "classe": "ATTACK",
+          "efeitos": "Impacto, Ferido 1, Massivo 1",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Bastão Retrátil",
+          "tipo": "1- Inicial",
+          "carta_sugerida": "Bastão Retrátil",
+          "classe": "ATTACK",
+          "efeitos": "Impacto",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Escuridão",
+          "tipo": "1- Inicial",
+          "carta_sugerida": "Escuridão",
+          "classe": "ESTADO",
+          "efeitos": "Instantâneo, Sustentável",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Premonição",
+          "tipo": "1- Inicial",
+          "carta_sugerida": "Premonição",
+          "classe": "ESTADO",
+          "efeitos": "Escudo, Proteção 1, Prioridade",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "A Filha Dele",
+          "tipo": "1- Inicial",
+          "carta_sugerida": "A Filha Dele",
+          "classe": "ESTADO",
+          "efeitos": "Ações 1, Grátis",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Konrad\nAlinhamento: Caótico e Maligno\nCodinome: \nRaça: Meio Sangue\nFraquezas: \nIdentidade: Pública\nReputação: Muito popular (+3)\nAparência: Comum (+0)\nAtributos\nPRE 3 VID 5+8 IMP 6 ARM 5 POD 4 ESC 5 VEL 7\nManobras\nInvisibilidade: Fica invisível por um curto período de tempo e esfaqueia o oponente pelas costas.\nSufocar\nQuebre a Perna\nSubstituto\nOutros Feitiços:\nLeve como pena",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/alunos"
+      ],
+      "role": "playable",
+      "alterego": "",
+      "stats": {
+        "nivel": 8,
+        "attrs": "PRE 3 VID 5+8 IMP 6 ARM 5 POD 4 ESC 5 VEL 7"
+      },
+      "kits": [
+        {
+          "source": "docx:HERORGASM4",
+          "manobras": [
+            "Invisibilidade"
+          ]
+        }
+      ],
+      "in_hotn3": true,
+      "suggested_cards": [
+        {
+          "name": "Invisibilidade",
+          "tipo": "DOCX",
+          "carta_sugerida": "Invisibilidade",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Lamia",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Feitiçaria",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Feitiçaria",
+          "classe": "ATTACK",
+          "efeitos": "Feitiçaria (Poder, Dano 1)",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        },
+        {
+          "name": "Escudo",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Escudo",
+          "classe": "ATTACK",
+          "efeitos": "Escudo",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Lich",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": true,
+      "suggested_cards": [
+        {
+          "name": "Ações 1",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Ações 1",
+          "classe": "ATTACK",
+          "efeitos": "Ações 1",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Lobisomem",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Lorenz",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/raça"
+      ],
+      "role": "npc",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Madame Cascos",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM5/narrativa"
+      ],
+      "role": "elite",
+      "alterego": "",
+      "stats": {
+        "note": "Vilã; anéis / Caos"
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Arremesso",
+          "tipo": "Elite",
+          "carta_sugerida": "Arremesso",
+          "classe": "ATTACK",
+          "efeitos": "Impacto (carro/objetos)",
+          "flags": "—",
+          "status": "proposta"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Madame Cascos\nCaos\nMitsukai\nDanilo",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/raça"
+      ],
+      "role": "npc",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Madame Relâmpago",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/raça"
+      ],
+      "role": "npc",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Madame Relâmpago\nGarota Radioativa\nOmni-Man",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/raça"
+      ],
+      "role": "npc",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Madelyn",
+      "aliases": [],
+      "sources": [
+        "xlsx:Fichas 3"
+      ],
+      "role": "playable",
+      "alterego": "",
+      "stats": {
+        "raca": "Meio-Monstro",
+        "vida": "d10",
+        "velocidade": "8 passos"
+      },
+      "kits": [
+        {
+          "source": "xlsx:Fichas 3",
+          "manobras": [
+            "Katana Enferrujada",
+            "Pistola",
+            "Rapidez",
+            "Premonição",
+            "Compartimento Secreto",
+            "Beleza Vampírica",
+            "Manto das Sombras",
+            "Transe",
+            "Assombro",
+            "Negação",
+            "Katana Enferrujada+",
+            "Pistola+",
+            "Rapidez+",
+            "Premonição+",
+            "Compartimento Secreto+",
+            "Beleza Vampírica+",
+            "Manto das Sombras+",
+            "Transe+",
+            "Assombro+",
+            "Negação+",
+            "A Fome"
+          ]
+        }
+      ],
+      "in_hotn3": true,
+      "suggested_cards": [
+        {
+          "name": "Katana Enferrujada",
+          "tipo": "1- Inicial",
+          "carta_sugerida": "Katana Enferrujada",
+          "classe": "ATTACK",
+          "efeitos": "Impacto 1, Ferido 1",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Pistola",
+          "tipo": "1- Inicial",
+          "carta_sugerida": "Pistola",
+          "classe": "ATTACK",
+          "efeitos": "Poder 1, Alcance 1, Ferido 1",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Rapidez",
+          "tipo": "1- Inicial",
+          "carta_sugerida": "Rapidez",
+          "classe": "ESTADO",
+          "efeitos": "Reação, Prioridade, Armadura 1",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Premonição",
+          "tipo": "1- Inicial",
+          "carta_sugerida": "Premonição",
+          "classe": "ESTADO",
+          "efeitos": "Reação, Prioridade, Escudo 1",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Compartimento Secreto",
+          "tipo": "1- Inicial",
+          "carta_sugerida": "Compartimento Secreto",
+          "classe": "ESTADO",
+          "efeitos": "Comprar (próprio) 3",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Beleza Vampírica",
+          "tipo": "2- Evoluída",
+          "carta_sugerida": "Beleza Vampírica",
+          "classe": "ESTADO",
+          "efeitos": "Grátis, Instantâneo",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Manto das Sombras",
+          "tipo": "2- Evoluída",
+          "carta_sugerida": "Manto das Sombras",
+          "classe": "ATTACK",
+          "efeitos": "Impacto 1, Ferido 1, Invulnerável 1",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Transe",
+          "tipo": "2- Evoluída",
+          "carta_sugerida": "Transe",
+          "classe": "ESTADO",
+          "efeitos": "Atordoado 1, Final, Frágil 1",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Assombro",
+          "tipo": "2- Evoluída",
+          "carta_sugerida": "Assombro",
+          "classe": "ESTADO",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "Negação",
+          "tipo": "2- Evoluída",
+          "carta_sugerida": "Negação",
+          "classe": "ESTADO",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        },
+        {
+          "name": "A Fome",
+          "tipo": "4- Desvantagem",
+          "carta_sugerida": "A Fome",
+          "classe": "ATTACK",
+          "efeitos": "Instantâneo, Final, Impacto 1, Aniquilação",
+          "flags": "—",
+          "status": "proposta (Fichas 3)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Mahina\nKonrad\nBaba-Yaga",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/raça"
+      ],
+      "role": "npc",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Mahina Kimura\nAlinhamento: Neutra e Bondosa\nCodinome: Vazio\nRaça: Meio-Sangue\nFraquezas: \nReputação: Aluno comum (+1)\nAparência: Muito sedutora (+7)\nAtributos (com Axel)\nPRE 8 VID 14+16 IMP 10 ARM 10 POD 10 ESC 10 VEL 10\nAtributos (Vazia)\nPRE 8 VID 7+16 IMP 5 ARM 5 POD 5 ESC 5 VEL 5\nAtributos (com outros)\nPRE 8 VID 10+16 IMP 8 ARM 7 POD 8 ESC 7 VEL 8\nManobras\nDevorar",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/alunos"
+      ],
+      "role": "playable",
+      "alterego": "",
+      "stats": {
+        "nivel": 16,
+        "attrs": "PRE 8 VID 14+16 IMP 10 ARM 10 POD 10 ESC 10 VEL 10"
+      },
+      "kits": [
+        {
+          "source": "docx:HERORGASM4",
+          "manobras": [
+            "Devorar"
+          ]
+        }
+      ],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Devorar",
+          "tipo": "DOCX",
+          "carta_sugerida": "Devorar",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Mandrágora",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Grito Estridente",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Grito Estridente",
+          "classe": "ATTACK",
+          "efeitos": "Grito Estridente (Poder, Dano 1)",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        },
+        {
+          "name": "Frágil 1",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Frágil 1",
+          "classe": "ATTACK",
+          "efeitos": "Frágil 1",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Marshmallow",
+      "aliases": [],
+      "sources": [
+        "xlsx:Lista de Personagens",
+        "xlsx:FICHAS - Manobras"
+      ],
+      "role": "playable",
+      "alterego": "Marshmallow",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Marshmallow\nAlinhamento: Neutra e Maligna\nCodinome: \nRaça: Monstro (Coelho - Al-mi'raj)\nFraquezas: Prata\nIdentidade: Pública\nReputação: Heroína Iniciante (+4)\nAparência: Muito Sedutora (+7)\nAtributos\nPRE 9 VID 10+12 IMP 9 ARM 7 POD 5 ESC 7 VEL 10\nManobras\nFeromônios (Físico, Crítico, Atordoar): Se o oponente faz um Ataque Físico, recebe Atordoado\nReflexos Superiores (Passivo, Superior, Esquiva): Se o oponente rolar um [1], não recebe dano\nSiga-me (Estado, Provocar): \nSuper Salto: \nAudição e Olfato Superior: \nSuper Fecundidade:\nChutes de Coelho: habilidade de desferir chutes poderosos com suas pernas musculosas de coelho para causar dano físico de perto.\nFeromônios: habilidade de liberar feromônios para confundir e desorientar o oponente em combate de perto.\nReflexos: habilidade de se mover rapidamente e esquivar de ataques à distância.\nEscavação: habilidade de cavar rapidamente no solo ou em superfícies macias, permitindo que Marshmallow se mova rapidamente ou se esconda de inimigos.",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/alunos"
+      ],
+      "role": "playable",
+      "alterego": "",
+      "stats": {
+        "nivel": 12,
+        "attrs": "PRE 9 VID 10+12 IMP 9 ARM 7 POD 5 ESC 7 VEL 10"
+      },
+      "kits": [
+        {
+          "source": "docx:HERORGASM4",
+          "manobras": [
+            "Feromônios (Físico, Crítico, Atordoar)"
+          ]
+        }
+      ],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Feromônios (Físico, Crítico, Atordoar)",
+          "tipo": "DOCX",
+          "carta_sugerida": "Feromônios (Físico, Crítico, Atordoar)",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Martha\nAlinhamento: Caótica e Bondosa\nCodinome: Baba-Yaga\nRaça: Meio-Sangue\nFraquezas: \nIdentidade: Secreta (usa o Feitiço da Máscara)\nReputação: Comum (+1)\nAparência: Sedutora (+5)\nAfiliação: Aluna do IN, Grupo do Methos, Nox Arcana Inc., Hard Hard & Harder\nContatos: \nAtributos\nPRE 6 VID 3+7 IMP 6 ARM 4 POD 6 ESC 4 VEL 5\nManobras\nInvocar arma\nTrocar de roupa\n\nBaba-Yaga tem 14 anos, e são os 10% da bruxa Matriarca, que se separou dela, ficando com 126 anos.\nMutare vestimenta mea!\nAdducere, hasta mea!",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/alunos"
+      ],
+      "role": "playable",
+      "alterego": "",
+      "stats": {
+        "nivel": 7,
+        "attrs": "PRE 6 VID 3+7 IMP 6 ARM 4 POD 6 ESC 4 VEL 5"
+      },
+      "kits": [
+        {
+          "source": "docx:HERORGASM4",
+          "manobras": [
+            "Invocar arma"
+          ]
+        }
+      ],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Invocar arma",
+          "tipo": "DOCX",
+          "carta_sugerida": "Invocar arma",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Martha Ratzinger\nCodinome: Matriarca\nRaça: Meio-Sangue\nFraquezas: \nReputação: \nAparência: \nAtributos\nPRE 7 VID 4+9 IMP 8 ARM 8 POD 8 ESC 5 VEL 6\nManobras\nGarras Demoníacas\nVômito Corrosivo",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/vilões"
+      ],
+      "role": "elite",
+      "alterego": "",
+      "stats": {
+        "nivel": 9,
+        "attrs": "PRE 7 VID 4+9 IMP 8 ARM 8 POD 8 ESC 5 VEL 6"
+      },
+      "kits": [
+        {
+          "source": "docx:HERORGASM4/vilões",
+          "manobras": [
+            "Garras Demoníacas"
+          ]
+        }
+      ],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Garras Demoníacas",
+          "tipo": "DOCX",
+          "carta_sugerida": "Garras Demoníacas",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4 vilão)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Mary Ann",
+      "aliases": [
+        "Rapina"
+      ],
+      "sources": [
+        "xlsx:Lista de Personagens",
+        "xlsx:FICHAS - Manobras"
+      ],
+      "role": "playable",
+      "alterego": "Rapina",
+      "stats": {},
+      "kits": [
+        {
+          "source": "xlsx:FICHAS - Manobras",
+          "manobras": [
+            "Manobra com Impacto",
+            "Manobra com Poder",
+            "Manobra de Armadura",
+            "Manobra de Escudo"
+          ]
+        }
+      ],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Manobra com Impacto",
+          "tipo": "Manobras",
+          "carta_sugerida": "Manobra com Impacto",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        },
+        {
+          "name": "Manobra com Poder",
+          "tipo": "Manobras",
+          "carta_sugerida": "Manobra com Poder",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        },
+        {
+          "name": "Manobra de Armadura",
+          "tipo": "Manobras",
+          "carta_sugerida": "Manobra de Armadura",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        },
+        {
+          "name": "Manobra de Escudo",
+          "tipo": "Manobras",
+          "carta_sugerida": "Manobra de Escudo",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (Manobras)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Maze",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/raça"
+      ],
+      "role": "npc",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Merida",
+      "aliases": [],
+      "sources": [
+        "xlsx:Lista de Personagens",
+        "xlsx:FICHAS - Manobras"
+      ],
+      "role": "playable",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Merida\nAlinhamento: Caótica e Neutra\nCodinome: Fada\nRaça: Mutante\nFraquezas: Instabilidade emocional desestabiliza os poderes\nIdentidade: Pública\nReputação: Herói iniciante (+4)\nAparência: Muito sedutora (+7)\nAtributos\nPRE 11 VID 10+15 IMP 7 ARM 9 POD 14 ESC 11 VEL 9\nManobras\nLança-chamas (Especial, Recuo, Massivo): Recuo. Gasta 1 PV e faz um ataque especial com +2\nTransformação (Estado, Revanche, Único, Super): Carga. Quando a Vida de Merida está menor que um terço (VID 8), ela abre suas Asas de Fogo, recebendo +2 em IMP, ARM, POD, ESC e VEL.\nBola de Fogo (Especial, Carga, Recuo, Massivo, Area): Grande explosão que causa dano a todos os oponentes.\nConvergência (Passivo, Singular, Massivo): Se Merida lutar ao lado de outra Winx, as duas fundem seus poderes e causam +2 de dano.\nMerida Smith é uma garota de dezessete anos que nasceu e foi criada nas Ilhas Marshall com seus pais e seu irmão mais novo. Sua família administra um pequeno hotel, que é a principal fonte de renda para eles. Merida é responsável pela administração do hotel e também cuida de seu irmão mais novo. Ela é uma pessoa curiosa e aventureira que passa a maior parte do tempo aprendendo novos idiomas, lendo sobre diferentes culturas e simulando experiências de viagem, mesmo nunca tendo saído de seu país.\nMerida é uma pessoa determinada e autêntica que adora experimentar coisas novas. Ela também é impulsiva e às vezes pode ser egoísta e apática. Sua aparência é descrita como bonita, com pele bronzeada, cabelos dourados cacheados com reflexos rosados, olhos cinzentos e sardas.\nA cor favorita de Merida é o amarelo, e ela adora usar cores vivas e vibrantes. Ela gosta de comer peixe, saladas e doces como chocolate. Ela também tem inveja dos outros jovens que vêm ao seu hotel e têm amigos e parceiros românticos. Apesar de seus conflitos e lutas internas, Merida permanece otimista e corajosa.",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/alunos"
+      ],
+      "role": "playable",
+      "alterego": "",
+      "stats": {
+        "nivel": 15,
+        "attrs": "PRE 11 VID 10+15 IMP 7 ARM 9 POD 14 ESC 11 VEL 9"
+      },
+      "kits": [
+        {
+          "source": "docx:HERORGASM4",
+          "manobras": [
+            "Lança-chamas (Especial, Recuo, Massivo)"
+          ]
+        }
+      ],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Lança-chamas (Especial, Recuo, Massivo)",
+          "tipo": "DOCX",
+          "carta_sugerida": "Lança-chamas (Especial, Recuo, Massivo)",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Mershark?",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Lento 2",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Lento 2",
+          "classe": "ATTACK",
+          "efeitos": "Lento 2",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Methos",
+      "aliases": [],
+      "sources": [
+        "xlsx:Lista de Personagens"
+      ],
+      "role": "playable",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": " Ambíguo: H4 dá a Methos o codinome Paladino; planilha lista ambos."
+    },
+    {
+      "name": "Methos\nAlinhamento: Leal e Bondoso\nCodinome: Paladino\nRaça: Humano\nFraquezas: Nenhuma\nIdentidade: Pública\nReputação: Herói iniciante (+4)\nAparência: Levemente assustador (+2)\nAtributos\nPRE 6 VID 10+16 IMP 12 ARM 13 POD 7 ESC 12 VEL 10\nManobras\nDefesa Perfeita (Passivo, Superior, Esquiva): Com um pouco de sorte, Methos pode evitar completamente um ataque com o seu escudo.\nEscudo de Tambor (Estado, Provocar): Atrai a atenção para ele\nVarrida de Escudo (Físico, Crítico, Atordoar): Golpeia com força com o escudo derrubando o oponente.\nEscudo Bumerangue (Especial, Crítico, Area): Arremessa um escudo que ricocheteia e acerta vários oponentes.\nMeu nome é Methos. Eu descendo de uma família boa e nobre da Inglaterra, composta por militares, lordes e cavaleiros. Cresci com valores de ética, justiça e altruísmo, e gosto de pensar que sou hoje uma pessoa boa. Não houve nenhum grande evento na minha infância, e não há nada em que eu não pareça com minha família. Exceto pelo mais marcante: eu não quero ser um cavaleiro, nem um militar. Eu sou um homem de paz e quero ter uma vida normal longe do império britânico. Tive muitos amigos quando criança, e sempre fui bem-querido por todos. Tratado em uma família rica, eu não tive qualquer dificuldade, além da aceitação das minhas escolhas. \nSempre tive um espírito científico e curioso, embora pouco apurado. Tenho que manter o nome dos Beowulfs, mas quero fazer isso de uma forma diferente. Quero me tornar um cientista biólogo, e descobrir todos os segredos do corpo humano. Quero ajudar com meu conhecimento a maior quantidade de pessoas que eu puder.  As pessoas me veem como alguém prestativo, educado e atencioso, sempre disposto a ajudar o próximo. Às vezes, também sou visto como alguém infantil ou delicado, mesmo que eu não concorde totalmente com isso. Eu acho que sou alguém sempre em busca de ser a melhor versão de mim mesmo.\nNas minhas raras horas de lazer, eu gosto de ler sobre o corpo humano, estudar e de explorar. Também estou aprendendo massoterapia, e uso isso para viver. Gosto de descobrir comidas ou lugares. Eu gosto de passar meu tempo com pessoas interessantes, mas normalmente o faço sozinho. Minha cor preferida é branco. O que eu mais gosto de fazer é ajudar as outras pessoas. Eu também gosto muito de doces delicados, e não muito de bebidas quentes, sopas ou coisas apimentadas.\nEu tenho um pequeno estojo com um exemplar de cada moeda diferente que eu já vi em cada lugar, de cada valor ou época. Eu criei pássaros pequenos uma vez, e aprendi muita coisa. Eu os reabilitava e os soltava no final. Gosto muito de animais pequenos, e não muito de animais grandes.",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/alunos"
+      ],
+      "role": "playable",
+      "alterego": "",
+      "stats": {
+        "nivel": 16,
+        "attrs": "PRE 6 VID 10+16 IMP 12 ARM 13 POD 7 ESC 12 VEL 10"
+      },
+      "kits": [
+        {
+          "source": "docx:HERORGASM4",
+          "manobras": [
+            "Defesa Perfeita (Passivo, Superior, Esquiva)"
+          ]
+        }
+      ],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Defesa Perfeita (Passivo, Superior, Esquiva)",
+          "tipo": "DOCX",
+          "carta_sugerida": "Defesa Perfeita (Passivo, Superior, Esquiva)",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Mika Yamamoto",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM5/inimigos"
+      ],
+      "role": "elite",
+      "alterego": "",
+      "stats": {
+        "classe": "Subchefe",
+        "vida": "8",
+        "passos": "10",
+        "note": "Subchefe H5"
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Garras",
+          "tipo": "Subchefe",
+          "carta_sugerida": "Garras",
+          "classe": "ATTACK",
+          "efeitos": "Garras (Impacto, Dano 2, Repulsão 2)",
+          "flags": "—",
+          "status": "proposta (H5 inimigo)"
+        },
+        {
+          "name": "Servos",
+          "tipo": "Subchefe",
+          "carta_sugerida": "Servos",
+          "classe": "ATTACK",
+          "efeitos": "Servos (Alcance 2, Guardião, Combo 1)",
+          "flags": "—",
+          "status": "proposta (H5 inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Motzolop",
+      "aliases": [],
+      "sources": [
+        "xlsx:Lista de Personagens",
+        "xlsx:FICHAS - Manobras"
+      ],
+      "role": "playable",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Motzolop\nAlinhamento: Caótico e Neutro\nCodinome: Kraken\nRaça: Meio Alien\nFraquezas: Eletricidade, Calor\nIdentidade: Pública\nReputação: Impopular (+0)\nAparência: Muito assustador (+6)\nAfiliação: Aluno do IN; Freaks (Nymb e +2)\nContatos: Konrad\nAtributos\nPRE 6 VID 6+7 IMP 6 ARM 6 POD 3 ESC 4 VEL 3\nManobras\nTentáculos: Motz pode estender seus membros com tentáculos para agarrar e imobilizar seu adversário em uma luta corpo a corpo.\n\nJato de Tinta: Motz pode secretar um ácido corrosivo em seu adversário para causar danos a longa distância.\n\nRegeneração: Motz pode regenerar rapidamente membros perdidos ou danificados, curando-se de ferimentos graves durante uma luta.\n\nTelecinese: Motz pode tentar desviar projéteis usando a força da sua mente.\n\nMetamorfose: Motz pode se transformar em qualquer ser vivo que já tenha absorvido, copiando sua aparência.\n\nMotzolop foi abandonado quando era bebê. Ele foi encontrado por um casal de caminhoneiros que o adotaram como filho e o criaram enquanto viajavam pelo país. Apesar de amar seus pais adotivos, Motzolop nunca se sentiu completamente à vontade. Ele sabia que era diferente dos outros seres humanos, e isso o deixava frustrado e confuso.\nMotzolop era um adolescente rebelde que não se encaixava em lugar nenhum. Ele tinha dificuldade em fazer amigos e frequentemente se metia em problemas por causa de suas habilidades. Motzolop começou a mentir compulsivamente para as pessoas ao seu redor, tentando se encaixar em um mundo que ele nunca pertenceu.\nEle tem um amor profundo por seu pai adotivo caminhoneiro, mas se ressente por nunca ter recebido atenção suficiente dele quando era criança. Nos seus momentos de lazer, Motzolop gosta de praticar telecinese, tentando desviar projéteis usando a força da sua mente. Além disso, ele pode se transformar em qualquer ser vivo que já tenha absorvido, copiando sua aparência. Motzolop é vulnerável a eletricidade e calor, que podem prejudicar suas habilidades de regeneração.",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/alunos"
+      ],
+      "role": "playable",
+      "alterego": "",
+      "stats": {
+        "nivel": 7,
+        "attrs": "PRE 6 VID 6+7 IMP 6 ARM 6 POD 3 ESC 4 VEL 3"
+      },
+      "kits": [
+        {
+          "source": "docx:HERORGASM4",
+          "manobras": [
+            "Tentáculos",
+            "Jato de Tinta",
+            "Regeneração",
+            "Telecinese",
+            "Metamorfose"
+          ]
+        }
+      ],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Tentáculos",
+          "tipo": "DOCX",
+          "carta_sugerida": "Tentáculos",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4)"
+        },
+        {
+          "name": "Jato de Tinta",
+          "tipo": "DOCX",
+          "carta_sugerida": "Jato de Tinta",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4)"
+        },
+        {
+          "name": "Regeneração",
+          "tipo": "DOCX",
+          "carta_sugerida": "Regeneração",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4)"
+        },
+        {
+          "name": "Telecinese",
+          "tipo": "DOCX",
+          "carta_sugerida": "Telecinese",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4)"
+        },
+        {
+          "name": "Metamorfose",
+          "tipo": "DOCX",
+          "carta_sugerida": "Metamorfose",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Mímico",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Provocação",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Provocação",
+          "classe": "ATTACK",
+          "efeitos": "Provocação",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Múmia",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": true,
+      "suggested_cards": [
+        {
+          "name": "Resistente 2",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Resistente 2",
+          "classe": "ATTACK",
+          "efeitos": "Resistente 2",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Nave Mãe\nCortana",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/raça"
+      ],
+      "role": "npc",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Neblina\nElly\nVibro\nDelia",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/raça"
+      ],
+      "role": "npc",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Necromante",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Combo 2",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Combo 2",
+          "classe": "ATTACK",
+          "efeitos": "Combo 2",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Nero Granger",
+      "aliases": [],
+      "sources": [
+        "xlsx:Lista de Personagens",
+        "xlsx:FICHAS - Manobras"
+      ],
+      "role": "playable",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": true,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Neófito",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Mordida",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Mordida",
+          "classe": "ATTACK",
+          "efeitos": "Mordida (Impacto, Dano 1, Rápido)",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Nikki Pimvare\nAlinhamento: Leal e Maligna\nCodinome: Necrolai\nRaça: Monstro\nFraquezas: \nReputação: Comum (+1)\nAparência: Levemente assustadora (+2) / Sedutora (+5) (Forma Necrolai)\nAtributos\nPRE 3/7 VID 8+10 IMP 8 ARM 6 POD 4 ESC 6 VEL 8\nManobras\nHediacs (Passivo, Pressão, Rolar): Necrolai está sempre rodeada de humanos que ela controla, tornando mais difícil atingi-la sem machucar os reféns. Se receber um ataque rola um [6], o adversário rola o dado mais uma vez.\nTeletransporte: Necrolai pode se teletransportar para qualquer local à vontade.\nMetamorfose: Necrolai tem a habilidade de se transformar em outra pessoa. \nTransmutação de Vampiros: Necrolai pode morder qualquer um e transformá-lo em um vampiro e também em seu servo.\nSopro de Vento: Necrolai pode liberar uma rajada de vento de sua boca.",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/alunos"
+      ],
+      "role": "playable",
+      "alterego": "",
+      "stats": {
+        "nivel": 10
+      },
+      "kits": [
+        {
+          "source": "docx:HERORGASM4",
+          "manobras": [
+            "Hediacs (Passivo, Pressão, Rolar)"
+          ]
+        }
+      ],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Hediacs (Passivo, Pressão, Rolar)",
+          "tipo": "DOCX",
+          "carta_sugerida": "Hediacs (Passivo, Pressão, Rolar)",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Nixie\nAlinhamento: Neutra e Bondosa\nCodinome: \nRaça: \nFraquezas: \nReputação: Herói iniciante (+4)\nAparência: Muito sedutora (+7)\nAtributos\nPRE 11 VID 14+15 IMP 7 ARM 13 POD 7 ESC 12 VEL 7\nManobras\nIlusão (ME): Cria monstros imaginários. Ganha a Presença? Atordoado?\nConfusão (ME): Faz clones dos alvos. Inimigo ataca aliado?\nSentir Maldade:\nInvisibilidade: Se X não pode ser atacada",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/alunos"
+      ],
+      "role": "playable",
+      "alterego": "",
+      "stats": {
+        "nivel": 15,
+        "attrs": "PRE 11 VID 14+15 IMP 7 ARM 13 POD 7 ESC 12 VEL 7"
+      },
+      "kits": [
+        {
+          "source": "docx:HERORGASM4",
+          "manobras": [
+            "Ilusão (ME)"
+          ]
+        }
+      ],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Ilusão (ME)",
+          "tipo": "DOCX",
+          "carta_sugerida": "Ilusão (ME)",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Orc",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Elite",
+        "vida": 4,
+        "passos": 6
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Tacabe",
+          "tipo": "Elite",
+          "carta_sugerida": "Tacabe",
+          "classe": "ATTACK",
+          "efeitos": "Tacabe (Impacto, Dano 2)",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        },
+        {
+          "name": "Impacto",
+          "tipo": "Elite",
+          "carta_sugerida": "Impacto",
+          "classe": "ATTACK",
+          "efeitos": "Impacto",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Paladino",
+      "aliases": [],
+      "sources": [
+        "xlsx:Lista de Personagens"
+      ],
+      "role": "playable",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": "Entrada distinta na planilha; em H4 Paladino = codinome de Methos."
+    },
+    {
+      "name": "Pixie",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Plasmóide Atroz",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Vômito Ácido",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Vômito Ácido",
+          "classe": "ATTACK",
+          "efeitos": "Vômito Ácido (Poder, Dano 2)",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        },
+        {
+          "name": "Cura 1",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Cura 1",
+          "classe": "ATTACK",
+          "efeitos": "Cura 1",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Plasmóide Menor",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Vômito Ácido",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Vômito Ácido",
+          "classe": "ATTACK",
+          "efeitos": "Vômito Ácido (Poder, Dano 1)",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        },
+        {
+          "name": "Fusão",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Fusão",
+          "classe": "ATTACK",
+          "efeitos": "Fusão",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "QP",
+      "aliases": [
+        "Quatro Partes"
+      ],
+      "sources": [
+        "xlsx:Lista de Personagens",
+        "xlsx:FICHAS - Manobras",
+        "docx:HERORGASM4/alunos"
+      ],
+      "role": "playable",
+      "alterego": "QP",
+      "stats": {
+        "nivel": 5,
+        "attrs": "PRE 3 VID 3+5 IMP 3 ARM 3 POD 5 ESC 3 VEL 3"
+      },
+      "kits": [
+        {
+          "source": "docx:HERORGASM4",
+          "manobras": [
+            "Análise de Combate",
+            "Soco Foguete",
+            "Campo de Calor",
+            "Fogo Concentrado",
+            "Propulsão de Foguete"
+          ]
+        }
+      ],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Análise de Combate",
+          "tipo": "DOCX",
+          "carta_sugerida": "Análise de Combate",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4)"
+        },
+        {
+          "name": "Soco Foguete",
+          "tipo": "DOCX",
+          "carta_sugerida": "Soco Foguete",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4)"
+        },
+        {
+          "name": "Campo de Calor",
+          "tipo": "DOCX",
+          "carta_sugerida": "Campo de Calor",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4)"
+        },
+        {
+          "name": "Fogo Concentrado",
+          "tipo": "DOCX",
+          "carta_sugerida": "Fogo Concentrado",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4)"
+        },
+        {
+          "name": "Propulsão de Foguete",
+          "tipo": "DOCX",
+          "carta_sugerida": "Propulsão de Foguete",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Quatro Partes\nSoren\nNixie\nChase",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/raça"
+      ],
+      "role": "npc",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Quimera",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Chefão",
+        "vida": 12,
+        "passos": 10
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Rainha Aldra",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/raça"
+      ],
+      "role": "npc",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Red Thumb",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/raça"
+      ],
+      "role": "npc",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Rita Repulsa\nCodinome: Patrulheira Verde\nRaça: Andróide\nFraquezas: \nReputação: \nAparência: \nAtributos\nPRE  VID 9+13 IMP 7 ARM 8 POD 11 ESC 8 VEL 9\nManobras\nControle de Ouro\nInimiga do Chase Quinn/Patrulheiro Vermelho. Inimiga de todos os outros patrulheiros que aparecerem. Se morta, outro assume seu lugar.",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/vilões"
+      ],
+      "role": "elite",
+      "alterego": "",
+      "stats": {
+        "nivel": 13,
+        "attrs": "PRE  VID 9+13 IMP 7 ARM 8 POD 11 ESC 8 VEL 9"
+      },
+      "kits": [
+        {
+          "source": "docx:HERORGASM4/vilões",
+          "manobras": [
+            "Controle de Ouro"
+          ]
+        }
+      ],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Controle de Ouro",
+          "tipo": "DOCX",
+          "carta_sugerida": "Controle de Ouro",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4 vilão)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Roper",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Frágil 2",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Frágil 2",
+          "classe": "ATTACK",
+          "efeitos": "Frágil 2",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Sacerdote",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Magia de Sangue",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Magia de Sangue",
+          "classe": "ATTACK",
+          "efeitos": "Magia de Sangue (Poder, Dano 1)",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        },
+        {
+          "name": "Cura 1",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Cura 1",
+          "classe": "ATTACK",
+          "efeitos": "Cura 1",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Samael",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM5/narrativa"
+      ],
+      "role": "elite",
+      "alterego": "",
+      "stats": {
+        "note": "Meio-Sangue serpente; servo de Brom Stikk"
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Forma Serpente",
+          "tipo": "Elite",
+          "carta_sugerida": "Forma Serpente",
+          "classe": "ATTACK",
+          "efeitos": "Transformação / área",
+          "flags": "—",
+          "status": "proposta"
+        },
+        {
+          "name": "Investida",
+          "tipo": "Elite",
+          "carta_sugerida": "Investida",
+          "classe": "ATTACK",
+          "efeitos": "Impacto",
+          "flags": "—",
+          "status": "proposta"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Scypha\nAlinhamento: \nCodinome: Pixie\nRaça: Mutante\nFraquezas: Instabilidade emocional desestabiliza os poderes\nIdentidade: Secreta\nReputação: Herói iniciante (+4)\nAparência: Sedutora (+5)\nAtributos\nPRE 9 VID 8+12 IMP 5 ARM 9 POD 9 ESC 9 VEL 8\nManobras\nTentáculos de Sombra (Especial, Crítico, Atordoar): \nTransformação (Estado, Revanche, Único, Super): Quando a Vida de Delia está menor que um terço (VID 7), ela abre suas Asas de Luz, recebendo +2 em IMP, ARM, POD, ESC e VEL.\nConvergência (Passivo, Singular, Massivo): Se Delia lutar ao lado de outra Winx, as duas fundem seus poderes e causam +2 de dano.",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/alunos"
+      ],
+      "role": "playable",
+      "alterego": "",
+      "stats": {
+        "nivel": 12,
+        "attrs": "PRE 9 VID 8+12 IMP 5 ARM 9 POD 9 ESC 9 VEL 8"
+      },
+      "kits": [
+        {
+          "source": "docx:HERORGASM4",
+          "manobras": [
+            "Tentáculos de Sombra (Especial, Crítico, Atordoar)"
+          ]
+        }
+      ],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Tentáculos de Sombra (Especial, Crítico, Atordoar)",
+          "tipo": "DOCX",
+          "carta_sugerida": "Tentáculos de Sombra (Especial, Crítico, Atordoar)",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Shotguy\nNitro\nCaçador\nLady Hardware",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/raça"
+      ],
+      "role": "npc",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Siren\nColecionador\nRübezahl",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/raça"
+      ],
+      "role": "npc",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": true,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Sirena",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Slash\nRevenger",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/raça"
+      ],
+      "role": "npc",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Soren",
+      "aliases": [],
+      "sources": [
+        "xlsx:Lista de Personagens",
+        "xlsx:FICHAS - Manobras"
+      ],
+      "role": "playable",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Soren\nAlinhamento: Leal e Neutro\nCodinome: \nRaça: Mutante\nFraquezas: \nIdentidade: Pública\nReputação: Popular (+2)\nAparência: Levemente sedutor (+3)\nAtributos\nPRE 5 VID 8+12 IMP 9 ARM 9 POD 5 ESC 9 VEL 8\nManobras\nGênio Estrategista (Passivo, Heroico, Rolar): Ataques que rolam [1] repetem 1 vez por turno\nMaça de Areia (Físico, Recuo, Massivo): Custa 1 de VID, causa +2 de dano com Ataque Físico\nKung Fu (Físico, Crítico, Duplo): Ataques Físicos que rolam [6] causam +1D6 de dano extra.\nAreia nos Olhos: \nEscavar\nEncher de Areia\nMuro de Areia nas costas\nCama de Espinhos",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/alunos"
+      ],
+      "role": "playable",
+      "alterego": "",
+      "stats": {
+        "nivel": 12,
+        "attrs": "PRE 5 VID 8+12 IMP 9 ARM 9 POD 5 ESC 9 VEL 8"
+      },
+      "kits": [
+        {
+          "source": "docx:HERORGASM4",
+          "manobras": [
+            "Gênio Estrategista (Passivo, Heroico, Rolar)"
+          ]
+        }
+      ],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Gênio Estrategista (Passivo, Heroico, Rolar)",
+          "tipo": "DOCX",
+          "carta_sugerida": "Gênio Estrategista (Passivo, Heroico, Rolar)",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Succubu",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Taylor Snut",
+      "aliases": [
+        "Nave-Mãe"
+      ],
+      "sources": [
+        "xlsx:Lista de Personagens",
+        "xlsx:Fichas 3"
+      ],
+      "role": "playable",
+      "alterego": "Nave-Mãe",
+      "stats": {
+        "raca": "Meio-Sangue",
+        "vida": "d6 1",
+        "velocidade": "6 passos"
+      },
+      "kits": [
+        {
+          "source": "xlsx:Fichas 3",
+          "manobras": []
+        }
+      ],
+      "in_hotn3": true,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Techna",
+      "aliases": [],
+      "sources": [
+        "xlsx:FICHAS - Manobras"
+      ],
+      "role": "playable",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": true,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Ursoruja",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Adjacente 2",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Adjacente 2",
+          "classe": "ATTACK",
+          "efeitos": "Adjacente 2",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Vampiro",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes",
+        "docx:HERORGASM5/inimigos"
+      ],
+      "role": "elite",
+      "alterego": "",
+      "stats": {
+        "classe": "Elite",
+        "vida": "4",
+        "passos": "7"
+      },
+      "kits": [],
+      "in_hotn3": true,
+      "suggested_cards": [
+        {
+          "name": "Área 2",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Área 2",
+          "classe": "ATTACK",
+          "efeitos": "Área 2",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        },
+        {
+          "name": "Mordida",
+          "tipo": "Elite",
+          "carta_sugerida": "Mordida",
+          "classe": "ATTACK",
+          "efeitos": "Mordida (Impacto, Dano 2, Rápido 1, Ferido 1)",
+          "flags": "—",
+          "status": "proposta (H5 inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Vampiro (Neófito)",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM5/inimigos"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaios",
+        "vida": "1",
+        "passos": "5"
+      },
+      "kits": [],
+      "in_hotn3": true,
+      "suggested_cards": [
+        {
+          "name": "Mordida",
+          "tipo": "Lacaios",
+          "carta_sugerida": "Mordida",
+          "classe": "ATTACK",
+          "efeitos": "Mordida (Impacto, Dano 1, Rápido )",
+          "flags": "—",
+          "status": "proposta (H5 inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Vampiro (Toreador)",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM5/inimigos"
+      ],
+      "role": "elite",
+      "alterego": "",
+      "stats": {
+        "classe": "Elite",
+        "vida": "4",
+        "passos": "7"
+      },
+      "kits": [],
+      "in_hotn3": true,
+      "suggested_cards": [
+        {
+          "name": "Hipnose",
+          "tipo": "Elite",
+          "carta_sugerida": "Hipnose",
+          "classe": "ATTACK",
+          "efeitos": "Hipnose (Poder, Dano 1, Atordoado)",
+          "flags": "—",
+          "status": "proposta (H5 inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Verme",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Engolir",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Engolir",
+          "classe": "ATTACK",
+          "efeitos": "Engolir (Impacto, Poder, Dano 1)",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        },
+        {
+          "name": "Recuo",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Recuo",
+          "classe": "ATTACK",
+          "efeitos": "Recuo",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Yuina",
+      "aliases": [],
+      "sources": [
+        "docx:HotN Godot Edition A (DOCX aa573632…)",
+        "docx:HotN Mecânicas (DOCX 964fd7ef…)"
+      ],
+      "role": "npc",
+      "alterego": "",
+      "stats": {
+        "note": "Citado no cast HotN Godot junto a Isabella / Sombria (Ajudante)"
+      },
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "(kit incompleto)",
+          "tipo": "Manobra",
+          "carta_sugerida": "(kit incompleto)",
+          "classe": "ESTADO",
+          "efeitos": "sem poderes no DOCX",
+          "flags": "—",
+          "status": "lacuna"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Yumi Yamaguchi\nCodinome: Princesa Yumi\nRaça: Inumana\nFraquezas: \nReputação: \nAparência: \nAtributos\nPRE 5 VID 9+12 IMP 6 ARM 10 POD 6 ESC 11 VEL 6\nManobras\nAtributos (Rapidash)\nPRE 8 VID 9+12 IMP 11 ARM 6 POD 6 ESC 6 VEL 10\nPastel Veil (ME): \nAtributos (Sylveon)\nPRE 8 VID 9+12 IMP 6 ARM 6 POD 10 ESC 6 VEL 11\nExplosão Lunar (ME): Custa 1 de VID, causa +2 de dano com Ataque Especial\nAtributos (Bolinho - Tanque)\nPRE 8 VID 9+12 IMP 6 ARM 11 POD 6 ESC 11 VEL 6\nSiga-me! (ME): Provocar\n\nYumi não era como as outras garotas que Hibiki conhecia. Ela era uma princesa japonesa, corajosa e determinada, e sempre estava disposta a tentar coisas novas. Quando Hibiki lhe contou sobre os seus estudos com a Professora Elowen e as suas pesquisas sobre a Dimensão Dourada, Yumi ficou fascinada e decidiu ajudá-los  usado seus recursos e influência. No entanto, durante os testes finais, quando os três foram expostos à radiação, apenas Hibiki e Yumi sobreviveram e adquiriram os poderes de Inumano.\nYumi acreditava que, como Inumanos, ela e Hibiki eram destinados a ficar juntos para sempre. Ela ficou obcecada com a ideia de se casar com ele e salvar a Dimensão Dourada. Hibiki, no entanto, não compartilhava os mesmos sentimentos e tentava se afastar dela a todo custo.",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/vilões"
+      ],
+      "role": "elite",
+      "alterego": "",
+      "stats": {
+        "nivel": 12,
+        "attrs": "PRE 5 VID 9+12 IMP 6 ARM 10 POD 6 ESC 11 VEL 6"
+      },
+      "kits": [
+        {
+          "source": "docx:HERORGASM4/vilões",
+          "manobras": [
+            "Atributos (Rapidash)"
+          ]
+        }
+      ],
+      "in_hotn3": false,
+      "suggested_cards": [
+        {
+          "name": "Atributos (Rapidash)",
+          "tipo": "DOCX",
+          "carta_sugerida": "Atributos (Rapidash)",
+          "classe": "ATTACK",
+          "efeitos": "",
+          "flags": "—",
+          "status": "proposta (HERORGASM4 vilão)"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "name": "Zaphter",
+      "aliases": [],
+      "sources": [
+        "docx:HERORGASM4/raça"
+      ],
+      "role": "npc",
+      "alterego": "",
+      "stats": {},
+      "kits": [],
+      "in_hotn3": false,
+      "suggested_cards": [],
+      "notes": ""
+    },
+    {
+      "name": "Zumbi",
+      "aliases": [],
+      "sources": [
+        "xlsx:Inimigos e Ajudantes"
+      ],
+      "role": "enemy",
+      "alterego": "",
+      "stats": {
+        "classe": "Lacaio",
+        "vida": 1,
+        "passos": 4
+      },
+      "kits": [],
+      "in_hotn3": true,
+      "suggested_cards": [
+        {
+          "name": "Mordida",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Mordida",
+          "classe": "ATTACK",
+          "efeitos": "Mordida (Impacto, Dano 1)",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        },
+        {
+          "name": "Ferido 1",
+          "tipo": "Lacaio",
+          "carta_sugerida": "Ferido 1",
+          "classe": "ATTACK",
+          "efeitos": "Ferido 1",
+          "flags": "—",
+          "status": "proposta (inimigo)"
+        }
+      ],
+      "notes": ""
+    }
+  ]
+}

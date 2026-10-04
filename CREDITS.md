@@ -1,8 +1,10 @@
 # Créditos
 
-- Design e direção do universo Heroes of the Nightmare: projeto do usuário.
-- Implementação do código do HotN3 nesta cópia de desenvolvimento: colaboração com Codex.
-- Oito sprites presentes: copiados do HotN2. Criadores originais **não identificados** na cópia recebida; atribuição e permissões pendentes, como detalhado em `ASSET_LICENSES.md`.
-- Música e efeitos atuais: síntese original no script `game/SoundBus.gd`.
+- Design, direção e universo Heroes of the Nightmare: projeto do usuário.
+- Implementação do HotN3: colaboração entre o usuário e Codex.
+- Personagens e artes em `assets/cast/`: conteúdo do projeto HotN.
+- Efeitos Effekseer, texturas de partículas, BGM e imagens MZ: pacotes de DLC do RPG Maker MZ descritos em `ASSETS.md`, usados sob as licenças confirmadas pelo usuário.
+- Interface, arenas e cartas: construídas pelo código do projeto.
+- Efeitos sonoros e trilhas de fallback: sintetizados por `game/SoundBus.gd`.
 
-Não atribuí autoria de imagens a pessoas ou sites sem evidência.
+Os oito sprites herdados do HotN2 sem autoria comprovada deixaram de fazer parte dos bytes ativos do projeto em 2026-09-27.

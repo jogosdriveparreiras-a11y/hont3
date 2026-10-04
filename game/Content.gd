@@ -57,9 +57,9 @@ static var CARDS := {
 	"corrente": {"name": "Corte em sequência", "class": "ATTACK", "target": "CHAIN", "reach": true, "gain": 1, "chain": 3, "effects": [{"kind": "DAMAGE", "amount": 20, "stat": "attack"}], "full_combo": [{"kind": "STATUS", "id": "bleed", "duration": 2, "stacks": 2}], "anim_self": ["Special2"], "anim_target": ["SlashSP2"]},
 	"sombra": {"name": "Dança sombria", "class": "POWER", "target": "ENEMY", "reach": true, "cost": 3, "effects": [{"kind": "DAMAGE", "amount": 38, "stat": "attack"}, {"kind": "STATUS", "id": "bleed", "duration": 2, "stacks": 2}], "anim_self": ["Special3"], "anim_target": ["shield"]},
 	"luz": {"name": "Luz incisiva", "class": "ATTACK", "target": "ENEMY", "reach": true, "gain": 1, "effects": [{"kind": "DAMAGE", "amount": 20, "stat": "power"}], "anim_self": ["BreathLight"], "anim_target": ["HitSP2"]},
-	"cura": {"name": "Cura vital", "class": "SKILL", "target": "ALLY", "gain": 1, "effects": [{"kind": "HEAL", "amount": 12}, {"kind": "CLEANSE", "ids": ["poison", "bleed", "burn"]}], "anim_self": ["HeartMark1"], "anim_target": ["Light1"]},
+	"cura": {"name": "Cura vital", "class": "SKILL", "target": "ALLY", "gain": 1, "effects": [{"kind": "HEAL", "amount": 12}, {"kind": "CLEANSE", "ids": ["bleed"]}], "anim_self": ["HeartMark1"], "anim_target": ["Light1"]},
 	"benção": {"name": "Bênção persistente", "class": "SKILL", "target": "ALLY", "gain": 2, "effects": [{"kind": "STATUS", "id": "strengthened", "duration": 2, "stacks": 1}, {"kind": "STATUS", "id": "regen", "duration": 2, "stacks": 1}], "anim_self": ["BreathLight"], "anim_target": ["shield"]},
-	"purificar": {"name": "Purificação", "class": "SKILL", "target": "ALLY", "gain": 1, "free": true, "effects": [{"kind": "CLEANSE", "ids": ["poison", "bleed", "burn", "weak", "bind", "silence", "blind"]}, {"kind": "DRAW", "amount": 1}], "anim_self": ["cast"], "anim_target": ["shield"]},
+	"purificar": {"name": "Purificação", "class": "SKILL", "target": "ALLY", "gain": 1, "free": true, "effects": [{"kind": "CLEANSE", "ids": ["bleed", "weak", "wounded", "bind", "silence", "blind"]}, {"kind": "DRAW", "amount": 1}], "anim_self": ["cast"], "anim_target": ["shield"]},
 	"julgamento": {"name": "Julgamento", "class": "POWER", "target": "ENEMY", "reach": true, "cost": 4, "effects": [{"kind": "DAMAGE", "amount": 35, "stat": "power"}, {"kind": "STATUS", "id": "stun", "duration": 1, "stacks": 1}], "anim_self": ["fire"], "anim_target": ["shield"]},
 	"martelo": {"name": "Golpe de martelo", "class": "ATTACK", "target": "ENEMY", "gain": 1, "effects": [{"kind": "DAMAGE", "amount": 20, "stat": "attack"}, {"kind": "PULL"}], "anim_self": ["lightning"], "anim_target": ["pull"]},
 	"egide": {"name": "Égide", "class": "SKILL", "target": "ALLY", "gain": 1, "effects": [{"kind": "STATUS", "id": "barrier", "duration": 1, "stacks": 8}, {"kind": "STATUS", "id": "resistente", "duration": 2, "stacks": 1}], "anim_self": ["buff"], "anim_target": ["Reflection"]},
@@ -87,7 +87,7 @@ static var CARDS := {
 	"foco": {"name": "Foco do caçador", "class": "SKILL", "target": "SELF", "gain": 2, "effects": [{"kind": "STATUS", "id": "strengthened", "duration": 1}, {"kind": "DRAW", "amount": 1}], "anim_self": ["cast"], "anim_target": ["bind"]},
 	"salva": {"name": "Salva rente", "class": "ATTACK", "target": "ENEMY_ROW", "reach": true, "gain": 1, "effects": [{"kind": "DAMAGE", "amount": 20, "stat": "attack"}], "anim_self": ["Special3"], "anim_target": ["HitSP1"]},
 	"rede": {"name": "Rede de caça", "class": "SKILL", "target": "ENEMY", "reach": true, "gain": 1, "effects": [{"kind": "STATUS", "id": "bind", "duration": 2}, {"kind": "PULL"}], "anim_self": ["Neutral1"], "anim_target": ["pull"]},
-	"veneno": {"name": "Flecha contaminada", "class": "ATTACK", "target": "ENEMY", "reach": true, "gain": 1, "effects": [{"kind": "DAMAGE", "amount": 20, "stat": "attack"}, {"kind": "STATUS", "id": "poison", "duration": 2, "stacks": 2}], "anim_self": ["fire"], "anim_target": ["PierceSP1"]},
+	"veneno": {"name": "Flecha serrilhada", "class": "ATTACK", "target": "ENEMY", "reach": true, "gain": 1, "effects": [{"kind": "DAMAGE", "amount": 20, "stat": "attack"}, {"kind": "STATUS", "id": "bleed", "duration": 2, "stacks": 2}], "anim_self": ["fire"], "anim_target": ["PierceSP1"]},
 	"flanquear": {"name": "Flanquear", "class": "SKILL", "target": "SELF", "free": true, "gain": 1, "effects": [{"kind": "MOVE"}, {"kind": "STATUS", "id": "conceal", "duration": 1}], "anim_self": ["Neutral2"], "anim_target": ["shield"]},
 	"falcon": {"name": "Olho da falcoaria", "class": "SKILL", "target": "ENEMY", "reach": true, "gain": 2, "effects": [{"kind": "STATUS", "id": "marked", "duration": 2}, {"kind": "DRAW", "amount": 1}], "anim_self": ["Special1"], "anim_target": ["status"]},
 	"chuva": {"name": "Chuva de pontas", "class": "POWER", "target": "ALL_ENEMIES", "reach": true, "cost": 5, "effects": [{"kind": "DAMAGE", "amount": 20, "stat": "attack"}], "anim_self": ["lightning"], "anim_target": ["HitSP2"]},
@@ -100,7 +100,7 @@ static var CARDS := {
 	"campo_sagrado": {"name": "Campo sagrado", "class": "SKILL", "target": "SELF", "gain": 1, "effects": [{"kind": "STATUS", "id": "chaos_field", "duration": 2}, {"kind": "CURE"}], "anim_self": ["BreathLight"], "anim_target": ["StarsHit"]},
 	"elo_vital": {"name": "Elo vital", "class": "SKILL", "target": "ALL_ALLIES", "cost": 2, "effects": [{"kind": "STATUS", "id": "soulbound", "duration": 2}, {"kind": "HEAL", "amount": 3}], "anim_self": ["HeartMark1"], "anim_target": ["Light4"]},
 	"estandarte": {"name": "Estandarte de defesa", "class": "SKILL", "target": "SELF", "cost": 2, "effects": [{"kind": "STATUS", "id": "barrier", "duration": 2, "stacks": 15}, {"kind": "STATUS", "id": "binary", "duration": 2}, {"kind": "STATUS", "id": "protecao", "duration": 2}], "anim_self": ["buff"], "anim_target": ["bind"]},
-	"guarda_absoluta": {"name": "Guarda absoluta", "class": "SKILL", "target": "ALLY", "gain": 1, "effects": [{"kind": "STATUS", "id": "protecao", "duration": 1}, {"kind": "STATUS", "id": "invulnerable", "duration": 1}], "anim_self": ["guard"], "anim_target": ["Shield"]},
+	"guarda_absoluta": {"name": "Guarda absoluta", "class": "SKILL", "target": "ALLY", "gain": 1, "effects": [{"kind": "STATUS", "id": "protecao", "duration": 1}, {"kind": "STATUS", "id": "conceal", "duration": 1}], "anim_self": ["guard"], "anim_target": ["Shield"]},
 	"teia": {"name": "Teia de caça", "class": "SKILL", "target": "ENEMY", "reach": true, "gain": 1, "effects": [{"kind": "STATUS", "id": "webbed_up", "duration": 2}, {"kind": "STATUS", "id": "bound", "duration": 1}], "anim_self": ["Special1"], "anim_target": ["shield"]},
 	"foco_ambiental": {"name": "Foco ambiental", "class": "SKILL", "target": "SELF", "gain": 1, "effects": [{"kind": "STATUS", "id": "opportunist", "duration": 2, "stacks": 2}, {"kind": "STATUS", "id": "perfect_aim", "duration": 2, "stacks": 2}], "anim_self": ["cast"], "anim_target": ["status"]},
 	"furia_totem": {"name": "Fúria do totem", "class": "SKILL", "target": "SELF", "cost": 2, "effects": [{"kind": "STATUS", "id": "en_fuego", "duration": 99}, {"kind": "STATUS", "id": "fury_totem", "duration": 2}, {"kind": "STATUS", "id": "fatal_fury", "duration": 1}], "anim_self": ["wind"], "anim_target": ["debuff"]},
@@ -147,7 +147,7 @@ const ENEMIES := {
 const ENEMY_CARDS := {
 	"strike": {"name": "Ataque", "target": "ENEMY", "effects": [{"kind": "DAMAGE", "amount": 20, "stat": "attack"}]},
 	"shot": {"name": "Disparo", "target": "ENEMY", "reach": true, "effects": [{"kind": "DAMAGE", "amount": 20, "stat": "attack"}]},
-	"poison_shot": {"name": "Dardo tóxico", "target": "ENEMY", "reach": true, "effects": [{"kind": "DAMAGE", "amount": 20, "stat": "attack"}, {"kind": "STATUS", "id": "poison", "duration": 2, "stacks": 1}, {"kind": "INFECT"}]},
+	"poison_shot": {"name": "Dardo serrilhado", "target": "ENEMY", "reach": true, "effects": [{"kind": "DAMAGE", "amount": 20, "stat": "attack"}, {"kind": "STATUS", "id": "bleed", "duration": 2, "stacks": 1}, {"kind": "INFECT"}]},
 	"guard": {"name": "Guarda", "target": "SELF", "effects": [{"kind": "STATUS", "id": "barrier", "duration": 1, "stacks": 7}]},
 	"sweep": {"name": "Varredura", "target": "ENEMY_ROW", "reach": true, "effects": [{"kind": "DAMAGE", "amount": 20, "stat": "attack"}]},
 	"ritual": {"name": "Selo adverso", "target": "ENEMY", "reach": true, "effects": [{"kind": "DAMAGE", "amount": 20, "stat": "power"}, {"kind": "STATUS", "id": "weak", "duration": 2, "stacks": 1}]},
@@ -175,7 +175,7 @@ static var CAMPAIGN := {
 }
 
 static var HERO_LORE := {
-	"guerreiro": {"role": "Vanguarda", "trait": "Na frente recebe 2 de Bloqueio no começo de cada rodada.", "history": "Ex-sentinela que abandonou a Vigília após a queda da estrada."},
+	"guerreiro": {"role": "Vanguarda", "trait": "Na frente recebe Barreira 2 no começo de cada rodada.", "history": "Ex-sentinela que abandonou a Vigília após a queda da estrada."},
 	"mago": {"role": "Artilharia", "trait": "Canalizar gera 1 Iniciativa a cada rodada.", "history": "Estudou os selos que alimentam o ritual de cinzas."},
 	"ladino": {"role": "Execução", "trait": "Causa dano extra a alvos marcados.", "history": "Contrabandista que conhece as rotas entre os postos da Vigília."},
 	"clerigo": {"role": "Sustento", "trait": "Amplia a cura das habilidades.", "history": "Guardião das últimas sentinelas que resistem à corrupção."},

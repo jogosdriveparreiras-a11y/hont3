@@ -56,7 +56,7 @@ const SFX_FOR := {
 	"heal": "heal", "light": "heal", "absorb": "heal", "buff": "heal", "summon": "cast",
 	"cast": "cast", "darkness": "cast", "fire": "cast", "ice": "cast",
 	"lightning": "cast", "thunder": "cast", "banish": "cast",
-	"guard": "block", "shield": "block",
+	"guard": "resist", "shield": "resist",
 	"status": "status", "stun": "status", "bind": "status", "slow": "status",
 	"debuff": "status", "confusion": "status",
 }

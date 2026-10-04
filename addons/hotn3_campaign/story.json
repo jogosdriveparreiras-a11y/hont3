@@ -1,7 +1,11 @@
 {
   "title": "A Fenda das Três Vigílias",
   "protagonist": "ent_alyssa_wine",
-  "battles": ["road", "ritual", "eclipse"],
+  "battles": [
+    "road",
+    "ritual",
+    "eclipse"
+  ],
   "scenes": {
     "prologue": {
       "title": "I · A estrada que escuta",
@@ -9,27 +13,107 @@
       "weather": "rain",
       "bgm": "res://assets/audio/bgm/Dungeon3.ogg",
       "steps": [
-        {"speaker": "NARRADOR", "text": "A estrada da Vigília desaparece sob a chuva. Onde deveria haver um posto de guarda, restam pedras marcadas com cinza negra."},
-        {"speaker": "ALYSSA", "right": "", "text": "O selo não caiu sozinho. Consigo ouvir alguém contando os meus batimentos dentro dele."},
-        {"speaker": "VIGÍLIA", "text": "Alyssa Wine, aqui é a operadora da Vigília. Três estações pararam de responder na mesma hora. Você é a única que saiu viva da última descarga da Tormenta."},
-        {"speaker": "ALYSSA", "text": "Saí porque alguém fechou a porta depois de mim. Diga onde estão as pessoas do posto."},
-        {"speaker": "VIGÍLIA", "text": "Nenhum sinal de civis na estrada. Leve duas pessoas. O canal só alcançará vocês enquanto o primeiro marco estiver de pé."},
-        {"speaker": "NARRADOR", "text": "Alyssa encosta a mão no marco. A dor acende uma memória que não é sua: um círculo de cinzas e, acima dele, uma sombra cobrindo o sol."},
-        {"speaker": "ALYSSA", "text": "A Escuridão reage ao marco. Se eu forçar, posso descobrir quem abriu a fenda. Se esperar, talvez ela não perceba que cheguei."},
-        {"type": "choice", "options": [
-          {"label": "Tocar o selo e aceitar a dor", "flag": "heard_seal", "value": true},
-          {"label": "Conter a Escuridão e observar", "flag": "heard_seal", "value": false}
-        ]},
-        {"speaker": "NARRADOR", "if": "heard_seal", "text": "O selo responde com três nomes: Akuji, Techna e Guardião. A voz se cala antes de dizer qual deles o controla."},
-        {"speaker": "NARRADOR", "unless": "heard_seal", "text": "Ela solta a pedra. Um fio de luz atravessa a estrada e desaparece no círculo de cinzas; alguém ainda alimenta o selo à distância."},
-        {"speaker": "AKUJI", "right": "ent_akuji", "text": "Alyssa. Deram a você a estrada inteira para atravessar? Então ainda não sabem o que você carrega."},
-        {"speaker": "FATE", "right": "ent_fate", "text": "O marco tem sua marca. Quando ele despertar, vai procurar quem o tocou primeiro."},
-        {"speaker": "EVELYN", "right": "ent_evelyn_graves", "text": "Deixem que ela chegue perto. Uma fenda só se abre quando alguém decide atravessá-la."},
-        {"speaker": "ALYSSA", "right": "ent_evelyn_graves", "text": "Vocês sabem para onde foram os vigias. Saiam da passagem e respondam."},
-        {"speaker": "AKUJI", "right": "ent_akuji", "text": "O posto está vazio. O círculo seguinte não estará. A estrada termina aqui para vocês."},
-        {"speaker": "VIGÍLIA", "right": "ent_akuji", "text": "Alyssa, o sinal deles se divide. Há três alvos agora e feras vindo da mata. Prepare a equipe antes de avançar."},
-        {"speaker": "ALYSSA", "right": "ent_akuji", "text": "{ally1}, {ally2}: mantenham a passagem aberta. Eu alcanço o marco."},
-        {"type": "battle", "index": 0}
+        {
+          "speaker": "NARRADOR",
+          "text": "A estrada da Vigília desaparece sob a chuva. Onde deveria haver um posto de guarda, restam pedras marcadas com cinza negra."
+        },
+        {
+          "speaker": "ALYSSA",
+          "right": "",
+          "text": "O selo não caiu sozinho. Consigo ouvir alguém contando os meus batimentos dentro dele."
+        },
+        {
+          "speaker": "VIGÍLIA",
+          "text": "Alyssa Wine, aqui é a operadora da Vigília. Três estações pararam de responder na mesma hora. Você é a única que saiu viva da última descarga da Tormenta."
+        },
+        {
+          "speaker": "ALYSSA",
+          "text": "Saí porque alguém fechou a porta depois de mim. Diga onde estão as pessoas do posto."
+        },
+        {
+          "speaker": "VIGÍLIA",
+          "text": "Nenhum sinal de civis na estrada. Leve duas pessoas. O canal só alcançará vocês enquanto o primeiro marco estiver de pé."
+        },
+        {
+          "speaker": "NARRADOR",
+          "text": "Alyssa encosta a mão no marco. A dor acende uma memória que não é sua: um círculo de cinzas e, acima dele, uma sombra cobrindo o sol."
+        },
+        {
+          "speaker": "ALYSSA",
+          "text": "A Escuridão reage ao marco. Se eu forçar, posso descobrir quem abriu a fenda. Se esperar, talvez ela não perceba que cheguei."
+        },
+        {
+          "type": "choice",
+          "options": [
+            {
+              "label": "Tocar o selo e aceitar a dor",
+              "flag": "heard_seal",
+              "value": true
+            },
+            {
+              "label": "Conter a Escuridão e observar",
+              "flag": "heard_seal",
+              "value": false
+            }
+          ]
+        },
+        {
+          "speaker": "NARRADOR",
+          "if": "heard_seal",
+          "text": "O selo responde com três nomes: Akuji, Techna e Guardião. A voz se cala antes de dizer qual deles o controla."
+        },
+        {
+          "speaker": "NARRADOR",
+          "unless": "heard_seal",
+          "text": "Ela solta a pedra. Um fio de luz atravessa a estrada e desaparece no círculo de cinzas; alguém ainda alimenta o selo à distância."
+        },
+        {
+          "speaker": "AKUJI",
+          "right": "ent_akuji",
+          "text": "Alyssa. Deram a você a estrada inteira para atravessar? Então ainda não sabem o que você carrega."
+        },
+        {
+          "speaker": "FATE",
+          "right": "ent_fate",
+          "text": "O marco tem sua marca. Quando ele despertar, vai procurar quem o tocou primeiro."
+        },
+        {
+          "speaker": "EVELYN",
+          "right": "ent_evelyn_graves",
+          "text": "Deixem que ela chegue perto. Uma fenda só se abre quando alguém decide atravessá-la."
+        },
+        {
+          "speaker": "ALYSSA",
+          "right": "ent_evelyn_graves",
+          "text": "Vocês sabem para onde foram os vigias. Saiam da passagem e respondam."
+        },
+        {
+          "speaker": "AKUJI",
+          "right": "ent_akuji",
+          "text": "O posto está vazio. O círculo seguinte não estará. A estrada termina aqui para vocês."
+        },
+        {
+          "speaker": "VIGÍLIA",
+          "right": "ent_akuji",
+          "text": "Alyssa, o sinal deles se divide. Há três alvos agora e feras vindo da mata. Prepare a equipe antes de avançar."
+        },
+        {
+          "speaker": "ALYSSA",
+          "right": "ent_akuji",
+          "text": "{ally1}, {ally2}: mantenham a passagem aberta. Eu alcanço o marco."
+        },
+        {
+          "type": "battle",
+          "mission": "road",
+          "next": "after_road",
+          "required_party": [
+            "ent_alyssa_wine"
+          ],
+          "party_size": 3,
+          "reward_count": 3,
+          "arena": "campaign_road",
+          "battle_bgm": "res://assets/audio/bgm/Battle2.ogg"
+        }
       ]
     },
     "after_road": {
@@ -38,27 +122,111 @@
       "weather": "ash",
       "bgm": "res://assets/audio/bgm/Dungeon5.ogg",
       "steps": [
-        {"speaker": "NARRADOR", "text": "O último golpe apaga o marco. As feras se dispersam. Fate, caído junto à pedra, ainda tenta proteger um fragmento do selo."},
-        {"speaker": "ALYSSA", "right": "ent_fate", "text": "Akuji e Evelyn recuaram. Você ficou. O que existe no círculo?"},
-        {"speaker": "FATE", "right": "ent_fate", "text": "Uma máquina para manter fechada uma coisa que não sabe que foi trancada. Vocês acabam de retirar sua primeira trava."},
-        {"speaker": "VIGÍLIA", "right": "ent_fate", "text": "Alyssa, a queda do marco acordou a estação de cinzas. A equipe de Techna está dentro. Ela nos chama de invasores."},
-        {"speaker": "ALYSSA", "right": "ent_fate", "text": "Preciso de uma prova antes que alguém nos mate por causa de um erro de interpretação."},
-        {"type": "choice", "options": [
-          {"label": "Ajudar Fate e ouvir sua versão", "flag": "spared_fate", "value": true},
-          {"label": "Tomar o fragmento e seguir", "flag": "spared_fate", "value": false}
-        ]},
-        {"speaker": "FATE", "right": "ent_fate", "if": "spared_fate", "text": "Eu não os trouxe para cá. Fui designado para impedir que o Guardião escutasse Alyssa. Se ela chegar ao topo, ele vai chamá-la pelo nome."},
-        {"speaker": "NARRADOR", "unless": "spared_fate", "text": "O fragmento vibra nas mãos de Alyssa. No verso, há uma inscrição repetida três vezes: ESTRADA, CÍRCULO, ECLIPSE."},
-        {"speaker": "NARRADOR", "text": "A chuva termina na entrada do círculo. Cinza morna sobe do chão; cada pilar ilumina o seguinte como se contasse o tempo que resta."},
-        {"speaker": "TECHNA", "right": "ent_techna", "text": "Alyssa Wine. Sua presença fez a primeira trava falhar. Não entre na área de contenção."},
-        {"speaker": "ALYSSA", "right": "ent_techna", "text": "A estrada não tinha vigias, apenas sua patrulha armada. Onde estão as pessoas que vocês deveriam proteger?"},
-        {"speaker": "NERO", "right": "ent_nero", "text": "Retiradas antes da noite. A estação não protege o território; protege vocês de algo que respira embaixo dele."},
-        {"speaker": "TAYLOR", "right": "ent_taylor", "text": "O ciclo se fecha depois de cinco rodadas. Se vocês quebrarem o circuito, o observatório vai receber toda a descarga."},
-        {"speaker": "VIGÍLIA", "right": "ent_taylor", "text": "A transmissão confirma: o círculo mantém uma barreira temporária. Alyssa, sobrevivam ao ciclo e eu consigo localizar o Guardião."},
-        {"speaker": "ALYSSA", "right": "ent_techna", "text": "Techna, deixe-nos sair quando terminar. Até lá, ninguém mais toca nos pilares."},
-        {"speaker": "TECHNA", "right": "ent_techna", "text": "Se resistirem, eu escuto. Por enquanto, vocês são o risco mais próximo do núcleo."},
-        {"speaker": "NARRADOR", "text": "A cinza gira no sentido contrário ao vento. Alyssa reúne novamente seus dois aliados antes de entrar no círculo."},
-        {"type": "battle", "index": 1}
+        {
+          "speaker": "NARRADOR",
+          "text": "O último golpe apaga o marco. As feras se dispersam. Fate, caído junto à pedra, ainda tenta proteger um fragmento do selo."
+        },
+        {
+          "speaker": "ALYSSA",
+          "right": "ent_fate",
+          "text": "Akuji e Evelyn recuaram. Você ficou. O que existe no círculo?"
+        },
+        {
+          "speaker": "FATE",
+          "right": "ent_fate",
+          "text": "Uma máquina para manter fechada uma coisa que não sabe que foi trancada. Vocês acabam de retirar sua primeira trava."
+        },
+        {
+          "speaker": "VIGÍLIA",
+          "right": "ent_fate",
+          "text": "Alyssa, a queda do marco acordou a estação de cinzas. A equipe de Techna está dentro. Ela nos chama de invasores."
+        },
+        {
+          "speaker": "ALYSSA",
+          "right": "ent_fate",
+          "text": "Preciso de uma prova antes que alguém nos mate por causa de um erro de interpretação."
+        },
+        {
+          "type": "choice",
+          "options": [
+            {
+              "label": "Ajudar Fate e ouvir sua versão",
+              "flag": "spared_fate",
+              "value": true
+            },
+            {
+              "label": "Tomar o fragmento e seguir",
+              "flag": "spared_fate",
+              "value": false
+            }
+          ]
+        },
+        {
+          "speaker": "FATE",
+          "right": "ent_fate",
+          "if": "spared_fate",
+          "text": "Eu não os trouxe para cá. Fui designado para impedir que o Guardião escutasse Alyssa. Se ela chegar ao topo, ele vai chamá-la pelo nome."
+        },
+        {
+          "speaker": "NARRADOR",
+          "unless": "spared_fate",
+          "text": "O fragmento vibra nas mãos de Alyssa. No verso, há uma inscrição repetida três vezes: ESTRADA, CÍRCULO, ECLIPSE."
+        },
+        {
+          "speaker": "NARRADOR",
+          "text": "A chuva termina na entrada do círculo. Cinza morna sobe do chão; cada pilar ilumina o seguinte como se contasse o tempo que resta."
+        },
+        {
+          "speaker": "TECHNA",
+          "right": "ent_techna",
+          "text": "Alyssa Wine. Sua presença fez a primeira trava falhar. Não entre na área de contenção."
+        },
+        {
+          "speaker": "ALYSSA",
+          "right": "ent_techna",
+          "text": "A estrada não tinha vigias, apenas sua patrulha armada. Onde estão as pessoas que vocês deveriam proteger?"
+        },
+        {
+          "speaker": "NERO",
+          "right": "ent_nero",
+          "text": "Retiradas antes da noite. A estação não protege o território; protege vocês de algo que respira embaixo dele."
+        },
+        {
+          "speaker": "TAYLOR",
+          "right": "ent_taylor",
+          "text": "O ciclo se fecha depois de cinco rodadas. Se vocês quebrarem o circuito, o observatório vai receber toda a descarga."
+        },
+        {
+          "speaker": "VIGÍLIA",
+          "right": "ent_taylor",
+          "text": "A transmissão confirma: o círculo mantém uma barreira temporária. Alyssa, sobrevivam ao ciclo e eu consigo localizar o Guardião."
+        },
+        {
+          "speaker": "ALYSSA",
+          "right": "ent_techna",
+          "text": "Techna, deixe-nos sair quando terminar. Até lá, ninguém mais toca nos pilares."
+        },
+        {
+          "speaker": "TECHNA",
+          "right": "ent_techna",
+          "text": "Se resistirem, eu escuto. Por enquanto, vocês são o risco mais próximo do núcleo."
+        },
+        {
+          "speaker": "NARRADOR",
+          "text": "A cinza gira no sentido contrário ao vento. Alyssa reúne novamente seus dois aliados antes de entrar no círculo."
+        },
+        {
+          "type": "battle",
+          "mission": "ritual",
+          "next": "after_ritual",
+          "required_party": [
+            "ent_alyssa_wine"
+          ],
+          "party_size": 3,
+          "reward_count": 3,
+          "arena": "campaign_ritual",
+          "battle_bgm": "res://assets/audio/bgm/Battle5.ogg"
+        }
       ]
     },
     "after_ritual": {
@@ -67,20 +235,80 @@
       "weather": "eclipse",
       "bgm": "res://assets/audio/bgm/Dungeon7.ogg",
       "steps": [
-        {"speaker": "NARRADOR", "text": "Na quinta rodada, o círculo fica escuro. O ar volta a circular. Techna abaixa a arma antes de sua equipe."},
-        {"speaker": "TECHNA", "right": "ent_techna", "text": "Vocês ficaram de pé. Eu estava errada sobre sua intenção, Alyssa. Não sobre o perigo."},
-        {"speaker": "ALYSSA", "right": "ent_techna", "text": "O que recebeu a descarga quando o circuito fechou?"},
-        {"speaker": "TECHNA", "right": "ent_techna", "text": "O observatório. Dominika e Leona guardam a última trava. O Guardião está ligado a ela: feri-lo pode abri-la, mas deixá-lo ali perpetua a Tormenta."},
-        {"speaker": "VIGÍLIA", "right": "ent_techna", "text": "Alyssa, tenho duas leituras. Se isolarmos o núcleo, a fenda fecha e perdemos os rastros dos desaparecidos. Se o abrirmos, posso localizar todos; a Escuridão vai reconhecer você."},
-        {"speaker": "ALYSSA", "right": "ent_techna", "text": "Não deixarei essa decisão para a máquina. Quando o Guardião cair, escolherei o destino do núcleo."},
-        {"speaker": "NARRADOR", "text": "Acima das ruínas, um disco negro atravessa o sol. Engrenagens partidas sustentam o observatório enquanto o chão repete o pulso de Alyssa."},
-        {"speaker": "DOMINIKA", "right": "ent_dominika_seur", "text": "Mais um passo e a plataforma cede. Não sabem a quem vão entregar a fenda se derrubarem o Guardião."},
-        {"speaker": "LEONA", "right": "ent_leona", "text": "Alyssa, ele está acordado porque você se aproximou. Ainda pode voltar."},
-        {"speaker": "ALYSSA", "right": "ent_leona", "text": "Não volto sem descobrir o que fizeram com os vigias. Afastem-se do núcleo."},
-        {"speaker": "GUARDIÃO", "right": "guardiao", "text": "Wine. Eu escutei a primeira vez que você chamou a Escuridão para sobreviver. Desde então, espero que diga o meu nome."},
-        {"speaker": "ALYSSA", "right": "guardiao", "text": "Você não recebe um nome de mim. Recebe um limite."},
-        {"speaker": "NARRADOR", "text": "O observatório estala sob os pés da equipe. Antes de enfrentar o Guardião, Alyssa pode mudar os dois aliados que a acompanham."},
-        {"type": "battle", "index": 2}
+        {
+          "speaker": "NARRADOR",
+          "text": "Na quinta rodada, o círculo fica escuro. O ar volta a circular. Techna abaixa a arma antes de sua equipe."
+        },
+        {
+          "speaker": "TECHNA",
+          "right": "ent_techna",
+          "text": "Vocês ficaram de pé. Eu estava errada sobre sua intenção, Alyssa. Não sobre o perigo."
+        },
+        {
+          "speaker": "ALYSSA",
+          "right": "ent_techna",
+          "text": "O que recebeu a descarga quando o circuito fechou?"
+        },
+        {
+          "speaker": "TECHNA",
+          "right": "ent_techna",
+          "text": "O observatório. Dominika e Leona guardam a última trava. O Guardião está ligado a ela: feri-lo pode abri-la, mas deixá-lo ali perpetua a Tormenta."
+        },
+        {
+          "speaker": "VIGÍLIA",
+          "right": "ent_techna",
+          "text": "Alyssa, tenho duas leituras. Se isolarmos o núcleo, a fenda fecha e perdemos os rastros dos desaparecidos. Se o abrirmos, posso localizar todos; a Escuridão vai reconhecer você."
+        },
+        {
+          "speaker": "ALYSSA",
+          "right": "ent_techna",
+          "text": "Não deixarei essa decisão para a máquina. Quando o Guardião cair, escolherei o destino do núcleo."
+        },
+        {
+          "speaker": "NARRADOR",
+          "text": "Acima das ruínas, um disco negro atravessa o sol. Engrenagens partidas sustentam o observatório enquanto o chão repete o pulso de Alyssa."
+        },
+        {
+          "speaker": "DOMINIKA",
+          "right": "ent_dominika_seur",
+          "text": "Mais um passo e a plataforma cede. Não sabem a quem vão entregar a fenda se derrubarem o Guardião."
+        },
+        {
+          "speaker": "LEONA",
+          "right": "ent_leona",
+          "text": "Alyssa, ele está acordado porque você se aproximou. Ainda pode voltar."
+        },
+        {
+          "speaker": "ALYSSA",
+          "right": "ent_leona",
+          "text": "Não volto sem descobrir o que fizeram com os vigias. Afastem-se do núcleo."
+        },
+        {
+          "speaker": "GUARDIÃO",
+          "right": "guardiao",
+          "text": "Wine. Eu escutei a primeira vez que você chamou a Escuridão para sobreviver. Desde então, espero que diga o meu nome."
+        },
+        {
+          "speaker": "ALYSSA",
+          "right": "guardiao",
+          "text": "Você não recebe um nome de mim. Recebe um limite."
+        },
+        {
+          "speaker": "NARRADOR",
+          "text": "O observatório estala sob os pés da equipe. Antes de enfrentar o Guardião, Alyssa pode mudar os dois aliados que a acompanham."
+        },
+        {
+          "type": "battle",
+          "mission": "eclipse",
+          "next": "ending",
+          "required_party": [
+            "ent_alyssa_wine"
+          ],
+          "party_size": 3,
+          "reward_count": 3,
+          "arena": "campaign_eclipse",
+          "battle_bgm": "res://assets/audio/bgm/Battle8.ogg"
+        }
       ]
     },
     "ending": {
@@ -89,26 +317,93 @@
       "weather": "eclipse",
       "bgm": "res://assets/audio/bgm/Scene9.ogg",
       "steps": [
-        {"speaker": "NARRADOR", "text": "O Guardião cai. Sua sombra se desfaz sobre o mecanismo, mas a fenda continua aberta por um último instante."},
-        {"speaker": "LEONA", "right": "ent_leona", "text": "Dominika, retire todos da plataforma. Alyssa precisa decidir enquanto o núcleo ainda responde."},
-        {"speaker": "VIGÍLIA", "right": "ent_leona", "text": "Posso fechar a última passagem agora, Alyssa. Também posso segurar a abertura por trinta segundos e procurar os vigias."},
-        {"speaker": "ALYSSA", "right": "ent_leona", "text": "Trinta segundos bastam para alguém voltar. Também bastam para a Tormenta entrar."},
-        {"type": "choice", "options": [
-          {"label": "Isolar o núcleo e proteger a equipe", "flag": "opened_core", "value": false},
-          {"label": "Abrir o núcleo e procurar os desaparecidos", "flag": "opened_core", "value": true}
-        ]},
-        {"speaker": "NARRADOR", "unless": "opened_core", "text": "Alyssa quebra a ligação com o observatório. O disco negro perde a borda vermelha. As vozes dos vigias deixam de responder, mas a fenda cessa de crescer."},
-        {"speaker": "ALYSSA", "unless": "opened_core", "text": "Fechei o que pude. Amanhã voltamos pelos desaparecidos com outro caminho e uma equipe inteira."},
-        {"speaker": "NARRADOR", "if": "opened_core", "text": "Alyssa mantém a fenda aberta. Entre vozes quebradas, a Vigília capta três sinais humanos além do observatório. A Escuridão alcança seu braço antes que ela solte o núcleo."},
-        {"speaker": "VIGÍLIA", "if": "opened_core", "text": "Três pessoas vivas. Marquei a posição. Alyssa, saia daí agora; eu consigo conduzir uma equipe até elas."},
-        {"speaker": "ALYSSA", "if": "opened_core", "text": "As coordenadas são suas. Eu fico com a marca. Não deixem ninguém cruzar a passagem atrás de mim."},
-        {"speaker": "NARRADOR", "if": "spared_fate", "text": "Fate deixa um transmissor sobre o parapeito. Sua mensagem é curta: a estrada foi evacuada; o próximo posto ainda pode receber os três sinais."},
-        {"speaker": "NARRADOR", "unless": "spared_fate", "text": "O fragmento retirado de Fate esfria na bolsa de Alyssa. As três inscrições apagaram; a estrada já não aponta para o observatório."},
-        {"speaker": "NARRADOR", "if": "heard_seal", "text": "A voz que Alyssa ouviu no primeiro marco diz apenas uma palavra, quase humana: depois. Ela não responde."},
-        {"speaker": "NARRADOR", "text": "{ally1} e {ally2} ajudam Alyssa a descer. O eclipse termina sobre uma estrada que, pela primeira vez naquela noite, permanece em silêncio."},
-        {"speaker": "ALYSSA", "text": "Ninguém atravessa sozinho a próxima porta. Essa é a regra a partir de agora."},
-        {"type": "end"}
+        {
+          "speaker": "NARRADOR",
+          "text": "O Guardião cai. Sua sombra se desfaz sobre o mecanismo, mas a fenda continua aberta por um último instante."
+        },
+        {
+          "speaker": "LEONA",
+          "right": "ent_leona",
+          "text": "Dominika, retire todos da plataforma. Alyssa precisa decidir enquanto o núcleo ainda responde."
+        },
+        {
+          "speaker": "VIGÍLIA",
+          "right": "ent_leona",
+          "text": "Posso fechar a última passagem agora, Alyssa. Também posso segurar a abertura por trinta segundos e procurar os vigias."
+        },
+        {
+          "speaker": "ALYSSA",
+          "right": "ent_leona",
+          "text": "Trinta segundos bastam para alguém voltar. Também bastam para a Tormenta entrar."
+        },
+        {
+          "type": "choice",
+          "options": [
+            {
+              "label": "Isolar o núcleo e proteger a equipe",
+              "flag": "opened_core",
+              "value": false
+            },
+            {
+              "label": "Abrir o núcleo e procurar os desaparecidos",
+              "flag": "opened_core",
+              "value": true
+            }
+          ]
+        },
+        {
+          "speaker": "NARRADOR",
+          "unless": "opened_core",
+          "text": "Alyssa quebra a ligação com o observatório. O disco negro perde a borda vermelha. As vozes dos vigias deixam de responder, mas a fenda cessa de crescer."
+        },
+        {
+          "speaker": "ALYSSA",
+          "unless": "opened_core",
+          "text": "Fechei o que pude. Amanhã voltamos pelos desaparecidos com outro caminho e uma equipe inteira."
+        },
+        {
+          "speaker": "NARRADOR",
+          "if": "opened_core",
+          "text": "Alyssa mantém a fenda aberta. Entre vozes quebradas, a Vigília capta três sinais humanos além do observatório. A Escuridão alcança seu braço antes que ela solte o núcleo."
+        },
+        {
+          "speaker": "VIGÍLIA",
+          "if": "opened_core",
+          "text": "Três pessoas vivas. Marquei a posição. Alyssa, saia daí agora; eu consigo conduzir uma equipe até elas."
+        },
+        {
+          "speaker": "ALYSSA",
+          "if": "opened_core",
+          "text": "As coordenadas são suas. Eu fico com a marca. Não deixem ninguém cruzar a passagem atrás de mim."
+        },
+        {
+          "speaker": "NARRADOR",
+          "if": "spared_fate",
+          "text": "Fate deixa um transmissor sobre o parapeito. Sua mensagem é curta: a estrada foi evacuada; o próximo posto ainda pode receber os três sinais."
+        },
+        {
+          "speaker": "NARRADOR",
+          "unless": "spared_fate",
+          "text": "O fragmento retirado de Fate esfria na bolsa de Alyssa. As três inscrições apagaram; a estrada já não aponta para o observatório."
+        },
+        {
+          "speaker": "NARRADOR",
+          "if": "heard_seal",
+          "text": "A voz que Alyssa ouviu no primeiro marco diz apenas uma palavra, quase humana: depois. Ela não responde."
+        },
+        {
+          "speaker": "NARRADOR",
+          "text": "{ally1} e {ally2} ajudam Alyssa a descer. O eclipse termina sobre uma estrada que, pela primeira vez naquela noite, permanece em silêncio."
+        },
+        {
+          "speaker": "ALYSSA",
+          "text": "Ninguém atravessa sozinho a próxima porta. Essa é a regra a partir de agora."
+        },
+        {
+          "type": "end"
+        }
       ]
     }
-  }
+  },
+  "start_scene": "prologue"
 }

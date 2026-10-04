@@ -339,7 +339,7 @@ def make_generic_hero(meta: dict, paths: dict) -> dict:
         "iniciais": iniciais,
         "evoluidas": evoluidas,
         "desvantagem": "",
-        "signature": {"name": "Reserva", "target": "SELF", "action": ["BLOCK", "2"]},
+        "signature": {"name": "Reserva", "target": "SELF", "action": ["barreira", "1", "2"]},
         "tags": [{"name": "Genérico", "level": 1}],
         "escudo": meta.get("escudo", 16),
         "aprimoramento": "",

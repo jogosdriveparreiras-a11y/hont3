@@ -25,7 +25,7 @@ func _ready() -> void:
 		voice.set_meta("channel", "SFX")
 		cue_players.append(voice)
 		add_child(voice)
-	for id in ["hover", "select", "confirm", "cancel", "draw", "redraw", "cast", "hit", "block", "heal", "status", "death", "victory", "resist", "move"]:
+	for id in ["hover", "select", "confirm", "cancel", "draw", "redraw", "cast", "hit", "heal", "status", "death", "victory", "resist", "move"]:
 		cues[id] = _synthesize(id)
 	_scan_bgm()
 	# GameRoot escolhe a faixa por contexto (menu/batalha); não iniciar aqui.
@@ -104,8 +104,8 @@ func stop_bgm() -> void:
 	current_bgm = "__stop__"
 
 func _synthesize(id: String) -> AudioStreamWAV:
-	var frequencies := {"hover": 480.0, "select": 610.0, "confirm": 740.0, "cancel": 280.0, "draw": 460.0, "redraw": 310.0, "cast": 390.0, "hit": 120.0, "block": 190.0, "heal": 720.0, "status": 350.0, "death": 95.0, "victory": 530.0, "resist": 260.0, "move": 330.0}
-	var durations := {"hover": 0.055, "select": 0.11, "confirm": 0.13, "cancel": 0.10, "draw": 0.12, "redraw": 0.14, "cast": 0.18, "hit": 0.15, "block": 0.16, "heal": 0.30, "status": 0.18, "death": 0.42, "victory": 0.50, "resist": 0.14, "move": 0.13}
+	var frequencies := {"hover": 480.0, "select": 610.0, "confirm": 740.0, "cancel": 280.0, "draw": 460.0, "redraw": 310.0, "cast": 390.0, "hit": 120.0, "heal": 720.0, "status": 350.0, "death": 95.0, "victory": 530.0, "resist": 260.0, "move": 330.0}
+	var durations := {"hover": 0.055, "select": 0.11, "confirm": 0.13, "cancel": 0.10, "draw": 0.12, "redraw": 0.14, "cast": 0.18, "hit": 0.15, "heal": 0.30, "status": 0.18, "death": 0.42, "victory": 0.50, "resist": 0.14, "move": 0.13}
 	var count := int(RATE * float(durations[id]))
 	var frequency: float = frequencies[id]
 	var pcm := PackedByteArray()
@@ -115,7 +115,7 @@ func _synthesize(id: String) -> AudioStreamWAV:
 		var fade := pow(1.0 - float(index) / float(count), 2.0)
 		var sweep := frequency * (1.0 - 0.3 * float(index) / float(count))
 		var tone := sin(TAU * sweep * time) + 0.23 * sin(TAU * sweep * 1.97 * time)
-		if id in ["hit", "block", "death"]: tone += 0.38 * sin(float(index * 73 % 101) * 1.4)
+		if id in ["hit", "death"]: tone += 0.38 * sin(float(index * 73 % 101) * 1.4)
 		var sample := clampi(roundi(tone * fade * 7800.0), -32768, 32767)
 		pcm[index * 2] = sample & 255
 		pcm[index * 2 + 1] = (sample >> 8) & 255

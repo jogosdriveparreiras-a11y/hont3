@@ -1,5 +1,7 @@
 # Auditoria dos 77 efeitos de status
 
+Atualização 2026-10: Voar foi incluído na regra de combate, no texto do editor e na suíte `tools/StatusSmoke.gd`. O catálogo e a cobertura verificável ficam em `tools/card_editor.html` e `tools/verify_effect_catalog.py`; a auditoria de 77 nomes abaixo mantém o inventário de origem.
+
 Comparação com a lista fornecida pelo usuário e a [página de efeitos de status](https://marvels-midnight-suns.fandom.com/wiki/Status_Effect) da wiki de *Marvel's Midnight Suns*. Estado: **Carta** = presente em carta equipável ou gerada; **Motor** = aplicado por habilidade inimiga, sem carta equipável; **Adaptado** = versão de linhas ou com valores definidos para dados desconhecidos, sem equivalência exata. O código não foi executado no Godot 4.6, portanto estas categorias são inspeção de código, não comprovação de funcionamento.
 
 | Efeito da referência | Estado | Implementação ou lacuna |
@@ -9,13 +11,13 @@ Comparação com a lista fornecida pelo usuário e a [página de efeitos de stat
 | Banished | Carta | Laço instável retira temporariamente o inimigo da lista de alvos sem contar como KO. |
 | Berserk (Enemy) | Carta | Agitação dirigida força a próxima ação a atacar uma unidade da mesma linha. |
 | Berserk (Wolverine) | Carta | Jogo de sombras concede Roubo de Vida temporário a cartas de dano. |
-| Binary | Carta | Estandarte: +100% de Ataque até perder Bloqueio. |
+| Binary | Carta | Estandarte: +100% de Ataque enquanto tiver Barreira. |
 | Bind | Carta | Armadilha/rede: impede ação e remove Proteção. |
-| Bleed | Carta | Dano periódico ignora Bloqueio e Resistência. |
+| Bleed | Carta | Dano periódico ignora Proteção e Barreira. |
 | Blessed | Adaptado | Bênção do grupo dobra dano contra a facção abissal original do jogo. |
-| Block | Carta | Absorve dano e permanece até ser consumido. |
+| Block | Removido | O pool legado foi eliminado; use Proteção para absorver hits ou Barreira para absorver HP. |
 | Blood Magic | Carta | Prisma sanguíneo concede Roubo de Vida a cartas de Ataque. |
-| Bloodlust | Carta | Frenesi de aço: dano/contra-ataque aplica Sangramento até perder Bloqueio. |
+| Bloodlust | Carta | Frenesi de aço: dano/contra-ataque aplica Sangramento enquanto tiver Barreira. |
 | Bound | Carta | Teia: impede ação e movimento forçado. |
 | Chain | Carta | Corrente: permite repetir o alvo ou dividir os acertos. |
 | Chaos Field | Adaptado | Campo sagrado concede Resistência a aliados da mesma linha no fim do turno. |
@@ -59,7 +61,7 @@ Comparação com a lista fornecida pelo usuário e a [página de efeitos de stat
 | Perfect Aim | Carta | Foco ambiental concede bônus a dois ataques ambientais; valor próprio de 50%. |
 | Portal | Adaptado | Domínio do selo configura o próximo empurrão, sem posição de portal. |
 | Protected | Carta | Guarda absoluta evita seleção direta e dano de área. |
-| Protecting | Carta | Estandarte evita empurrão até ficar sem Bloqueio. |
+| Protecting | Adaptado | Estandarte usa Barreira para sustentar o efeito; não mantém pool de Bloqueio separado. |
 | Quick | Carta | KO do alvo devolve uma jogada. |
 | Ravenous | Carta | Instinto do predador inicia com cinco níveis, cresce e consome níveis. |
 | Resist | Carta | Cancela uma instância de dano e consome uma carga. |
