@@ -60,6 +60,12 @@ func _run() -> void:
 	var battle_config: Dictionary = campaign._battle_config({"mission": mission_id, "party_size": 3, "criteria": [{"type": "survive_rounds", "value": 2}], "extra_cards": [{"side": "enemy", "card_id": extra_card}]})
 	assert(battle_config["mission_data"]["campaign_criteria"].size() == 1, "Editor criteria must reach the runtime mission")
 	assert(battle_config["extra_cards"].size() == 1, "Editor extra cards must reach the runtime battle")
+	if FileAccess.file_exists("res://av1.json"):
+		var imported: Dictionary = campaign.campaign_story["campaigns"].filter(func(item): return str(item.get("source_file", "")) == "av1.json")[0]
+		assert(imported["party_size"] == 4, "Campaign roster size must be independent from battle size")
+		assert(campaign.campaign_story["scenes"].has("av_1__s01_quarto_nolan"), "External scene IDs must be isolated by source file")
+		var battle_step: Dictionary = campaign.campaign_story["scenes"]["av_1__s03_batalha_amona"]["steps"].filter(func(item): return item.get("type", "") == "battle")[0]
+		assert(campaign._battle_config(battle_step)["party_size"] == 3, "The campaign's 4-person roster must still allow 3-person battles")
 	campaign.free()
 	print("OK: %d missions, custom criteria, campaign script loading and extra battle cards" % Content.MISSIONS.size())
 	quit(0)

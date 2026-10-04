@@ -44,7 +44,7 @@ for adventure_id, adventure in adventures.items():
     for scene_id in adventure.get("scene_ids", scenes):
         assert scene_id in scenes, f"Adventure {adventure_id} references missing scene {scene_id}"
 for campaign in campaigns:
-    assert 1 <= int(campaign.get("party_size", 3)) <= 3
+    assert int(campaign.get("party_size", 3)) >= len(campaign.get("required_party", []))
     assert len(campaign.get("required_party", [])) <= int(campaign.get("party_size", 3))
     assert all(hero in catalog["heroes"] for hero in campaign.get("required_party", []))
     assert campaign.get("adventures", list(adventures))

@@ -4,6 +4,7 @@ signal next_line
 signal option_selected(option: Dictionary)
 signal team_selected(ids: Array)
 signal card_selected(option: Dictionary)
+signal campaign_selected(campaign_id: String)
 signal reward_bundle_continue
 signal load_campaign
 signal exit_campaign
@@ -102,9 +103,14 @@ func _ready() -> void:
 	for side in ["margin_left", "margin_right", "margin_top", "margin_bottom"]:
 		action_padding.add_theme_constant_override(side, 22)
 	action_area.add_child(action_padding)
+	var action_scroll := ScrollContainer.new()
+	action_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	# Scroll de ações mantém listas longas de campanhas acessíveis.
+	action_padding.add_child(action_scroll)
 	action_list = VBoxContainer.new()
 	action_list.add_theme_constant_override("separation", 12)
-	action_padding.add_child(action_list)
+	action_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	action_scroll.add_child(action_list)
 	action_area.hide()
 	get_viewport().size_changed.connect(_on_screen_resized)
 
@@ -208,6 +214,22 @@ func show_choices(options: Array) -> void:
 
 func _select_option(option: Dictionary) -> void:
 	option_selected.emit(option)
+
+func show_campaign_list(campaigns: Array) -> void:
+	_clear_actions("Campanhas", "Escolha uma campanha para começar ou continuar.")
+	for raw in campaigns:
+		if typeof(raw) != TYPE_DICTIONARY: continue
+		var campaign: Dictionary = raw
+		var id := str(campaign.get("id", ""))
+		var title := str(campaign.get("title", id))
+		var source := str(campaign.get("source_file", ""))
+		var caption := title if source == "" else "%s · %s" % [title, source]
+		action_list.add_child(_button(caption, _select_campaign.bind(id)))
+	action_list.add_child(_button("Voltar ao menu", _exit))
+	text_panel.hide()
+
+func _select_campaign(id: String) -> void:
+	campaign_selected.emit(id)
 
 func show_team(roster: Dictionary, selection: Array[String], forbidden: Dictionary, battle_name: String, required_party: Array = ["ent_alyssa_wine"], party_size: int = 3) -> void:
 	_roster = roster

@@ -1,12 +1,14 @@
 extends "res://game/GameRoot.gd"
 
 const StoryPath := "res://addons/hotn3_campaign/story.json"
+const CampaignDirectory := "res://campaigns"
 const SavePath := "user://hotn3_campaign.cfg"
 const CampaignView = preload("res://addons/hotn3_campaign/CampaignView.gd")
 const CampaignArenaBuilder = preload("res://addons/hotn3_campaign/ArenaBuilder.gd")
 const Lead := "ent_alyssa_wine"
 
 var campaign_story: Dictionary = {}
+var campaign_sources: Dictionary = {}
 var campaign_flags: Dictionary = {}
 var campaign_id := ""
 var campaign_unlocked: Dictionary = {}
@@ -35,9 +37,8 @@ func _ready() -> void:
 		original_music = sound.music.stream
 
 func _show_menu() -> void:
-	# Após change_scene a partir do título do GameRoot, não remontar o menu 3D —
-	# isso fazia Campanha "voltar ao título". Entra direto na VN uma vez.
-	if _boot_open_campaign and not campaign_story.is_empty() and campaign_story.get("campaigns", []).size() == 1:
+	# A entrada Campanha sempre começa na lista, inclusive após change_scene do título.
+	if _boot_open_campaign and not campaign_story.is_empty():
 		_boot_open_campaign = false
 		battle_menu_open = false
 		if battle != null:
@@ -48,17 +49,17 @@ func _show_menu() -> void:
 		if sound != null and original_music == null:
 			original_music = sound.music.stream
 		_teardown_title_screen()
-		_open_campaign(campaign_id)
+		_show_campaign_list()
 		return
 	_boot_open_campaign = false
 	super._show_menu()
 
 func _launch_campaign_module() -> void:
-	# Já estamos no CampaignRoot: abre a narrativa no lugar (sem recarregar a cena).
+	# Mostra os roteiros instalados antes de entrar em uma campanha.
 	if sound != null and original_music == null:
 		original_music = sound.music.stream
 	_teardown_title_screen()
-	_open_campaign()
+	_show_campaign_list()
 
 func _read_story() -> void:
 	var file := FileAccess.open(StoryPath, FileAccess.READ)
@@ -67,14 +68,99 @@ func _read_story() -> void:
 		return
 	var parsed: Variant = JSON.parse_string(file.get_as_text())
 	if typeof(parsed) == TYPE_DICTIONARY and parsed.has("scenes"):
-		campaign_story = parsed
-		if campaign_story.get("adventures", {}).is_empty():
-			campaign_story["adventures"] = {"aventura_principal": {"id": "aventura_principal", "title": str(campaign_story.get("title", "Aventura")), "scene_ids": campaign_story["scenes"].keys()}}
-		if campaign_story.get("campaigns", []).is_empty():
-			campaign_story["campaigns"] = [{"id": "campanha_principal", "title": str(campaign_story.get("title", "Campanha")), "required_party": [str(campaign_story.get("protagonist", Lead))], "party_size": 3, "adventures": campaign_story["adventures"].keys()}]
+		campaign_story = _normalize_story(parsed)
+		campaign_sources.clear()
+		for definition in campaign_story.get("campaigns", []): campaign_sources[str(definition.get("id", ""))] = StoryPath.get_file()
+		_append_campaign_files()
 		campaign_id = str(campaign_story.get("start_campaign", campaign_story["campaigns"][0].get("id", "campanha_principal")))
 	else:
 		push_error("Roteiro da campanha inválido")
+
+func _normalize_story(source: Dictionary) -> Dictionary:
+	var normalized := source.duplicate(true)
+	if normalized.get("adventures", {}).is_empty():
+		normalized["adventures"] = {"aventura_principal": {"id": "aventura_principal", "title": str(normalized.get("title", "Aventura")), "scene_ids": normalized.get("scenes", {}).keys()}}
+	if normalized.get("campaigns", []).is_empty():
+		normalized["campaigns"] = [{"id": "campanha_principal", "title": str(normalized.get("title", "Campanha")), "required_party": [str(normalized.get("protagonist", Lead))], "party_size": 3, "adventures": normalized["adventures"].keys()}]
+	if not normalized.get("campaigns", []).any(func(entry): return typeof(entry) == TYPE_DICTIONARY):
+		normalized["campaigns"] = [{"id": "campanha_principal", "title": str(normalized.get("title", "Campanha")), "required_party": [], "party_size": 3, "adventures": normalized["adventures"].keys()}]
+	if not normalized.get("start_campaign", "") in normalized["campaigns"].map(func(entry): return str(entry.get("id", ""))):
+		normalized["start_campaign"] = str(normalized["campaigns"][0].get("id", "campanha_principal"))
+	if not normalized.has("start_scene"):
+		normalized["start_scene"] = str(normalized["scenes"].keys()[0]) if not normalized["scenes"].is_empty() else ""
+	return normalized
+
+func _append_campaign_files() -> void:
+	var paths: Array[String] = []
+	_collect_json_files("res://", paths)
+	_collect_json_files(CampaignDirectory, paths)
+	_collect_json_files("user://campaigns", paths)
+	if not Engine.is_editor_hint():
+		var executable_dir := OS.get_executable_path().get_base_dir()
+		_collect_json_files(executable_dir, paths)
+		_collect_json_files(executable_dir.path_join("campaigns"), paths)
+	paths.sort()
+	var seen: Dictionary = {}
+	var contents_seen: Dictionary = {}
+	for path in paths:
+		if path == StoryPath or seen.has(path): continue
+		seen[path] = true
+		var file := FileAccess.open(path, FileAccess.READ)
+		if file == null: continue
+		var source_text := file.get_as_text()
+		var fingerprint := source_text.sha256_text()
+		if contents_seen.has(fingerprint): continue
+		contents_seen[fingerprint] = true
+		var parsed: Variant = JSON.parse_string(source_text)
+		if typeof(parsed) != TYPE_DICTIONARY or not parsed.has("scenes"): continue
+		var prefix := path.get_file().get_basename().to_snake_case()
+		if prefix == "": continue
+		var suffix := 2
+		while campaign_story["campaigns"].any(func(entry): return str(entry.get("id", "")).begins_with(prefix + "__")):
+			prefix = path.get_file().get_basename().to_snake_case() + "_" + str(suffix)
+			suffix += 1
+		_append_campaign_package(_normalize_story(parsed), prefix, path.get_file())
+
+func _collect_json_files(directory_path: String, result: Array[String]) -> void:
+	var directory := DirAccess.open(directory_path)
+	if directory == null: return
+	for filename in directory.get_files():
+		if filename.get_extension().to_lower() == "json": result.append(directory_path.path_join(filename))
+
+func _append_campaign_package(package: Dictionary, prefix: String, source_name: String) -> void:
+	var scene_ids: Dictionary = {}
+	var adventure_ids: Dictionary = {}
+	var campaign_ids: Dictionary = {}
+	for id in package.get("scenes", {}).keys(): scene_ids[str(id)] = prefix + "__" + str(id)
+	for id in package.get("adventures", {}).keys(): adventure_ids[str(id)] = prefix + "__" + str(id)
+	for definition in package.get("campaigns", []):
+		var local_id := str(definition.get("id", "campanha_principal"))
+		campaign_ids[local_id] = prefix + "__" + local_id
+	for local_id in package.get("scenes", {}):
+		var scene: Dictionary = package["scenes"][local_id].duplicate(true)
+		if scene.has("next"): scene["next"] = scene_ids.get(str(scene["next"]), str(scene["next"]))
+		for step in scene.get("steps", []):
+			if step.has("scene"): step["scene"] = scene_ids.get(str(step["scene"]), str(step["scene"]))
+			if step.has("next"): step["next"] = scene_ids.get(str(step["next"]), str(step["next"]))
+			for option in step.get("options", []):
+				if option.has("goto"): option["goto"] = scene_ids.get(str(option["goto"]), str(option["goto"]))
+		campaign_story["scenes"][scene_ids[str(local_id)]] = scene
+	for local_id in package.get("adventures", {}):
+		var adventure: Dictionary = package["adventures"][local_id].duplicate(true)
+		adventure["id"] = adventure_ids[str(local_id)]
+		adventure["scene_ids"] = adventure.get("scene_ids", []).map(func(id): return scene_ids.get(str(id), str(id)))
+		campaign_story["adventures"][adventure_ids[str(local_id)]] = adventure
+	for definition in package.get("campaigns", []):
+		var campaign: Dictionary = definition.duplicate(true)
+		var local_id := str(campaign.get("id", "campanha_principal"))
+		var unique_id: String = campaign_ids[local_id]
+		campaign["id"] = unique_id
+		campaign["source_file"] = source_name
+		campaign["adventures"] = campaign.get("adventures", []).map(func(id): return adventure_ids.get(str(id), str(id)))
+		var package_start := str(campaign.get("start_scene", package.get("start_scene", "")))
+		if package_start != "": campaign["start_scene"] = scene_ids.get(package_start, package_start)
+		campaign_story["campaigns"].append(campaign)
+		campaign_sources[unique_id] = source_name
 
 func _add_campaign_menu_button(menu: VBoxContainer) -> void:
 	# Cada entrada escolhe uma campanha do roteiro; o save da campanha em curso continua separado.
@@ -105,6 +191,7 @@ func _view() -> CampaignView:
 	add_child(campaign_view)
 	campaign_view.next_line.connect(_next_line)
 	campaign_view.option_selected.connect(_choose_option)
+	campaign_view.campaign_selected.connect(_campaign_selected)
 	campaign_view.team_selected.connect(_confirm_team)
 	campaign_view.card_selected.connect(_claim_card)
 	campaign_view.reward_bundle_continue.connect(_claim_reward_bundle)
@@ -115,17 +202,9 @@ func _view() -> CampaignView:
 
 func _new_campaign(id: String = "") -> void:
 	if id != "": campaign_id = id
-	campaign_flags.clear()
-	campaign_unlocked.clear()
-	for required_id in _campaign_definition().get("required_party", []): campaign_unlocked[str(required_id)] = true
-	campaign_team = _default_campaign_team()
-	battle_team.clear()
-	reward_offers.clear()
-	active_battle.clear()
-	var configured_start := str(campaign_story.get("start_scene", ""))
+	_reset_campaign_state()
+	var configured_start := str(_campaign_definition().get("start_scene", campaign_story.get("start_scene", "")))
 	campaign_scene = configured_start if _scene_belongs_to_campaign(configured_start) else _first_scene_in_campaign()
-	scene_step = 0
-	battle_index = 0
 	campaign_phase = "story"
 	campaign_active = true
 	_save_campaign()
@@ -152,6 +231,30 @@ func _campaign_definition() -> Dictionary:
 		var definition: Dictionary = raw
 		if str(definition.get("id", "")) == campaign_id: return definition
 	return {}
+
+func _show_campaign_list() -> void:
+	_clear_ui()
+	_clear_combat_visuals()
+	_view().show_campaign_list(campaign_story.get("campaigns", []))
+
+func _campaign_selected(id: String) -> void:
+	_open_campaign(id)
+
+func _reset_campaign_state() -> void:
+	campaign_flags.clear()
+	campaign_unlocked.clear()
+	for required_id in _campaign_definition().get("required_party", []): campaign_unlocked[str(required_id)] = true
+	campaign_team = _default_campaign_team()
+	battle_team.clear()
+	reward_offers.clear()
+	active_battle.clear()
+	pending_reward_bundle.clear()
+	pending_reward_draw = false
+	reward_return = "battle"
+	campaign_scene = _first_scene_in_campaign()
+	scene_step = 0
+	battle_index = 0
+	campaign_phase = "new"
 
 func _first_scene_in_campaign() -> String:
 	var definition := _campaign_definition()
@@ -187,7 +290,7 @@ func _scene_available(scene_id: String) -> bool:
 	for raw in _campaign_definition().get("adventures", []):
 		var adventure: Dictionary = campaign_story.get("adventures", {}).get(str(raw), {})
 		if adventure.get("scene_ids", []).has(scene_id): return _condition_passes(adventure)
-	return true
+	return false
 
 func _next_ordered_scene() -> String:
 	var definition := _campaign_definition()
@@ -449,6 +552,9 @@ func _default_team() -> Array[String]:
 			campaign_unlocked[id] = true
 	var blocked := _enemy_roster()
 	var need := int(active_battle.get("party_size", _campaign_definition().get("party_size", 3)))
+	for id in campaign_team:
+		if result.size() >= need: break
+		if _hero_available(id) and not blocked.has(id) and not result.has(id): result.append(id)
 	for id in Content.HEROES:
 		if result.size() >= need: break
 		var hero: Dictionary = Content.HEROES[id]
@@ -465,12 +571,26 @@ func _default_campaign_team() -> Array[String]:
 			campaign_unlocked[id] = true
 			result.append(id)
 	var blocked := _enemy_roster()
-	var size := clampi(int(definition.get("party_size", 3)), maxi(1, result.size()), 3)
+	var size := clampi(int(definition.get("party_size", 3)), maxi(1, result.size()), maxi(1, Content.HEROES.size()))
 	for raw in Content.HEROES.keys():
 		var id := str(raw)
 		if result.size() >= size: break
 		if _hero_available(id) and not blocked.has(id) and not result.has(id): result.append(id)
 	return result
+
+func _campaign_team_is_valid(ids: Array[String]) -> bool:
+	var definition := _campaign_definition()
+	var required: Array = definition.get("required_party", [])
+	var size := clampi(int(definition.get("party_size", 3)), maxi(1, required.size()), maxi(1, Content.HEROES.size()))
+	if ids.size() != size: return false
+	var banned := _enemy_roster()
+	var seen: Dictionary = {}
+	for id in ids:
+		if seen.has(id) or banned.has(id) or not _hero_available(id): return false
+		seen[id] = true
+	for hero_id in required:
+		if Content.HEROES.has(str(hero_id)) and not ids.has(str(hero_id)): return false
+	return true
 
 func _hero_available(id: String) -> bool:
 	return Content.HEROES.has(id) and (bool(Content.HEROES[id].get("playable", true)) or bool(campaign_unlocked.get(id, false)))
@@ -513,19 +633,19 @@ func _prepare_team() -> void:
 	_build_arena(str(active_battle.get("arena", "campaign_road")))
 	var scene: Dictionary = campaign_story.get("scenes", {}).get(campaign_scene, {})
 	_play_campaign_music(str(scene.get("bgm", "")))
-	if not _team_is_valid(campaign_team): campaign_team = _default_team()
+	if not _campaign_team_is_valid(campaign_team): campaign_team = _default_campaign_team()
+	var battle_selection: Array[String] = battle_team.duplicate() if _team_is_valid(battle_team) else _default_team()
 	var mission: Dictionary = active_battle.get("mission_data", {})
 	var name := str(mission.get("name", active_battle.get("mission", "Batalha")))
 	var overlay := _view()
 	overlay.set_meta("battle_name", name)
-	overlay.show_team(_available_hero_roster(), campaign_team, _enemy_roster(), name, active_battle.get("required_party", _campaign_definition().get("required_party", [Lead])), int(active_battle.get("party_size", _campaign_definition().get("party_size", 3))))
+	overlay.show_team(_available_hero_roster(), battle_selection, _enemy_roster(), name, active_battle.get("required_party", _campaign_definition().get("required_party", [Lead])), int(active_battle.get("party_size", _campaign_definition().get("party_size", 3))))
 	_save_campaign()
 
 func _confirm_team(ids: Array) -> void:
 	var selection: Array[String] = []
 	for raw in ids: selection.append(str(raw))
 	if not _team_is_valid(selection): return
-	campaign_team = selection.duplicate()
 	battle_team = selection.duplicate()
 	team = selection.duplicate()
 	_save_campaign()
@@ -788,21 +908,16 @@ func _load_campaign(id: String = "") -> void:
 	if id != "": campaign_id = id
 	var config := ConfigFile.new()
 	if config.load(SavePath) != OK:
-		campaign_phase = "new"
-		campaign_scene = _first_scene_in_campaign()
-		campaign_team = _default_campaign_team()
-		battle_team.clear()
-		campaign_flags.clear()
-		campaign_unlocked.clear()
-		for required_id in _campaign_definition().get("required_party", []): campaign_unlocked[str(required_id)] = true
+		_reset_campaign_state()
 		return
 	if id == "": campaign_id = str(config.get_value("settings", "current_campaign", campaign_story.get("start_campaign", campaign_id)))
 	if _campaign_definition().is_empty(): campaign_id = str(campaign_story.get("start_campaign", campaign_id))
-	var section := "campaign_" + campaign_id if config.has_section("campaign_" + campaign_id) else "story"
-	if section == "story" and str(campaign_story.get("start_campaign", "")) != campaign_id:
-		campaign_phase = "new"
-		campaign_scene = _first_scene_in_campaign()
+	var campaign_section := "campaign_" + campaign_id
+	var legacy_section := campaign_id == str(campaign_story.get("start_campaign", "")) and config.has_section("story")
+	if not config.has_section(campaign_section) and not legacy_section:
+		_reset_campaign_state()
 		return
+	var section := campaign_section if config.has_section(campaign_section) else "story"
 	var scene_id := str(config.get_value(section, "scene", _first_scene_in_campaign()))
 	if _scene_belongs_to_campaign(scene_id): campaign_scene = scene_id
 	else: campaign_scene = _first_scene_in_campaign()

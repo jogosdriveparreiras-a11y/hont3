@@ -16,7 +16,13 @@ Após cada vitória, o módulo oferece três cartas ainda não possuídas, prior
 
 O roteiro editável em `story.json` é um grafo: qualquer quantidade de cenas pode levar a qualquer outra por escolha ou salto. Uma batalha declara sua missão, os personagens fixos, o tamanho do grupo, o pool de inimigos opcional, a próxima cena e o número de ofertas de carta. O jogador preenche as vagas com personagens possuídos que não pertencem ao pool inimigo do encontro. Ao vencer, escolhe entre Evoluídas ainda não possuídas e Melhoradas das cartas-base que já possui. A interface mostra retratos do elenco, escurece o personagem que não está falando, nome do orador, texto gradual, música distinta por cena, chuva/cinzas/partículas de eclipse e diálogos que mencionam os aliados selecionados. O save independente `user://hotn3_campaign.cfg` guarda cena, escolhas, equipe e ofertas de carta para retomar entre batalhas.
 
-Use `tools/vn_editor.html` para montar e pré-visualizar o roteiro sem editar JSON manualmente. Ele importa e exporta o `story.json` compatível com este módulo.
+Use `tools/vn_editor.html` para montar e pré-visualizar o roteiro sem editar JSON manualmente. **Abrir JSON** aceita roteiros existentes e **Baixar JSON** mantém o nome do arquivo aberto.
+
+## Campanhas e aventuras adicionais
+
+Salve o JSON exportado em `res://campaigns/` ou na raiz do projeto. O jogo também procura em `user://campaigns/` e, na versão desktop exportada, ao lado do executável ou em sua subpasta `campaigns/`. Cada arquivo que contém `scenes` aparece na lista aberta pelo botão **Campanha**. Um arquivo que declara apenas `scenes` é tratado como uma campanha com uma aventura; arquivos estruturados mantêm a ordem de campanhas, aventuras e cenas. O jogo isola os IDs locais pelo nome do arquivo para impedir colisões entre roteiros.
+
+Arquivos de roteiro não incluem automaticamente personagens, cartas, retratos, arenas ou missões de combate personalizados. Esses IDs precisam existir no conteúdo instalado do jogo para as respectivas batalhas funcionarem.
 
 ## Verificar
 

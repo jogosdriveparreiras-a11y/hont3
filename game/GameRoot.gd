@@ -580,7 +580,7 @@ func _populate_title_menu() -> void:
 	match title_menu_section:
 		"jogar":
 			if ResourceLoader.exists("res://addons/hotn3_campaign/CampaignRoot.tscn"):
-				rows.append({"kind": "btn", "text": "Campanha", "hint": "A Fenda das Três Vigílias · três capítulos", "cb": _launch_campaign_module})
+				rows.append({"kind": "btn", "text": "Campanha", "hint": "Escolher uma campanha instalada", "cb": _launch_campaign_module})
 			else:
 				rows.append({"kind": "label", "text": "(Campanha indisponível)", "size": 20, "color": Color("9aa6bf")})
 			rows.append({"kind": "btn", "text": "Missões", "hint": "Selecionar missão", "cb": func() -> void:
