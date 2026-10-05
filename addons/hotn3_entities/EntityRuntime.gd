@@ -6,6 +6,7 @@ const Catalog = preload("res://addons/hotn3_entities/EntityCatalog.gd")
 const CombatRules = preload("res://game/CombatRules.gd")
 var catalog = Catalog.new()
 var memory: Dictionary = {} # Scoped to the current battle instance; reset with install().
+var _plus_of: Dictionary = {}
 
 
 func _acting_side(battle: Variant) -> String:
@@ -92,7 +93,7 @@ func _foes(battle: Variant, source: Dictionary) -> Array:
 	return battle.living("ALLY" if side == "ENEMY" else "ENEMY")
 
 
-func deploy(battle: Variant, mission_id: String, entity_ids: Array[String], chosen_decks: Dictionary = {}, seed_value: int = 0, mission_override: Dictionary = {}) -> bool:
+func deploy(battle: Variant, mission_id: String, entity_ids: Array[String], chosen_decks: Dictionary = {}, seed_value: int = 0, enemy_kits: Dictionary = {}, mission_override: Dictionary = {}) -> bool:
 	# Adapter HotNBattle. Aceita 1–3 heróis únicos (Arena incompleta OK; missões seguem 3).
 	var n := entity_ids.size()
 	if n < 1 or n > 3:
@@ -181,6 +182,8 @@ func deploy(battle: Variant, mission_id: String, entity_ids: Array[String], chos
 			"naomi_despertar":
 				ally["nero_plays"] = 0
 				ally["transformed"] = false
+	if not enemy_kits.is_empty():
+		_install_enemy_kits(battle, enemy_kits)
 	battle._draw_side("ALLY", int(battle.rules["opening_hand"]))
 	battle._draw_side("ENEMY", int(battle.rules["opening_hand"]))
 	battle._log("Missão: %s" % battle.mission["name"])
@@ -189,6 +192,68 @@ func deploy(battle: Variant, mission_id: String, entity_ids: Array[String], chos
 	on_turn_start(battle)
 	battle.changed.emit()
 	return true
+
+
+func kit_for_stage(entity_id: String, stage: String) -> Array:
+	# Arena: Inicial = kit de 5 + desvantagem. Final = + evoluídas. Final+ = bases trocadas pela versão +.
+	var mode := str(stage)
+	if mode != "final" and mode != "final_plus":
+		mode = "inicial"
+	var ids: Array = kit_manobras(entity_id).duplicate()
+	var seen: Dictionary = {}
+	for cid in ids:
+		seen[str(cid)] = true
+	if mode != "inicial":
+		var hero: Dictionary = catalog.hero(entity_id)
+		for cid in hero.get("evoluidas", []):
+			var sid := str(cid)
+			if seen.has(sid) or catalog.definition(sid).is_empty():
+				continue
+			seen[sid] = true
+			ids.append(sid)
+	var desv := kit_desvantagem(entity_id)
+	if desv != "" and not seen.has(desv):
+		ids.append(desv)
+	if mode == "final_plus":
+		var plus := _plus_index()
+		var upgraded: Array = []
+		for cid in ids:
+			var sid := str(cid)
+			upgraded.append(str(plus.get(sid, sid)))
+		return apply_melhorada_replace(upgraded)
+	return ids
+
+func _plus_index() -> Dictionary:
+	if not _plus_of.is_empty():
+		return _plus_of
+	for cid in catalog.cards:
+		var base := str(catalog.cards[cid].get("melhorada_de", ""))
+		if base != "":
+			_plus_of[base] = str(cid)
+	return _plus_of
+
+func _install_enemy_kits(battle: Variant, enemy_kits: Dictionary) -> void:
+	# Substitui o kit padrão (só cards do template) pelo estágio da Arena.
+	for actor in battle.living("ENEMY"):
+		var archetype := str(actor.get("archetype", ""))
+		if not enemy_kits.has(archetype):
+			continue
+		var owner := int(actor["id"])
+		for pile in [battle.enemy_deck, battle.enemy_hand, battle.enemy_discard, battle.enemy_exhausted]:
+			for j in range(pile.size() - 1, -1, -1):
+				if int(pile[j].get("owner", -1)) == owner:
+					pile.remove_at(j)
+		var kit: Array = enemy_kits[archetype]
+		for cid in kit:
+			if catalog.definition(str(cid)).is_empty():
+				continue
+			battle.next_card_id += 1
+			var cdef: Dictionary = catalog.definition(str(cid))
+			var row := {"uid": battle.next_card_id, "id": str(cid), "owner": owner, "class": cdef.get("class", ""), "upgrade": 0, "external_pack": true}
+			if str(cdef.get("class", "")) == "DESVANTAGEM" or bool(cdef.get("instant", false)):
+				row["instant"] = true
+			battle.enemy_deck.append(row)
+	battle._shuffle(battle.enemy_deck)
 
 func deck_valid(entity_id: String, deck: Array) -> bool:
 	var hero: Dictionary = catalog.hero(entity_id)
@@ -210,7 +275,9 @@ func deck_valid(entity_id: String, deck: Array) -> bool:
 		var cid := str(card_id)
 		if seen.has(cid): return false
 		seen[cid] = true
-		if not allowed.has(cid): return false
+		if not allowed.has(cid):
+			var base_of := str(catalog.definition(cid).get("melhorada_de", ""))
+			if base_of == "" or not allowed.has(base_of): return false
 	return true
 
 func apply_melhorada_replace(card_ids: Array) -> Array:

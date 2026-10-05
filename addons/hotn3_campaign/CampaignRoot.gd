@@ -668,7 +668,7 @@ func _start_campaign_battle() -> void:
 		pack_mode = "entities"
 		var ids: Array[String] = []
 		for id in team: ids.append(str(id))
-		if not packs.entities.deploy(battle, mission_id, ids, equipped, 0, mission_override):
+		if not packs.entities.deploy(battle, mission_id, ids, equipped, 0, {}, mission_override):
 			pack_mode = "default"
 			battle.begin(mission_id, team, equipped, 0, improvements, loadout, false, mission_override)
 			_start_campaign_battle_turn()
