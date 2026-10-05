@@ -94,6 +94,8 @@ var pending_target_id := -1
 var status_hover_actor := -1
 var arena_allies: Array[String] = []
 var arena_enemies: Array[String] = []
+var arena_ally_stages: Array[String] = []
+var arena_enemy_stages: Array[String] = []
 var battle_menu_open := false
 var weather_mode := "none"  # none | rain | fog | heat | night | leaves | snow
 var free_camera := false
@@ -1040,6 +1042,57 @@ func _arena_filled(side_ids: Array) -> Array[String]:
 			out.append(s)
 	return out
 
+func _arena_stage_label(stage: String) -> String:
+	match stage:
+		"final":
+			return "Final"
+		"final_plus":
+			return "Final+"
+		_:
+			return "Inicial"
+
+func _arena_stage(side: String, slot: int) -> String:
+	var stages: Array[String] = arena_ally_stages if side == "ally" else arena_enemy_stages
+	if slot < 0 or slot >= stages.size():
+		return "inicial"
+	var stage := str(stages[slot])
+	if stage != "final" and stage != "final_plus":
+		return "inicial"
+	return stage
+
+func _arena_set_stage(side: String, slot: int, stage: String) -> void:
+	var stages: Array[String] = arena_ally_stages if side == "ally" else arena_enemy_stages
+	while stages.size() <= slot:
+		stages.append("inicial")
+	stages[slot] = stage
+	if side == "ally":
+		arena_ally_stages = stages
+	else:
+		arena_enemy_stages = stages
+
+func _arena_cycle_stage(side: String, slot: int) -> void:
+	var order := ["inicial", "final", "final_plus"]
+	var cur := _arena_stage(side, slot)
+	var idx := order.find(cur)
+	_arena_set_stage(side, slot, order[(idx + 1) % order.size()])
+	_show_arena()
+
+func _arena_set_all_stages(stage: String) -> void:
+	for i in range(3):
+		_arena_set_stage("ally", i, stage)
+		_arena_set_stage("enemy", i, stage)
+	_show_arena()
+
+func _arena_decks(side: String) -> Dictionary:
+	var ids: Array[String] = arena_allies if side == "ally" else arena_enemies
+	var decks: Dictionary = {}
+	for i in range(ids.size()):
+		var id := str(ids[i])
+		if id == "" or not Content.HEROES.has(id):
+			continue
+		decks[id] = packs.entities.kit_for_stage(id, _arena_stage(side, i))
+	return decks
+
 func _show_arena() -> void:
 	if arena_allies.is_empty():
 		if team.size() >= 1 and team.size() <= 3:
@@ -1051,6 +1104,14 @@ func _show_arena() -> void:
 	_clear_ui()
 	var menu := _center_panel("ARENA")
 	menu.add_child(_label("Equipes incompletas OK: 1 a 3 por lado. Combate livre (sem missões).", 17, Color("9aa6bf")))
+	menu.add_child(_label("Forma de entrada: Inicial (kit), Final (kit + evoluídas) ou Final+ (versões +).", 16, Color("c9b27a")))
+	var all_row := HBoxContainer.new()
+	all_row.add_theme_constant_override("separation", 6)
+	all_row.add_child(_label("Todos", 18, Color("d7deee")))
+	all_row.add_child(_button("Inicial", _arena_set_all_stages.bind("inicial"), "Todos entram só com as manobras iniciais e a desvantagem."))
+	all_row.add_child(_button("Final", _arena_set_all_stages.bind("final"), "Todos entram com iniciais e evoluídas."))
+	all_row.add_child(_button("Final+", _arena_set_all_stages.bind("final_plus"), "Todos entram com a versão melhorada, quando existir."))
+	menu.add_child(all_row)
 	var ally_n := _arena_filled(arena_allies).size()
 	var enemy_n := _arena_filled(arena_enemies).size()
 	menu.add_child(_label("Aliados · %d/3" % ally_n, 20, Color("6dffa3")))
@@ -1061,6 +1122,8 @@ func _show_arena() -> void:
 		row.add_theme_constant_override("separation", 6)
 		row.add_child(_button("Aliado %d: %s" % [i + 1, name], _arena_pick_slot.bind("ally", i)))
 		if cur != "":
+			var stage := _arena_stage("ally", i)
+			row.add_child(_button(_arena_stage_label(stage), _arena_cycle_stage.bind("ally", i), "Clique para alternar Inicial, Final e Final+."))
 			row.add_child(_button("Limpar", _arena_clear_slot.bind("ally", i)))
 		menu.add_child(row)
 	menu.add_child(_label("Inimigos · %d/3" % enemy_n, 20, Color("ff8a8a")))
@@ -1071,6 +1134,8 @@ func _show_arena() -> void:
 		row2.add_theme_constant_override("separation", 6)
 		row2.add_child(_button("Inimigo %d: %s" % [i + 1, name2], _arena_pick_slot.bind("enemy", i)))
 		if cur2 != "":
+			var stage2 := _arena_stage("enemy", i)
+			row2.add_child(_button(_arena_stage_label(stage2), _arena_cycle_stage.bind("enemy", i), "Clique para alternar Inicial, Final e Final+."))
 			row2.add_child(_button("Limpar", _arena_clear_slot.bind("enemy", i)))
 		menu.add_child(row2)
 	var ready := ally_n >= 1 and enemy_n >= 1
@@ -1918,7 +1983,12 @@ func _start_mission() -> void:
 		pack_mode = "entities"
 		var ids: Array[String] = []
 		for id in team: ids.append(str(id))
-		if not packs.entities.deploy(battle, mission_id, ids, equipped, 0):
+		var decks: Dictionary = equipped
+		var enemy_kits: Dictionary = {}
+		if mission_id == "arena":
+			decks = _arena_decks("ally")
+			enemy_kits = _arena_decks("enemy")
+		if not packs.entities.deploy(battle, mission_id, ids, decks, 0, enemy_kits):
 			battle.begin(mission_id, team, equipped, 0, improvements, loadout)
 	else:
 		battle.begin(mission_id, team, equipped, 0, improvements, loadout)
