@@ -1077,12 +1077,6 @@ func _arena_cycle_stage(side: String, slot: int) -> void:
 	_arena_set_stage(side, slot, order[(idx + 1) % order.size()])
 	_show_arena()
 
-func _arena_set_all_stages(stage: String) -> void:
-	for i in range(3):
-		_arena_set_stage("ally", i, stage)
-		_arena_set_stage("enemy", i, stage)
-	_show_arena()
-
 func _arena_decks(side: String) -> Dictionary:
 	var ids: Array[String] = arena_allies if side == "ally" else arena_enemies
 	var decks: Dictionary = {}
@@ -1104,14 +1098,7 @@ func _show_arena() -> void:
 	_clear_ui()
 	var menu := _center_panel("ARENA")
 	menu.add_child(_label("Equipes incompletas OK: 1 a 3 por lado. Combate livre (sem missões).", 17, Color("9aa6bf")))
-	menu.add_child(_label("Forma de entrada: Inicial (kit), Final (kit + evoluídas) ou Final+ (versões +).", 16, Color("c9b27a")))
-	var all_row := HBoxContainer.new()
-	all_row.add_theme_constant_override("separation", 6)
-	all_row.add_child(_label("Todos", 18, Color("d7deee")))
-	all_row.add_child(_button("Inicial", _arena_set_all_stages.bind("inicial"), "Todos entram só com as manobras iniciais e a desvantagem."))
-	all_row.add_child(_button("Final", _arena_set_all_stages.bind("final"), "Todos entram com iniciais e evoluídas."))
-	all_row.add_child(_button("Final+", _arena_set_all_stages.bind("final_plus"), "Todos entram com a versão melhorada, quando existir."))
-	menu.add_child(all_row)
+	menu.add_child(_label("Cada personagem escolhe a própria forma: Inicial, Final ou Final+.", 16, Color("c9b27a")))
 	var ally_n := _arena_filled(arena_allies).size()
 	var enemy_n := _arena_filled(arena_enemies).size()
 	menu.add_child(_label("Aliados · %d/3" % ally_n, 20, Color("6dffa3")))
@@ -1123,7 +1110,7 @@ func _show_arena() -> void:
 		row.add_child(_button("Aliado %d: %s" % [i + 1, name], _arena_pick_slot.bind("ally", i)))
 		if cur != "":
 			var stage := _arena_stage("ally", i)
-			row.add_child(_button(_arena_stage_label(stage), _arena_cycle_stage.bind("ally", i), "Clique para alternar Inicial, Final e Final+."))
+			row.add_child(_button(_arena_stage_label(stage), _arena_cycle_stage.bind("ally", i), "Forma só deste aliado: Inicial, Final ou Final+."))
 			row.add_child(_button("Limpar", _arena_clear_slot.bind("ally", i)))
 		menu.add_child(row)
 	menu.add_child(_label("Inimigos · %d/3" % enemy_n, 20, Color("ff8a8a")))
@@ -1135,7 +1122,7 @@ func _show_arena() -> void:
 		row2.add_child(_button("Inimigo %d: %s" % [i + 1, name2], _arena_pick_slot.bind("enemy", i)))
 		if cur2 != "":
 			var stage2 := _arena_stage("enemy", i)
-			row2.add_child(_button(_arena_stage_label(stage2), _arena_cycle_stage.bind("enemy", i), "Clique para alternar Inicial, Final e Final+."))
+			row2.add_child(_button(_arena_stage_label(stage2), _arena_cycle_stage.bind("enemy", i), "Forma só deste inimigo: Inicial, Final ou Final+."))
 			row2.add_child(_button("Limpar", _arena_clear_slot.bind("enemy", i)))
 		menu.add_child(row2)
 	var ready := ally_n >= 1 and enemy_n >= 1

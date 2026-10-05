@@ -1,7 +1,7 @@
 
 ## Arena — forma de entrada
 
-- A Arena permite escolher, por personagem, se entra como **Inicial** (kit + desvantagem), **Final** (iniciais + evoluídas) ou **Final+** (mesmas cartas, com a versão melhorada quando existir). Há atalho para aplicar a mesma forma a todos.
+- A Arena permite escolher, por personagem, se entra como **Inicial** (kit + desvantagem), **Final** (iniciais + evoluídas) ou **Final+** (mesmas cartas, com a versão melhorada quando existir). A escolha é individual: cada personagem de cada lado tem a própria forma.
 ## 2026-10-01 — Remove Assinatura; Arena 1–3; Log HUD pt-BR
 
 ## 2026-10-01 — Confusão + log Guerreiro
