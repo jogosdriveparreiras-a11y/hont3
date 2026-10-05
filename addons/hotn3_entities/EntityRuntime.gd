@@ -994,7 +994,8 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 			"push", "pull", "move_target":
 				for victim in targets:
 					if battle.has_method("reposition"):
-					kos.append_array(battle.reposition(source, victim, "move" if op == "move_target" else op, _has_action(def, "collision") or _has_action(def, "colidir")))
+						kos.append_array(battle.reposition(source, victim, "move" if op == "move_target" else op, _has_action(def, "collision") or _has_action(def, "colidir")))
+						continue
 			"draw", "draw_owner", "draw_owner_to", "draw_heroic", "draw_attack_heroic":
 				_draw_filtered(battle, source, op, int(a[1]))
 			"draw_own":
