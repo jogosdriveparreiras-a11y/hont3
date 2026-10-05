@@ -32,7 +32,7 @@ const STATES := {
 const EFFECTS := {
 	"recuo": {"damage_divisor": 3.0},
 	"dreno": {"heal_divisor": 4.0},
-	"colisao": {"base_damage_flat": 10, "base_damage_max_hp_fraction": 0.10},
+	"colisao": {"base_damage_flat": 10, "base_damage_max_hp_fraction": 0.10, "boundary_damage_max_hp_fraction": 0.10},
 	"recompra": {"attack_bonus": 0.5},
 }
 

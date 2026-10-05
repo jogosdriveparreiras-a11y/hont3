@@ -100,5 +100,11 @@ func _initialize() -> void:
 	if tgt.get("side", "") != "ALLY":
 		_fail("ataque ENEMY deve mirar ALY (jogador); target side=%s id=%s" % [tgt.get("side", ""), tid]); return
 	_ok("ATTACK ENEMY mira unidade do jogador (id=%d)" % tid)
+	var taunted: Dictionary = battle.living("ALLY")[1]
+	battle._add_status(taunted, "taunt", 1, 1, int(b["id"]))
+	choice = battle.peek_enemy_play()
+	if choice.is_empty() or int(choice.get("target", -1)) != int(taunted["id"]):
+		_fail("Provocar deve forçar a IA a escolher o personagem provocado; got %s" % str(choice)); return
+	_ok("Provocar força a seleção da IA entre alvos hostis alcançáveis")
 	print("EnemyAiTargetSmoke PASS")
 	quit(0)

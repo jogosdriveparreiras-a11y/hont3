@@ -46,8 +46,9 @@ voar = [rule for _, entry_id, _, rule in rows if entry_id == "voar"]
 assert len(voar) == 1, "Voar needs one catalog rule"
 assert all(part in voar[0] for part in ("área", "Alcance", "Colisão")), voar
 collision = [rule for category, entry_id, _, rule in rows if category == "Op" and entry_id == "collision"]
-assert len(collision) == 1 and all(part in collision[0] for part in ("empurrão", "Voar")), collision
-assert '{op:"collision", label:"Colisão"' in editor
+assert len(collision) == 1 and "10 + 10%" in collision[0] and "voand" in collision[0].lower(), collision
+assert '{op:"collision", label:"Colidir"' in editor
+assert '{op:"fly", label:"Voar"' in editor
 for source in (
     "addons/hotn3_entities/EntityCatalog.gd",
     "addons/hotn3_external_cards/CardPack.gd",
@@ -59,11 +60,20 @@ for source in (
 ):
     runtime = (ROOT / source).read_text(encoding="utf-8")
     assert "battle.is_area_attack(resolved_def)" in runtime and 'not battle._has_status(victim, "flying")' in runtime, (source, "area flight filtering")
-    assert 'battle.reposition(source, victim, "move" if op == "move_target" else op, _has_action(def, "collision"))' in runtime, (source, "collision dispatch")
+    assert 'battle.reposition(source, victim, "collision", true)' in runtime, (source, "standalone collision dispatch")
+    assert 'battle.reposition(source, victim, "move" if op == "move_target" else op, _has_action(def, "collision") or _has_action(def, "colidir"))' in runtime, (source, "movement collision dispatch")
+    assert 'if op == "colidir": op = "collision"' in runtime, (source, "collision alias")
+    assert 'if op in ["voar", "flying"]: op = "fly"' in runtime, (source, "flight action aliases")
+    assert '"fly":' in runtime, (source, "fly interpreter")
 combat = (ROOT / "game/CombatRules.gd").read_text(encoding="utf-8")
 assert '"voar": {"landing_damage_max_hp_fraction": 0.10, "movement_damage_multiplier": 2.0}' in combat
+state_runtime = (ROOT / "game/BattleState.gd").read_text(encoding="utf-8")
+assert '"taunt", "provocar":\n\t\t\treturn "taunted"' in state_runtime, "Provocar status must normalize to the state AI follows"
 smoke = (ROOT / "tools/StatusSmoke.gd").read_text(encoding="utf-8")
-assert all(part in smoke for part in ("Voar evita dano", "Alcance permite ataque direto contra Voar", "Atacante voando alcança alvo voador", "não corpo a corpo derruba Voar", "Colisão duplica"))
+assert all(part in smoke for part in ("Voar evita dano", "Alcance permite ataque direto contra Voar", "Atacante voando alcança alvo voador", "não corpo a corpo derruba Voar", "Colisão duplica", "Interpretador de entidades executa [fly, X]", "Interpretador externo normaliza alias [voar, X]", "Colidir sem movimento", "ação Provocar", "Ações X de ambos os interpretadores"))
+assert "Provocar deve forçar a IA a escolher o personagem provocado" in (ROOT / "tools/EnemyAiTargetSmoke.gd").read_text(encoding="utf-8")
+bridge = (ROOT / "game/PackBridge.gd").read_text(encoding="utf-8")
+assert '"Colidir: atinge um aliado aleatório na fileira atual ou de destino"' in bridge and '"Voar %s rodada(s)"' in bridge
 assert all(f'"{kind}"' in smoke for kind in ("ENEMY_ROW", "ALLY_ROW", "ROW", "FRONT_ROW", "BACK_ROW", "ADJACENT", "ALL_ENEMIES", "ALL_ALLIES", "ALL_OTHERS"))
 
 for source in (

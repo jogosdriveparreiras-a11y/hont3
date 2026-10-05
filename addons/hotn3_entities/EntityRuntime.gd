@@ -809,7 +809,9 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 	# Antes do resolve: play_stamp de status (Confusão) casa com _after_card_play.
 	battle.played_cards += 1
 	for a in def["actions"]:
-		var op: String = a[0]
+		var op: String = str(a[0])
+		if op == "colidir": op = "collision"
+		if op in ["voar", "flying"]: op = "fly"
 		if acted.has(op) and op in ["quick", "free", "exhaust", "final"]: continue
 		acted.append(op)
 		match op:
@@ -974,14 +976,25 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 				battle._take_damage(source, source, raw_sd, true, false)
 			"counter_effects":
 				pass  # metadata; aplicada ao conceder counter
-			"collision", "requires_alone", "requires_own_minion_front":
-				pass
+			"collision":
+				var has_movement := false
+				for candidate in def.get("actions", []):
+					if typeof(candidate) == TYPE_ARRAY and not candidate.is_empty() and str(candidate[0]) in ["push", "pull", "move_target"]:
+						has_movement = true
+						break
+				if not has_movement:
+					for victim in targets:
+						kos.append_array(battle.reposition(source, victim, "collision", true))
+			"fly":
+				var fly_duration := maxi(1, int(round(battle.resolve_amount(a[1] if a.size() > 1 else 1, source))))
+				battle._add_status(source, "flying", fly_duration, 1, int(source["id"]))
+			"requires_alone", "requires_own_minion_front": pass
 			"cure":
 				for victim in targets: battle._cleanse(victim)
 			"push", "pull", "move_target":
 				for victim in targets:
 					if battle.has_method("reposition"):
-						kos.append_array(battle.reposition(source, victim, "move" if op == "move_target" else op, _has_action(def, "collision")))
+					kos.append_array(battle.reposition(source, victim, "move" if op == "move_target" else op, _has_action(def, "collision") or _has_action(def, "colidir")))
 			"draw", "draw_owner", "draw_owner_to", "draw_heroic", "draw_attack_heroic":
 				_draw_filtered(battle, source, op, int(a[1]))
 			"draw_own":
@@ -1017,8 +1030,7 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 					victim["statuses"].erase("bleed")
 					if battle._take_damage(source, victim, amount, true, false, false, false, false, false, true): kos.append(int(victim["id"]))
 			"taunt":
-				var provoked: Array = targets if target.get("side") != source.get("side") else _foes(battle, source)
-				for victim in provoked: battle._add_status(victim, "taunted", 1, 1, int(source["id"]))
+				for victim in targets: battle._add_status(victim, "taunted", 1, 1, int(source["id"]))
 			"taunt_attackers":
 				for foe in _foes(battle, source):
 					if int(foe.get("intent_target", -1)) == int(target["id"]): battle._add_status(foe, "taunted", 1, 1, int(source["id"]))
@@ -1352,7 +1364,7 @@ func play(battle: Variant, hand_index: int, target_id: int, chain_ids: Array = [
 				pass  # Avaliado em on_redraw.
 			"requires_self_status", "requires_status":
 				pass  # Pré-checagem em play().
-			"quick", "free", "exhaust", "final", "chain", "grow_chain", "chain_hand_owner", "full_combo", "bonus_status", "bonus_damaged", "bonus_defense", "bonus_targeting_self", "bonus_full_hp", "bonus_en_fuego", "force_if_damaged", "hand_protecao", "hand_cost_down", "hand_damage_growth", "hand_resist", "overheal_max", "cost_down_en_fuego", "area_en_fuego", "enhanced", "redraw_force", "redraw_bonus", "redraw_strengthened", "play_while_disabled", "penetrating", "lethargic", "recoil", "drain", "instant", "ephemeral", "warmup", "barrier_from_hit", "counter_effects", "collision", "requires_alone", "requires_own_minion_front", "hit_flat", "hit_enemy_front", "heal_own_minions", "sacrifice_minion", "self_damage_hp": pass # Evaluated in preplay, hooks, or _bonus.
+			"quick", "free", "exhaust", "final", "chain", "grow_chain", "chain_hand_owner", "full_combo", "bonus_status", "bonus_damaged", "bonus_defense", "bonus_targeting_self", "bonus_full_hp", "bonus_en_fuego", "force_if_damaged", "hand_protecao", "hand_cost_down", "hand_damage_growth", "hand_resist", "overheal_max", "cost_down_en_fuego", "area_en_fuego", "enhanced", "redraw_force", "redraw_bonus", "redraw_strengthened", "play_while_disabled", "penetrating", "lethargic", "recoil", "drain", "instant", "ephemeral", "warmup", "barrier_from_hit", "counter_effects", "requires_alone", "requires_own_minion_front", "hit_flat", "hit_enemy_front", "heal_own_minions", "sacrifice_minion", "self_damage_hp": pass # Evaluated in preplay, hooks, or _bonus.
 			_:
 				push_error("Unsupported external card action: " + op)
 	# Rápida: não gasta jogada (já tratado); ["quick", N] concede N jogadas extras.

@@ -870,6 +870,8 @@ func _normalize_status_id(id: String) -> String:
 			return "wounded"
 		"voar", "voando", "flying", "flight":
 			return "flying"
+		"taunt", "provocar":
+			return "taunted"
 		"slow", "lento":
 			return "slow"
 		"vitima", "victim", "tanque":
@@ -2147,30 +2149,47 @@ func reposition(source: Dictionary, target: Dictionary, mode: String, collision:
 	if target.is_empty() or int(target.get("hp", 0)) <= 0 or _has_status(target, "bound"):
 		return fallen
 	var from := str(target.get("row", "front"))
+	if mode == "collision":
+		var same_row := _living_in_row(str(target.get("side", "")), from, int(target.get("id", -1)))
+		if not same_row.is_empty():
+			var partner: Dictionary = same_row[rng.randi_range(0, same_row.size() - 1)]
+			fallen.append_array(_apply_collision(source, target, partner))
+		return fallen
 	var to := from
 	if mode == "pull": to = "front"
 	elif mode == "push": to = "back"
 	else: to = "back" if from == "front" else "front"
 	var blocked := to == from
-	var partner: Dictionary = {}
-	for actor in living(str(target.get("side", ""))):
-		if int(actor.get("id", -1)) != int(target.get("id", -2)) and str(actor.get("row", "")) == to:
-			partner = actor
-			break
-	var should_hit := blocked or (collision and not partner.is_empty())
-	if should_hit:
-		var amount := int(CombatRules.formula_value("Efeitos", "colisao", "base_damage_flat", 10)) + roundi(float(target.get("max_hp", 1)) * float(CombatRules.formula_value("Efeitos", "colisao", "base_damage_max_hp_fraction", 0.10)))
-		if _has_status(target, "flying"):
-			amount = roundi(float(amount) * float(CombatRules.status_value("voar", "movement_damage_multiplier", 2.0)))
+	var partners := _living_in_row(str(target.get("side", "")), to, int(target.get("id", -1)))
+	if not blocked and collision and not partners.is_empty():
+		var partner: Dictionary = partners[rng.randi_range(0, partners.size() - 1)]
+		fallen.append_array(_apply_collision(source, target, partner))
+	elif blocked:
+		# Empurrar/puxar além dos limites machuca o alvo, sem o bônus fixo de Colisão.
+		var amount := roundi(float(target.get("max_hp", 1)) * float(CombatRules.formula_value("Efeitos", "colisao", "boundary_damage_max_hp_fraction", 0.10)))
 		if _take_damage(source, target, amount, false, false, true, false, false, true): fallen.append(int(target["id"]))
-		if collision and not partner.is_empty() and int(partner.get("hp", 0)) > 0:
-			var partner_amount := int(CombatRules.formula_value("Efeitos", "colisao", "base_damage_flat", 10)) + roundi(float(partner.get("max_hp", 1)) * float(CombatRules.formula_value("Efeitos", "colisao", "base_damage_max_hp_fraction", 0.10)))
-			if _has_status(partner, "flying"):
-				partner_amount = roundi(float(partner_amount) * float(CombatRules.status_value("voar", "movement_damage_multiplier", 2.0)))
-			if _take_damage(source, partner, partner_amount, false, false, true, false, false, true): fallen.append(int(partner["id"]))
 	if not blocked and int(target.get("hp", 0)) > 0:
 		target["row"] = to
 		visual.emit("move", int(source.get("id", -1)), int(target["id"]), 0)
+	return fallen
+
+func _living_in_row(side: String, row: String, excluded_id: int) -> Array[Dictionary]:
+	var result: Array[Dictionary] = []
+	for actor in living(side):
+		if int(actor.get("id", -1)) != excluded_id and str(actor.get("row", "")) == row:
+			result.append(actor)
+	return result
+
+func _apply_collision(source: Dictionary, target: Dictionary, partner: Dictionary) -> Array[int]:
+	var fallen: Array[int] = []
+	for victim in [target, partner]:
+		if int(victim.get("hp", 0)) <= 0:
+			continue
+		var amount := int(CombatRules.formula_value("Efeitos", "colisao", "base_damage_flat", 10)) + roundi(float(victim.get("max_hp", 1)) * float(CombatRules.formula_value("Efeitos", "colisao", "base_damage_max_hp_fraction", 0.10)))
+		if _has_status(victim, "flying"):
+			amount = roundi(float(amount) * float(CombatRules.status_value("voar", "movement_damage_multiplier", 2.0)))
+		if _take_damage(source, victim, amount, false, false, true, false, false, true):
+			fallen.append(int(victim["id"]))
 	return fallen
 
 func use_item(id: String, target_id: int) -> bool:
@@ -2677,7 +2696,7 @@ func _best_enemy_play() -> Dictionary:
 		elif kind == "DEAD_ALLY": candidates = dead_on_side("ENEMY")
 		elif kind == "ANY_UNIT": candidates = living("ALLY") + living("ENEMY")
 		else: candidates = living("ALLY")
-		if kind not in ["SELF", "ALLY", "ALL_ALLIES"]:
+		if kind not in ["SELF", "OWN_MINION", "ALLY", "ALL_ALLIES", "DEAD_ALLY"]:
 			var forced: Array[Dictionary] = []
 			for ally in living("ALLY"):
 				if _has_status(ally, "taunted") and can_reach(source, ally, definition): forced.append(ally)

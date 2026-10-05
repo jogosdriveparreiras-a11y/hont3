@@ -226,8 +226,10 @@ func describe_actions(definition: Dictionary) -> Array[String]:
 			continue
 		var op := str(action[0])
 		match op:
-			"collision":
-				parts.append("Colisão: empurrões e puxões atingem unidades na fileira de destino")
+			"collision", "colidir":
+				parts.append("Colidir: atinge um aliado aleatório na fileira atual ou de destino")
+			"fly", "voar", "flying":
+				parts.append("Voar %s rodada(s)" % str(action[1] if action.size() > 1 else "1"))
 			"hit", "hit_per_impulse", "hit_per_hand", "hit_from_protecao", "hit_from_barrier", "roulette_hit":
 				if op == "hit_from_protecao":
 					parts.append("Dano = stacks de Proteção")

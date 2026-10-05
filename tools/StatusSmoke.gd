@@ -232,6 +232,100 @@ func _initialize() -> void:
 	collision.reposition(collision_source, collision_target, "push", true)
 	assert(int(collision_target["hp"]) == 50 and int(collision_partner["hp"]) == 50, "Colisão duplica o impacto em cada unidade voadora")
 	assert(not collision._has_status(collision_target, "voar") and not collision._has_status(collision_partner, "voar"), "Colisão derruba ambos os voadores")
+	var standalone = Battle.new()
+	standalone.begin("road", team, {}, 311)
+	var crash_target: Dictionary = standalone.living("ENEMY")[0]
+	var crash_a: Dictionary = standalone.living("ENEMY")[1]
+	var crash_b: Dictionary = standalone.living("ENEMY")[2]
+	var crash_source: Dictionary = standalone.living("ALLY")[0]
+	for unit in [crash_target, crash_a, crash_b]:
+		unit["row"] = "front"
+		unit["hp"] = 100
+		unit["max_hp"] = 100
+	var before_collision_hp := int(crash_target["hp"])
+	standalone.reposition(crash_source, crash_target, "collision", true)
+	assert(int(crash_target["hp"]) == before_collision_hp - 20, "Colidir sem movimento causa 10 + 10% no alvo")
+	var ally_damage := [int(crash_a["hp"]), int(crash_b["hp"])].filter(func(hp): return hp == 80).size()
+	assert(ally_damage == 1, "Colidir sem movimento escolhe só um aliado aleatoriamente da mesma fileira")
+	var edge = Battle.new()
+	edge.begin("road", team, {}, 313)
+	var edge_target: Dictionary = edge.living("ENEMY")[1]
+	edge_target["row"] = "back"
+	edge_target["hp"] = 100
+	edge_target["max_hp"] = 100
+	edge.reposition(edge.living("ALLY")[0], edge_target, "push")
+	assert(int(edge_target["hp"]) == 90, "Empurrar além do limite causa apenas 10% da Vida máxima")
+	assert(standalone.living("ALLY")[0]["statuses"].is_empty(), "Teste de Voar começa sem estado")
+	var entity_fly_id := "ent_smoke_fly"
+	_packs.entities.catalog.cards[entity_fly_id] = {"id": entity_fly_id, "name": "Voar teste", "owner": "smoke", "class": "SKILL", "target": "SELF", "cost": 0, "actions": [["fly", "2"]]}
+	standalone.hand.clear()
+	standalone.hand.append({"uid": 99001, "id": entity_fly_id, "owner": int(crash_source["id"]), "class": "SKILL", "cost_override": 0})
+	standalone.card_plays = 3
+	standalone.impulse = 5
+	assert(_packs.play_card(standalone, "entities", 0, int(crash_source["id"])), "Interpretador de entidades executa [fly, X]")
+	assert(standalone._has_status(crash_source, "flying"), "Ação Voar concede o estado ao usuário")
+	var entity_collision_id := "ent_smoke_colidir"
+	_packs.entities.catalog.cards[entity_collision_id] = {"id": entity_collision_id, "name": "Colidir teste entidade", "owner": "smoke", "class": "SKILL", "target": "ENEMY", "cost": 0, "actions": [["collision"]]}
+	standalone.hand.clear()
+	for unit in standalone.living("ENEMY"):
+		unit["row"] = "front"
+		unit["hp"] = 100
+		unit["max_hp"] = 100
+	standalone.hand.append({"uid": 99006, "id": entity_collision_id, "owner": int(crash_source["id"]), "class": "SKILL", "cost_override": 0})
+	assert(_packs.play_card(standalone, "entities", 0, int(standalone.living("ENEMY")[0]["id"])), "Interpretador de entidades executa Colidir sem movimento")
+	assert(standalone.living("ENEMY").filter(func(unit): return int(unit["hp"]) == 80).size() == 2, "Colidir entidade causa dano no alvo e num aliado")
+	var external_fly_id := "ms_smoke_voar"
+	_packs.external.catalog.cards[external_fly_id] = {"id": external_fly_id, "name": "Voar teste externo", "owner": "smoke", "class": "SKILL", "target": "SELF", "cost": 0, "actions": [["voar", "2"]]}
+	var external_flight := Battle.new()
+	external_flight.begin("road", team, {}, 315)
+	var external_flyer: Dictionary = external_flight.living("ALLY")[0]
+	external_flight.hand.append({"uid": 99002, "id": external_fly_id, "owner": int(external_flyer["id"]), "class": "SKILL", "cost_override": 0})
+	assert(_packs.play_card(external_flight, "external", 0, int(external_flyer["id"])), "Interpretador externo normaliza alias [voar, X]")
+	assert(external_flight._has_status(external_flyer, "flying"), "Alias Voar concede o estado ao usuário")
+	var collision_id := "ms_smoke_colidir"
+	_packs.external.catalog.cards[collision_id] = {"id": collision_id, "name": "Colidir teste", "owner": "smoke", "class": "SKILL", "target": "ENEMY", "cost": 0, "actions": [["colidir"]]}
+	var interpreted_collision := Battle.new()
+	interpreted_collision.begin("road", team, {}, 316)
+	var interpreted_target: Dictionary = interpreted_collision.living("ENEMY")[0]
+	var interpreted_allies: Array = interpreted_collision.living("ENEMY").slice(1)
+	var collision_owner: Dictionary = interpreted_collision.living("ALLY")[0]
+	for unit in [interpreted_target] + interpreted_allies:
+		unit["row"] = "front"
+		unit["hp"] = 100
+		unit["max_hp"] = 100
+	interpreted_collision.hand.append({"uid": 99005, "id": collision_id, "owner": int(collision_owner["id"]), "class": "SKILL", "cost_override": 0})
+	assert(_packs.play_card(interpreted_collision, "external", 0, int(interpreted_target["id"])), "Interpretador externo executa Colidir sem movimento")
+	assert(int(interpreted_target["hp"]) == 80 and interpreted_allies.filter(func(unit): return int(unit["hp"]) == 80).size() == 1, "Colidir executado pelo interpretador atinge alvo e um aliado aleatório")
+	var provoke_id := "ent_smoke_provoke"
+	_packs.entities.catalog.cards[provoke_id] = {"id": provoke_id, "name": "Provocar teste", "owner": "smoke", "class": "SKILL", "target": "SELF", "cost": 0, "actions": [["taunt"]]}
+	var taunt_battle := Battle.new()
+	taunt_battle.begin("road", team, {}, 318)
+	var taunt_owner: Dictionary = taunt_battle.living("ALLY")[0]
+	taunt_battle.hand.append({"uid": 99007, "id": provoke_id, "owner": int(taunt_owner["id"]), "class": "SKILL", "cost_override": 0})
+	assert(_packs.play_card(taunt_battle, "entities", 0, int(taunt_owner["id"])), "Interpretador executa ação Provocar")
+	assert(taunt_battle._has_status(taunt_owner, "taunted"), "Provocar no próprio personagem aplica o estado que direciona a IA hostil")
+	var extra_plays = Battle.new()
+	extra_plays.begin("road", team, {}, 317)
+	var plays_owner: Dictionary = extra_plays.living("ALLY")[0]
+	_packs.entities.catalog.cards["ent_smoke_actions"] = {"id": "ent_smoke_actions", "name": "Ações teste", "owner": "smoke", "class": "SKILL", "target": "SELF", "cost": 0, "actions": [["actions", "2"]]}
+	extra_plays.hand.append({"uid": 99008, "id": "ent_smoke_actions", "owner": int(plays_owner["id"]), "class": "SKILL", "cost_override": 0})
+	assert(_packs.play_card(extra_plays, "entities", 0, int(plays_owner["id"])), "Interpretador aplica Ações X")
+	_packs.external.catalog.cards["ms_smoke_actions"] = {"id": "ms_smoke_actions", "name": "Ações teste externo", "owner": "smoke", "class": "SKILL", "target": "SELF", "cost": 0, "actions": [["actions", "2"]]}
+	extra_plays.hand.append({"uid": 99009, "id": "ms_smoke_actions", "owner": int(plays_owner["id"]), "class": "SKILL", "cost_override": 0})
+	assert(_packs.play_card(extra_plays, "external", 0, int(plays_owner["id"])), "Interpretador externo aplica Ações X")
+	extra_plays.start_turn()
+	assert(int(extra_plays.card_plays) == 7, "Ações X de ambos os interpretadores soma ao turno seguinte")
+	var redraw_plays := Battle.new()
+	redraw_plays.begin("road", team, {}, 319)
+	var redraw_owner: Dictionary = redraw_plays.living("ALLY")[0]
+	var actions_card := {"uid": 99003, "id": "ent_smoke_redraw", "owner": int(plays_owner["id"]), "class": "SKILL"}
+	_packs.entities.catalog.cards["ent_smoke_redraw"] = {"id": "ent_smoke_redraw", "name": "Ações teste", "owner": "smoke", "class": "SKILL", "target": "SELF", "cost": 0, "actions": [["redraw_actions", "2"]]}
+	actions_card["owner"] = int(redraw_owner["id"])
+	_packs.entities.on_redraw(redraw_plays, actions_card)
+	_packs.external.catalog.cards["ms_smoke_redraw"] = {"id": "ms_smoke_redraw", "name": "Ações externas teste", "owner": "smoke", "class": "SKILL", "target": "SELF", "cost": 0, "actions": [["redraw_actions", "2"]]}
+	_packs.external.on_redraw(redraw_plays, {"uid": 99004, "id": "ms_smoke_redraw", "owner": int(redraw_owner["id"]), "class": "SKILL"})
+	redraw_plays.start_turn()
+	assert(int(redraw_plays.card_plays) == 7, "Recompra concede Ações X pelos dois interpretadores")
 	assert(not flight.actors[0].has("block") and not flight.actors[0].has("shield"), "Atores não carregam pools legados de Bloqueio/Escudo")
 
 	print("OK: estados, Chain, Soulbound, impacto, prévia, alvos especiais e KO próprio")
