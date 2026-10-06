@@ -9,6 +9,9 @@ signal reward_bundle_continue
 signal load_campaign
 signal exit_campaign
 signal retry_battle
+signal adventure_selected(adventure_id: String)
+signal adventure_action(action: String, adventure_id: String)
+signal campaign_hub
 
 const Content = preload("res://game/Content.gd")
 const EntityCatalog = preload("res://addons/hotn3_entities/EntityCatalog.gd")
@@ -22,6 +25,10 @@ var _full_text := ""
 var _typing := 0.0
 var _weather_kind := ""
 var _entity_catalog: HotN3EntityCatalog
+var _selected_campaign_id := ""
+var _selected_adventure_id := ""
+var _restart_target_adventure := ""
+var _restart_dialog: ConfirmationDialog
 
 var canvas: Control
 var wash: ColorRect
@@ -76,6 +83,11 @@ func _ready() -> void:
 	action_list.add_theme_constant_override("separation", 12)
 	action_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	action_area.hide()
+	_restart_dialog = ConfirmationDialog.new()
+	_restart_dialog.title = "Recomeçar aventura"
+	_restart_dialog.dialog_text = "Jogar do início apagará o progresso salvo desta aventura. Bônus permanentes, cartas, itens e personagens já desbloqueados serão mantidos. Deseja continuar?"
+	canvas.add_child(_restart_dialog)
+	_restart_dialog.confirmed.connect(func(): adventure_action.emit("restart", _restart_target_adventure))
 	get_viewport().size_changed.connect(_on_screen_resized)
 
 func _style(fill: Color, border: Color) -> StyleBoxFlat:
@@ -177,21 +189,75 @@ func show_choices(options: Array) -> void:
 func _select_option(option: Dictionary) -> void:
 	option_selected.emit(option)
 
-func show_campaign_list(campaigns: Array) -> void:
-	_clear_actions("Campanhas", "Escolha uma campanha para começar ou continuar.")
+func show_campaign_hub(campaigns: Array, selected_campaign_id: String, adventures: Array, selected_adventure_id: String, has_save: bool, completed: bool) -> void:
+	_selected_campaign_id = selected_campaign_id
+	_selected_adventure_id = selected_adventure_id
+	_clear_actions("Campanhas", "Selecione uma campanha para ver suas aventuras.")
+	var columns := HBoxContainer.new()
+	columns.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	columns.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	action_list.add_child(columns)
+	var campaign_column := _menu_column("Campanhas", 240)
+	columns.add_child(campaign_column)
 	for raw in campaigns:
 		if typeof(raw) != TYPE_DICTIONARY: continue
 		var campaign: Dictionary = raw
 		var id := str(campaign.get("id", ""))
 		var title := str(campaign.get("title", id))
-		var source := str(campaign.get("source_file", ""))
-		var caption := title if source == "" else "%s · %s" % [title, source]
-		action_list.add_child(_button(caption, _select_campaign.bind(id)))
-	action_list.add_child(_button("Voltar ao menu", _exit))
+		var marker := "› " if id == selected_campaign_id else ""
+		campaign_column.add_child(_button(marker + title, _select_campaign.bind(id)))
+	var adventure_column := _menu_column("Aventuras", 270)
+	columns.add_child(adventure_column)
+	for raw in adventures:
+		if typeof(raw) != TYPE_DICTIONARY: continue
+		var adventure: Dictionary = raw
+		var id := str(adventure.get("id", ""))
+		var status := " · concluída" if bool(adventure.get("completed", false)) else (" · em andamento" if bool(adventure.get("has_save", false)) else " · nova")
+		var marker := "› " if id == selected_adventure_id else ""
+		adventure_column.add_child(_button(marker + str(adventure.get("title", id)) + status, _select_adventure.bind(id)))
+	var detail := _menu_column("", 360)
+	detail.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	columns.add_child(detail)
+	var selected_title := "Selecione uma aventura"
+	for raw in adventures:
+		if typeof(raw) == TYPE_DICTIONARY and str(raw.get("id", "")) == selected_adventure_id:
+			selected_title = str(raw.get("title", selected_adventure_id))
+			break
+	if selected_campaign_id != "" and selected_adventure_id == "":
+		detail.add_child(_label("Escolha uma aventura na lista lateral.", 18, Color("c4b6a4")))
+	if selected_adventure_id != "":
+		detail.add_child(_label(selected_title, 23, Color("f1d398")))
+		if completed:
+			detail.add_child(_label("Concluída anteriormente. Bônus da conclusão serão mantidos ao recomeçar.", 16, Color("c4b6a4")))
+		elif has_save:
+			detail.add_child(_label("Há progresso salvo nesta aventura.", 16, Color("c4b6a4")))
+		if has_save:
+			detail.add_child(_button("Continuar", func(): adventure_action.emit("continue", _selected_adventure_id)))
+			detail.add_child(_button("Jogar do início", _request_restart))
+		else:
+			detail.add_child(_button("Começar", func(): adventure_action.emit("start", _selected_adventure_id)))
+	detail.add_spacer(false)
+	detail.add_child(_button("Voltar ao menu", _exit))
 	text_panel.hide()
+
+func _menu_column(title: String, width: int) -> VBoxContainer:
+	var column := VBoxContainer.new()
+	column.custom_minimum_size.x = width
+	column.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	column.add_theme_constant_override("separation", 10)
+	if title != "": column.add_child(_label(title, 19, Color("d4c7e4")))
+	return column
+
+func _request_restart() -> void:
+	_restart_target_adventure = _selected_adventure_id
+	_restart_dialog.popup_centered()
 
 func _select_campaign(id: String) -> void:
 	campaign_selected.emit(id)
+
+func _select_adventure(id: String) -> void:
+	_selected_adventure_id = id
+	adventure_selected.emit(id)
 
 func show_team(roster: Dictionary, selection: Array[String], forbidden: Dictionary, battle_name: String, required_party: Array = ["ent_alyssa_wine"], party_size: int = 3) -> void:
 	_roster = roster
@@ -284,8 +350,9 @@ func show_defeat(battle_name: String, game_over: String = "none") -> void:
 	action_list.add_child(_button("Ir para a tela inicial", _exit))
 	text_panel.hide()
 
-func show_ending() -> void:
-	_clear_actions("Fim · A Fenda das Três Vigílias", "As escolhas e cartas conquistadas foram salvas.")
+func show_ending(adventure_title: String = "Aventura concluída") -> void:
+	_clear_actions("Fim · " + adventure_title, "O progresso foi salvo. Recompensas e bônus permanentes foram preservados.")
+	action_list.add_child(_button("Voltar às aventuras", func(): campaign_hub.emit()))
 	action_list.add_child(_button("Voltar ao menu", _exit))
 	text_panel.hide()
 

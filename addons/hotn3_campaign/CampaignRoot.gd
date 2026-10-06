@@ -20,6 +20,11 @@ var scene_step := 0
 var battle_index := 0
 var campaign_phase := "new"
 var campaign_active := false
+var active_adventure_id := ""
+var campaign_bonus_unlocked: Dictionary = {}
+var campaign_completed_adventures: Array[String] = []
+var _menu_campaign_id := ""
+var _menu_adventure_id := ""
 var right_portrait_id := ""
 var reward_offers: Array = []
 var active_battle: Dictionary = {}
@@ -166,15 +171,12 @@ func _append_campaign_package(package: Dictionary, prefix: String, source_name: 
 		campaign_sources[unique_id] = source_name
 
 func _add_campaign_menu_button(menu: VBoxContainer) -> void:
-	# Cada entrada escolhe uma campanha do roteiro; o save da campanha em curso continua separado.
+	# Abre o seletor hierárquico; cada aventura oferece começar, continuar ou recomeçar.
 	for raw in campaign_story.get("campaigns", []):
 		var definition: Dictionary = raw
 		var id := str(definition.get("id", ""))
 		var title := str(definition.get("title", id))
-		var label := title + (" · continuar" if campaign_id == id and campaign_phase != "new" else "")
-		menu.add_child(_button(label, _open_campaign.bind(id), "Iniciar ou continuar esta campanha"))
-	if campaign_phase != "new":
-		menu.add_child(_button("Reiniciar narrativa", _new_campaign.bind(campaign_id), "Recomeça as cenas; mantém cartas já conquistadas."))
+		menu.add_child(_button(title, _open_campaign.bind(id), "Ver campanhas e aventuras disponíveis"))
 
 func _build_arena(theme: String = "default") -> void:
 	if not theme.begins_with("campaign_"):
@@ -201,10 +203,16 @@ func _view() -> CampaignView:
 	campaign_view.load_campaign.connect(_load_campaign_from_defeat)
 	campaign_view.retry_battle.connect(_prepare_team)
 	campaign_view.exit_campaign.connect(_exit_campaign)
+	campaign_view.adventure_selected.connect(_adventure_selected)
+	campaign_view.adventure_action.connect(_adventure_action)
+	campaign_view.campaign_hub.connect(_show_campaign_list)
 	return campaign_view
 
 func _new_campaign(id: String = "") -> void:
 	if id != "": campaign_id = id
+	if active_adventure_id == "":
+		var ids: Array = _campaign_definition().get("adventures", [])
+		active_adventure_id = str(ids[0]) if not ids.is_empty() else ""
 	_reset_campaign_state()
 	var configured_start := str(_campaign_definition().get("start_scene", campaign_story.get("start_scene", "")))
 	campaign_scene = configured_start if _scene_belongs_to_campaign(configured_start) else _first_scene_in_campaign()
@@ -215,13 +223,74 @@ func _new_campaign(id: String = "") -> void:
 
 func _open_campaign(id: String = "") -> void:
 	if campaign_story.is_empty(): return
-	if id != "" and id != campaign_id:
-		_load_campaign(id)
-	if campaign_phase == "new":
-		_new_campaign(campaign_id)
+	_menu_campaign_id = id if id != "" else campaign_id
+	if _campaign_definition_for(_menu_campaign_id).is_empty():
+		_menu_campaign_id = ""
+	_menu_adventure_id = ""
+	_show_campaign_list()
+
+func _campaign_definition() -> Dictionary:
+	return _campaign_definition_for(campaign_id)
+
+func _campaign_definition_for(id: String) -> Dictionary:
+	for raw in campaign_story.get("campaigns", []):
+		var definition: Dictionary = raw
+		if str(definition.get("id", "")) == id: return definition
+	return {}
+
+func _show_campaign_list() -> void:
+	_clear_ui()
+	_clear_combat_visuals()
+	var campaigns: Array = campaign_story.get("campaigns", [])
+	var definition := _campaign_definition_for(_menu_campaign_id)
+	var adventures: Array = []
+	for raw in definition.get("adventures", []):
+		var adventure_id := str(raw)
+		var adventure: Dictionary = campaign_story.get("adventures", {}).get(adventure_id, {})
+		var has_save := _has_adventure_save(_menu_campaign_id, adventure_id)
+		var completed := _adventure_was_completed(_menu_campaign_id, adventure_id)
+		adventures.append({"id": adventure_id, "title": str(adventure.get("title", adventure_id)), "has_save": has_save, "completed": completed})
+	if _menu_adventure_id == "" or not definition.get("adventures", []).has(_menu_adventure_id):
+		_menu_adventure_id = str(definition.get("adventures", [""])[0]) if not definition.get("adventures", []).is_empty() else ""
+	var has_save := _has_adventure_save(_menu_campaign_id, _menu_adventure_id)
+	var completed := _adventure_was_completed(_menu_campaign_id, _menu_adventure_id)
+	_view().show_campaign_hub(campaigns, _menu_campaign_id, adventures, _menu_adventure_id, has_save, completed)
+
+func _campaign_selected(id: String) -> void:
+	_menu_campaign_id = id
+	_menu_adventure_id = ""
+	_show_campaign_list()
+
+func _adventure_selected(id: String) -> void:
+	_menu_adventure_id = id
+	_show_campaign_list()
+
+func _adventure_action(action: String, adventure_id: String) -> void:
+	campaign_id = _menu_campaign_id
+	active_adventure_id = adventure_id
+	if action == "continue":
+		if not _has_adventure_save(campaign_id, active_adventure_id):
+			_show_campaign_list()
+			return
+		_load_campaign(campaign_id, active_adventure_id)
+		_resume_current_adventure()
 		return
+	if action == "restart" or action == "start":
+		if action == "start" and _has_adventure_save(campaign_id, active_adventure_id):
+			_show_campaign_list()
+			return
+		_reset_campaign_state()
+		campaign_scene = _first_scene_in_campaign()
+		campaign_phase = "story"
+		campaign_active = true
+		_save_campaign()
+		_enter_scene()
+
+func _resume_current_adventure() -> void:
 	campaign_active = true
-	if campaign_phase == "reward" and not reward_offers.is_empty():
+	if campaign_phase == "complete":
+		_view().show_ending(_active_adventure_title())
+	elif campaign_phase == "reward" and not reward_offers.is_empty():
 		_show_reward()
 	elif campaign_phase in ["team", "battle", "defeat"]:
 		_restore_active_battle()
@@ -229,24 +298,12 @@ func _open_campaign(id: String = "") -> void:
 	else:
 		_enter_scene()
 
-func _campaign_definition() -> Dictionary:
-	for raw in campaign_story.get("campaigns", []):
-		var definition: Dictionary = raw
-		if str(definition.get("id", "")) == campaign_id: return definition
-	return {}
-
-func _show_campaign_list() -> void:
-	_clear_ui()
-	_clear_combat_visuals()
-	_view().show_campaign_list(campaign_story.get("campaigns", []))
-
-func _campaign_selected(id: String) -> void:
-	_open_campaign(id)
-
 func _reset_campaign_state() -> void:
 	campaign_flags.clear()
 	campaign_unlocked.clear()
 	for required_id in _campaign_definition().get("required_party", []): campaign_unlocked[str(required_id)] = true
+	_load_campaign_bonus()
+	for id in campaign_bonus_unlocked: campaign_unlocked[str(id)] = true
 	campaign_team = _default_campaign_team()
 	battle_team.clear()
 	reward_offers.clear()
@@ -261,7 +318,8 @@ func _reset_campaign_state() -> void:
 
 func _first_scene_in_campaign() -> String:
 	var definition := _campaign_definition()
-	for raw in definition.get("adventures", []):
+	var adventure_ids: Array = [active_adventure_id] if active_adventure_id != "" else definition.get("adventures", [])
+	for raw in adventure_ids:
 		var adventure: Dictionary = campaign_story.get("adventures", {}).get(str(raw), {})
 		for scene_id in adventure.get("scene_ids", []):
 			if campaign_story.get("scenes", {}).has(str(scene_id)) and _condition_passes(adventure) and _condition_passes(campaign_story["scenes"][str(scene_id)]):
@@ -270,7 +328,8 @@ func _first_scene_in_campaign() -> String:
 
 func _scene_belongs_to_campaign(scene_id: String) -> bool:
 	if scene_id == "" or not campaign_story.get("scenes", {}).has(scene_id): return false
-	for adventure_id in _campaign_definition().get("adventures", []):
+	var adventure_ids: Array = [active_adventure_id] if active_adventure_id != "" else _campaign_definition().get("adventures", [])
+	for adventure_id in adventure_ids:
 		var adventure: Dictionary = campaign_story.get("adventures", {}).get(str(adventure_id), {})
 		if adventure.get("scene_ids", []).has(scene_id): return true
 	return false
@@ -290,14 +349,14 @@ func _as_bool(value: Variant) -> bool:
 func _scene_available(scene_id: String) -> bool:
 	var data: Dictionary = campaign_story.get("scenes", {}).get(scene_id, {})
 	if data.is_empty() or not _condition_passes(data): return false
-	for raw in _campaign_definition().get("adventures", []):
+	var adventure_ids: Array = [active_adventure_id] if active_adventure_id != "" else _campaign_definition().get("adventures", [])
+	for raw in adventure_ids:
 		var adventure: Dictionary = campaign_story.get("adventures", {}).get(str(raw), {})
 		if adventure.get("scene_ids", []).has(scene_id): return _condition_passes(adventure)
 	return false
 
 func _next_ordered_scene() -> String:
-	var definition := _campaign_definition()
-	var adventure_ids: Array = definition.get("adventures", [])
+	var adventure_ids: Array = [active_adventure_id] if active_adventure_id != "" else _campaign_definition().get("adventures", [])
 	var found := false
 	for adventure_index in range(adventure_ids.size()):
 		var adventure: Dictionary = campaign_story.get("adventures", {}).get(str(adventure_ids[adventure_index]), {})
@@ -328,8 +387,9 @@ func _advance_scene(destination: String = "") -> void:
 			next = _next_ordered_scene()
 	if next == "":
 		campaign_phase = "complete"
+		_mark_adventure_completed()
 		_save_campaign()
-		_view().show_ending()
+		_view().show_ending(_active_adventure_title())
 		return
 	campaign_scene = next
 	scene_step = 0
@@ -403,8 +463,9 @@ func _show_step() -> void:
 				scene_step += 1
 			"end":
 				campaign_phase = "complete"
+				_mark_adventure_completed()
 				_save_campaign()
-				campaign_view.show_ending()
+				campaign_view.show_ending(_active_adventure_title())
 				return
 			"reward":
 				_begin_story_reward(entry)
@@ -509,6 +570,7 @@ func _apply_story_effects(effects: Array) -> bool:
 			"add_hero":
 				if Content.HEROES.has(id):
 					campaign_unlocked[id] = true
+					campaign_bonus_unlocked[id] = true
 					if not campaign_team.has(id) and campaign_team.size() < int(_campaign_definition().get("party_size", 3)): campaign_team.append(id)
 			"remove_hero":
 				if id not in _campaign_definition().get("required_party", []): campaign_team.erase(id)
@@ -881,7 +943,9 @@ func _apply_reward_bundle(rewards: Array) -> void:
 		var amount := maxi(1, int(reward.get("amount", 1)))
 		match str(reward.get("type", "")):
 			"character":
-				if Content.HEROES.has(id): campaign_unlocked[id] = true
+				if Content.HEROES.has(id):
+					campaign_unlocked[id] = true
+					campaign_bonus_unlocked[id] = true
 			"item":
 				if id != "": loadout[id] = int(loadout.get(id, 0)) + amount
 			"card":
@@ -900,7 +964,7 @@ func _open_story_card_draw() -> void:
 	_show_reward()
 
 func _load_campaign_from_defeat() -> void:
-	_load_campaign(campaign_id)
+	_load_campaign(campaign_id, active_adventure_id)
 	_restore_active_battle()
 	_prepare_team()
 
@@ -926,8 +990,9 @@ func _exit_campaign() -> void:
 func _save_campaign() -> void:
 	var config := ConfigFile.new()
 	config.load(SavePath)
-	var section := "campaign_" + campaign_id if campaign_id != "" else "story"
+	var section := _save_section_name(campaign_id, active_adventure_id)
 	config.set_value("settings", "current_campaign", campaign_id)
+	config.set_value("settings", "current_adventure", active_adventure_id)
 	config.set_value(section, "scene", campaign_scene)
 	config.set_value(section, "step", scene_step)
 	config.set_value(section, "battle", battle_index)
@@ -941,22 +1006,38 @@ func _save_campaign() -> void:
 	config.set_value(section, "reward_return", reward_return)
 	config.set_value(section, "pending_reward_bundle", pending_reward_bundle)
 	config.set_value(section, "pending_reward_draw", pending_reward_draw)
+	config.set_value(_bonus_section_name(campaign_id), "unlocked", campaign_bonus_unlocked)
+	config.set_value(_bonus_section_name(campaign_id), "completed_adventures", campaign_completed_adventures)
 	config.save(SavePath)
 
-func _load_campaign(id: String = "") -> void:
-	if id != "": campaign_id = id
+func _load_campaign(id: String = "", adventure_id: String = "") -> void:
 	var config := ConfigFile.new()
-	if config.load(SavePath) != OK:
-		_reset_campaign_state()
-		return
-	if id == "": campaign_id = str(config.get_value("settings", "current_campaign", campaign_story.get("start_campaign", campaign_id)))
+	var has_config := config.load(SavePath) == OK
+	if id != "": campaign_id = id
+	elif has_config: campaign_id = str(config.get_value("settings", "current_campaign", campaign_story.get("start_campaign", campaign_id)))
 	if _campaign_definition().is_empty(): campaign_id = str(campaign_story.get("start_campaign", campaign_id))
-	var campaign_section := "campaign_" + campaign_id
-	var legacy_section := campaign_id == str(campaign_story.get("start_campaign", "")) and config.has_section("story")
-	if not config.has_section(campaign_section) and not legacy_section:
+	if adventure_id != "":
+		active_adventure_id = adventure_id
+	elif has_config:
+		active_adventure_id = str(config.get_value("settings", "current_adventure", ""))
+	if active_adventure_id == "" and has_config:
+		var legacy := "campaign_" + campaign_id
+		var legacy_section := legacy if config.has_section(legacy) else ("story" if config.has_section("story") else "")
+		if legacy_section != "":
+			var saved_scene := str(config.get_value(legacy_section, "scene", ""))
+			for raw_adventure in _campaign_definition().get("adventures", []):
+				var candidate: Dictionary = campaign_story.get("adventures", {}).get(str(raw_adventure), {})
+				if candidate.get("scene_ids", []).has(saved_scene):
+					active_adventure_id = str(raw_adventure)
+					break
+	if active_adventure_id == "":
+		var ids: Array = _campaign_definition().get("adventures", [])
+		active_adventure_id = str(ids[0]) if not ids.is_empty() else ""
+	_load_campaign_bonus(config if has_config else null)
+	var section := _find_adventure_save_section(config, campaign_id, active_adventure_id) if has_config else ""
+	if section == "":
 		_reset_campaign_state()
 		return
-	var section := campaign_section if config.has_section(campaign_section) else "story"
 	var scene_id := str(config.get_value(section, "scene", _first_scene_in_campaign()))
 	if _scene_belongs_to_campaign(scene_id): campaign_scene = scene_id
 	else: campaign_scene = _first_scene_in_campaign()
@@ -965,6 +1046,8 @@ func _load_campaign(id: String = "") -> void:
 	campaign_phase = str(config.get_value(section, "phase", "new"))
 	campaign_flags = config.get_value(section, "flags", {})
 	campaign_unlocked = config.get_value(section, "unlocked", {})
+	for hero_id in campaign_unlocked:
+		if bool(campaign_unlocked[hero_id]): campaign_bonus_unlocked[str(hero_id)] = true
 	var stored_team: Array = config.get_value(section, "team", [])
 	if not stored_team.is_empty():
 		campaign_team.clear()
@@ -978,3 +1061,62 @@ func _load_campaign(id: String = "") -> void:
 	pending_reward_bundle = config.get_value(section, "pending_reward_bundle", [])
 	pending_reward_draw = bool(config.get_value(section, "pending_reward_draw", false))
 	if campaign_phase == "battle": campaign_phase = "team"
+
+func _save_section_name(id: String, adventure_id: String) -> String:
+	if id == "": return "story"
+	return "campaign_%s__%s" % [id, adventure_id] if adventure_id != "" else "campaign_" + id
+
+func _bonus_section_name(id: String) -> String:
+	return "campaign_bonus_" + id
+
+func _load_campaign_bonus(config: ConfigFile = null) -> void:
+	campaign_bonus_unlocked.clear()
+	campaign_completed_adventures.clear()
+	var save := config
+	if save == null:
+		save = ConfigFile.new()
+		if save.load(SavePath) != OK: return
+	campaign_bonus_unlocked = save.get_value(_bonus_section_name(campaign_id), "unlocked", {})
+	for adventure_id in save.get_value(_bonus_section_name(campaign_id), "completed_adventures", []):
+		campaign_completed_adventures.append(str(adventure_id))
+
+func _adventure_was_completed(id: String, adventure_id: String) -> bool:
+	if id == campaign_id and campaign_completed_adventures.has(adventure_id): return true
+	var config := ConfigFile.new()
+	if config.load(SavePath) != OK: return false
+	var completed: Array = config.get_value(_bonus_section_name(id), "completed_adventures", [])
+	return completed.has(adventure_id)
+
+func _mark_adventure_completed() -> void:
+	if active_adventure_id != "" and not campaign_completed_adventures.has(active_adventure_id):
+		campaign_completed_adventures.append(active_adventure_id)
+
+func _find_adventure_save_section(config: ConfigFile, id: String, adventure_id: String) -> String:
+	var current := _save_section_name(id, adventure_id)
+	if config.has_section(current): return current
+	var old_campaign_section := "campaign_" + id
+	if config.has_section(old_campaign_section):
+		var old_scene := str(config.get_value(old_campaign_section, "scene", ""))
+		var adventure: Dictionary = campaign_story.get("adventures", {}).get(adventure_id, {})
+		if adventure.get("scene_ids", []).has(old_scene): return old_campaign_section
+	if id == str(campaign_story.get("start_campaign", "")) and config.has_section("story"):
+		var legacy_scene := str(config.get_value("story", "scene", ""))
+		var legacy_adventure: Dictionary = campaign_story.get("adventures", {}).get(adventure_id, {})
+		if legacy_adventure.get("scene_ids", []).has(legacy_scene): return "story"
+	return ""
+
+func _has_adventure_save(id: String, adventure_id: String) -> bool:
+	if id == "" or adventure_id == "": return false
+	var config := ConfigFile.new()
+	if config.load(SavePath) != OK: return false
+	return _find_adventure_save_section(config, id, adventure_id) != ""
+
+func _adventure_save_phase(id: String, adventure_id: String) -> String:
+	var config := ConfigFile.new()
+	if config.load(SavePath) != OK: return "new"
+	var section := _find_adventure_save_section(config, id, adventure_id)
+	return str(config.get_value(section, "phase", "new")) if section != "" else "new"
+
+func _active_adventure_title() -> String:
+	var adventure: Dictionary = campaign_story.get("adventures", {}).get(active_adventure_id, {})
+	return str(adventure.get("title", active_adventure_id))

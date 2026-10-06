@@ -16,6 +16,8 @@ Após cada vitória, o módulo oferece três cartas ainda não possuídas, prior
 
 O roteiro editável em `story.json` é um grafo: qualquer quantidade de cenas pode levar a qualquer outra por escolha ou salto. Uma batalha declara sua missão, os personagens fixos, o tamanho do grupo, o pool de inimigos opcional, a próxima cena e o número de ofertas de carta. O jogador preenche as vagas com personagens possuídos que não pertencem ao pool inimigo do encontro. Ao vencer, escolhe entre Evoluídas ainda não possuídas e Melhoradas das cartas-base que já possui. A interface mostra retratos do elenco, escurece o personagem que não está falando, nome do orador, texto gradual, música distinta por cena, chuva/cinzas/partículas de eclipse e diálogos que mencionam os aliados selecionados. O save independente `user://hotn3_campaign.cfg` guarda cena, escolhas, equipe e ofertas de carta para retomar entre batalhas.
 
+No menu **Campanha**, selecione uma campanha na primeira coluna e uma aventura na coluna lateral. Aventuras sem progresso oferecem **Começar**; as que têm save oferecem **Continuar** e **Jogar do início**. Recomeçar pede confirmação, apaga apenas o progresso narrativo daquela aventura e preserva bônus já recebidos, cartas, itens e personagens desbloqueados. Cada aventura mantém seu próprio save.
+
 Use `tools/vn_editor.html` para montar e pré-visualizar o roteiro sem editar JSON manualmente. **Abrir JSON** aceita roteiros existentes e **Baixar JSON** mantém o nome do arquivo aberto.
 
 ## Ajustar a interface no Godot
