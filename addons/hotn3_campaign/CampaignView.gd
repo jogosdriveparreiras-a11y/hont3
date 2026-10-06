@@ -192,7 +192,8 @@ func _select_option(option: Dictionary) -> void:
 func show_campaign_hub(campaigns: Array, selected_campaign_id: String, adventures: Array, selected_adventure_id: String, has_save: bool, completed: bool) -> void:
 	_selected_campaign_id = selected_campaign_id
 	_selected_adventure_id = selected_adventure_id
-	_clear_actions("Campanhas", "Selecione uma campanha para ver suas aventuras.")
+	var guidance := "Selecione uma campanha para ver suas aventuras." if selected_campaign_id == "" else "Escolha uma aventura para começar ou continuar."
+	_clear_actions("Campanhas", guidance)
 	var columns := HBoxContainer.new()
 	columns.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	columns.size_flags_vertical = Control.SIZE_EXPAND_FILL
