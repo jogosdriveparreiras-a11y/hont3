@@ -5,6 +5,7 @@ const CampaignDirectory := "res://campaigns"
 const SavePath := "user://hotn3_campaign.cfg"
 const CampaignView = preload("res://addons/hotn3_campaign/CampaignView.gd")
 const CampaignArenaBuilder = preload("res://addons/hotn3_campaign/ArenaBuilder.gd")
+const EntityCatalog = preload("res://addons/hotn3_entities/EntityCatalog.gd")
 const Lead := "ent_alyssa_wine"
 
 var campaign_story: Dictionary = {}
@@ -26,10 +27,12 @@ var reward_return := "battle"
 var pending_reward_bundle: Array = []
 var pending_reward_draw := false
 var campaign_view: CampaignView
+var _story_entity_catalog: HotN3EntityCatalog
 var original_music: AudioStream
 var _boot_open_campaign := true
 
 func _ready() -> void:
+	_story_entity_catalog = EntityCatalog.new()
 	_read_story()
 	_load_campaign()
 	super._ready()
@@ -365,14 +368,19 @@ func _show_step() -> void:
 			continue
 		match str(entry.get("type", "line")):
 			"line":
-				if entry.has("right_portrait") or entry.has("right"):
-					right_portrait_id = _resolve_portrait_id(str(entry.get("right_portrait", entry.get("right", ""))))
 				var left_id := _resolve_portrait_id(str(entry.get("left_portrait", "")))
-				if left_id == "": left_id = Lead
+				if left_id == "": left_id = _story_protagonist()
 				var line := entry.duplicate(true)
 				line["speaker"] = _format_text(str(entry.get("speaker", "NARRADOR")))
 				line["display_name"] = _format_text(str(entry.get("display_name", line["speaker"])))
-				campaign_view.show_line(str(data.get("title", "Campanha")), line, _format_text(str(entry.get("text", ""))), right_portrait_id, str(data.get("weather", "rain")), left_id)
+				var speaker := str(line["speaker"])
+				var explicit_right := str(entry.get("right_portrait", entry.get("right", "")))
+				if explicit_right != "":
+					right_portrait_id = _resolve_portrait_id(explicit_right)
+				else:
+					var speaker_id := _story_entity_for_speaker(speaker)
+					if speaker_id != "" and speaker_id != left_id: right_portrait_id = speaker_id
+				campaign_view.show_line(_story_heading(), line, _format_text(str(entry.get("text", ""))), right_portrait_id, str(data.get("weather", "rain")), left_id)
 				return
 			"choice":
 				var options := _available_choice_options(entry.get("options", []))
@@ -409,6 +417,37 @@ func _resolve_portrait_id(value: String) -> String:
 	if value == "{ally1}": return campaign_team[1] if campaign_team.size() > 1 else Lead
 	if value == "{ally2}": return campaign_team[2] if campaign_team.size() > 2 else Lead
 	return value
+
+func _story_protagonist() -> String:
+	var campaign := _campaign_definition()
+	var required: Array = campaign.get("required_party", [])
+	if not required.is_empty(): return str(required[0])
+	var protagonist := str(campaign_story.get("protagonist", ""))
+	if protagonist != "": return protagonist
+	return str(campaign_team[0]) if not campaign_team.is_empty() else Lead
+
+func _story_entity_for_speaker(speaker: String) -> String:
+	var normalized := speaker.strip_edges().to_upper()
+	if normalized == "" or normalized in ["NARRADOR", "NARRATION"]: return ""
+	for id in Content.HEROES:
+		var name := str(Content.HEROES[id].get("name", "")).to_upper()
+		if name != "" and (name == normalized or name.begins_with(normalized)): return str(id)
+	if _story_entity_catalog != null:
+		for id in _story_entity_catalog.heroes:
+			var name := str(_story_entity_catalog.heroes[id].get("name", "")).to_upper()
+			if name != "" and (name == normalized or name.begins_with(normalized)): return str(id)
+	return ""
+
+func _story_heading() -> String:
+	var campaign_title := str(_campaign_definition().get("title", campaign_id))
+	var adventure_title := ""
+	for raw in _campaign_definition().get("adventures", []):
+		var adventure: Dictionary = campaign_story.get("adventures", {}).get(str(raw), {})
+		if adventure.get("scene_ids", []).has(campaign_scene):
+			adventure_title = str(adventure.get("title", raw))
+			break
+	if adventure_title == "": adventure_title = "Aventura"
+	return "Campanha: %s  *  Aventura: %s" % [campaign_title, adventure_title]
 
 func _available_choice_options(options: Array) -> Array:
 	var result: Array = []

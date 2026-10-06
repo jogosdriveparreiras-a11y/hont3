@@ -1,6 +1,7 @@
 {
   "id": "herorgasm5_av1_s01_nolan",
   "title": "O Sonho de Nolan — Apartamento",
+  "protagonist": "ent_sombria",
   "scenes": {
     "h5_av1_nolan_inicio": {
       "title": "O Sonho de Nolan — Apartamento",
@@ -44,14 +45,14 @@
         {"speaker":"MARCADOR EDITORIAL","text":"[ERP CORTADO NO MATERIAL ORIGINAL — inserir manualmente aqui a cena adulta completa, após a aproximação de Sombria e Nolan e antes de ela conduzi-lo ao Reino Quebrado.]"},
         {"speaker":"NARRADOR","text":"Mais tarde, Sombria consegue conduzir Nolan ao Reino Quebrado sem que ele suspeite de nada ao acordar."},
         {"speaker":"NARRADOR","text":"Sombria se conecta à mente de Nolan. O mundo vai se ajustando até ficar estável. Preso ali, ele não consegue distinguir aquilo de um sonho quando acordar; vai apenas se sentir fraco. Quanto mais intensas as emoções, mais rapidamente Sombria se alimenta. Se Nolan perceber que está sonhando, pode tentar acordar. Sombria pode criar sonhos específicos, de doces a pesadelos terríveis."},
-        {"speaker":"NARRADOR","text":"No original, Sombria escolhe um sonho agradável com a família. Agora, ela pode decidir como moldar o sonho de Nolan para sugar sua energia."},
-        {"type":"choice","options":[{"label":"Um sonho feliz em família (cânone)","goto":"h5_av1_nolan_sonho_feliz","effects":[{"type":"give_item","id":"energia_pura","amount":1}]},{"label":"Um pesadelo terrível","goto":"h5_av1_nolan_pesadelo","effects":[{"type":"give_item","id":"essencia_do_medo","amount":1},{"type":"set_flag","id":"nolan_pesadelo","value":true}]}]}
+        {"speaker":"NARRADOR","text":"Uma lembrança se forma diante de Nolan: o calor do sol, vozes familiares e o cheiro de comida sobre a mesa. Sombria sente a mente dele oscilar entre a saudade e o medo. Ela pode envolvê-lo na paz de um almoço em família ou transformar a rua numa armadilha sem saída."},
+        {"type":"choice","options":[{"label":"Preparar um almoço ensolarado com a família","goto":"h5_av1_nolan_sonho_feliz","effects":[{"type":"give_item","id":"energia_pura","amount":1}]},{"label":"Encurralá-lo num pesadelo de bandidos e policiais","goto":"h5_av1_nolan_pesadelo","effects":[{"type":"give_item","id":"essencia_do_medo","amount":1},{"type":"set_flag","id":"nolan_pesadelo","value":true}]}]}
       ]
     },
     "h5_av1_nolan_sonho_feliz": {
       "title": "Nolan — Sonho feliz",
       "steps": [
-        {"speaker":"NARRADOR","text":"Sombria deixa Nolan ter sonhos agradáveis, como uma realidade diferente com a família. Apesar de ele ser um malfeitor, a intenção dela não é machucá-lo. Ela recria os parentes que ele mencionou."},
+        {"speaker":"NARRADOR","text":"Sombria deixa Nolan sonhar com uma vida diferente, junto da família. Apesar de ele ser um malfeitor, ela não quer machucá-lo. Com cuidado, recria as pessoas de quem ele falou: o pai e a avó."},
         {"speaker":"NARRADOR","text":"Sombria imita superficialmente um comercial qualquer de margarina. Não conhece a família, então cria um almoço simples, bonito e sob o sol. Mesmo em uma família quebrada, um almoço livre do peso do mundo pode deixar qualquer um feliz."},
         {"speaker":"NARRADOR","text":"Nolan se lembra de um almoço de quando era pequeno. O pai e a avó estão com ele. Um comercial da Sadia."},
         {"speaker":"NARRADOR","text":"Nolan fica bem feliz. Quanto mais feliz fica, mais energia deixa o corpo, e Sombria se alimenta."},
@@ -61,8 +62,8 @@
     "h5_av1_nolan_pesadelo": {
       "title": "Nolan — Pesadelo",
       "steps": [
-        {"speaker":"NARRADOR","text":"Sombria transforma o sonho. Os bandidos que o perseguem e os policiais que o procuram o encurralam. A rua se fecha ao redor de Nolan; não há saída, e os rostos de seu pai e de sua avó aparecem ao longe, fora de alcance."},
-        {"speaker":"NARRADOR","text":"O terror é delicioso e farto. Nolan se debate na cama e quase acorda. Sombria sustenta o pesadelo só o bastante para se alimentar, antes que ele desperte."},
+        {"speaker":"NARRADOR","text":"Sombria transforma a lembrança. Os bandidos que perseguem Nolan surgem no fim da rua; sirenes cortam o ar e as luzes da polícia fecham a outra saída. Ele corre, mas cada esquina o devolve ao mesmo beco. Ao longe, o pai e a avó chamam por ele, separados por uma barreira que não cede."},
+        {"speaker":"NARRADOR","text":"O medo toma conta do sonho e alimenta Sombria. Nolan se debate na cama; por um instante, parece prestes a despertar. Ela sustenta a imagem por mais alguns segundos, sentindo a energia crescer, e então afrouxa o domínio antes que o terror o arranque do sono."},
         {"type":"jump","scene":"h5_av1_nolan_retorno"}
       ]
     },

@@ -11,6 +11,8 @@ signal exit_campaign
 signal retry_battle
 
 const Content = preload("res://game/Content.gd")
+const EntityCatalog = preload("res://addons/hotn3_entities/EntityCatalog.gd")
+const Layout = preload("res://addons/hotn3_campaign/CampaignViewLayout.tscn")
 
 var mode := "line"
 var chosen: Array[String] = []
@@ -19,16 +21,16 @@ var _forbidden: Dictionary = {}
 var _full_text := ""
 var _typing := 0.0
 var _weather_kind := ""
+var _entity_catalog: HotN3EntityCatalog
 
 var canvas: Control
 var wash: ColorRect
 var weather: CPUParticles2D
 var heading: Label
-var left_frame: PanelContainer
-var right_frame: PanelContainer
 var left_portrait: TextureRect
 var right_portrait: TextureRect
-var namebox: Label
+var namebox: PanelContainer
+var name_label: Label
 var text_panel: PanelContainer
 var body: RichTextLabel
 var action_area: PanelContainer
@@ -36,81 +38,43 @@ var action_list: VBoxContainer
 
 func _ready() -> void:
 	layer = 4
-	canvas = Control.new()
-	canvas.mouse_filter = Control.MOUSE_FILTER_STOP
+	_entity_catalog = EntityCatalog.new()
+	canvas = Layout.instantiate() as Control
 	add_child(canvas)
-	canvas.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	wash = ColorRect.new()
-	wash.color = Color(0.04, 0.07, 0.14, 0.57)
-	wash.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	canvas.add_child(wash)
-	wash.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	heading = _label("", 25, Color("e4c896"))
-	heading.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	heading.anchor_left = 0.025
-	heading.anchor_right = 0.975
-	heading.anchor_top = 0.025
-	heading.anchor_bottom = 0.10
-	canvas.add_child(heading)
-	left_frame = _portrait_frame(0.04, 0.38)
-	left_portrait = left_frame.get_child(0) as TextureRect
-	right_frame = _portrait_frame(0.62, 0.96)
-	right_portrait = right_frame.get_child(0) as TextureRect
-	namebox = _label("", 23, Color("f7d9a1"))
-	namebox.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	namebox.anchor_left = 0.055
-	namebox.anchor_right = 0.44
-	namebox.anchor_top = 0.765
-	namebox.anchor_bottom = 0.815
-	canvas.add_child(namebox)
-	text_panel = PanelContainer.new()
+	wash = canvas.get_node("Wash") as ColorRect
+	heading = canvas.get_node("Heading") as Label
+	left_portrait = canvas.get_node("LeftPortrait") as TextureRect
+	right_portrait = canvas.get_node("RightPortrait") as TextureRect
+	namebox = canvas.get_node("Namebox") as PanelContainer
+	name_label = canvas.get_node("Namebox/Name") as Label
+	text_panel = canvas.get_node("DialoguePanel") as PanelContainer
+	body = canvas.get_node("DialoguePanel/Padding/Body") as RichTextLabel
+	var action_padding := canvas.get_node("ActionArea/Padding") as MarginContainer
+	var action_scroll := canvas.get_node("ActionArea/Padding/Scroll") as ScrollContainer
+	action_area = canvas.get_node("ActionArea") as PanelContainer
+	action_list = canvas.get_node("ActionArea/Padding/Scroll/ActionList") as VBoxContainer
+	canvas.gui_input.connect(_on_canvas_input)
 	text_panel.add_theme_stylebox_override("panel", _style(Color(0.06, 0.07, 0.13, 0.95), Color("b89a72")))
-	text_panel.anchor_left = 0.04
-	text_panel.anchor_right = 0.96
-	text_panel.anchor_top = 0.815
-	text_panel.anchor_bottom = 0.97
-	canvas.add_child(text_panel)
-	text_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var padding := MarginContainer.new()
-	padding.add_theme_constant_override("margin_left", 24)
-	padding.add_theme_constant_override("margin_right", 24)
-	padding.add_theme_constant_override("margin_top", 13)
-	padding.add_theme_constant_override("margin_bottom", 12)
-	text_panel.add_child(padding)
-	body = RichTextLabel.new()
+	namebox.add_theme_stylebox_override("panel", _style(Color(0.10, 0.08, 0.13, 0.99), Color("b89a72")))
+	for side in ["margin_left", "margin_right"]:
+		text_panel.get_node("Padding").add_theme_constant_override(side, 25)
+	text_panel.get_node("Padding").add_theme_constant_override("margin_top", 25)
+	text_panel.get_node("Padding").add_theme_constant_override("margin_bottom", 18)
+	name_label.add_theme_font_size_override("font_size", 22)
+	name_label.add_theme_color_override("font_color", Color("f7d9a1"))
+	name_label.add_theme_constant_override("outline_size", 3)
+	name_label.add_theme_color_override("font_outline_color", Color("100e16"))
 	body.bbcode_enabled = true
-	body.add_theme_font_size_override("normal_font_size", 24)
+	body.add_theme_font_size_override("normal_font_size", 25)
 	body.add_theme_color_override("default_color", Color("f1ece5"))
 	body.scroll_active = false
 	body.mouse_filter = Control.MOUSE_FILTER_PASS
-	padding.add_child(body)
-	var hint := _label("ESPAÇO / ENTER / CLIQUE PARA AVANÇAR", 13, Color("aeb0bc"))
-	hint.anchor_left = 0.72
-	hint.anchor_right = 0.975
-	hint.anchor_top = 0.97
-	hint.anchor_bottom = 1.0
-	hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	canvas.add_child(hint)
-	canvas.gui_input.connect(_on_canvas_input)
-	action_area = PanelContainer.new()
-	action_area.anchor_left = 0.26
-	action_area.anchor_right = 0.74
-	action_area.anchor_top = 0.19
-	action_area.anchor_bottom = 0.76
 	action_area.add_theme_stylebox_override("panel", _style(Color(0.08, 0.09, 0.16, 0.97), Color("bf9968")))
-	canvas.add_child(action_area)
-	var action_padding := MarginContainer.new()
 	for side in ["margin_left", "margin_right", "margin_top", "margin_bottom"]:
 		action_padding.add_theme_constant_override(side, 22)
-	action_area.add_child(action_padding)
-	var action_scroll := ScrollContainer.new()
 	action_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	# Scroll de ações mantém listas longas de campanhas acessíveis.
-	action_padding.add_child(action_scroll)
-	action_list = VBoxContainer.new()
 	action_list.add_theme_constant_override("separation", 12)
 	action_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	action_scroll.add_child(action_list)
 	action_area.hide()
 	get_viewport().size_changed.connect(_on_screen_resized)
 
@@ -141,35 +105,27 @@ func _button(value: String, action: Callable, hint: String = "") -> Button:
 	button.pressed.connect(action)
 	return button
 
-func _portrait_frame(start: float, stop: float) -> PanelContainer:
-	var panel := PanelContainer.new()
-	panel.anchor_left = start
-	panel.anchor_right = stop
-	panel.anchor_top = 0.12
-	panel.anchor_bottom = 0.76
-	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	panel.add_theme_stylebox_override("panel", _style(Color(0.08, 0.09, 0.14, 0.48), Color(0.4, 0.4, 0.5, 0.35)))
-	canvas.add_child(panel)
-	var picture := TextureRect.new()
-	picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	picture.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	panel.add_child(picture)
-	return panel
-
 func _portrait(hero_id: String) -> Texture2D:
 	if hero_id.begins_with("res://") and ResourceLoader.exists(hero_id):
 		return load(hero_id) as Texture2D
 	var hero: Dictionary = Content.HEROES.get(hero_id, {})
+	if hero.is_empty() and _entity_catalog != null:
+		hero = _entity_catalog.hero(hero_id)
 	var path := str(hero.get("portrait", ""))
+	if path == "" and hero_id.begins_with("ent_"):
+		var default_portrait := "res://assets/cast/" + hero_id + "_portrait.png"
+		if ResourceLoader.exists(default_portrait): path = default_portrait
 	if path == "" or not ResourceLoader.exists(path):
 		path = str(hero.get("sprite", ""))
+		if path == "" and hero_id.begins_with("ent_"):
+			var default_sprite := "res://assets/cast/" + hero_id + "_sprite.png"
+			if ResourceLoader.exists(default_sprite): path = default_sprite
 	if path == "" or not ResourceLoader.exists(path): return null
 	return load(path) as Texture2D
 
 func _set_right(hero_id: String) -> void:
 	right_portrait.texture = _portrait(hero_id) if hero_id != "" else null
-	right_frame.visible = right_portrait.texture != null
+	right_portrait.visible = right_portrait.texture != null
 
 func show_line(title: String, entry: Dictionary, text_value: String, right_id: String, weather_name: String, left_id: String = "ent_alyssa_wine") -> void:
 	show()
@@ -179,21 +135,27 @@ func show_line(title: String, entry: Dictionary, text_value: String, right_id: S
 	left_portrait.texture = _portrait(left_id)
 	_set_right(right_id)
 	var speaker := str(entry.get("speaker", "NARRADOR"))
-	namebox.text = str(entry.get("display_name", speaker))
-	var active := str(entry.get("active_portrait", ""))
-	if active == "": active = "right" if _right_is_speaking(speaker, right_id) else "left"
-	left_frame.modulate = Color.WHITE if active == "left" else Color(0.38, 0.42, 0.52, 0.80)
-	right_frame.modulate = Color.WHITE if active == "right" and right_id != "" else Color(0.38, 0.42, 0.52, 0.80)
+	var narrator := speaker.to_upper() in ["NARRADOR", "NARRATION"]
+	name_label.text = "Narração" if narrator else str(entry.get("display_name", speaker))
+	var active := str(entry.get("active_portrait", "left"))
+	if _right_is_speaking(speaker, right_id): active = "right"
+	if narrator: active = "none"
+	left_portrait.modulate = Color.WHITE if active == "left" else Color(0.38, 0.42, 0.52, 0.80)
+	right_portrait.modulate = Color.WHITE if active == "right" and right_id != "" else Color(0.38, 0.42, 0.52, 0.80)
+	namebox.visible = not narrator
 	text_panel.show()
-	_full_text = text_value
-	body.text = text_value
+	_full_text = "[i]%s[/i]" % text_value if narrator else text_value
+	body.text = _full_text
 	body.visible_characters = 0
 	_typing = 0.0
 	action_area.hide()
 
 func _right_is_speaking(speaker: String, hero_id: String) -> bool:
-	if hero_id == "" or not Content.HEROES.has(hero_id): return false
-	return str(Content.HEROES[hero_id].get("name", "")).to_upper().begins_with(speaker)
+	if hero_id == "": return false
+	var hero: Dictionary = Content.HEROES.get(hero_id, {})
+	if hero.is_empty() and _entity_catalog != null: hero = _entity_catalog.hero(hero_id)
+	var name := str(hero.get("name", "")).to_upper()
+	return name != "" and (name == speaker.to_upper() or name.begins_with(speaker.to_upper()))
 
 func _clear_actions(title: String, subtitle: String = "") -> void:
 	show()
@@ -206,7 +168,7 @@ func _clear_actions(title: String, subtitle: String = "") -> void:
 	if subtitle != "": action_list.add_child(_label(subtitle, 17, Color("dad5d3")))
 
 func show_choices(options: Array) -> void:
-	_clear_actions("Decisão de Alyssa", "A escolha altera o desfecho da história.")
+	_clear_actions("Escolha", "")
 	for raw in options:
 		var option: Dictionary = raw
 		action_list.add_child(_button(str(option.get("label", "Escolher")), _select_option.bind(option)))

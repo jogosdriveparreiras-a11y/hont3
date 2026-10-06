@@ -18,6 +18,10 @@ O roteiro editável em `story.json` é um grafo: qualquer quantidade de cenas po
 
 Use `tools/vn_editor.html` para montar e pré-visualizar o roteiro sem editar JSON manualmente. **Abrir JSON** aceita roteiros existentes e **Baixar JSON** mantém o nome do arquivo aberto.
 
+## Ajustar a interface no Godot
+
+Abra `CampaignViewLayout.tscn` e use a visualização 2D para mover controles e ajustar âncoras, margens e tamanhos. A fala, os retratos, o título e a caixa de nome são nós separados. Para usar arte própria, arraste os arquivos para a pasta do projeto no painel **FileSystem**; depois adicione um `TextureRect` à cena e escolha a textura importada no Inspector. O script da campanha instancia esse layout e controla os textos, portraits, escolhas e animações.
+
 ## Campanhas e aventuras adicionais
 
 Salve o JSON exportado em `res://campaigns/` ou na raiz do projeto. O jogo também procura em `user://campaigns/` e, na versão desktop exportada, ao lado do executável ou em sua subpasta `campaigns/`. Cada arquivo que contém `scenes` aparece na lista aberta pelo botão **Campanha**. Um arquivo que declara apenas `scenes` é tratado como uma campanha com uma aventura; arquivos estruturados mantêm a ordem de campanhas, aventuras e cenas. O jogo isola os IDs locais pelo nome do arquivo para impedir colisões entre roteiros.
