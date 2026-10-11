@@ -1,0 +1,292 @@
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><title>HotN3 — Ragnar · Invocações · editável</title><style>
+:root {
+  --bg: #0e1018;
+  --panel: #171b28;
+  --panel2: #1c2233;
+  --border: #2a3148;
+  --text: #e8eef8;
+  --muted: #9aa6bf;
+  --accent: #f0c27a;
+  --green: #6dffa3;
+  --red: #ff6b7a;
+  --blue: #7eb6ff;
+  --purple: #c9a0ff;
+  --attack: #d24b4b;
+  --estado: #3ecf7a;
+  --desv: #f0c27a;
+  --gap: #ff9f43;
+  --ok: #3ecf7a;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  background: radial-gradient(1200px 600px at 10% -10%, #1a2240 0%, var(--bg) 55%);
+  color: var(--text);
+  line-height: 1.45;
+}
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 28px 20px 80px; }
+header.hero {
+  background: linear-gradient(135deg, #1a2035 0%, #12182a 100%);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px 32px;
+  margin-bottom: 28px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.35);
+}
+header.hero h1 {
+  margin: 0 0 8px;
+  font-size: 1.85rem;
+  color: var(--accent);
+  letter-spacing: .02em;
+}
+header.hero .sub { color: var(--muted); margin: 0 0 16px; }
+.badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--panel2); border: 1px solid var(--border);
+  border-radius: 999px; padding: 4px 12px; font-size: .78rem; color: var(--muted);
+}
+.badge b { color: var(--accent); font-weight: 600; }
+nav.toc {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin-bottom: 28px;
+  /* TOC stays in normal flow so it never overlays scrolled content. (não sticky / não contenteditable) */
+  backdrop-filter: blur(8px);
+}
+nav.toc h2 { margin: 0 0 10px; font-size: .95rem; color: var(--accent); }
+nav.toc ol { margin: 0; padding-left: 20px; columns: 2; gap: 24px; }
+nav.toc li { margin: 4px 0; break-inside: avoid; }
+@media (max-width: 700px) { nav.toc ol { columns: 1; } }
+section.method, section.char, section.summary {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 22px 24px;
+  margin-bottom: 22px;
+}
+h2.sec {
+  margin: 0 0 12px;
+  font-size: 1.35rem;
+  color: var(--green);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+}
+h3 { color: var(--accent); margin: 18px 0 8px; font-size: 1.05rem; }
+p, li { color: var(--text); }
+.muted { color: var(--muted); }
+.char-head {
+  display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start;
+  margin-bottom: 14px;
+}
+.identity {
+  flex: 1 1 280px;
+  background: var(--panel2);
+  border-radius: 12px;
+  padding: 14px 16px;
+  border-left: 4px solid var(--accent);
+}
+.identity h2 { margin: 0 0 6px; color: var(--text); font-size: 1.4rem; border: 0; padding: 0; }
+.identity .alter { color: var(--accent); font-weight: 600; margin-bottom: 8px; }
+.identity dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0; font-size: .9rem; }
+.identity dt { color: var(--muted); }
+.identity dd { margin: 0; }
+.desv-box {
+  flex: 1 1 260px;
+  background: rgba(240,194,122,.08);
+  border: 1px solid var(--desv);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+.desv-box .label {
+  text-align: center; color: var(--desv); font-weight: 800;
+  letter-spacing: .06em; text-transform: uppercase; font-size: .85rem; margin-bottom: 8px;
+}
+.note {
+  background: rgba(126,182,255,.08);
+  border: 1px solid rgba(126,182,255,.25);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: .88rem;
+  color: var(--muted);
+  margin: 10px 0;
+}
+.warn {
+  background: rgba(255,159,67,.1);
+  border: 1px solid rgba(255,159,67,.35);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: .88rem;
+  margin: 10px 0;
+}
+table.map {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .82rem;
+  margin: 10px 0 16px;
+}
+table.map th, table.map td {
+  border: 1px solid var(--border);
+  padding: 8px 10px;
+  vertical-align: top;
+  text-align: left;
+}
+table.map th {
+  background: #121624;
+  color: var(--accent);
+  font-weight: 600;
+  position: sticky; top: 70px;
+}
+table.map tr:nth-child(even) td { background: rgba(255,255,255,.02); }
+table.map td.manobra { color: var(--purple); font-weight: 600; white-space: nowrap; }
+.chip {
+  display: inline-block;
+  background: #2a3148;
+  border-radius: 999px;
+  padding: 1px 8px;
+  margin: 1px 2px;
+  font-size: .75rem;
+  color: var(--muted);
+}
+.chip.ok { background: rgba(62,207,122,.18); color: var(--ok); }
+.chip.gap { background: rgba(255,159,67,.18); color: var(--gap); }
+.chip.atk { background: rgba(210,75,75,.2); color: #ff8a8a; }
+.chip.est { background: rgba(62,207,122,.2); color: #8dffb8; }
+.chip.des { background: rgba(240,194,122,.2); color: var(--desv); }
+.deck {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+@media (max-width: 700px) { .deck { grid-template-columns: 1fr; } }
+.deck .col {
+  background: var(--panel2);
+  border-radius: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+}
+.deck h4 { margin: 0 0 8px; color: var(--blue); font-size: .9rem; }
+.deck ul { margin: 0; padding-left: 18px; font-size: .88rem; }
+.flags { margin-top: 6px; }
+code, .mono {
+  font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+  font-size: .85em;
+  background: #0c0e16;
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+.summary table { font-size: .85rem; }
+footer {
+  text-align: center; color: var(--muted); font-size: .8rem; margin-top: 24px;
+}
+ul.compact li { margin: 4px 0; }
+
+.summary-grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(140px,1fr)); gap:10px; margin:12px 0; }
+.stat { background:var(--panel2); border:1px solid var(--border); border-radius:12px; padding:12px; text-align:center; }
+.stat .n { font-size:1.6rem; color:var(--accent); font-weight:700; }
+.stat .l { font-size:.75rem; color:var(--muted); }
+.already { background:rgba(62,207,122,.06); border:1px solid rgba(62,207,122,.25); border-radius:12px; padding:12px 16px; margin:12px 0; }
+.cat-badge { font-size:.7rem; text-transform:uppercase; letter-spacing:.05em; color:var(--purple); }
+
+/* ===== Editable chrome ===== */
+.edit-bar {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  background: rgba(18,22,36,.92); border: 1px solid var(--border);
+  border-radius: 12px; padding: 10px 14px; margin-bottom: 16px;
+  backdrop-filter: blur(10px); box-shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+.edit-bar .title-mini { color: var(--accent); font-weight: 700; font-size: .85rem; margin-right: 8px; }
+.edit-bar input[type="search"] {
+  flex: 1 1 180px; min-width: 140px;
+  background: #0c0e16; border: 1px solid var(--border); color: var(--text);
+  border-radius: 8px; padding: 6px 10px; font-size: .85rem;
+}
+.edit-bar button, .btn {
+  background: var(--panel2); border: 1px solid var(--border); color: var(--text);
+  border-radius: 8px; padding: 6px 12px; font-size: .78rem; cursor: pointer;
+}
+.edit-bar button:hover, .btn:hover { border-color: var(--accent); color: var(--accent); }
+.edit-bar .status { font-size: .75rem; color: var(--muted); margin-left: auto; }
+.edit-bar .status.dirty { color: var(--gap); }
+.edit-bar .status.saved { color: var(--ok); }
+[contenteditable="true"] {
+  outline: none; border-radius: 4px; transition: box-shadow .15s, background .15s;
+  min-height: 1em;
+}
+[contenteditable="true"]:hover { background: rgba(240,194,122,.04); }
+[contenteditable="true"]:focus {
+  box-shadow: 0 0 0 2px rgba(240,194,122,.45);
+  background: rgba(240,194,122,.07);
+}
+.char.collapsed .char-body { display: none; }
+.char-toolbar-mini { display:flex; gap:8px; align-items:center; margin-bottom:8px; }
+.btn-collapse {
+  background: transparent; border: 1px solid var(--border); color: var(--muted);
+  border-radius: 6px; width: 28px; height: 28px; cursor: pointer; line-height: 1;
+}
+.docx-dl { display:grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 8px 0; font-size:.88rem; }
+.docx-dl dt { color: var(--muted); }
+.docx-dl dd { margin: 0; }
+.docx-pre {
+  white-space: pre-wrap; font-family: ui-monospace, Consolas, monospace;
+  font-size: .8rem; background: #0c0e16; padding: 10px 12px; border-radius: 8px;
+  border: 1px solid var(--border); margin: 8px 0; color: var(--text);
+}
+.char.hidden-filter { display: none !important; }
+@media print {
+  .edit-bar, .btn-collapse, nav.toc { position: static !important; box-shadow: none; }
+  [contenteditable="true"]:hover, [contenteditable="true"]:focus { box-shadow: none; background: transparent; }
+  body { background: #fff; color: #111; }
+  .wrap { max-width: 100%; }
+}
+
+
+table{width:100%;border-collapse:collapse}td,th{border:1px solid var(--border);padding:8px;vertical-align:top}th{color:var(--accent)}#edit-bar{display:flex;gap:8px;margin-bottom:16px}</style></head>
+<body><div class="wrap">
+<div id="edit-bar" contenteditable="false"><button id="btn-save">Salvar</button><button id="btn-export-md">Exportar Markdown</button><button id="btn-export-html">Exportar HTML</button><button id="btn-reset">Resetar rascunho</button><span id="edit-status" class="status"></span></div>
+<div id="doc" contenteditable="true">
+<header class="hero"><h1>Ragnar — Invocações</h1><p class="sub">Documento de design. Nada aplicado no código ainda.</p></header>
+<section class="method"><h2 class="sec">Regras travadas</h2><ul>
+<li>Ragnar começa na <b>linha de trás</b>.</li>
+<li>Cartas <b>Invocar X</b>: Brenda, Alda, Chiharu, Samira, Áine, Layla, Citlali. Tag <b>Final</b>, custo <b>4 INI</b>, <b>Recomprável</b> gerando <b>+1 INI</b>.</li>
+<li>Jogar Invocar X não invoca na hora: Ragnar recebe <b>Conjurando 2</b>.</li>
+<li>Golpe direto ou <b>Atordoado</b> cancelam a conjuração; dano indireto (Sangramento, Veneno, clima…) não cancela.</li>
+<li>Usar Invocar X no meio da conjuração cancela a anterior e recomeça Conjurando 2 com o novo alvo (mesmo se for o mesmo).</li>
+<li>Se Conjurando termina sozinho, a invocada entra na <b>linha de trás</b>.</li>
+<li><b>Uma invocação por vez</b>: a nova desinvoca a anterior na hora (sai com as cartas). Não conta como morte (não ativa Vingador etc.).</li>
+<li>Se Ragnar morre, a invocada sai junto.</li>
+<li><b>Invocar X+</b>: invoca com <b>Proteção 1</b> e melhora as cartas da invocada.</li>
+<li><b>Carta da arma</b>: Grátis, 0 INI. Versão +: gera <b>2 INI</b>. Fica na mão; pode ser recomprada ou guardada para outra conjuração.</li>
+<li><b>Carta do monstro</b>: 2 INI, transforma a invocada (só ida). Versão +: adiciona <b>Forte 3, Resistente 3, Rápido 3</b> e melhora as cartas do monstro.</li>
+<li>Toda invocada tem o Aprimoramento <b>Ascensão</b>: ao ser invocada, coloca suas duas cartas na mão.</li></ul></section>
+<section class="char"><h2 class="sec">Tabela das invocadas</h2><table><tr><th>Invocada</th><th>Arma (nome, efeito, efeito +)</th><th>Monstro (nome, cartas com efeito e +)</th><th>Atributos</th><th>Aprimoramentos (além de Ascensão)</th><th>Desvantagem</th><th>Notas</th></tr>
+<tr><td><b>Brenda</b><br><small>Invocar Brenda / Invocar Brenda+</small></td><td><b>Nome:</b> <br><b>Efeito:</b> <br><b>Efeito +:</b> </td><td><b>Nome:</b> <br><b>Cartas:</b> </td><td>Vida: <br>Impacto: <br>Poder: <br>Armadura: <br>Escudo: </td><td>Ascensão + </td><td></td><td></td></tr>
+<tr><td><b>Alda</b><br><small>Invocar Alda / Invocar Alda+</small></td><td><b>Nome:</b> <br><b>Efeito:</b> <br><b>Efeito +:</b> </td><td><b>Nome:</b> <br><b>Cartas:</b> </td><td>Vida: <br>Impacto: <br>Poder: <br>Armadura: <br>Escudo: </td><td>Ascensão + </td><td></td><td></td></tr>
+<tr><td><b>Chiharu</b><br><small>Invocar Chiharu / Invocar Chiharu+</small></td><td><b>Nome:</b> <br><b>Efeito:</b> <br><b>Efeito +:</b> </td><td><b>Nome:</b> <br><b>Cartas:</b> </td><td>Vida: <br>Impacto: <br>Poder: <br>Armadura: <br>Escudo: </td><td>Ascensão + </td><td></td><td></td></tr>
+<tr><td><b>Samira</b><br><small>Invocar Samira / Invocar Samira+</small></td><td><b>Nome:</b> Chakram<br><b>Efeito:</b> <br><b>Efeito +:</b> </td><td><b>Nome:</b> Garuda<br><b>Cartas:</b> Corrente Ascendente: <i>(efeito a definir)</i> · Corrente Ascendente+: <i>(a definir)</i></td><td>Vida: <br>Impacto: <br>Poder: <br>Armadura: <br>Escudo: </td><td>Ascensão + </td><td></td><td></td></tr>
+<tr><td><b>Áine</b><br><small>Invocar Áine / Invocar Áine+</small></td><td><b>Nome:</b> <br><b>Efeito:</b> <br><b>Efeito +:</b> </td><td><b>Nome:</b> <br><b>Cartas:</b> </td><td>Vida: <br>Impacto: <br>Poder: <br>Armadura: <br>Escudo: </td><td>Ascensão + </td><td></td><td></td></tr>
+<tr><td><b>Layla</b><br><small>Invocar Layla / Invocar Layla+</small></td><td><b>Nome:</b> <br><b>Efeito:</b> <br><b>Efeito +:</b> </td><td><b>Nome:</b> <br><b>Cartas:</b> </td><td>Vida: <br>Impacto: <br>Poder: <br>Armadura: <br>Escudo: </td><td>Ascensão + </td><td></td><td></td></tr>
+<tr><td><b>Citlali</b><br><small>Invocar Citlali / Invocar Citlali+</small></td><td><b>Nome:</b> <br><b>Efeito:</b> <br><b>Efeito +:</b> </td><td><b>Nome:</b> <br><b>Cartas:</b> </td><td>Vida: <br>Impacto: <br>Poder: <br>Armadura: <br>Escudo: </td><td>Ascensão + </td><td></td><td></td></tr>
+</table></section>
+<section class="summary"><h2 class="sec">Perguntas em aberto</h2><ul>
+<li><b>Tag Final hoje</b>: ao jogar, o dono recebe o estado <i>finalizado</i> e não pode jogar outras cartas nem se mover pelo resto da rodada (ex.: Tempestade dos selos). Invocar X com Final = Ragnar encerra suas ações na rodada ao começar a conjurar. É isso? E a Final impede a arma Grátis da invocada? (Não: o estado é só no Ragnar.)</li>
+<li><b>Limite por linha</b>: o código não tem limite de personagens por linha (frente/trás); só a equipe é limitada (1–3 na Arena, 3 na Campanha) e invocações entram como atores extras. Queremos um limite?</li>
+<li>Ragnar Kaiju atual (Invocar Isabella/Marina/Aurélia/Gaia/Lúcia/Nyx/Celeste, Forma Bestial, Garras e Presas, Sentidos Aguçados, Erro Terrível): substituir tudo pelo kit novo ou manter alguma parte?</li>
+<li>Dano/efeito de cada arma e carta de monstro: preencher na tabela.</li></ul></section>
+</div></div>
+<script>(function(){const KEY="hotn3_ragnar_invocacoes_v1",doc=document.getElementById('doc'),st=document.getElementById('edit-status');let t;
+function save(){localStorage.setItem(KEY,doc.innerHTML);st.textContent='Salvo · '+new Date().toLocaleTimeString('pt-BR');}
+function dl(n,c,m){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([c],{type:m}));a.download=n;a.click();}
+const s=localStorage.getItem(KEY);if(s)doc.innerHTML=s;
+doc.addEventListener('input',()=>{st.textContent='Alterações não salvas…';clearTimeout(t);t=setTimeout(save,1200);});
+document.getElementById('btn-save').onclick=save;
+document.getElementById('btn-reset').onclick=()=>{if(confirm('Apagar rascunho?')){localStorage.removeItem(KEY);location.reload();}};
+document.getElementById('btn-export-html').onclick=()=>dl('ragnar_invocacoes.html','<!DOCTYPE html>'+document.documentElement.outerHTML,'text/html');
+document.getElementById('btn-export-md').onclick=()=>{let md='# Ragnar — Invocações\n\n';doc.querySelectorAll('h2,li,tr').forEach(e=>{if(e.tagName=='H2')md+='\n## '+e.innerText+'\n';else if(e.tagName=='LI')md+='- '+e.innerText.replace(/\n/g,' ')+'\n';else md+='| '+[...e.children].map(c=>c.innerText.replace(/\n/g,' · ').replace(/\|/g,'/')).join(' | ')+' |\n';});dl('ragnar_invocacoes.md',md,'text/markdown');};})();</script></body></html>
