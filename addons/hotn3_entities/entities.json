@@ -460,7 +460,77 @@
         "ent_alyssa_wine_super_sentidos_plus"
       ],
       "woman": 5,
-      "man": 0
+      "man": 0,
+      "design": {
+        "draft": false,
+        "name": "Alyssa Wine",
+        "tipo": "Herói",
+        "attributes": {
+          "VID": 33,
+          "IMP": 36,
+          "POD": 36,
+          "ARM": 27,
+          "ESC": 24
+        },
+        "moral": "",
+        "aprimoramento": {
+          "nome": "Escuridão",
+          "efeito": "Sempre ativa. Ao sofrer dano, ganha 1 stack de Escuridão (E). Cartas escalam com E.",
+          "vr": 6,
+          "rod": ""
+        },
+        "desvantagem": {
+          "nome": "Tormenta",
+          "efeito": "Instantâneo. Requer Escuridão ≥ 1. Causa 10×E de dano a todos os outros (aliados e inimigos). Não pode ser recomprada.",
+          "instantanea": true
+        },
+        "deck": [
+          {
+            "nome": "Bastão Retrátil",
+            "base": "Impacto 1+E. Escuridão 1+: Chain 1 (alvo extra). Escuridão 2+: Empurra.",
+            "mais": ""
+          },
+          {
+            "nome": "Garras e Presas",
+            "base": "Requer Escuridão 1+. Impacto 2×E. Bleed E. Ferido E.",
+            "mais": ""
+          },
+          {
+            "nome": "Premonição",
+            "base": "Proteção 1. Resistente 1.",
+            "mais": ""
+          },
+          {
+            "nome": "A Filha Dele",
+            "base": "Lento 1 em toda a equipe inimiga.",
+            "mais": ""
+          },
+          {
+            "nome": "Regeneração",
+            "base": "Requer Escuridão 2+. Cura 2×E. Resistente 2×E.",
+            "mais": ""
+          },
+          {
+            "nome": "Relâmpago",
+            "base": "Requer Escuridão 4+. Poder 2×E. Fileira inimiga + Alcance. E5: todos os inimigos. E6+: todos os outros (exceto ela).",
+            "mais": ""
+          },
+          {
+            "nome": "Intelecto",
+            "base": "Compra todas as cartas de item do baralho. Ao recomprar esta carta: +1 Ação (funciona mesmo sem itens).",
+            "mais": ""
+          },
+          {
+            "nome": "Super Sentidos",
+            "base": "Atento 2: ignora desvantagem de arquétipo/tipo e pode atingir Oculto.",
+            "mais": ""
+          }
+        ],
+        "monster": null,
+        "notes": "",
+        "flag": "Escala antiga (hp 109, VID derivado (hp−10)/3) — converter para escala nova",
+        "suggestions": {}
+      }
     },
     "ent_marcell_wine": {
       "id": "ent_marcell_wine",
@@ -570,7 +640,77 @@
       "source_sheet": "Marcell_Wine_ficha.json",
       "source_page": "Marcell_Wine.md",
       "woman": 0,
-      "man": 0
+      "man": 0,
+      "design": {
+        "draft": false,
+        "name": "Marcell Wine",
+        "tipo": "Herói",
+        "attributes": {
+          "VID": 35,
+          "IMP": 38,
+          "POD": 40,
+          "ARM": 26,
+          "ESC": 26
+        },
+        "moral": "",
+        "aprimoramento": {
+          "nome": "Escuridão",
+          "efeito": "Sempre ativa. Ao sofrer dano, ganha 1 stack de Escuridão (E). Cartas escalam com E.",
+          "vr": 6,
+          "rod": ""
+        },
+        "desvantagem": {
+          "nome": "Inimigos",
+          "efeito": "Instantâneo. Requer Escuridão ≥ 1. A equipe inimiga recebe E lacaios do mesmo tipo (tipo sorteado uma vez por jogada). Não pode ser recomprada.",
+          "instantanea": true
+        },
+        "deck": [
+          {
+            "nome": "Bastão Retrátil",
+            "base": "Impacto 1+E. Escuridão 1+: Chain 1 (alvo extra). Escuridão 2+: Resistente E e Barreira E.",
+            "mais": ""
+          },
+          {
+            "nome": "Garras e Presas",
+            "base": "Requer Escuridão 1+. Impacto 2×E. Bleed E. Ferido E.",
+            "mais": ""
+          },
+          {
+            "nome": "Premonição",
+            "base": "Proteção 1+E. Sem requisito de Escuridão.",
+            "mais": ""
+          },
+          {
+            "nome": "Tormenta",
+            "base": "Requer Escuridão 1+. Forte E, Resistente E, Rápido E. Define o clima para Chuva (só um clima ativo).",
+            "mais": ""
+          },
+          {
+            "nome": "Regeneração",
+            "base": "Cura 10%+18%×E da Vida faltante (E5 ≈ cura total do dano). Resistente E. Sem requisito de Escuridão.",
+            "mais": ""
+          },
+          {
+            "nome": "Relâmpago",
+            "base": "Requer Escuridão 1+. Custo INI = min(E, 5). Poder 2×E. E2: Chain. E3: Fileira. E4: todos inimigos. E5+: todos os outros.",
+            "mais": ""
+          },
+          {
+            "nome": "Intelecto",
+            "base": "Compra todas as cartas de item do baralho. Ao recomprar esta carta: +1 Ação (funciona mesmo sem itens).",
+            "mais": ""
+          },
+          {
+            "nome": "Super Sentidos",
+            "base": "Atento 2: ignora desvantagem de arquétipo/tipo e pode atingir Oculto.",
+            "mais": ""
+          }
+        ],
+        "monster": null,
+        "notes": "",
+        "flag": "Escala antiga (hp 115, VID derivado (hp−10)/3) — converter para escala nova",
+        "suggestions": {}
+      }
     },
     "ent_ashlee": {
       "id": "ent_ashlee",
@@ -3558,7 +3698,124 @@
       ],
       "biografia": "Ragnar Kaiju chama sete elementais e, perto da morte, assume uma forma de pantera monstruosa.",
       "woman": 0,
-      "man": 4
+      "man": 4,
+      "design": {
+        "draft": true,
+        "name": "Ragnar",
+        "tipo": "Herói",
+        "ordem": "",
+        "attributes": {
+          "VID": 33,
+          "IMP": 35,
+          "POD": 35,
+          "ARM": 24,
+          "ESC": 0
+        },
+        "moral": "",
+        "aprimoramento": {
+          "nome": "Forma Bestial",
+          "efeito": "Uma vez por combate, ao atingir 1/3 da Vida, transforma-se em Ragnar (Forma Kaiju) por 3 rodadas.",
+          "vr": 8,
+          "rod": ""
+        },
+        "desvantagem": {
+          "nome": "Erro Terrível",
+          "efeito": "Fica Atordoado 1 ao atacar ou ser atacado sem Alcance por uma personagem mulher, fora da Forma Bestial.",
+          "instantanea": true
+        },
+        "deck": [
+          {
+            "nome": "Invocar Brenda",
+            "base": "Final · 4 INI · Recompra +1 INI · Ragnar recebe Carregamento 2; ao terminar sozinho, invoca Brenda na linha de trás.",
+            "mais": "Igual, mas Brenda chega com Proteção 1 e cartas Melhoradas (Arma+ e Transformar+)."
+          },
+          {
+            "nome": "Invocar Alda",
+            "base": "Final · 4 INI · Recompra +1 INI · Ragnar recebe Carregamento 2; ao terminar sozinho, invoca Alda na linha de trás.",
+            "mais": "Igual, mas Alda chega com Proteção 1 e cartas Melhoradas (Arma+ e Transformar+)."
+          },
+          {
+            "nome": "Invocar Chiharu",
+            "base": "Final · 4 INI · Recompra +1 INI · Ragnar recebe Carregamento 2; ao terminar sozinho, invoca Chiharu na linha de trás.",
+            "mais": "Igual, mas Chiharu chega com Proteção 1 e cartas Melhoradas (Arma+ e Transformar+)."
+          },
+          {
+            "nome": "Invocar Samira",
+            "base": "Final · 4 INI · Recompra +1 INI · Ragnar recebe Carregamento 2; ao terminar sozinho, invoca Samira na linha de trás.",
+            "mais": "Igual, mas Samira chega com Proteção 1 e cartas Melhoradas (Arma+ e Transformar+)."
+          },
+          {
+            "nome": "Invocar Áine",
+            "base": "Final · 4 INI · Recompra +1 INI · Ragnar recebe Carregamento 2; ao terminar sozinho, invoca Áine na linha de trás.",
+            "mais": "Igual, mas Áine chega com Proteção 1 e cartas Melhoradas (Arma+ e Transformar+)."
+          },
+          {
+            "nome": "Invocar Layla",
+            "base": "Final · 4 INI · Recompra +1 INI · Ragnar recebe Carregamento 2; ao terminar sozinho, invoca Layla na linha de trás.",
+            "mais": "Igual, mas Layla chega com Proteção 1 e cartas Melhoradas (Arma+ e Transformar+)."
+          },
+          {
+            "nome": "Invocar Citlali",
+            "base": "Final · 4 INI · Recompra +1 INI · Ragnar recebe Carregamento 2; ao terminar sozinho, invoca Citlali na linha de trás.",
+            "mais": "Igual, mas Citlali chega com Proteção 1 e cartas Melhoradas (Arma+ e Transformar+)."
+          },
+          {
+            "nome": "Invocar Norma",
+            "base": "Grátis · 0 INI · Final · Recompra +1 INI · Carregamento 1; invoca Norma (minion comum) na linha de trás.",
+            "mais": "Igual, mas Norma chega com Proteção 2 (e Pistola+?)."
+          },
+          {
+            "nome": "Garras e Presas",
+            "base": "Inimigo · +1 INI · dano 1 (Impacto), Sangramento 1",
+            "mais": "+ Ágil"
+          },
+          {
+            "nome": "Sentidos Aguçados",
+            "base": "Si mesmo · +2 INI · Atento 2",
+            "mais": "+ Comprar 1 (próprio)"
+          }
+        ],
+        "arma": null,
+        "transformar": null,
+        "monster": {
+          "name": "Ragnar (Forma Kaiju)",
+          "attributes": null,
+          "aprimoramento": {
+            "nome": "Indomável",
+            "efeito": "Não cai abaixo de 1 de Vida. Todas as cartas de Ragnar no descarte, deck e mão, e a Desvantagem, viram Garras e Presas (Kaiju) — ou Garras e Presas+ (Kaiju) se vieram de cartas Melhoradas. Ao destransformar, voltam a ser o que eram.",
+            "vr": 15,
+            "rod": 3
+          },
+          "desvantagem": {
+            "nome": "Nenhuma",
+            "efeito": "A Forma Kaiju não tem Desvantagem.",
+            "instantanea": false
+          },
+          "manobras": [
+            {
+              "nome": "Garras e Presas (Kaiju)",
+              "base": "Impacto, Sangramento 1, Ágil",
+              "mais": "Impacto, Sangramento 2, Sequência 1, Ágil"
+            }
+          ]
+        },
+        "notes": "Começa na linha de trás. Deck de 10 manobras. VID 33 → HP 109 (antes Vida 108).",
+        "flag": "",
+        "suggestions": {
+          "deck.7.mais": "Igual, mas Norma chega com Proteção 2 e Pistola+ (Sangramento 1)."
+        },
+        "summons": [
+          "brenda",
+          "alda",
+          "chiharu",
+          "samira",
+          "aine",
+          "layla",
+          "citlali",
+          "norma"
+        ],
+        "hero_id": "ent_ragnar_kaiju"
+      }
     }
   },
   "cards": {
@@ -16578,6 +16835,863 @@
       ],
       "anim_timing": "parallel",
       "text": "Fora da Forma Bestial, ao atacar ou ser atacado sem Alcance por personagem com gênero “woman”, recebe Atordoado 1."
+    }
+  },
+  "design": {
+    "format": 1,
+    "note": "Bloco de design (editor). Ignorado pelo jogo. Personagens só-design ficam em design.characters; heróis do jogo guardam o seu em heroes.<id>.design.",
+    "weights": {
+      "PR": {
+        "dano": 20,
+        "Preso": 10,
+        "Atordoado": 25,
+        "Lento": 8,
+        "Rápido": 8,
+        "Forte": 15,
+        "Resistente": 12,
+        "Fraco": 12,
+        "Frágil": 15,
+        "Marcado": 8,
+        "Sangramento": 8,
+        "Ferido": 10,
+        "Oculto": 12,
+        "Provocação": 8,
+        "Proteção": 20,
+        "Barreira": 2,
+        "Cura": 1.2,
+        "Empurrar": 6,
+        "Puxar": 6,
+        "Voo": 10,
+        "Sequência": 0.6,
+        "Área": 1.2,
+        "Alcance": 5,
+        "Ágil": 6,
+        "Grátis": 12,
+        "Recompra": 4,
+        "Comprar": 12,
+        "Vorpal": 25,
+        "Invocar": 60,
+        "Atento": 6,
+        "Confuso": 15,
+        "Dreno": 0.25,
+        "Transformar": 30
+      },
+      "DP": {
+        "mult": 1.5,
+        "alvo": 4
+      },
+      "WP": {
+        "w2": 0.25,
+        "wARM": 1,
+        "wESC": 1,
+        "ref": 3600,
+        "pAttr": 100,
+        "pMan": 1,
+        "pAp": 1,
+        "pDes": 1,
+        "rodadas": 4,
+        "compras": 1.5,
+        "deck": 10,
+        "sin": 10
+      },
+      "MP": {
+        "carregamento": 0.75,
+        "final": 0.8,
+        "requisito": 0.7
+      }
+    },
+    "glossary": [
+      {
+        "termo": "Carregamento",
+        "definicao": "Antigo Conjuração/Conjurando. Dura N; perde se receber dano direto, usar manobra ou ficar Atordoado (dano indireto não cancela). Se terminar sozinho, o efeito acontece."
+      },
+      {
+        "termo": "Final",
+        "definicao": "Quem joga não age mais na rodada (nem Grátis) e não se move."
+      },
+      {
+        "termo": "Grátis",
+        "definicao": "Não gasta a ação (PA) do grupo."
+      },
+      {
+        "termo": "Recompra",
+        "definicao": "Pode ser descartada para comprar outra; gera o INI indicado."
+      },
+      {
+        "termo": "Alcance",
+        "definicao": "Ataca à distância (de qualquer linha)."
+      },
+      {
+        "termo": "Área",
+        "definicao": "a definir",
+        "sugestao": "Atinge todos da linha alvo (ou todos, se indicado)."
+      },
+      {
+        "termo": "Penetrante",
+        "definicao": "a definir",
+        "sugestao": "Ignora Armadura/Barreira (pierce no código)."
+      },
+      {
+        "termo": "Ágil",
+        "definicao": "a definir",
+        "sugestao": "Pode ser jogada depois de mover sem custo de ação extra (tag nova)."
+      },
+      {
+        "termo": "Sequência",
+        "definicao": "a definir (encadeia para outro alvo?)",
+        "sugestao": "Após o alvo, salta para mais N inimigos adjacentes (CHAIN)."
+      },
+      {
+        "termo": "Voo / Voar",
+        "definicao": "a definir",
+        "sugestao": "Só é atingido por Alcance, Área ou outro voador (flying)."
+      },
+      {
+        "termo": "Preso",
+        "definicao": "a definir",
+        "sugestao": "Não pode se mover nem trocar de linha (bind)."
+      },
+      {
+        "termo": "Provocação",
+        "definicao": "Inimigos são forçados a mirar nela (duração/detalhe a definir)."
+      },
+      {
+        "termo": "Oculto",
+        "definicao": "a definir",
+        "sugestao": "Não pode ser alvo único até sair (conceal)."
+      },
+      {
+        "termo": "Marcado",
+        "definicao": "a definir",
+        "sugestao": "Recebe dano extra de ataques (marked)."
+      },
+      {
+        "termo": "Lento",
+        "definicao": "a definir",
+        "sugestao": "Joga depois e gera menos INI (slow)."
+      },
+      {
+        "termo": "Rápido",
+        "definicao": "a definir",
+        "sugestao": "Age antes e gera +INI (fast)."
+      },
+      {
+        "termo": "Forte",
+        "definicao": "a definir",
+        "sugestao": "+dano dos ataques (strengthened)."
+      },
+      {
+        "termo": "Resistente",
+        "definicao": "a definir",
+        "sugestao": "−dano recebido (resistente)."
+      },
+      {
+        "termo": "Ferido",
+        "definicao": "a definir",
+        "sugestao": "Recebe cura reduzida e dano extra de Sangramento (ferido)."
+      },
+      {
+        "termo": "Sangramento",
+        "definicao": "Dano indireto por rodada (valor/duração a definir)."
+      },
+      {
+        "termo": "Atordoado",
+        "definicao": "Perde a ação; cancela Carregamento."
+      },
+      {
+        "termo": "Atento",
+        "definicao": "a definir",
+        "sugestao": "Bloqueia o próximo ataque surpresa / Oculto (atento)."
+      },
+      {
+        "termo": "Proteção",
+        "definicao": "a definir",
+        "sugestao": "Anula o próximo golpe direto (protecao)."
+      },
+      {
+        "termo": "Ascensão",
+        "definicao": "Ao ser invocada, coloca Arma + Transformar na mão."
+      },
+      {
+        "termo": "Instantânea",
+        "definicao": "Desvantagem: dispara assim que é comprada."
+      },
+      {
+        "termo": "Vorpal",
+        "definicao": "State negativo. Enquanto durar, um único golpe que tire 50% ou mais da Vida atual mata."
+      },
+      {
+        "termo": "Moral",
+        "definicao": "−2 maligno, −1 caótico, 0 neutro, 1 leal, 2 bondoso. Campo de cada personagem (usado por Coração Leve)."
+      },
+      {
+        "termo": "Frágil",
+        "definicao": "Divide a defesa (ARM/ESC) de quem recebe o golpe. Substitui Frágil."
+      },
+      {
+        "termo": "Fraco",
+        "definicao": "Reduz o dano causado. Substitui Fraco."
+      },
+      {
+        "termo": "Desvantagem",
+        "definicao": "Sempre ATIVADA: carta Instantânea, dispara ao ser comprada e aplica efeito ruim por poucas rodadas. Nunca regra passiva permanente."
+      }
+    ],
+    "open_questions": [
+      "Fórmula HP = 3×VID+10 ainda não está no código.",
+      "Revisar e aceitar (ou editar) as sugestões em azul.",
+      "Tags novas que ainda não existem no código: Ágil, Carregamento, Sequência (como tag de carta), Engolir/Prisão Uterina, Lançar para cima, Metal/Ferro, Lâmina.",
+      "Brenda/Dragão: Ventre Exposto é a Desvantagem ativa; Engolir Explosão fica como alternativa (precisaria virar ativa).",
+      "Versões Melhoradas (+) ficam por último.",
+      "Moral de cada personagem a definir.",
+      "Código: Vorpal, Moral, renomear Quick→Ágil e Chain→Sequência."
+    ],
+    "characters": {
+      "brenda": {
+        "draft": true,
+        "name": "Brenda",
+        "tipo": "Invocação",
+        "ordem": "IMP POD ARM ESC VID",
+        "attributes": {
+          "IMP": 20,
+          "POD": 18,
+          "ARM": 15,
+          "VID": 10,
+          "ESC": 13
+        },
+        "moral": "",
+        "aprimoramento": {
+          "nome": "Ascensão",
+          "efeito": "Ao ser invocada, coloca suas duas cartas (Arma + Transformar) na mão.",
+          "vr": 10,
+          "rod": 1
+        },
+        "desvantagem": {
+          "nome": "Nenhuma",
+          "efeito": "Formas humanas das invocações do Ragnar não têm Desvantagem.",
+          "instantanea": false
+        },
+        "deck": [],
+        "arma": {
+          "nome": "Lança",
+          "base": "Impacto, Penetrante, Grátis, 0 INI",
+          "mais": "Lança+: Impacto+, Penetrante, Grátis, gera 2 INI"
+        },
+        "transformar": {
+          "nome": "Transformar em Dragão",
+          "base": "2 INI · transforma no monstro (só ida).",
+          "mais": "+ Forte 3, Resistente 3, Rápido 3 e manobras do monstro Melhoradas."
+        },
+        "monster": {
+          "name": "Dragão",
+          "attributes": {
+            "IMP": 40,
+            "POD": 35,
+            "ARM": 30,
+            "VID": 20,
+            "ESC": 25
+          },
+          "aprimoramento": {
+            "nome": "Protetora",
+            "efeito": "Aplica Provocação 1 em si sempre que faz um ataque.",
+            "vr": 6,
+            "rod": ""
+          },
+          "desvantagem": {
+            "nome": "Ventre Exposto",
+            "efeito": "Instantânea (Soberba): ao ser comprada, Brenda recebe Frágil 2 e Vorpal 1 e perde Voo. Alternativa anotada: Engolir Explosão (versão passiva antiga, adaptar se for mantida).",
+            "instantanea": true
+          },
+          "manobras": [
+            {
+              "nome": "Lança-Chamas",
+              "base": "Poder, Alcance, Área, Carregamento 1",
+              "mais": "a definir"
+            },
+            {
+              "nome": "Golpe de Cauda",
+              "base": "Impacto, Voo",
+              "mais": "a definir"
+            },
+            {
+              "nome": "Abraço Crematório",
+              "base": "Impacto, Ferido, Preso",
+              "mais": "a definir"
+            }
+          ]
+        },
+        "notes": "Manobras do monstro entram no deck de compra do grupo (como todo minion); Ascensão puxa Arma + Transformar para a mão.",
+        "flag": "Invocação (metade dos atributos)",
+        "suggestions": {
+          "monster.manobras.0.mais": "Poder, Alcance, Área, Carregamento 1, Ferido 1 em todos atingidos",
+          "monster.manobras.1.mais": "Impacto, Voo, Empurrar (alvo vai para a linha de trás)",
+          "monster.manobras.2.mais": "Impacto, Ferido 2, Preso 2"
+        },
+        "summoned_by": "ent_ragnar_kaiju"
+      },
+      "alda": {
+        "draft": true,
+        "name": "Alda",
+        "tipo": "Invocação",
+        "ordem": "VID ARM ESC IMP POD",
+        "attributes": {
+          "VID": 20,
+          "ARM": 18,
+          "ESC": 15,
+          "IMP": 13,
+          "POD": 10
+        },
+        "moral": "",
+        "aprimoramento": {
+          "nome": "Ascensão",
+          "efeito": "Ao ser invocada, coloca suas duas cartas (Arma + Transformar) na mão.",
+          "vr": 10,
+          "rod": 1
+        },
+        "desvantagem": {
+          "nome": "Nenhuma",
+          "efeito": "Formas humanas das invocações do Ragnar não têm Desvantagem.",
+          "instantanea": false
+        },
+        "deck": [],
+        "arma": {
+          "nome": "Rede de Pesca",
+          "base": "Preso",
+          "mais": "a definir"
+        },
+        "transformar": {
+          "nome": "Transformar em Kraken",
+          "base": "2 INI · transforma no monstro (só ida).",
+          "mais": "+ Forte 3, Resistente 3, Rápido 3 e manobras do monstro Melhoradas."
+        },
+        "monster": {
+          "name": "Kraken",
+          "attributes": {
+            "VID": 40,
+            "ARM": 35,
+            "ESC": 30,
+            "IMP": 25,
+            "POD": 20
+          },
+          "aprimoramento": {
+            "nome": "a definir (nome)",
+            "efeito": "Regenera 1/10 da Vida por rodada.",
+            "vr": 6,
+            "rod": ""
+          },
+          "desvantagem": {
+            "nome": "Fúria do Abismo",
+            "efeito": "Instantânea (Ira): ao ser comprada, Alda solta quem engoliu, vai para a linha de trás e recebe Lento 2.",
+            "instantanea": true
+          },
+          "manobras": [
+            {
+              "nome": "Redemoinho",
+              "base": "a definir",
+              "mais": "a definir"
+            },
+            {
+              "nome": "Jato de Tinta",
+              "base": "a definir",
+              "mais": "a definir"
+            },
+            {
+              "nome": "Prisão Uterina",
+              "base": "Insere inimigos no próprio corpo; o sprite cresce enquanto estiverem lá. Ficam presos por tempo proporcional ao nível. Presos contam como derrotados: se não sobrar nenhum inimigo vivo solto, a luta acaba.",
+              "mais": "a definir"
+            }
+          ]
+        },
+        "notes": "A forma monstro não causa dano. Manobras do monstro entram no deck de compra do grupo (como todo minion); Ascensão puxa Arma + Transformar para a mão.",
+        "flag": "Invocação (metade dos atributos)",
+        "suggestions": {
+          "arma.mais": "Rede de Pesca+: Preso 2, Lento 1, Grátis, gera 2 INI",
+          "monster.aprimoramento.nome": "Maré Viva",
+          "monster.manobras.0.base": "Área (linha inimiga), Puxar para a linha da frente, Lento 1. Sem dano.",
+          "monster.manobras.0.mais": "Todos os inimigos, Puxar, Lento 2.",
+          "monster.manobras.1.base": "Inimigo, Alcance, Fracos 1 (blind) + Oculto 1 em si. Sem dano.",
+          "monster.manobras.1.mais": "Linha inimiga, Fracos 1; Oculto 1 em Alda e aliados da linha.",
+          "monster.manobras.2.base": "Final · 4 INI · engole 1 inimigo da linha da frente por 1 + nível÷2 rodadas (máx. 3). O engolido conta como derrotado; sai com Vida atual ao fim, ou se Alda morrer/ficar Atordoada. Alda fica Lenta enquanto engole.",
+          "monster.manobras.2.mais": "Duração +1 rodada (máx. 4) e Alda ganha Barreira igual a 10% da Vida máx. do engolido."
+        },
+        "summoned_by": "ent_ragnar_kaiju"
+      },
+      "chiharu": {
+        "draft": true,
+        "name": "Chiharu",
+        "tipo": "Invocação",
+        "ordem": "ARM VID IMP ESC POD",
+        "attributes": {
+          "ARM": 20,
+          "IMP": 15,
+          "VID": 18,
+          "ESC": 13,
+          "POD": 10
+        },
+        "moral": "",
+        "aprimoramento": {
+          "nome": "Ascensão",
+          "efeito": "Ao ser invocada, coloca suas duas cartas (Arma + Transformar) na mão.",
+          "vr": 10,
+          "rod": 1
+        },
+        "desvantagem": {
+          "nome": "Nenhuma",
+          "efeito": "Formas humanas das invocações do Ragnar não têm Desvantagem.",
+          "instantanea": false
+        },
+        "deck": [],
+        "arma": {
+          "nome": "a definir",
+          "base": "a definir",
+          "mais": "a definir"
+        },
+        "transformar": {
+          "nome": "Transformar em Tsuchigumo",
+          "base": "2 INI · transforma no monstro (só ida).",
+          "mais": "+ Forte 3, Resistente 3, Rápido 3 e manobras do monstro Melhoradas."
+        },
+        "monster": {
+          "name": "Tsuchigumo",
+          "attributes": {
+            "ARM": 40,
+            "IMP": 30,
+            "VID": 35,
+            "ESC": 25,
+            "POD": 20
+          },
+          "aprimoramento": {
+            "nome": "Teia",
+            "efeito": "Aplica Lento 1 sempre que ataca ou é atacada.",
+            "vr": 6,
+            "rod": ""
+          },
+          "desvantagem": {
+            "nome": "Decapitação",
+            "efeito": "Instantânea (Preguiça / lâminas): ao ser comprada, Chiharu recebe Marcado 2 e Vorpal 1.",
+            "instantanea": true
+          },
+          "manobras": [
+            {
+              "nome": "a definir",
+              "base": "a definir",
+              "mais": "a definir"
+            },
+            {
+              "nome": "a definir",
+              "base": "a definir",
+              "mais": "a definir"
+            },
+            {
+              "nome": "a definir",
+              "base": "a definir",
+              "mais": "a definir"
+            }
+          ]
+        },
+        "notes": "Manobras do monstro entram no deck de compra do grupo (como todo minion); Ascensão puxa Arma + Transformar para a mão.",
+        "flag": "Invocação (metade dos atributos)",
+        "suggestions": {
+          "arma.nome": "Kusarigama",
+          "arma.base": "Impacto, Alcance, Preso 1, Grátis, 0 INI",
+          "arma.mais": "Kusarigama+: Impacto, Alcance, Preso 1, Lento 1, Grátis, gera 2 INI",
+          "monster.manobras.0.nome": "Casulo de Seda",
+          "monster.manobras.0.base": "Inimigo, Alcance, Preso 2, Lento 1. Sem dano.",
+          "monster.manobras.0.mais": "Linha inimiga, Preso 1, Lento 2.",
+          "monster.manobras.1.nome": "Presas Venenosas",
+          "monster.manobras.1.base": "Impacto, Ferido 1, Sangramento 1; dobra Sangramento se o alvo estiver Lento.",
+          "monster.manobras.1.mais": "Impacto, Ferido 2, Sangramento 2; dobra se Lento.",
+          "monster.manobras.2.nome": "Ninho da Montanha",
+          "monster.manobras.2.base": "Si mesma: Resistente 2, Provocação 1; inimigos que a atacarem corpo a corpo ficam Lentos 1 (soma com Teia).",
+          "monster.manobras.2.mais": "Resistente 3, Provocação 1, Barreira 2."
+        },
+        "summoned_by": "ent_ragnar_kaiju"
+      },
+      "samira": {
+        "draft": true,
+        "name": "Samira",
+        "tipo": "Invocação",
+        "ordem": "POD ESC ARM VID IMP",
+        "attributes": {
+          "POD": 20,
+          "ESC": 18,
+          "ARM": 15,
+          "VID": 13,
+          "IMP": 10
+        },
+        "moral": "",
+        "aprimoramento": {
+          "nome": "Ascensão",
+          "efeito": "Ao ser invocada, coloca suas duas cartas (Arma + Transformar) na mão.",
+          "vr": 10,
+          "rod": 1
+        },
+        "desvantagem": {
+          "nome": "Nenhuma",
+          "efeito": "Formas humanas das invocações do Ragnar não têm Desvantagem.",
+          "instantanea": false
+        },
+        "deck": [],
+        "arma": {
+          "nome": "Chakram",
+          "base": "a definir",
+          "mais": "a definir"
+        },
+        "transformar": {
+          "nome": "Transformar em Garuda",
+          "base": "2 INI · transforma no monstro (só ida).",
+          "mais": "+ Forte 3, Resistente 3, Rápido 3 e manobras do monstro Melhoradas."
+        },
+        "monster": {
+          "name": "Garuda",
+          "attributes": {
+            "POD": 40,
+            "ESC": 35,
+            "ARM": 30,
+            "VID": 25,
+            "IMP": 20
+          },
+          "aprimoramento": {
+            "nome": "a definir (nome)",
+            "efeito": "Aplica Voar 1 e Rápido 1 em si sempre que faz um ataque.",
+            "vr": 6,
+            "rod": ""
+          },
+          "desvantagem": {
+            "nome": "Maldição dos Sábios",
+            "efeito": "Instantânea (Inveja): ao ser comprada, Samira fica Atordoada 1 e perde Voo.",
+            "instantanea": true
+          },
+          "manobras": [
+            {
+              "nome": "Ciclone Ascendente",
+              "base": "Joga inimigos para cima.",
+              "mais": "a definir"
+            },
+            {
+              "nome": "Disparar Raios",
+              "base": "a definir",
+              "mais": "a definir"
+            },
+            {
+              "nome": "Pêlos Condutores",
+              "base": "a definir",
+              "mais": "a definir"
+            }
+          ]
+        },
+        "notes": "Manobras do monstro entram no deck de compra do grupo (como todo minion); Ascensão puxa Arma + Transformar para a mão.",
+        "flag": "Invocação (metade dos atributos)",
+        "suggestions": {
+          "monster.aprimoramento.nome": "Vento Divino",
+          "arma.base": "Poder, Alcance, Sequência 1 (ricocheteia em mais 1 inimigo), Grátis, 0 INI",
+          "arma.mais": "Chakram+: Poder, Alcance, Sequência 2, Grátis, gera 2 INI",
+          "monster.manobras.0.base": "Poder, Área (linha inimiga), lança para cima: alvos ficam Voo 1 forçado e Lento 1 (não podem usar Bloqueio/Barreira de linha).",
+          "monster.manobras.0.mais": "Poder, todos os inimigos, Voo forçado 1, Lento 1, Frágil 1.",
+          "monster.manobras.1.base": "Poder, Alcance, Sequência 2.",
+          "monster.manobras.1.mais": "Poder, Alcance, Sequência 3, Atordoado 1 no primeiro alvo.",
+          "monster.manobras.2.base": "Si mesma: Atento 2 e Barreira 2; quem a atacar corpo a corpo leva Poder×0,5 (choque).",
+          "monster.manobras.2.mais": "Atento 3, Barreira 3, choque Poder×1."
+        },
+        "summoned_by": "ent_ragnar_kaiju"
+      },
+      "aine": {
+        "draft": true,
+        "name": "Áine",
+        "tipo": "Invocação",
+        "ordem": "ESC POD VID ARM IMP",
+        "attributes": {
+          "ESC": 20,
+          "POD": 18,
+          "VID": 15,
+          "ARM": 13,
+          "IMP": 10
+        },
+        "moral": "",
+        "aprimoramento": {
+          "nome": "Ascensão",
+          "efeito": "Ao ser invocada, coloca suas duas cartas (Arma + Transformar) na mão.",
+          "vr": 10,
+          "rod": 1
+        },
+        "desvantagem": {
+          "nome": "Nenhuma",
+          "efeito": "Formas humanas das invocações do Ragnar não têm Desvantagem.",
+          "instantanea": false
+        },
+        "deck": [],
+        "arma": {
+          "nome": "Dardos de Sílex",
+          "base": "Alcance",
+          "mais": "a definir"
+        },
+        "transformar": {
+          "nome": "Transformar em Fada",
+          "base": "2 INI · transforma no monstro (só ida).",
+          "mais": "+ Forte 3, Resistente 3, Rápido 3 e manobras do monstro Melhoradas."
+        },
+        "monster": {
+          "name": "Fada",
+          "attributes": {
+            "ESC": 40,
+            "POD": 35,
+            "VID": 30,
+            "ARM": 25,
+            "IMP": 20
+          },
+          "aprimoramento": {
+            "nome": "Invisibilidade",
+            "efeito": "Aplica Oculto 1 em si ao entrar no campo e sempre que recebe dano direto.",
+            "vr": 6,
+            "rod": ""
+          },
+          "desvantagem": {
+            "nome": "Toque do Ferro",
+            "efeito": "Instantânea (Luxúria / ferro): ao ser comprada, Áine perde Oculto e recebe Frágil 2.",
+            "instantanea": true
+          },
+          "manobras": [
+            {
+              "nome": "Seta de Luz",
+              "base": "Poder",
+              "mais": "a definir"
+            },
+            {
+              "nome": "Ilusões Feéricas",
+              "base": "a definir",
+              "mais": "a definir"
+            },
+            {
+              "nome": "Oral Irresistível",
+              "base": "Preso, Atordoado",
+              "mais": "a definir"
+            }
+          ]
+        },
+        "notes": "Manobras do monstro entram no deck de compra do grupo (como todo minion); Ascensão puxa Arma + Transformar para a mão.",
+        "flag": "Invocação (metade dos atributos)",
+        "suggestions": {
+          "arma.mais": "Dardos de Sílex+: Impacto, Alcance, Sangramento 1, Grátis, gera 2 INI",
+          "monster.manobras.0.base": "Poder, Alcance, Marcado 1.",
+          "monster.manobras.0.mais": "Poder, Alcance, Sequência 1, Marcado 1.",
+          "monster.manobras.1.base": "Linha inimiga: Confuso 1. Áine ganha Oculto 1.",
+          "monster.manobras.1.mais": "Todos os inimigos: Confuso 1; Oculto 1 em Áine e um aliado.",
+          "monster.manobras.2.base": "Inimigo corpo a corpo: Preso 1, Atordoado 1. Sem dano. 3 INI.",
+          "monster.manobras.2.mais": "Preso 2, Atordoado 1 e Áine cura 10% da Vida máx."
+        },
+        "summoned_by": "ent_ragnar_kaiju"
+      },
+      "layla": {
+        "draft": true,
+        "name": "Layla",
+        "tipo": "Invocação",
+        "ordem": "IMP ESC ARM VID POD",
+        "attributes": {
+          "IMP": 20,
+          "ESC": 18,
+          "ARM": 15,
+          "VID": 13,
+          "POD": 10
+        },
+        "moral": "",
+        "aprimoramento": {
+          "nome": "Ascensão",
+          "efeito": "Ao ser invocada, coloca suas duas cartas (Arma + Transformar) na mão.",
+          "vr": 10,
+          "rod": 1
+        },
+        "desvantagem": {
+          "nome": "Nenhuma",
+          "efeito": "Formas humanas das invocações do Ragnar não têm Desvantagem.",
+          "instantanea": false
+        },
+        "deck": [],
+        "arma": {
+          "nome": "Faca Ritual",
+          "base": "a definir",
+          "mais": "a definir"
+        },
+        "transformar": {
+          "nome": "Transformar em Ammit",
+          "base": "2 INI · transforma no monstro (só ida).",
+          "mais": "+ Forte 3, Resistente 3, Rápido 3 e manobras do monstro Melhoradas."
+        },
+        "monster": {
+          "name": "Ammit",
+          "attributes": {
+            "IMP": 40,
+            "ESC": 35,
+            "ARM": 30,
+            "VID": 25,
+            "POD": 20
+          },
+          "aprimoramento": {
+            "nome": "Julgadora",
+            "efeito": "Aplica Marcado 1 sempre que ataca ou é atacada.",
+            "vr": 6,
+            "rod": ""
+          },
+          "desvantagem": {
+            "nome": "Coração Leve",
+            "efeito": "Instantânea (Gula / Maat): ao ser comprada, cada inimigo com Moral positiva recebe Forte igual à sua Moral.",
+            "instantanea": true
+          },
+          "manobras": [
+            {
+              "nome": "Véu de Trevas",
+              "base": "a definir",
+              "mais": "a definir"
+            },
+            {
+              "nome": "Mordida de Crocodilo",
+              "base": "a definir",
+              "mais": "a definir"
+            },
+            {
+              "nome": "Julgamento",
+              "base": "a definir",
+              "mais": "a definir"
+            }
+          ]
+        },
+        "notes": "Manobras do monstro entram no deck de compra do grupo (como todo minion); Ascensão puxa Arma + Transformar para a mão.",
+        "flag": "Invocação (metade dos atributos)",
+        "suggestions": {
+          "arma.base": "Impacto, Sangramento 1, Grátis, 0 INI",
+          "arma.mais": "Faca Ritual+: Impacto, Sangramento 1, Marcado 1, Grátis, gera 2 INI",
+          "monster.manobras.0.base": "Si mesma e aliados da linha: Oculto 1; inimigos da linha da frente Fracos 1.",
+          "monster.manobras.0.mais": "Oculto 1 em todos os aliados; Fracos 1 em todos os inimigos.",
+          "monster.manobras.1.base": "Impacto, Ferido 1, Preso 1; dano dobrado contra Marcado.",
+          "monster.manobras.1.mais": "Impacto, Ferido 2, Preso 1; dano dobrado contra Marcado; cura metade do dano.",
+          "monster.manobras.2.base": "Poder, Alcance; consome Marcado do alvo: +1 Atordoado se tiver Marcado 2+. 4 INI.",
+          "monster.manobras.2.mais": "Poder ×1,5, Alcance; Atordoado 1 se Marcado; 4 INI."
+        },
+        "summoned_by": "ent_ragnar_kaiju"
+      },
+      "citlali": {
+        "draft": true,
+        "name": "Citlali",
+        "tipo": "Invocação",
+        "ordem": "POD IMP ESC VID ARM",
+        "attributes": {
+          "POD": 20,
+          "IMP": 18,
+          "ESC": 15,
+          "VID": 13,
+          "ARM": 10
+        },
+        "moral": "",
+        "aprimoramento": {
+          "nome": "Ascensão",
+          "efeito": "Ao ser invocada, coloca suas duas cartas (Arma + Transformar) na mão.",
+          "vr": 10,
+          "rod": 1
+        },
+        "desvantagem": {
+          "nome": "Nenhuma",
+          "efeito": "Formas humanas das invocações do Ragnar não têm Desvantagem.",
+          "instantanea": false
+        },
+        "deck": [],
+        "arma": {
+          "nome": "Macuahuitl",
+          "base": "a definir",
+          "mais": "a definir"
+        },
+        "transformar": {
+          "nome": "Transformar em Tzitzimime",
+          "base": "2 INI · transforma no monstro (só ida).",
+          "mais": "+ Forte 3, Resistente 3, Rápido 3 e manobras do monstro Melhoradas."
+        },
+        "monster": {
+          "name": "Tzitzimime",
+          "attributes": {
+            "POD": 40,
+            "IMP": 35,
+            "ESC": 30,
+            "VID": 25,
+            "ARM": 20
+          },
+          "aprimoramento": {
+            "nome": "Devoradora",
+            "efeito": "Aplica Forte 2, Resistente 2 e Rápido 2 em si ao nocautear alguém.",
+            "vr": 6,
+            "rod": ""
+          },
+          "desvantagem": {
+            "nome": "Retorno do Sol",
+            "efeito": "Instantânea (Avareza / ordem solar): ao ser comprada, Citlali perde Forte, Resistente e Rápido e recebe Fraco 2.",
+            "instantanea": true
+          },
+          "manobras": [
+            {
+              "nome": "Poço Gravitacional",
+              "base": "Poder, move todos",
+              "mais": "a definir"
+            },
+            {
+              "nome": "Devorar Mortal",
+              "base": "Impacto, cura ao nocautear",
+              "mais": "a definir"
+            },
+            {
+              "nome": "Eclipse",
+              "base": "a definir",
+              "mais": "a definir"
+            }
+          ]
+        },
+        "notes": "Grafia alternativa do monstro: Tzitzimitl (singular náuatle; plural Tzitzimime). Manobras do monstro entram no deck de compra do grupo (como todo minion); Ascensão puxa Arma + Transformar para a mão.",
+        "flag": "Invocação (metade dos atributos)",
+        "suggestions": {
+          "arma.base": "Impacto, Ferido 1, Grátis, 0 INI",
+          "arma.mais": "Macuahuitl+: Impacto, Ferido 1, Sangramento 1, Grátis, gera 2 INI",
+          "monster.manobras.0.base": "Poder, todos os inimigos, Puxar para a linha da frente.",
+          "monster.manobras.0.mais": "Poder, todos os inimigos, Puxar, Lento 1.",
+          "monster.manobras.1.base": "Impacto; se nocautear, cura 25% da Vida máx. (soma com Devoradora). 3 INI.",
+          "monster.manobras.1.mais": "Impacto ×1,5; se nocautear, cura 40%.",
+          "monster.manobras.2.base": "Final · 4 INI · Todos os inimigos Fracos 1; aliados Oculto 1 até a próxima rodada.",
+          "monster.manobras.2.mais": "Igual + inimigos Fracos 1."
+        },
+        "summoned_by": "ent_ragnar_kaiju"
+      },
+      "norma": {
+        "draft": true,
+        "name": "Norma",
+        "tipo": "Minion comum",
+        "ordem": "",
+        "attributes": {
+          "VID": 15,
+          "IMP": 15,
+          "POD": 20,
+          "ARM": 15,
+          "ESC": 15
+        },
+        "moral": "",
+        "aprimoramento": {
+          "nome": "Nenhum",
+          "efeito": "Minion comum.",
+          "vr": 0,
+          "rod": ""
+        },
+        "desvantagem": {
+          "nome": "Nenhuma",
+          "efeito": "",
+          "instantanea": false
+        },
+        "deck": [],
+        "arma": {
+          "nome": "Pistola",
+          "base": "Poder, Alcance, Grátis",
+          "mais": "+ Sangramento 1"
+        },
+        "transformar": null,
+        "monster": null,
+        "notes": "Não se transforma. Só uma manobra. É desinvocada se Ragnar invocar outra.",
+        "flag": "Minion (abaixo de 20 permitido)",
+        "suggestions": {},
+        "summoned_by": "ent_ragnar_kaiju"
+      }
     }
   }
 }

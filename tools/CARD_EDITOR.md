@@ -116,3 +116,23 @@ Por personagem o editor mostra:
 ## Prévia simultânea do deck
 
 Na aba **Personagens**, a seção **Prévia do deck** exibe todas as cartas do personagem em uma grade, sem precisar abrir uma por vez. Use os botões **Inicial**, **Final** e **Final+** para comparar as composições. Cada miniatura mostra tipo, alvo, pontuação e os primeiros efeitos; clique nela para abrir a carta no editor.
+
+## Ficha (design), Balanceamento, Tags/Efeitos e Glossário (2026-10-12)
+
+Fonte única: `addons/hotn3_entities/entities.json`. O jogo ignora os campos de design.
+
+- `heroes.<id>.design` — ficha de design de um herói do jogo (ex.: `ent_ragnar_kaiju`, `ent_marcell_wine`, `ent_alyssa_wine`).
+- `design.characters.<slug>` — personagens só de design (invocações do Ragnar, Norma). Não entram no jogo.
+- `design.weights` — pesos/preços do Balanceamento (DP, WP, PR, MP).
+- `design.glossary` / `design.open_questions`.
+
+Campos da ficha: `draft`, `name`, `tipo`, `ordem`, `attributes{VID,IMP,POD,ARM,ESC}` (Vida = 3×VID+10), `moral` (−2..2),
+`aprimoramento{nome,efeito,vr,rod}`, `desvantagem{nome,efeito,instantanea,tags}`, `deck[]`, `arma`, `transformar` (manobras `{nome,base,mais,tags}`),
+`monster{name,attributes,aprimoramento,desvantagem,manobras[]}`, `summons[]`/`summoned_by`, `notes`, `flag`, `suggestions{caminho:valor}`.
+
+Salvar: igual ao resto do editor (Exportar entities.json completo). Toda edição de design também grava um rascunho do catálogo inteiro
+no navegador (`hotn3_entities_draft_v1`, botão "Rascunho local" no topo). Importar aceita também os JSONs antigos de
+`ragnar_invocacoes.html` / `balance_score.html`.
+
+Partes geradas do HTML: `python tools/scripts/gen_code_keys.py && python tools/scripts/build_editor.py`
+(cópia embutida do entities.json, lista de chaves do código e o módulo `tools/editor_design_module.js`).
